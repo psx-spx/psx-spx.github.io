@@ -194,8 +194,8 @@ The return value (if any) is stored in R2 register.<br/>
   A(10h) atoi(src)
   A(11h) atol(src)
   A(12h) atob(src,num_dst)
-  A(13h) SaveState(buf)
-  A(14h) RestoreState(buf,param)
+  A(13h) setjmp(buf)
+  A(14h) longjmp(buf,param)
   A(15h) strcat(dst,src)
   A(16h) strncat(dst,src,maxlen)
   A(17h) strcmp(str1,str2)
@@ -2129,8 +2129,8 @@ Executes "RestoreState(ioabortbuffer,param)". Internally used to recover from
 failed I/O operations, param should be nonzero to notify the SaveState caller
 that the abort has occurred.<br/>
 
-#### A(13h) - SaveState(buf)
-Stores some (not all) CPU registers in the specified buffer (30h bytes):<br/>
+#### A(13h) - setjmp(buf)
+This is a somewhat incomplete implementation of posix's setjmp, by storing the ABI-saved CPU registers in the specified buffer (30h bytes):<br/>
 ```
   00h 4    r31 (ra) (aka caller's pc)
   04h 4    r29 (sp)
@@ -2140,18 +2140,23 @@ Stores some (not all) CPU registers in the specified buffer (30h bytes):<br/>
 ```
 That type of buffer can be used with "ioabort", "RestoreState", and also
 "SetCustomExitFromException(addr)".<br/>
-The "SaveState" function (initially) returns 0, however, it may return again -
-to the same return address - with another return value (which should be usually
+The "setjmp" function returns 0 when called directly. However, it may return again -
+to the same return address, and the same stack pointer - with another return value (which should be usually
 non-zero, to indicate that the state has been restored (eg. ioabort passes 1 as
 return value).<br/>
+Also noteworthy from what a compliant setjmp implementation should be doing
+is the absence of saving the state of cop0 and cop2, thus making this slightly
+unsuitable for a typical coroutine system implementation.<br/>
 
-#### A(14h) - RestoreState(buf, param)
-Restores the R16-R23,GP,SP,FP,RA registers from a previously recorded SaveState
-buffer, and "returns" to that new RA address (rather than to the caller of the
-RestoreState function), the "param" value is passed as "return value" to the
-code at RA, ie. usually to the caller of the original SaveState call) (since
-SaveState returns 0, "param" should be usually 1, or another non-zero value to
-inidicate that RestoreState has occurred). See SaveState for further details.<br/>
+#### A(14h) - longjmp(buf, param)
+Restores the R16-R23,GP,SP,FP,RA registers from a previously recorded 
+jmp_buf buffer, and "returns" to that new RA address (rather than to the caller of the
+longjmp function). The "param" value is passed as "return value" to the
+code at RA, ie. usually to the caller of the original setjmp call. Noteworthy difference
+from a conformant longjmp implementation is that the "param" value won't be clamped to 1 if
+you pass 0 to it. So since setjmp returns 0 on the first call, the caller of longjmp must take
+care that "param" is non-zero, so the callsite of setjmp can make the difference between the first
+call and a rollback. See setjmp for further details.<br/>
 
 #### A(53h) - set\_ioabort\_handler(src)  ;PS2 only  ;PSX: SystemError
 Normally the ioabort handler is changed only internally during booting, with
