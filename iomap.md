@@ -208,7 +208,8 @@
   1F802032h 1 DTL-H2000: Whatever IRQ Control ?
   1F802040h 1 DTL-H2000: Bootmode "Dip switches" (R)
   1F802041h 1 PSX: POST (external 7 segment display, indicate BIOS boot status)
-  1F802042h 1 DTL-H2000: POST/LED (similar to POST) (other addr, 2-digit wide)   1F802070h 1 PS2: POST2 (similar to POST, but PS2 BIOS uses this address)
+  1F802042h 1 DTL-H2000: POST/LED (similar to POST) (other addr, 2-digit wide)
+  1F802070h 1 PS2: POST2 (similar to POST, but PS2 BIOS uses this address)
 ```
 #### Expansion Region 2 - Nocash Emulation Expansion
 ```
