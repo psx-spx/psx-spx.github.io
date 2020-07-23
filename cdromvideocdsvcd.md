@@ -87,7 +87,7 @@ InfoStatusFlags at [02Bh] describes certain characteristics of the disc:<br/>
 Note: Bit5/6 are used only if the next disc has the same Album ID (eg. the
 feature allows to skip copyright messages if the same message was already shown
 on another disc).<br/>
-First_segment_addr: The location of the first sector of the Segment Play Item
+First\_segment\_addr: The location of the first sector of the Segment Play Item
 Area [that is... the first ITEMnnnn.DAT file?], in the form mm:ss:00. Must be
 00:00:00 if PSD size is zero. If PSD size is nonzero, but no segments used:
 Usually set to 00:02:00.<br/>
@@ -106,7 +106,7 @@ Version;<br/>
   0x02 --- VCD2.0
   0x01 --- SVCD, should be same as version in INFO.SVD
 ```
-Sys_prof_tag;<br/>
+Sys\_prof\_tag;<br/>
 ```
   0x01 if VCD1.1
   0x00 else
@@ -239,14 +239,14 @@ one picture frame, or eventually with a few frames for short animations,
 including audio in some cases). Still images are said to be allowed to use
 twice the resolution of MPEG videos.<br/>
 
-#### EXT\PSD_X.VCD or EXT\PSD_X.SVD (extended version of PSD.VCD)
-#### EXT\LOT_X.VCD or EXT\LOT_X.SVD (extended version of LOT.VCD)
+#### EXT\PSD\_X.VCD or EXT\PSD\_X.SVD (extended version of PSD.VCD)
+#### EXT\LOT\_X.VCD or EXT\LOT\_X.SVD (extended version of LOT.VCD)
 The "extended" files are often identical to the normal PSD/LOT files. The
 difference is that, if disc uses SelectionLists, then PSD should use the normal
-descriptor (18h), and PSD_X should use the extended descriptor (1Ah), the
+descriptor (18h), and PSD\_X should use the extended descriptor (1Ah), the
 latter one seems to be intended to allow to highlight the current menu
 selection (particulary useful when using +/- buttons instead of Numeric Keypad
-input). Note: Nethertheless, Muppets from Space uses descriptor 18h in PSD_X.<br/>
+input). Note: Nethertheless, Muppets from Space uses descriptor 18h in PSD\_X.<br/>
 Unknown if SVCDs do really have "extended" files, too (theoretically the VCD
 extension should be a default feature for SVCDs).<br/>
 
@@ -254,7 +254,7 @@ extension should be a default feature for SVCDs).<br/>
 Although PBC was intended as "nice extra feature", many VCDs are containing
 faulty PSD files. In general, VCD players should either leave PBC unsupported
 (or provide an option for disabling it).<br/>
-Red Dragon from 2003 uses extended selection lists, but crops PSD_X.VCD to the
+Red Dragon from 2003 uses extended selection lists, but crops PSD\_X.VCD to the
 same filesize as PSD.VCD.<br/>
 Muppets from Space from 1999 assigns weird functions to Prev/Next buttons (Next
 wraps from Last Track to First Track, but Prev doesn't wrap from First to Last;
@@ -285,7 +285,7 @@ If that's correct, then the files would overlap with PSD.SVD (when PSD.SVD is
 bigger than one sector), that would be weird, but possible (ie. the "PsdOffset"
 in PSD.SVD would need to "skip" the region used by those two files).<br/>
 
-#### EXT\SCANDATA.DAT (12+3*N bytes for VCD 2.0) (or 16+3*N+2*X+3*Y+3*Z for SVCD)
+#### EXT\SCANDATA.DAT (12+3\*N bytes for VCD 2.0) (or 16+3\*N+2\*X+3\*Y+3\*Z for SVCD)
 This file fulfills much the same purpose of the SEARCH.DAT file except that
 this file is mandatory only if the System Profile Tag of the INFO.SVD file is
 0x01 (HQ-VCD) and also that it contains sector addresses also for each video
@@ -316,7 +316,7 @@ Segment Play Items in addition to the regular MPEG tracks.<br/>
   xxxh 3*Z  msf_t scandata_table[Z]  ;MM:SS:FF
 ```
 
-#### SVCD\SEARCH.DAT (13+3*N bytes)
+#### SVCD\SEARCH.DAT (13+3\*N bytes)
 This file defines where the scan points are. It covers all mpeg tracks
 together. A scan point at time T is the nearest I-picture in the MPEG stream to
 the given time T. Scan points are given at every half-second for the entire
@@ -333,7 +333,7 @@ Note: This SVCD file is about same as the old EXT\SCANDATA.DAT file on VCDs
 (with one extra entry for Time Interval). Whilst, SVCDs are storing some
 different stuff in EXT\SCANDATA.DAT (despite of the identical filename).<br/>
 
-#### SVCD\TRACKS.SVD (11+4*N bytes) (or rarely:11+5*N bytes)
+#### SVCD\TRACKS.SVD (11+4\*N bytes) (or rarely:11+5\*N bytes)
 The TRACKS.SVD file contains a series of structures, one for each track, which
 indicates the track's playing time (in sectors, not actually real time) and
 contents.<br/>
@@ -409,8 +409,8 @@ the picture frames (ie. in the MPEG macroblocks, rather than using the Closed
 Caption feature).<br/>
 These CAPTnn.DAT files are intended for Closed Captions (eg. subtitles in
 different languages and/or for deaf people).<br/>
-Alternately, the "user_data_cc" flag in INFO.VCD?/INFO.SVD can indicate to
-store Closed Captions in MPEG User Data (with START_CODE=000001B2h=User Data)
+Alternately, the "user\_data\_cc" flag in INFO.VCD?/INFO.SVD can indicate to
+store Closed Captions in MPEG User Data (with START\_CODE=000001B2h=User Data)
 instead of in EXT\CAPTnn.DAT. Either way, the format of those Closed Captions
 is unknown.<br/>
 Moreover, Content can be flagged to have Overlay Graphics/Text (OGT), whatever
@@ -434,17 +434,17 @@ of that files is unknown.<br/>
 Reportedly there are Midi VCDs (MVCDs) for karaoke, maybe those discs have
 "KARINFO.xxx" files(?)<br/>
 
-#### PICTURES\*.* (whatever)
+#### PICTURES\\*.\* (whatever)
 Unknown purpose. The PICTURES folder has been spotted on one VCD (Wallace and
 Gromit), but the folder was just empty.<br/>
 
-#### CDI\*.* (some kind of GUI/driver for Philips CDI Players)
+#### CDI\\*.\* (some kind of GUI/driver for Philips CDI Players)
 The CDI folder is some relict for Philips CDI Players, it isn't used by normal
 VCD players, however, the CDI folder & files are included on most or all
 VCDs.<br/>
 The path/name for the CDI executable is stored at offset 23Eh in the ISO
-Primary Volume Descriptor (usually "CDI/CDI_APPL.VCD;1" or "CDI/CDI_VCD.APP;1")
-(or accidentally "CDI_CDI_VCD.APP;1" on homebrew Nero discs).<br/>
+Primary Volume Descriptor (usually "CDI/CDI\_APPL.VCD;1" or "CDI/CDI\_VCD.APP;1")
+(or accidentally "CDI\_CDI\_VCD.APP;1" on homebrew Nero discs).<br/>
 The files in the CDI folder are usually just some standard files (without any
 customizations), however, there are some different revisions of these files:<br/>
 ```
@@ -463,20 +463,20 @@ customizations), however, there are some different revisions of these files:<br/
   CDI_TEXT.FNT   13616 bytes, 00-Nul-0000  CRC32=BDC55E86h  ;font?
   CDI_IMAG.RTF 1510028 bytes, 00-Nul-0000  CRC32=(RIFF)     ;realtimefile?
 ```
-CDI_VCD.CFG is some ASCII text file (with uncommon 0Dh,0Dh,0Ah line breaks),
+CDI\_VCD.CFG is some ASCII text file (with uncommon 0Dh,0Dh,0Ah line breaks),
 the file could be customized to change things like GUI colors, but most or all
 discs seem to contain the same file with CRC32=D1C6F7ADh. Note: The CFG file is
 missing on the homebrew DemoVCD.<br/>
-CDI_IMAG.RTF is seen as 1510028 byte file under windows (that is, with a
+CDI\_IMAG.RTF is seen as 1510028 byte file under windows (that is, with a
 windows RIFF header, and with data area containing the whole 930h bytes from
 each sector; this includes the MM:SS:FF values from the sector header, so the
 RTF file may look slightly different depending on which sectors it has been
 stored on, although the files are usually exactly same apart from those
 MM:SS:FF values). Note: The RTF file is cropped to 1324220 bytes (instead of
 1510028) on the homebrew DemoVCD (apart from that, the file is same as normal).<br/>
-CDI_ALL.RTF and CDI_BUM.RTF cannot be read/copied under Windows 7 (which is
+CDI\_ALL.RTF and CDI\_BUM.RTF cannot be read/copied under Windows 7 (which is
 weirdly reporting them to use an "invalid MS-DOS function"; some people also
-reported having CDI_IMAG.RTF files with similar problems). The reason is
+reported having CDI\_IMAG.RTF files with similar problems). The reason is
 unknown, maybe windows doesn't fully support the CD filesystem, or some VCDs
 are violating the filesystem specs, or whatever... maybe windows is
 mis-identifying certain RTF files as Rich Text Format files and tries to
@@ -521,7 +521,7 @@ determine the position/bitrate, so the Pack is kinda useless).<br/>
   1bit Marker (1)                                                       ;/
 ```
 
-#### MPEG-1 Multiplex System Header (12+N*3 bytes)(optionally)(at start of stream)
+#### MPEG-1 Multiplex System Header (12+N\*3 bytes)(optionally)(at start of stream)
 The System Header is usally found after the first Pack at the begin of the
 stream.<br/>
 ```
@@ -539,7 +539,7 @@ stream.<br/>
   5bit Video Bound (max number of video streams in this ISO stream)     ;/
   8bit Reserved (FFh)                                                   ;-1byte
 ```
-Followed by N*3 bytes for the streams (each with first bit=set):<br/>
+Followed by N\*3 bytes for the streams (each with first bit=set):<br/>
 ```
   8bit Stream ID (C0h..DFh=Audio, E0h..EFh=Video)                       ;\
   2bit Fixed (11b)                                                      ; 3byte
@@ -626,7 +626,7 @@ packets preceeded (and interrupted) by Multiplex headers. Ie. before processing
 the Video packets, one must first extract the video snippets from the Multiplex
 stream (see previous chapter).<br/>
 
-#### MPEG-1 Video Sequence Header (12, 76, or 140 bytes, ie. 12+N*64)
+#### MPEG-1 Video Sequence Header (12, 76, or 140 bytes, ie. 12+N\*64)
 ```
   32bit SEQUENCE_HEADER_CODE (000001B3h)                        ;-4byte
   12bit Width in pixels  (1..4095)                              ;\3byte
@@ -899,7 +899,7 @@ used by the .CDZ cdrom-image format.<br/>
 
 
 ##   Inflate - Core Functions
-#### tinf_uncompress(dst,src)
+#### tinf\_uncompress(dst,src)
 ```
  tinf_init()                    ;init constants (needed to be done only once)
  tinf_align_src_to_byte_boundary()
@@ -915,7 +915,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_inflate_uncompressed_block()
+#### tinf\_inflate\_uncompressed\_block()
 ```
  tinf_align_src_to_byte_boundary()
  len=LittleEndian16bit[src+0]                             ;get len
@@ -925,7 +925,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_inflate_compressed_block()
+#### tinf\_inflate\_compressed\_block()
 ```
  repeat
   sym1=tinf_decode_symbol(tinf_len_tree)
@@ -940,7 +940,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_decode_symbol(tree)
+#### tinf\_decode\_symbol(tree)
 ```
  sum=0, cur=0, len=0
  repeat                         ;get more bits while code value is above sum
@@ -952,21 +952,21 @@ used by the .CDZ cdrom-image format.<br/>
  return tree.trans[sum+cur]
 ```
 
-#### tinf_read_bits(num)     ;get N bits from source stream
+#### tinf\_read\_bits(num)     ;get N bits from source stream
 ```
  val=0
  for i=0 to num-1, val=val+(tinf_getbit() shl i), next i
  return val
 ```
 
-#### tinf_getbit()           ;get one bit from source stream
+#### tinf\_getbit()           ;get one bit from source stream
 ```
  bit=tag AND 01h, tag=tag/2
  if tag=00h then tag=[src], src=src+1, bit=tag AND 01h, tag=tag/2+80h
  return bit
 ```
 
-#### tinf_align_src_to_byte_boundary()
+#### tinf\_align\_src\_to\_byte\_boundary()
 ```
  tag=01h   ;empty/end-bit (discard any bits, align src to byte-boundary)
  ret
@@ -975,7 +975,7 @@ used by the .CDZ cdrom-image format.<br/>
 
 
 ##   Inflate - Initialization & Tree Creation
-#### tinf_init()
+#### tinf\_init()
 ```
  tinf_build_bits_base(length_bits, length_base, 4, 3)
  length_bits[28]=0, length_base[28]=258
@@ -983,7 +983,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_build_bits_base(bits,base,delta,base_val)
+#### tinf\_build\_bits\_base(bits,base,delta,base\_val)
 ```
  for i=0 to 29
   bits[i]=min(0,i-delta)/delta
@@ -992,7 +992,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_build_fixed_trees()
+#### tinf\_build\_fixed\_trees()
 ```
  for i=0 to 6, tinf_len_tree.table[i]=0, next i       ;[0..6]=0   ;len tree...
  tinf_len_tree.table[7,8,9]=24,152,112                ;[7..9]=24,152,112
@@ -1006,7 +1006,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_decode_dynamic_trees()
+#### tinf\_decode\_dynamic\_trees()
 ```
  hlit  = tinf_read_bits(5)+257           ;get 5 bits HLIT (257-286)
  hdist = tinf_read_bits(5)+1             ;get 5 bits HDIST (1-32)
@@ -1027,7 +1027,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_build_tree(tree, first, num)
+#### tinf\_build\_tree(tree, first, num)
 ```
  for i=0 to 15, tree.table[i]=0, next i     ;clear code length count table
  ;scan symbol lengths, and sum code length counts...
@@ -1041,7 +1041,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_data
+#### tinf\_data
 ```
  clcidx[0..18] = 16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15   ;constants
 ```
@@ -1070,7 +1070,7 @@ used by the .CDZ cdrom-image format.<br/>
 
 
 ##   Inflate - Headers and Checksums
-#### tinf_gzip_uncompress(void *dest, *destLen, *source, sourceLen)
+#### tinf\_gzip\_uncompress(void \*dest, \*destLen, \*source, sourceLen)
 ```
  src_start=src, dst_start=dst                 ;memorize start addresses
  if (src[0]<>1fh or src[1]<>8Bh) then ERROR   ;check id bytes
@@ -1092,7 +1092,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_zlib_uncompress(dst, destLen, src, sourceLen)
+#### tinf\_zlib\_uncompress(dst, destLen, src, sourceLen)
 ```
  src_start=src, dst_start=dst         ;memorize start addresses
  hdr=BigEndian16bit[src], src=src+2   ;get header
@@ -1108,7 +1108,7 @@ used by the .CDZ cdrom-image format.<br/>
  ret
 ```
 
-#### tinf_adler32(src, length)
+#### tinf\_adler32(src, length)
 ```
  s1=1, s2=0
  while (length>0)

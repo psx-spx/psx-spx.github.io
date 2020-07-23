@@ -33,33 +33,33 @@
 
 
 ##   Controller and Memory Card I/O Ports
-#### 1F801040h JOY_TX_DATA (W)
+#### 1F801040h JOY\_TX\_DATA (W)
 ```
   0-7   Data to be sent
   8-31  Not used
 ```
 Writing to this register starts the transfer (if, or as soon as TXEN=1 and
-JOY_STAT.2=Ready), the written value is sent to the controller or memory card,
-and, simultaneously, a byte is received (and stored in RX FIFO if JOY_CTRL.1 or
-JOY_CTRL.2 is set).<br/>
-The "TXEN=1" condition is a bit more complex: Writing to SIO_TX_DATA latches
+JOY\_STAT.2=Ready), the written value is sent to the controller or memory card,
+and, simultaneously, a byte is received (and stored in RX FIFO if JOY\_CTRL.1 or
+JOY\_CTRL.2 is set).<br/>
+The "TXEN=1" condition is a bit more complex: Writing to SIO\_TX\_DATA latches
 the current TXEN value, and the transfer DOES start if the current TXEN value
 OR the latched TXEN value is set (ie. if TXEN gets cleared after writing to
-SIO_TX_DATA, then the transfer may STILL start if the old latched TXEN value
+SIO\_TX\_DATA, then the transfer may STILL start if the old latched TXEN value
 was set).<br/>
 
-#### 1F801040h JOY_RX_DATA (R)
+#### 1F801040h JOY\_RX\_DATA (R)
 ```
   0-7   Received Data      (1st RX FIFO entry) (oldest entry)
   8-15  Preview            (2nd RX FIFO entry)
   16-23 Preview            (3rd RX FIFO entry)
   24-31 Preview            (4th RX FIFO entry) (5th..8th cannot be previewed)
 ```
-A data byte can be read when JOY_STAT.1=1. Data should be read only via 8bit
+A data byte can be read when JOY\_STAT.1=1. Data should be read only via 8bit
 memory access (the 16bit/32bit "preview" feature is rather unusable, and
 usually there shouldn't be more than 1 byte in the FIFO anyways).<br/>
 
-#### 1F801044h JOY_STAT (R)
+#### 1F801044h JOY\_STAT (R)
 ```
   0     TX Ready Flag 1   (1=Ready/Started)
   1     RX FIFO Not Empty (0=Empty, 1=Not Empty)
@@ -75,7 +75,7 @@ usually there shouldn't be more than 1 byte in the FIFO anyways).<br/>
   11-31 Baudrate Timer    (21bit timer, decrementing at 33MHz)
 ```
 
-#### 1F801048h JOY_MODE (R/W) (usually 000Dh, ie. 8bit, no parity, MUL1)
+#### 1F801048h JOY\_MODE (R/W) (usually 000Dh, ie. 8bit, no parity, MUL1)
 ```
   0-1   Baudrate Reload Factor (1=MUL1, 2=MUL16, 3=MUL64) (or 0=MUL1, too)
   2-3   Character Length       (0=5bits, 1=6bits, 2=7bits, 3=8bits)
@@ -86,7 +86,7 @@ usually there shouldn't be more than 1 byte in the FIFO anyways).<br/>
   9-15  Unknown (always zero)
 ```
 
-#### 1F80104Ah JOY_CTRL (R/W) (usually 1003h,3003h,0000h)
+#### 1F80104Ah JOY\_CTRL (R/W) (usually 1003h,3003h,0000h)
 ```
   0     TX Enable (TXEN)  (0=Disable, 1=Enable)
   1     /JOYn Output      (0=High, 1=Low/Select) (/JOYn as defined in Bit13)
@@ -109,7 +109,7 @@ Dualshock and Mouse require at least some small delay, and older Analog Joypads
 require a huge delay (around 500 clock cycles for SCPH-1150), official kernel
 waits more than 2000 cycles (which is much more than needed).<br/>
 
-#### 1F80104Eh JOY_BAUD (R/W) (usually 0088h, ie. circa 250kHz, when Factor=MUL1)
+#### 1F80104Eh JOY\_BAUD (R/W) (usually 0088h, ie. circa 250kHz, when Factor=MUL1)
 ```
   0-15  Baudrate Reload value for decrementing Baudrate Timer
 ```
@@ -136,16 +136,16 @@ an /ACK, or if there's no peripheral connected at all).<br/>
   Actually, /IRQ7 means "more-data-request",
   accordingly, it does NOT get triggered after receiving the LAST byte.
 ```
-I_STAT.7 is edge triggered (that means it can be acknowledge before or after
-acknowledging JOY_STAT.9). However, JOY_STAT.9 is NOT edge triggered (that
+I\_STAT.7 is edge triggered (that means it can be acknowledge before or after
+acknowledging JOY\_STAT.9). However, JOY\_STAT.9 is NOT edge triggered (that
 means it CANNOT be acknowledged while the external /IRQ input is still low; ie.
-one must first wait until JOY_STAT.7=0, and then set JOY_CTRL.4=1) (this is
+one must first wait until JOY\_STAT.7=0, and then set JOY\_CTRL.4=1) (this is
 apparently a hardware glitch; note: the LOW duration is circa 100 clock
 cycles).<br/>
 
 #### /IRQ10 (/IRQ) Controller - Lightpen Interrupt
 Pin8 on Controller Port. Routed directly to the Interrupt Controller (at
-1F80107xh). There are no status/enable bits in the JOY_registers (at
+1F80107xh). There are no status/enable bits in the JOY\_registers (at
 1F80104xh).<br/>
 
 #### RX FIFO / TX FIFO Notes
@@ -191,7 +191,7 @@ Controllers can be probably accessed via InitPad and StartPad functions,<br/>
 [BIOS Joypad Functions](kernelbios.md#bios-joypad-functions)<br/>
 Memory cards can be accessed by the filesystem (with device names "bu00:"
 (slot1) and "bu10:" (slot2) or so). Before using that device names, it seems to
-be required to call InitCard, StartCard, and _bu_init (?).<br/>
+be required to call InitCard, StartCard, and \_bu\_init (?).<br/>
 
 #### Connectors
 The PlayStation has four connectors (two controllers, two memory cards),<br/>
@@ -261,15 +261,15 @@ usually 00h) to receive the response bytes.<br/>
 
 X = none, - = Hi-Z<br/>
 
-* 0x81 is memory-card, 0x01 is standard-pad at top command.<br/>
-* serial data transfer is LSB-First format.<br/>
-* data is down edged output, PSX is read at up edge in shift clock.<br/>
-* PSX expects No-connection if not returned Acknowledge less than 100 usec.<br/>
-* clock pulse is 250KHz.<br/>
-* no need Acknowledge at last data.<br/>
-* Acknowledge signal width is more than 2 usec.<br/>
-* time is 16msec between SEL from previous SEL.<br/>
-* SEL- for memory card in PAD access.<br/>
+\* 0x81 is memory-card, 0x01 is standard-pad at top command.<br/>
+\* serial data transfer is LSB-First format.<br/>
+\* data is down edged output, PSX is read at up edge in shift clock.<br/>
+\* PSX expects No-connection if not returned Acknowledge less than 100 usec.<br/>
+\* clock pulse is 250KHz.<br/>
+\* no need Acknowledge at last data.<br/>
+\* Acknowledge signal width is more than 2 usec.<br/>
+\* time is 16msec between SEL from previous SEL.<br/>
+\* SEL- for memory card in PAD access.<br/>
 
 
 
@@ -1065,7 +1065,7 @@ screen; ie. on the game's GP1(06h) and GP1(07h) settings.<br/>
 Vertical coordinates are counted in scanlines (ie. equal to pixels). Horizontal
 coordinates are counted in 8MHz units (which would equal a resolution of 385
 pixels; which can be, for example, converted to 320 pixel resolution as
-X=X*320/385).<br/>
+X=X\*320/385).<br/>
 
 #### Misinformation (from bugged homebrew source code)
 ```
@@ -1184,7 +1184,7 @@ different if IRQs are disabled (eg. while another IRQ is processed).<br/>
 However, IRQ10 does also get triggered in the next some scanlines, so the first
 IRQ10 is used only as a notification that the CPU should watch out for further
 IRQ10's. Ie. the IRQ10 handler should disable all DMAs, acknowledge IRQ10, and
-then enter a waitloop that waits for the IRQ10 bit in I_STAT to become set
+then enter a waitloop that waits for the IRQ10 bit in I\_STAT to become set
 again (or abort if a timeout occurs) and then read the timers, reportedly like
 so:<br/>
 ```
@@ -1824,7 +1824,7 @@ port).<br/>
 
 #### TTY Debug Terminal
 If present, the external DUART can be used for external keyboard input, at the
-BIOS side, this is supported as "std_in".<br/>
+BIOS side, this is supported as "std\_in".<br/>
 
 
 
@@ -2056,7 +2056,7 @@ Sony), followed by up to 8 characters,<br/>
 ```
 (which may identify the file if the game uses multiple files; this part often
 contains a random string which seems to be allowed to contain any chars in
-range of 20h..7Fh, of course it shouldn't contain "?" and "*" wildcards).<br/>
+range of 20h..7Fh, of course it shouldn't contain "?" and "\*" wildcards).<br/>
 
 #### Broken Sector List (Block 0, Frame 16..35)
 ```

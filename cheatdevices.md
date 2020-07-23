@@ -27,7 +27,7 @@ DB25 connector can be directly connected to a PC parallel port.<br/>
 [Cheat Devices - FLASH/EEPROMs](cheatdevices.md#cheat-devices---flasheeproms)<br/>
 
 http://gamehacking.org/faqs/hackv500c.html - cheat code formats<br/>
-http://doc.kodewerx.org/hacking_psx.html - cheat code formats<br/>
+http://doc.kodewerx.org/hacking\_psx.html - cheat code formats<br/>
 http://xianaix.net/museum.htm - around 64 bios versions<br/>
 http://www.murraymoffatt.com/playstation-xplorer.html - xplorer bioses<br/>
 
@@ -624,7 +624,7 @@ The filedata is split into fragments, Len should be max 2000h per fragment.<br/>
 ```
 Memcard ReadFile does transfer N fragments of Len=2000h (depending on
 filesize). The GetWhatever function transfers one fragment with Len=80h,
-followed by N*6 fragments with Len=40Ah.<br/>
+followed by N\*6 fragments with Len=40Ah.<br/>
 
 #### RxTurbo for Memcard (bu) GetDirectory/GetFileHeader functions
 ```
@@ -857,7 +857,7 @@ on/off" flag (bit3: 0=on, 1=off; whatever that means, it does probably require
 WHATEVER actions to enable codes that are "off"; maybe via the Ftaaaaaa dddd
 code).<br/>
 
-#### break_type (cccc) (aka MSBs of cop0r7 DCIC register)
+#### break\_type (cccc) (aka MSBs of cop0r7 DCIC register)
 ```
   E180 (instruction gotton by CPU but not yet implemented) (uh, gotton what?)
   EE80 (data to be read or written)  ;<--looks okay
@@ -868,7 +868,7 @@ code).<br/>
 The CPU supports one data breakpoint and one instruction breakpoint (though
 unknown if the Xplorer does support to use both simultaneously, or if it does
 allow only one of them to be used).<br/>
-If the break_type/address/mask to match up with CPU's memory access actions...
+If the break\_type/address/mask to match up with CPU's memory access actions...
 then "something" does probably happen (maybe executing a sub-function that
 consists of the d0,d1,d2,etc-bytes, if so, maybe at a fixed/unknown memory
 address, or maybe at some random address; which would require relocatable
@@ -881,7 +881,7 @@ The "Slide" code shall be used only with even addresses, unknown if other
 
 
 ##   Cheat Devices - Xplorer Cheat Code and ROM-Image Decryption
-#### decrypt_xplorer_cheat_code:
+#### decrypt\_xplorer\_cheat\_code:
 ```
   key  = x[0] and 07h              ;'''''''' AABBCCDD EEFF '''''''';
   x[0] = x[0] xor key              ;         / / /  \  \ \         ;
@@ -916,7 +916,7 @@ The "Slide" code shall be used only with even addresses, unknown if other
   endif
 ```
 
-#### decrypt_xplorer_fcd_rom_image:
+#### decrypt\_xplorer\_fcd\_rom\_image:
 ```
   for i=0 to romsize-1
     x=45h

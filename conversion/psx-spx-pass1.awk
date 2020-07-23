@@ -6,7 +6,7 @@ function trim(s) { return rtrim(ltrim(s)); }
 # Escape slashes and amps in a string for building links
 function linkescape(s) {
     gsub(/\//, "\\/", s);
-    gsub(/\&/, "\\\\&", s);
+    gsub(/&/, "\\\\&", s);
     return s;
 }
 
@@ -68,6 +68,9 @@ WAIT_FOR_START { next; }
         # outside of <PRE> blocks, we want to escape these for the md format.
         gsub(/&lt;/, "\\<");
         gsub(/&gt;/, "\\>");
+        gsub(/*/, "\\*");
+        gsub(/_/, "\\_");
+        gsub(/~/, "\\~");
     }
     gsub(/&amp;/, "\\&");
 

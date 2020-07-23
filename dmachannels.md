@@ -15,7 +15,7 @@ These ports control DMA at the CPU-side. In most cases, you'll additionally
 need to initialize an address (and transfer direction, transfer enabled, etc.)
 at the remote-side (eg. at the GPU-side for DMA2).<br/>
 
-#### 1F801080h+N*10h - D#_MADR - DMA base address (Channel 0..6) (R/W)
+#### 1F801080h+N\*10h - D#\_MADR - DMA base address (Channel 0..6) (R/W)
 ```
   0-23  Memory Address where the DMA will start reading from/writing to
   24-31 Not used (always zero)
@@ -30,7 +30,7 @@ hold the end-address in SyncMode=1, or the 00FFFFFFh end-code in SyncMode=2)<br/
 Note: Address bit0-1 are writeable, but any updated current/end addresses are
 word-aligned with bit0-1 forced to zero.<br/>
 
-#### 1F801084h+N*10h - D#_BCR - DMA Block Control (Channel 0..6) (R/W)
+#### 1F801084h+N\*10h - D#\_BCR - DMA Block Control (Channel 0..6) (R/W)
 For SyncMode=0 (ie. for OTC and CDROM):<br/>
 ```
   0-15  BC    Number of words (0001h..FFFFh) (or 0=10000h words)
@@ -50,10 +50,10 @@ set the blocksize larger than the buffer of the corresponding unit can hold.
 (GPU and SPU both have a 16-word buffer). A larger blocksize means faster
 transfer.<br/>
 SyncMode=1 decrements BA to zero, SyncMode=0 with chopping enabled decrements
-BC to zero (aside from that two cases, D#_BCR isn't changed during/after
+BC to zero (aside from that two cases, D#\_BCR isn't changed during/after
 transfer).<br/>
 
-#### 1F801088h+N*10h - D#_CHCR - DMA Channel Control (Channel 0..6) (R/W)
+#### 1F801088h+N\*10h - D#\_CHCR - DMA Channel Control (Channel 0..6) (R/W)
 ```
   0       Transfer Direction    (0=To Main RAM, 1=From Main RAM)
   1       Memory Address Step   (0=Forward;+4, 1=Backward;-4)
@@ -82,7 +82,7 @@ force the first block to be transferred instantly without DRQ, which isn't
 desired).<br/>
 The Start/Busy bit is automatically cleared upon COMPLETION of the transfer,
 this bit must be always set for all SyncModes when starting a transfer.<br/>
-For DMA6/OTC there are some restrictions, D6_CHCR has only three
+For DMA6/OTC there are some restrictions, D6\_CHCR has only three
 read/write-able bits: Bit24,28,30. All other bits are read-only: Bit1 is always
 1 (step=backward), and the other bits are always 0.<br/>
 

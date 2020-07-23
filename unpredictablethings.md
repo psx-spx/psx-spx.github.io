@@ -42,9 +42,9 @@ Whereas,<br/>
   (i16) write full 16bits (ignored if address isn't halfword-aligned)
   CROP  write only lower 16bit (and leave upper 16bit unchanged)
 ```
-It's somewhat "legit" to use 16bit writes on 16bit registers like RAM_SIZE,
-I_STAT, I_MASK, and Timer 0-2.<br/>
-Non-4-byte aligned 8bit/16bit writes to RAM_SIZE do crash (probably because the
+It's somewhat "legit" to use 16bit writes on 16bit registers like RAM\_SIZE,
+I\_STAT, I\_MASK, and Timer 0-2.<br/>
+Non-4-byte aligned 8bit/16bit writes to RAM\_SIZE do crash (probably because the
 "(w32)" effect is left-shifting the value, so lower 8bit become zero).<br/>
 Results on unaligned I/O port writes (via SWL/SWR opcodes) are unknown.<br/>
 
@@ -103,7 +103,7 @@ assembler not to destroy that register behind your back.<br/>
 The PSX Kernel uses "Full-Decrementing-Wasted-Stack", where "Wasted" means that
 when calling a sub-function with N parameters, then the caller must
 pre-allocate N works on stack, and the sub-function may freely use and destroy
-these words; at [SP+0..N*4-1].<br/>
+these words; at [SP+0..N\*4-1].<br/>
 
 #### Locked Locations in Memory and I/O Area
 ```
@@ -130,7 +130,7 @@ locked regions are same as for first 512MB of KUSEG.<br/>
 ```
   1F80108Ch+N*10h - D#_CHCR Mirrors - (N=0..6, for DMA channel 0..6)
 ```
-Read/writeable mirrors of DMA Control registers at 1F801088h+N*10h.<br/>
+Read/writeable mirrors of DMA Control registers at 1F801088h+N\*10h.<br/>
 
 #### Garbage Locations in I/O Area
 ```

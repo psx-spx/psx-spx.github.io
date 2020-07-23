@@ -414,7 +414,7 @@ set.<br/>
   MAC0=(((H*20000h/SZ3)+1)/2)*IR2+OFY, SY2=MAC0/10000h ;ScrY FIFO -400h..+3FFh
   MAC0=(((H*20000h/SZ3)+1)/2)*DQA+DQB, IR0=MAC0/1000h  ;Depth cueing 0..+1000h
 ```
-If the result of the "(((H*20000h/SZ3)+1)/2)" division is greater than 1FFFFh,
+If the result of the "(((H\*20000h/SZ3)+1)/2)" division is greater than 1FFFFh,
 then the division result is saturated to +1FFFFh, and the divide overflow bit
 in the FLAG register gets set; that happens if the vertex is exceeding the
 "near clip plane", ie. if it is very close to the camera (SZ3\<=H/2), exactly
@@ -475,12 +475,12 @@ Multiplies a vector with either the rotation matrix, the light matrix or the
 color matrix and then adds the translation vector or background color vector.<br/>
 The GTE also allows selection of the far color vector (FC), but this vector is
 not added correctly by the hardware: The return values are reduced to the last
-portion of the formula, ie. MAC1=(Mx13*Vx3) SAR (sf*12), and similar for MAC2
+portion of the formula, ie. MAC1=(Mx13\*Vx3) SAR (sf\*12), and similar for MAC2
 and MAC3, nethertheless, some bits in the FLAG register seem to be adjusted as
 if the full operation would have been executed. Setting Mx=3 selects a garbage
 matrix (with elements -60h, +60h, IR0, RT13, RT13, RT13, RT22, RT22, RT22).<br/>
 
-#### COP2 0A00428h+sf*80000h - 5 Cycles - SQR(sf) - Square vector
+#### COP2 0A00428h+sf\*80000h - 5 Cycles - SQR(sf) - Square vector
 ```
   [MAC1,MAC2,MAC3] = [IR1*IR1,IR2*IR2,IR3*IR3] SHR (sf*12)
   [IR1,IR2,IR3]    = [MAC1,MAC2,MAC3]    ;IR1,IR2,IR3 saturated to max 7FFFh
@@ -488,7 +488,7 @@ matrix (with elements -60h, +60h, IR0, RT13, RT13, RT13, RT22, RT22, RT22).<br/>
 Calculates the square of a vector. The result is, of course, always positive,
 so the "lm" flag for negative saturation has no effect.<br/>
 
-#### COP2 170000Ch+sf*80000h - 6 Cycles - OP(sf,lm) - Outer product of 2 vectors
+#### COP2 170000Ch+sf\*80000h - 6 Cycles - OP(sf,lm) - Outer product of 2 vectors
 ```
   [MAC1,MAC2,MAC3] = [IR3*D2-IR2*D3, IR1*D3-IR3*D1, IR2*D1-IR1*D2] SAR (sf*12)
   [IR1,IR2,IR3]    = [MAC1,MAC2,MAC3]                        ;copy result
@@ -563,7 +563,7 @@ Fifo entries are modified.<br/>
 Note: Although the SHL in GPL is theoretically undone by the SAR, 44bit
 overflows can occur internally when sf=1.<br/>
 
-#### Details on "MAC+(FC-MAC)*IR0"
+#### Details on "MAC+(FC-MAC)\*IR0"
 ```
   [IR1,IR2,IR3] = (([RFC,GFC,BFC] SHL 12) - [MAC1,MAC2,MAC3]) SAR (sf*12)
   [MAC1,MAC2,MAC3] = (([IR1,IR2,IR3] * IR0) + [MAC1,MAC2,MAC3])
@@ -572,7 +572,7 @@ Note: Above "[IR1,IR2,IR3]=(FC-MAC)" is saturated to -8000h..+7FFFh (ie. as if
 lm=0), anyways, further writes to [IR1,IR2,IR3] (within the same command) are
 saturated as usually (ie. depening on lm setting).<br/>
 
-#### Details on "(LLM*V0) SAR (sf*12)" and "(BK*1000h + LCM*IR) SAR (sf*12)"
+#### Details on "(LLM\*V0) SAR (sf\*12)" and "(BK\*1000h + LCM\*IR) SAR (sf\*12)"
 Works like MVMVA command (see there), but with fixed Tx/Vx/Mx parameters, the
 sf/lm bits can be changed and do affect the results (although normally both
 bits should be set for use with color matrices).<br/>
@@ -621,7 +621,7 @@ mechanism (based on Unsigned Newton-Raphson (UNR) algorithm):<br/>
     n = min(1FFFFh, (((n*d) + 8000h) SHR 16))    ;n=0..1FFFFh
   else n = 1FFFFh, FLAG.Bit17=1, FLAG.Bit31=1    ;n=1FFFFh plus overflow flag
 ```
-the GTE's unr_table[000h..100h] consists of following values:<br/>
+the GTE's unr\_table[000h..100h] consists of following values:<br/>
 ```
   FFh,FDh,FBh,F9h,F7h,F5h,F3h,F1h,EFh,EEh,ECh,EAh,E8h,E6h,E4h,E3h ;\
   E1h,DFh,DDh,DCh,DAh,D8h,D6h,D5h,D3h,D1h,D0h,CEh,CDh,CBh,C9h,C8h ; 00h..3Fh
@@ -641,9 +641,9 @@ the GTE's unr_table[000h..100h] consists of following values:<br/>
   07h,07h,06h,06h,05h,05h,04h,04h,03h,03h,02h,02h,01h,01h,00h,00h ;/
   00h    ;<-- one extra table entry (for "(d-7FC0h)/80h"=100h)    ;-100h
 ```
-Above can be generated as "unr_table[i]=min(0,(40000h/(i+100h)+1)/2-101h)".<br/>
+Above can be generated as "unr\_table[i]=min(0,(40000h/(i+100h)+1)/2-101h)".<br/>
 Some special cases: NNNNh/0001h uses a big multiplier (d=20000h), in practice,
-this can occur only for 0000h/0001h and 0001h/0001h (due to the H\<SZ3*2
+this can occur only for 0000h/0001h and 0001h/0001h (due to the H\<SZ3\*2
 overflow check).<br/>
 The min(1FFFFh) limit is needed for cases like FE3Fh/7F20h, F015h/780Bh, etc.
 (these do produce UNR result 20000h, and are saturated to 1FFFFh, but without

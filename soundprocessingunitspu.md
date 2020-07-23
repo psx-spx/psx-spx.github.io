@@ -79,7 +79,7 @@ The SPU is connected to a 16bit databus. 8bit/16bit/32bit reads and 16bit/32bit
 writes are implemented. However, 8bit writes are NOT implemented: 8bit writes
 to ODD addresses are simply ignored (without causing any exceptions), 8bit
 writes to EVEN addresses are executed as 16bit writes (eg. "movp r1,12345678h,
-movb [spu_port],r1" will write 5678h instead of 78h).<br/>
+movb [spu\_port],r1" will write 5678h instead of 78h).<br/>
 
 
 
@@ -89,7 +89,7 @@ totally unsupported; leaving apart that one can write uncompressed 16bit PCM
 samples to the Reverb Buffer, which can be then output at 22050Hz, as long as
 they aren't overwritten by the hardware).<br/>
 
-#### 1F801C06h+N*10h - Voice 0..23 ADPCM Start Address (R/W)
+#### 1F801C06h+N\*10h - Voice 0..23 ADPCM Start Address (R/W)
 This register holds the sample start address (not the current address, ie. the
 register doesn't increment during playback).<br/>
 ```
@@ -98,7 +98,7 @@ register doesn't increment during playback).<br/>
 Writing to this register has no effect on the currently playing voice.<br/>
 The start address is copied to the current address upon Key On.<br/>
 
-#### 1F801C0Eh+N*10h - Voice 0..23 ADPCM Repeat Address (R/W)
+#### 1F801C0Eh+N\*10h - Voice 0..23 ADPCM Repeat Address (R/W)
 If the hardware finds an ADPCM header with Loop-Start-Bit, then it copies the
 current address to the repeat addresss register.<br/>
 If the hardware finds an ADPCM header with Loop-Stop-Bit, then it copies the
@@ -162,7 +162,7 @@ two sample rates, and, XA doesn't support looping.<br/>
 
 
 ##   SPU ADPCM Pitch
-#### 1F801C04h+N*10h - Voice 0..23 ADPCM Sample Rate (R/W) (VxPitch)
+#### 1F801C04h+N\*10h - Voice 0..23 ADPCM Sample Rate (R/W) (VxPitch)
 ```
   0-15  Sample rate (0=stop, 4000h=fastest, 4001h..FFFFh=usually same as 4000h)
 ```
@@ -328,7 +328,7 @@ overflow, which has been a hardware glitch on the SNES).<br/>
 
 
 ##   SPU Volume and ADSR Generator
-#### 1F801C08h+N*10h - Voice 0..23 Attack/Decay/Sustain/Release (ADSR) (32bit)
+#### 1F801C08h+N\*10h - Voice 0..23 Attack/Decay/Sustain/Release (ADSR) (32bit)
 ```
   ____lower 16bit (at 1F801C08h+N*10h)___________________________________
   15    Attack Mode       (0=Linear, 1=Exponential)
@@ -357,8 +357,8 @@ and switches from Sustain to Release when the software sets the Key OFF flag.<br
 
 #### 1F801D80h - Mainvolume left
 #### 1F801D82h - Mainvolume right
-#### 1F801C00h+N*10h - Voice 0..23 Volume Left
-#### 1F801C02h+N*10h - Voice 0..23 Volume Right
+#### 1F801C00h+N\*10h - Voice 0..23 Volume Left
+#### 1F801C02h+N\*10h - Voice 0..23 Volume Right
 Fixed Volume Mode (when Bit15=0):<br/>
 ```
   15    Must be zero      (0=Volume Mode)
@@ -408,7 +408,7 @@ ability to convert stereo CD output to mono, or to swap left/right channels).<br
 Exponential Increase is a fake (simply changes to a slower linear increase rate
 at higher volume levels).<br/>
 
-#### 1F801C0Ch+N*10h - Voice 0..23 Current ADSR volume (R/W)
+#### 1F801C0Ch+N\*10h - Voice 0..23 Current ADSR volume (R/W)
 ```
   15-0  Current ADSR Volume  (0..+7FFFh) (or -8000h..+7FFFh on manual write)
 ```
@@ -420,13 +420,13 @@ overwrite the setting (from another internal register) whenever applying a new
 Step?!<br/>
 
 #### 1F801DB8h - Current Main Volume Left/Right
-#### 1F801E00h+voice*04h - Voice 0..23 Current Volume Left/Right
+#### 1F801E00h+voice\*04h - Voice 0..23 Current Volume Left/Right
 ```
   0-15  Current Volume Left  (-8000h..+7FFFh)
   16-31 Current Volume Right (-8000h..+7FFFh)
 ```
 These are internal registers, normally not used by software (the Volume
-settings are usually set via Ports 1F801D80h and 1F801C00h+N*10h).<br/>
+settings are usually set via Ports 1F801D80h and 1F801C00h+N\*10h).<br/>
 
 #### Note
 Negative volumes are phase inverted, otherwise same as positive.<br/>
@@ -834,7 +834,7 @@ vIIR works only in range -7FFFh..+7FFFh. When set to -8000h, the multiplication
 by -8000h is still done correctly, but, the final result (the value written to
 memory) gets negated (this is a pretty strange feature, it is NOT a simple
 overflow bug, it does affect the "+[mLSAME-2]" addition; although that part
-normally shouldn't be affected by the "*vIIR" multiplication). Similar effects
+normally shouldn't be affected by the "\*vIIR" multiplication). Similar effects
 might (?) occur on some other volume registers when they are set to -8000h.<br/>
 
 #### Speed of Sound

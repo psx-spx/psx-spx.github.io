@@ -6,10 +6,10 @@ GTE.TXT by doomed@c64.org / psx.rules.org<br/>
 SPU.TXT by doomed@c64.org / psx.rules.org<br/>
 CDINFO.TXT by doomed with big thanks to Barubary, who rewrote a large part<br/>
 SYSTEM.TXT by doomed with thanx to Herozero for breakpoint info<br/>
-PS_ENG.TXT PlayStation PAD/Memory Interface Protocol by HFB03536<br/>
+PS\_ENG.TXT PlayStation PAD/Memory Interface Protocol by HFB03536<br/>
 IDT79R3041 Hardware User's Manual by Integrated Device Technology, Inc.<br/>
 IDTR3051, R3052 RISController User's Manual by Integrated Device Technology<br/>
-PSX.* by Joshua Walker (additional details in various distorted file formats)<br/>
+PSX.\* by Joshua Walker (additional details in various distorted file formats)<br/>
 LIBMIRAGE by Rok; info/source code for various cdrom-image formats<br/>
 psxdev.ru; cdrom sub-cpu decapping<br/>
 

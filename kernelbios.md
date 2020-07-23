@@ -131,8 +131,8 @@ total size (in bytes) of the corresponding control blocks.<br/>
   00000148h  -    Unused/reserved
   00000150h  DCB  Device Control Blocks       (addr=fixed, size=0Ah*50h)
 ```
-File handles (fd=00h..0Fh) can be simply converted as fcb=[140h]+fd*2Ch.<br/>
-Event handles (event=F10000xxh) as evcb=[120h]+(event AND FFFFh)*1Ch.<br/>
+File handles (fd=00h..0Fh) can be simply converted as fcb=[140h]+fd\*2Ch.<br/>
+Event handles (event=F10000xxh) as evcb=[120h]+(event AND FFFFh)\*1Ch.<br/>
 
 #### Garbage Area at Address 00000000h
 The first some bytes of memory address 00000000h aren't actually used by the
@@ -163,7 +163,7 @@ Argument(s) are passed in R4,R5,R6,R7,[SP+10h],[SP+14h],etc.<br/>
 Caution: When calling a sub-function with N parameters, the caller MUST always
 allocate N words on the stack, and, although the first four parameters are
 passed in registers rather than on stack, the sub-function is allowed to
-use/destroy these words at [SP+0..N*4-1].<br/>
+use/destroy these words at [SP+0..N\*4-1].<br/>
 BIOS Functions (and custom callback functions) are allowed to destroy registers
 R1-R15, R24-R25, R31 (RA), and HI/LO. Registers R16-R23, R29 (SP), and R30 (FP)
 must be left unchanged (if the function uses that registers, then it must
@@ -513,7 +513,7 @@ The 20bit immediate in the "syscall imm" opcode is unused (should be zero).<br/>
 
 #### BREAK-Functions (Break opcode with function number in opcode's immediate)
 BRK opcodes may be used within devkits, however, the standard BIOS simply calls
-DeliverEvent(F0000010h,1000h) and SystemError_A_40h upon any BRK opcodes (as
+DeliverEvent(F0000010h,1000h) and SystemError\_A\_40h upon any BRK opcodes (as
 well as on any other unresolved exceptions).<br/>
 ```
   BRK(1C00h) Division by zero (commonly checked/invoked by software)
@@ -554,7 +554,7 @@ Opens a file on the target device for io. Accessmode is set like this:<br/>
   bit16-31 Number of memory card blocks for a new file on the memory card
 ```
 The PSX can have a maximum of 16 files open at any time, of which, 2 handles
-are always reserved for std_io, so only 14 handles are available for actual
+are always reserved for std\_io, so only 14 handles are available for actual
 files. Some functions (chdir, testdevice, FileDelete, FileUndelete,
 FormatDevice, firstfile, FileRename) are temporarily allocating 1 filehandle
 (FileRename tries to use 2 filehandles, but, it does accidently use only 1
@@ -621,10 +621,10 @@ stored in RAM, so chdir is causing useless SLOW read/seek delays).<br/>
 #### B(42h) - firstfile(filename,direntry) - Find first file to match the name
 Returns r2=direntry (or r2=0 if no matching files).<br/>
 Searches for the first file to match the specified filename; the filename may
-contain "?" and "*" wildcards. "*" means to ignore ALL following characters;
-accordingly one cannot specify any further characters after the "*" (eg.
-"DATA*" would work, but "*.DAT" won't work). "?" is meant to ignore a single
-character cell. Note: The "?" wildcards (but not "*") can be used also in all
+contain "?" and "\*" wildcards. "\*" means to ignore ALL following characters;
+accordingly one cannot specify any further characters after the "\*" (eg.
+"DATA\*" would work, but "\*.DAT" won't work). "?" is meant to ignore a single
+character cell. Note: The "?" wildcards (but not "\*") can be used also in all
 other file functions; causing the function to use the first matching name (eg.
 FileDelete "????" would erase the first matching file, not all matching files).<br/>
 Start the name with the device you want to address. (ie. pcdrv:) Different
@@ -659,7 +659,7 @@ operations.<br/>
 Returns r2=direntry (or r2=0 if no more matching files).<br/>
 Uses the settings of a previous firstfile/nextfile command.<br/>
 
-#### B(44h) - FileRename(old_filename, new_filename)
+#### B(44h) - FileRename(old\_filename, new\_filename)
 Returns 1=okay, or 0=failed.<br/>
 
 #### B(45h) - FileDelete(filename) - Delete a file on target device
@@ -778,18 +778,18 @@ BUG: Part3 accidently treats the first 4 characters of the exename as memory
 address (causing an invalid memory address exception on address 6F726463h, for
 "cdrom:filename.exe").<br/>
 
-#### A(9Ch) - SetConf(num_EvCB, num_TCB, stacktop)
+#### A(9Ch) - SetConf(num\_EvCB, num\_TCB, stacktop)
 Changes the number of EvCBs and TCBs, and the stacktop. That values are usually
 initialized from the settings in the SYSTEM.CNF file, so using this function
 usually shouldn't ever be required.<br/>
 The function deallocates all old ExCBs, EvCBs, TCBs (so all Exception handlers,
 Events, and Threads (except the current one) are lost, and all other memory
-that may have been allocated via alloc_kernel_memory(size) is deallocated, too.
+that may have been allocated via alloc\_kernel\_memory(size) is deallocated, too.
 It does then allocate the new control blocks, and enqueue the default handlers.
 Despite of the changed stacktop, the current stack pointer is kept intact, and
 the function returns to the caller.<br/>
 
-#### A(9Dh) - GetConf(num_EvCB_dst, num_TCB_dst, stacktop_dst)
+#### A(9Dh) - GetConf(num\_EvCB\_dst, num\_TCB\_dst, stacktop\_dst)
 Returns the number of EvCBs, TCBs, and the initial stacktop. There's no return
 value in the R2 register, instead, the three 32bit return values are stored at
 the specified "dst" addresses.<br/>
@@ -822,7 +822,7 @@ to:<br/>
   init_card  B(4Ah)
   and by intro/boot code
 ```
-for load_file/load_exec, IRQ2 (cdrom) and IRQ3 (dma) need to be enabled, so the
+for load\_file/load\_exec, IRQ2 (cdrom) and IRQ3 (dma) need to be enabled, so the
 "disable all IRQs" workaround cannot be used for that functions, however, one
 can/should disable as many IRQs as possible, ie. everything except IRQ2/IRQ3,
 and all DMA interrupts except DMA3 (cdrom).<br/>
@@ -942,7 +942,7 @@ Memory Cards aka Backup Units (bu) are basically accessed via normal file
 functions, with device names "bu00:" (Slot 1) and "bu10:" (Slot 2),<br/>
 [BIOS File Functions](kernelbios.md#bios-file-functions)<br/>
 Before using the file functions for memory cards, first call
-InitCard(pad_enable), then StartCard(), and then _bu_init().<br/>
+InitCard(pad\_enable), then StartCard(), and then \_bu\_init().<br/>
 
 #### File Header, Filesize, and Sector Alignment
 The first 100h..200h bytes (2..4 sectors) of the file must contain the title
@@ -987,7 +987,7 @@ immediately after invoking the access (which does then continue on interrupt
 level, and does return an event when finished).<br/>
 The file "FileRead" and "FileWrite" functions act asynchronous when accessmode
 bit15 is set when opening the file. Additionally, the A(ACh)
-_card_async_load_directory(port) function can be used to tell the BIOS to load
+\_card\_async\_load\_directory(port) function can be used to tell the BIOS to load
 the directory entries and broken sector list to its internal RAM buffers (eg.
 during the games title screen, so the BIOS doesn't need to load that data once
 when the game enters its memory card menu). All other functions like FileDelete
@@ -1007,7 +1007,7 @@ cards (via Multitap adaptors). Device/port names "bu01:", "bu02:", "bu03:"
 allow to access extra memory carts in slot1 (and "bu11:", "bu12:", "bu13:" in
 slot2). Namely, those names will send values 82h, 83h, 84h to the memory card
 slot (instead of the normal 81h value).<br/>
-However, the BIOS directory_buffer and broken_sector_list do support only two
+However, the BIOS directory\_buffer and broken\_sector\_list do support only two
 memory cards (one in slot1 and one in slot2). So, trying to access more memory
 cards may cause great data corruption (though there might be a way to get the
 BIOS to reload those buffers before accessing a different memory card).<br/>
@@ -1016,52 +1016,52 @@ accessing only two memory cards. Trying to use the BIOS to access up to eight
 memory cards would be very-extremly-very slow, which would be more annoying
 than useful.<br/>
 
-#### B(4Ah) - InitCard(pad_enable)  ;uses/destroys k0/k1 !!!
+#### B(4Ah) - InitCard(pad\_enable)  ;uses/destroys k0/k1 !!!
 #### B(4Bh) - StartCard()
 #### B(4Ch) - StopCard()
-#### A(55h) or A(70h) - _bu_init()
+#### A(55h) or A(70h) - \_bu\_init()
 
 ```
   --- Below are some lower level memory card functions ---
 ```
 
-#### A(ABh) - _card_info(port)
-#### B(4Dh) - _card_info_subfunc(port)  ;subfunction for "_card_info"
-Can be used to check if the most recent call to write_card_sector has completed
+#### A(ABh) - \_card\_info(port)
+#### B(4Dh) - \_card\_info\_subfunc(port)  ;subfunction for "\_card\_info"
+Can be used to check if the most recent call to write\_card\_sector has completed
 okay. Issues an incomplete dummy read command (similar to B(4Fh) -
-read_card_sector). The read command is aborted once when receiving the status
+read\_card\_sector). The read command is aborted once when receiving the status
 byte from the memory card (the actual data transfer is skipped).<br/>
 
-#### A(AFh) - card_write_test(port)  ;not supported by old CEX-1000 version
+#### A(AFh) - card\_write\_test(port)  ;not supported by old CEX-1000 version
 Resets the card changed flag. For some strange reason, this flag isn't
 automatically reset after reading the flag, instead, the flag is reset upon
 sector writes. To do that, this function issues a dummy write to sector 3Fh.<br/>
 
-#### B(50h) - allow_new_card()
+#### B(50h) - allow\_new\_card()
 Normally any memory card read/write functions fail if the BIOS senses the card
 change flag to be set. Calling this function tells the BIOS to ignore the card
 change flag on the next read/write operation (the function is internally used
-when loading the "MC" ID from sector 0, and when calling the card_write_test
+when loading the "MC" ID from sector 0, and when calling the card\_write\_test
 function to acknowledge the card change flag).<br/>
 
-#### B(4Eh) - write_card_sector(port,sector,src)
-#### B(4Fh) - read_card_sector(port,sector,dst)
+#### B(4Eh) - write\_card\_sector(port,sector,src)
+#### B(4Fh) - read\_card\_sector(port,sector,dst)
 Invokes asynchronous reading/writing of a single sector. The function returns
 1=okay, or 0=failed (on invalid sector numbers). The actual I/O is done on IRQ
 level, completion of the I/O command transmission can be checked, among others,
-via get/wait_card_status(slot) functions (with slot=port/10h).<br/>
+via get/wait\_card\_status(slot) functions (with slot=port/10h).<br/>
 In case of the write function, completion of the \<transmission\> does NOT
 mean that the actual \<writing\> has completed, instead, write errors are
 indicated upon completion of the \<next sector\> read/write transmission
-(or, if there are no further sectors to be accessed; one can use _card_info to
+(or, if there are no further sectors to be accessed; one can use \_card\_info to
 verify completion of the last written sector).<br/>
 The sector number should be in range of 0..3FFh, for some strange reason,
 probably a BUG, the function also accepts sector 400h. The specified sector
 number is directly accessed (it is NOT parsed through the broken sector
 replacement list).<br/>
 
-#### B(5Ch) - get_card_status(slot)
-#### B(5Dh) - wait_card_status(slot)
+#### B(5Ch) - get\_card\_status(slot)
+#### B(5Dh) - wait\_card\_status(slot)
 Returns the status of the most recent I/O command, possible values are:<br/>
 ```
   01h=ready
@@ -1071,29 +1071,29 @@ Returns the status of the most recent I/O command, possible values are:<br/>
   11h=failed/timeout (eg. when no cartridge inserted)
   21h=failed/general error
 ```
-get_card_status returns immediately, wait_card_status waits until a non-busy
+get\_card\_status returns immediately, wait\_card\_status waits until a non-busy
 state occurs.<br/>
 
-#### A(A7h) - bu_callback_okay()
-#### A(A8h) - bu_callback_err_write()
-#### A(A9h) - bu_callback_err_busy()
-#### A(AAh) - bu_callback_err_eject()
-#### A(AEh) - bu_callback_err_prev_write()
+#### A(A7h) - bu\_callback\_okay()
+#### A(A8h) - bu\_callback\_err\_write()
+#### A(A9h) - bu\_callback\_err\_busy()
+#### A(AAh) - bu\_callback\_err\_eject()
+#### A(AEh) - bu\_callback\_err\_prev\_write()
 These five callback functions are internally used by the BIOS, notifying other
 BIOS functions about (un-)successful completion of memory card I/O commands.<br/>
 
-#### B(58h) - get_bu_callback_port()
-This is a subfunction for the five bu_callback_xxx functions (indicating
+#### B(58h) - get\_bu\_callback\_port()
+This is a subfunction for the five bu\_callback\_xxx functions (indicating
 whether the callback occured for a slot1 or slot2 access).<br/>
 
-#### A(ACh) - _card_async_load_directory(port)
+#### A(ACh) - \_card\_async\_load\_directory(port)
 Invokes asynchronous reading of the memory card directory. The function isn't
 too useful because the BIOS tends to read the directory automatically in
 various places in synchronous mode, so there isn't too much chance to replace
 the automatic synchronous reading by asynchronous reading.<br/>
 
-#### A(ADh) - set_card_auto_format(flag)
-Can be used to enable/disable auto format (0=off, 1=on). The _bu_init function
+#### A(ADh) - set\_card\_auto\_format(flag)
+Can be used to enable/disable auto format (0=off, 1=on). The \_bu\_init function
 initializes auto format as disabled. If auto format is enabled, then the BIOS
 does automatically format memory cards if it has failed to read the "MC" ID
 bytes on sector 0. Although potentially useful, activating this feature is
@@ -1102,8 +1102,8 @@ due to improperly inserted cards with dirty contacts, so it'd be better to
 prompt the user whether or not to format the card, rather than doing that
 automatically).<br/>
 
-#### C(1Ah) - set_card_find_mode(mode)
-#### C(1Dh) - get_card_find_mode()
+#### C(1Ah) - set\_card\_find\_mode(mode)
+#### C(1Dh) - get\_card\_find\_mode()
 Allows to get/set the card find mode (0=normal, 1=find deleted files), the mode
 setting affects only the firstfile/nextfile functions. All other file functions
 are used fixed mode settings (always mode=0 for FileOpen, FileRename,
@@ -1330,7 +1330,7 @@ This function is usually called by the kernel, undelivers all events that are
 enabled/ready, and that have mode=2000h, and that have the specified class and
 spec values. Undeliver means that the events are marked as enabled/busy.<br/>
 
-#### C(04h) get_free_EvCB_slot()
+#### C(04h) get\_free\_EvCB\_slot()
 A subfunction for OpenEvent.<br/>
 
 #### Event Classes
@@ -1482,7 +1482,7 @@ notifications from the BIOS).<br/>
 
 
 ##   BIOS Thread Functions
-#### B(0Eh) OpenThread(reg_PC,reg_SP_FP,reg_GP)
+#### B(0Eh) OpenThread(reg\_PC,reg\_SP\_FP,reg\_GP)
 Searches a free TCB, marks it as used, and stores the inital program counter
 (PC), global pointer (GP aka R28), stack pointer (SP aka R29), and frame
 pointer (FP aka R30) (using the same value for SP and FP). All other registers
@@ -1530,7 +1530,7 @@ back to that thread. Mind that other registers (I/O Ports or GTE registers
 aren't stored automatically, so, when needed, they need to be pushed/popped by
 software before/after ChangeThread).<br/>
 
-#### C(05h) get_free_TCB_slot()
+#### C(05h) get\_free\_TCB\_slot()
 Subfunction for OpenThread, returns the number of the first free TCB (usually
 in range 0..3) or FFFFFFFFh if there's no free TCB.<br/>
 
@@ -1558,33 +1558,33 @@ the two handlers).<br/>
 So, although Vblank IRQs are most important for games, the PSX BIOS doesn't
 actually allow to use them for purposes other than joypad access. A possible
 workaround is to examine the status byte in one of the joypad buffers (ie. the
-InitPad(buf1,22h,buf2,22h) buffers). Eg. a wait_for_vblank function could look
+InitPad(buf1,22h,buf2,22h) buffers). Eg. a wait\_for\_vblank function could look
 like so: set buf1[0]=55h, then wait until buf1[0]=00h or buf1[0]=FFh.<br/>
 
-#### B(02h) init_timer(t,reload,flags)
-When t=0..2, resets the old timer mode by setting [1F801104h+t*16]=0000h,
-applies the reload value by [1F801108h+t*16]=reload, computes the new mode:<br/>
+#### B(02h) init\_timer(t,reload,flags)
+When t=0..2, resets the old timer mode by setting [1F801104h+t\*16]=0000h,
+applies the reload value by [1F801108h+t\*16]=reload, computes the new mode:<br/>
 ```
   if flags.bit4=0 then mode=0048h else mode=0049h
   if flags.bit0=0 then mode=mode OR 100h
   if flags.bit12=1 then mode=mode OR 10h
 ```
-and applies it by setting [1F801104h+t*16]=mode, and returns 1. Does nothing
+and applies it by setting [1F801104h+t\*16]=mode, and returns 1. Does nothing
 and returns zero for t\>2.<br/>
 
-#### B(03h) get_timer(t)
-Reads the current timer value: Returns halfword[1F801100h+t*16] for t=0..2.
+#### B(03h) get\_timer(t)
+Reads the current timer value: Returns halfword[1F801100h+t\*16] for t=0..2.
 Does nothing and returns zero for t\>2.<br/>
 
-#### B(04h) enable_timer_irq(t)
-#### B(05h) disable_timer_irq(t)
+#### B(04h) enable\_timer\_irq(t)
+#### B(05h) disable\_timer\_irq(t)
 Enables/disables timer or vblank interrupt enable bits in [1F801074h], bit4,5,6
 for t=0,1,2, or bit0 for t=3, or random/garbage bits for t\>3. The enable
 function returns 1 for t=0..2, and 0 for t=3. The disable function returns
 always 1.<br/>
 
-#### B(06h) restart_timer(t)
-Sets the current timer value to zero: Sets [1F801100h+t*16]=0000h and returns 1
+#### B(06h) restart\_timer(t)
+Sets the current timer value to zero: Sets [1F801100h+t\*16]=0000h and returns 1
 for t=0..2. Does nothing and returns zero for t\>2.<br/>
 
 #### C(0Ah) - ChangeClearRCnt(t,flag) ;root counter (aka timer)
@@ -1609,8 +1609,8 @@ pads (such like for controlling rumble motors).<br/>
 Memorizes the desired buf1/buf2 addresses, zerofills the buffers by using the
 siz1/siz2 buffer size values (which should be 22h bytes each). And does some
 initialization on the PadCardIrq element (but doesn't enqueue it, that must be
-done by a following call to StartPad), and does set the "pad_enable_flag", that
-flag can be also set/cleared via InitCard(pad_enable), where it selects if the
+done by a following call to StartPad), and does set the "pad\_enable\_flag", that
+flag can be also set/cleared via InitCard(pad\_enable), where it selects if the
 Pads are kept handled together with Memory Cards. buf1/buf2 are having the
 following format:<br/>
 ```
@@ -1622,7 +1622,7 @@ Note: InitPad does initially zerofill the buffers, so, until the first IRQ is
 processed, the initial status is 00h=okay, with buttons=0000h (all buttons
 pressed), to fix that situation, change the two status bytes to FFh after
 calling InitPad (or alternately, reject ID1=00h).<br/>
-Once when the PadCardIrq is enqueued via StartPad, and while "pad_enable_flag"
+Once when the PadCardIrq is enqueued via StartPad, and while "pad\_enable\_flag"
 is set, the data for (both) Pad1 and Pad2 is read on Vblank interrupts, and
 stored in the buffers, the IRQ handler stores up to 22h bytes in the buffer
 (regardless of the siz1/siz2 values) (eg. a Multitap adaptor uses all 22h
@@ -1636,7 +1636,7 @@ additionally initialize some flags.<br/>
 Dequeues the PadCardIrq handler. Note that this handler is also used for memory
 cards, so it'll "stop" cards, too.<br/>
 
-#### B(15h) - OutdatedPadInitAndStart(type, button_dest, unused, unused)
+#### B(15h) - OutdatedPadInitAndStart(type, button\_dest, unused, unused)
 This is an extremely bizarre and restrictive function - don't use! The function
 fails unless type is 20000000h or 20000001h (the type value has no other
 function). The function uses "buf1/buf2" addresses that are located somewhere
@@ -1645,7 +1645,7 @@ internal buffers is to use the ugly "OutdatedPadGetButtons()" function. For
 some strange reason it FFh-fills buf1/buf2, and does then call
 InitPad(buf1,22h,buf2,22) (which does immediately 00h-fill the previously
 FFh-filled buffers), and does then call StartPad().<br/>
-Finally, it does memorize the "button_dest" address (see
+Finally, it does memorize the "button\_dest" address (see
 OutdatedPadGetButtons() for details on that value). The two unused parameters
 have no function, however, they are internally written back to the stack
 locations reserved for parameter 2 and 3, ie. at [SP+08h] and [SP+0Ch] on the
@@ -1654,13 +1654,13 @@ allocated on stack. Return value is 2 (or 0 if type was disliked).<br/>
 
 #### B(16h) - OutdatedPadGetButtons()
 This is a very ugly function, using the internal "buf1/buf2" values from
-"OutdatedPadInitAndStart" and the "button_dest" value that was passed to that
+"OutdatedPadInitAndStart" and the "button\_dest" value that was passed to that
 function.<br/>
-If "button_dest" is non-zero, then this function is automatically called by the
-PadCardIrq handler, and stores it's return value at [button_dest] (where it may
-be read by the main program). If "button_dest" is zero, then it isn't called
+If "button\_dest" is non-zero, then this function is automatically called by the
+PadCardIrq handler, and stores it's return value at [button\_dest] (where it may
+be read by the main program). If "button\_dest" is zero, then it isn't called
 automatically, and it \<can\> be called manually (with return value in R2),
-however, it does additionally write the return value to [button_dest], ie. to
+however, it does additionally write the return value to [button\_dest], ie. to
 [00000000h] in this case, destroying that memory location.<br/>
 The return value itself is useless garbage: The lower 16bit contain the pad1
 buttons, the upper 16bit the pad2 buttons, of which, both values have reversed
@@ -1678,23 +1678,23 @@ other ID values, or disconnected joypads, cause the halfword to be set to FFFFh
 #### A(48h) - SendGP1Command(gp1cmd)
 Writes [1F801814h]=gp1cmd. There's no return value (r2 is left unchanged).<br/>
 
-#### A(49h) - GPU_cw(gp0cmd)      ;send GP0 command word
-Calls gpu_sync(), and does then write [1F801810h]=gp0cmd. Returns the return
-value from the gpu_sync() call.<br/>
+#### A(49h) - GPU\_cw(gp0cmd)      ;send GP0 command word
+Calls gpu\_sync(), and does then write [1F801810h]=gp0cmd. Returns the return
+value from the gpu\_sync() call.<br/>
 
-#### A(4Ah) - GPU_cwp(src,num) ;send GP0 command word and parameter words
-Calls gpu_sync(), and does then copy "num" words from [src and up] to
+#### A(4Ah) - GPU\_cwp(src,num) ;send GP0 command word and parameter words
+Calls gpu\_sync(), and does then copy "num" words from [src and up] to
 [1F801810h], src should usually point to a command word, followed by num-1
 parameter words. Transfer is done by software (without DMA). Always returns 0.<br/>
 
-#### A(4Bh) - send_gpu_linked_list(src)
-Transfer an OT via DMA. Calls gpu_sync(), and does then write
+#### A(4Bh) - send\_gpu\_linked\_list(src)
+Transfer an OT via DMA. Calls gpu\_sync(), and does then write
 [1F801814h]=4000002h, [1F8010F4h]=0, [1F8010F0h]=[1F8010F0h] OR 800h,
 [1F8010A0h]=src, [1F8010A4h]=0, [1F8010A8h]=1000401h. The function does
 additionally output a bunch of TTY status messages via printf. The function
 doesn't wait until the DMA is completed. There's no return value.<br/>
 
-#### A(4Ch) - gpu_abort_dma()
+#### A(4Ch) - gpu\_abort\_dma()
 Writes [1F8010A8h]=401h, [1F801814h]=4000000h, [1F801814h]=2000000h,
 [1F801814h]=1000000h. Ie. stops GPU DMA, and issues GP1(4), GP1(2), GP1(1).
 Returns 1F801814h, ie. the I/O address.<br/>
@@ -1702,30 +1702,30 @@ Returns 1F801814h, ie. the I/O address.<br/>
 #### A(4Dh) - GetGPUStatus()
 Reads [1F801814h] and returns that value.<br/>
 
-#### A(46h) - GPU_dw(Xdst,Ydst,Xsiz,Ysiz,src)
-Waits until GPUSTAT.Bit26 is set (unlike gpu_sync, which waits for Bit28), and
+#### A(46h) - GPU\_dw(Xdst,Ydst,Xsiz,Ysiz,src)
+Waits until GPUSTAT.Bit26 is set (unlike gpu\_sync, which waits for Bit28), and
 does then [1F801810h]=A0000000h, [1F801810h]=YdstXdst, [1F801810h]=YsizXsiz,
 and finally transfers "N" words from [src and up] to [1F801810h], where "N" is
-"Xsiz*Ysiz/2". The data is transferred by software (without DMA) (by code
+"Xsiz\*Ysiz/2". The data is transferred by software (without DMA) (by code
 executed in the uncached BIOS region with high waitstates, so the data transfer
 is very SLOW).<br/>
-Caution: If "Xsiz*Ysiz" is odd, then the last halfword is NOT transferred, so
+Caution: If "Xsiz\*Ysiz" is odd, then the last halfword is NOT transferred, so
 the GPU stays waiting for the last data value.<br/>
-Returns [SP+04h]=Ydst, [SP+08h]=Xsiz, [SP+0Ch]=Ysiz, [SP+10h]=src+N*4, and
-R2=src=N*4.<br/>
+Returns [SP+04h]=Ydst, [SP+08h]=Xsiz, [SP+0Ch]=Ysiz, [SP+10h]=src+N\*4, and
+R2=src=N\*4.<br/>
 
-#### A(47h) - gpu_send_dma(Xdst,Ydst,Xsiz,Ysiz,src)
-Calls gpu_sync(), writes [1F801810h]=A0000000h, [1F801814h]=4000002h,
-[1F8010F0h]=[1F8010F0h] OR 800h, [1F8010A0h]=src, [1F8010A4h]=N*10000h+10h
-(where N="Xsiz*Ysiz/32"), [1F8010A8h]=1000201h.<br/>
-Caution: If "Xsiz*Ysiz" is not a multiple of 32, then the last halfword(s) are
+#### A(47h) - gpu\_send\_dma(Xdst,Ydst,Xsiz,Ysiz,src)
+Calls gpu\_sync(), writes [1F801810h]=A0000000h, [1F801814h]=4000002h,
+[1F8010F0h]=[1F8010F0h] OR 800h, [1F8010A0h]=src, [1F8010A4h]=N\*10000h+10h
+(where N="Xsiz\*Ysiz/32"), [1F8010A8h]=1000201h.<br/>
+Caution: If "Xsiz\*Ysiz" is not a multiple of 32, then the last halfword(s) are
 NOT transferred, so the GPU stays waiting for that values.<br/>
 Returns R2=1F801810h, and [SP+04h]=Ydst, [SP+08h]=Xsiz, [SP+0Ch]=Ysiz.<br/>
 
-#### A(4Eh) - gpu_sync()
+#### A(4Eh) - gpu\_sync()
 If DMA is off (when GPUSTAT.Bit29-30 are zero): Waits until GPUSTAT.Bit28=1 (or
 until timeout).<br/>
-If DMA is on: Waits until D2_CHCR.Bit24=0 (or until timeout), and does then
+If DMA is on: Waits until D2\_CHCR.Bit24=0 (or until timeout), and does then
 wait until GPUSTAT.Bit28=1 (without timeout, ie. may hang forever), and does
 then turn off DMA via GP1(04h).<br/>
 Returns 0 (or -1 in case of timeout, however, the timeout values are very big,
@@ -1752,17 +1752,17 @@ handle it may destroy memory at [buf-4], or trigger a memory exception (for
 example, when buf=0).<br/>
 
 #### A(37h) - calloc(sizx, sizy)     ;SLOW!
-Allocates xsiz*ysiz bytes by calling malloc(xsiz*ysiz), and, unlike malloc, it
+Allocates xsiz\*ysiz bytes by calling malloc(xsiz\*ysiz), and, unlike malloc, it
 does additionally zerofill the memory via SLOW "bzero" function. Returns the
 address of the memory block (or zero if failed).<br/>
 
-#### A(38h) - realloc(old_buf, new_size)   ;SLOW!
-If "old_buf" is zero, executes malloc(new_size), and returns r2=new_buf (or
-0=failed). Else, if "new_size" is zero, executes free(old_buf), and returns
-r2=garbage. Else, executes malloc(new_size), bcopy(old_buf,new_buf,new_size),
-and free(old_buf), and returns r2=new_buf (or 0=failed).<br/>
+#### A(38h) - realloc(old\_buf, new\_size)   ;SLOW!
+If "old\_buf" is zero, executes malloc(new\_size), and returns r2=new\_buf (or
+0=failed). Else, if "new\_size" is zero, executes free(old\_buf), and returns
+r2=garbage. Else, executes malloc(new\_size), bcopy(old\_buf,new\_buf,new\_size),
+and free(old\_buf), and returns r2=new\_buf (or 0=failed).<br/>
 Caution: The bcopy function is SLOW, and realloc does accidently copy
-"new_size" bytes from old_buf, so, if the old_size was smaller than new_size
+"new\_size" bytes from old\_buf, so, if the old\_size was smaller than new\_size
 then it'll copy whatever garbage data - in worst case, if it exceeds the top of
 the 2MB RAM region, it may crash with a locked memory exception, although
 that'd happen only if SetMemSize(2) was used to restrict RAM to 2MBs.<br/>
@@ -1777,11 +1777,11 @@ may use it to deallocate all old memory).<br/>
 The heap is used only by malloc/realloc/calloc/free, and by the "qsort"
 function.<br/>
 
-#### B(00h) alloc_kernel_memory(size)
-#### B(01h) free_kernel_memory(buf)
+#### B(00h) alloc\_kernel\_memory(size)
+#### B(01h) free\_kernel\_memory(buf)
 Same as malloc/free, but, instead of the heap, manages the 8kbyte control block
 memory at A000E000h..A000FFFFh. This region is used by the kernel to allocate
-ExCBs (4x08h bytes), EvCBs (N*1Ch bytes), TCBs (N*0C0h bytes), and the process
+ExCBs (4x08h bytes), EvCBs (N\*1Ch bytes), TCBs (N\*0C0h bytes), and the process
 control block (1x04h bytes). Unlike the heap, the BIOS does automatically
 initialize this memory region via SysInitMemory(addr,size), and does
 autimatically allocate the above data (where the number of EvCBs and TCBs is as
@@ -1931,14 +1931,14 @@ Returns the index (relative to src) of that occurence. If there was no
 occurence, then it returns the length of src. That silly return values do not
 actually indicate if an occurence has been found or not (unless one checks for
 [src+index]=00h or so).<br/>
-***<br/>
+\*\*\*<br/>
 "The strcspn() function shall compute the length (in bytes) of the maximum
 initial segment of the string pointed to by s1 which consists entirely of bytes
 not from the string pointed to by s2."<br/>
 "The strspn() function shall compute the length (in bytes) of the maximum
 initial segment of the string pointed to by s1 which consists entirely of bytes
 from the string pointed to by s2."<br/>
-***<br/>
+\*\*\*<br/>
 Hmmmm, that'd be vice-versa?<br/>
 
 #### A(23h) - strtok(src, list) ;first call
@@ -1994,7 +1994,7 @@ to uppercase/lowercase format accordingly. Works only for char 00h..7Fh (some
 characters in range 80h..FFh are left unchanged, others are randomly "adjusted"
 by adding/subtracting 20h, and by sign-expanding the result to 32bits).<br/>
 
-#### A(0Dh) - strtol(src, src_end, base)
+#### A(0Dh) - strtol(src, src\_end, base)
 Converts a string to a number. The function skips any leading "blank"
 characters (that are, 09h..0Dh, and 20h) (ie. TAB, CR, LF, SPC, and some
 others) (some characters in range 80h..FFh are accidently treated as "blank",
@@ -2014,34 +2014,34 @@ string "o55" will be treated as 55 octal) (the only workaround would be to
 add/remove leading "0" characters, ie. "b11" or "00b11" or "0o55" would work
 okay).<br/>
 Finally, the function initializes result=0, and does then process the digits as
-"result=result*base+digit" (without any overflow checks) unless/until it
+"result=result\*base+digit" (without any overflow checks) unless/until it
 reaches an unknown digit (or when digit\>=base) (ie. the string may end with
 00h, or with any other unexpected characters).<br/>
 The function accepts both uppercase and lowercase characters (both as prefixes,
 and as numeric digits). The function returns R2=result, and
-[src_end]=end_address (ie. usually the address of the ending 00h byte; or of
+[src\_end]=end\_address (ie. usually the address of the ending 00h byte; or of
 any other unexpected end-byte). If src points to 00000000h, then the function
-returns r2=0, and leaves [src_end] unchanged.<br/>
+returns r2=0, and leaves [src\_end] unchanged.<br/>
 
-#### A(0Ch) - strtoul(src, src_end, base)
+#### A(0Ch) - strtoul(src, src\_end, base)
 Same as "strtol" except that it doesn't recognize the "-" sign prefix (ie.
 works only for unsigned numbers).<br/>
 
 #### A(10h) - atoi(src)
 #### A(11h) - atol(src)  ;exactly same as "atoi" (but slightly slower)
 Same as "strtol", except that it doesn't return the string end address in
-[src_end], and except that it defaults to base=10, but still supports prefixes,
+[src\_end], and except that it defaults to base=10, but still supports prefixes,
 allowing to use base2,8,16. CAUTION: For some super bizarre reason, this
 function treats "0" (a leading ZERO digit) as OCTAL prefix (unlike strtol,
 which uses the "o" letter as octal prefix) (the "0x" and "0b" prefixes are
 working as usually).<br/>
 
-#### A(12h) - atob(src, num_dst)
-Calls "strtol(str,src_end,10)", and does then exchange the two return values
-(ie. sets R2=[src_end], and [num_dst]=value_32bit).<br/>
+#### A(12h) - atob(src, num\_dst)
+Calls "strtol(str,src\_end,10)", and does then exchange the two return values
+(ie. sets R2=[src\_end], and [num\_dst]=value\_32bit).<br/>
 
 #### A(0Bh) - atof(src) ;USES (ABSENT) COP1 FPU !!!
-#### A(32h) - strtod(src, src_end) ;USES (ABSENT) COP1 FPU !!!
+#### A(32h) - strtod(src, src\_end) ;USES (ABSENT) COP1 FPU !!!
 These functions are intended to convert strings to floating point numbers,
 however, the functions are accidently compiled for MIPS processors with COP1
 floating point unit (which is not installed in the PSX, nor does the BIOS
@@ -2058,7 +2058,7 @@ values.<br/>
 
 ##   BIOS Misc Functions
 #### A(2Fh) - rand()
-Advances the random generator as "x=x*41C64E6Dh+3039h" (aka plus 12345
+Advances the random generator as "x=x\*41C64E6Dh+3039h" (aka plus 12345
 decimal), and returns a 15bit random value "R2=(x/10000h) AND 7FFFh".<br/>
 
 #### A(30h) - srand(seed)
@@ -2122,9 +2122,9 @@ be, if it'd be in the array). Both functions return the address of the element
 #### C(19h) - ioabort(txt1,txt2)
 Displays the two strings on the TTY (in some cases the BIOS does accidently
 pass garbage instead of the 2nd string though). And does then execute
-ioabort_raw(1), see there for more details.<br/>
+ioabort\_raw(1), see there for more details.<br/>
 
-#### A(B2h) - ioabort_raw(param)  ;not supported by old CEX-1000 version
+#### A(B2h) - ioabort\_raw(param)  ;not supported by old CEX-1000 version
 Executes "RestoreState(ioabortbuffer,param)". Internally used to recover from
 failed I/O operations, param should be nonzero to notify the SaveState caller
 that the abort has occurred.<br/>
@@ -2153,7 +2153,7 @@ code at RA, ie. usually to the caller of the original SaveState call) (since
 SaveState returns 0, "param" should be usually 1, or another non-zero value to
 inidicate that RestoreState has occurred). See SaveState for further details.<br/>
 
-#### A(53h) - set_ioabort_handler(src)  ;PS2 only  ;PSX: SystemError
+#### A(53h) - set\_ioabort\_handler(src)  ;PS2 only  ;PSX: SystemError
 Normally the ioabort handler is changed only internally during booting, with
 this new function, games can install their own ioabort handler. src is pointer
 to a 30h-byte "savestate" structure, which will be copied to the actual ioabort
@@ -2215,7 +2215,7 @@ to SystemErrorUnresolvedException().<br/>
 
 
 ##   BIOS Internal Boot Functions
-#### A(45h) - init_a0_b0_c0_vectors
+#### A(45h) - init\_a0\_b0\_c0\_vectors
 Copies the three default four-opcode handlers for the A(NNh),B(NNh),C(NNh)
 functions to A00000A0h..A00000CFh.<br/>
 
@@ -2349,7 +2349,7 @@ Attributes Bits (standard MSDOS-style):<br/>
        V1  0 = success, error code if V0 is negative
 ```
 
-#### BRK(105h) - PCRead(filehandle, length, memory_destination_address)
+#### BRK(105h) - PCRead(filehandle, length, memory\_destination\_address)
 ```
   out: V0  0 = success, -1 = failure
        V1  number of read bytes or error code if V0 is negative.
@@ -2360,13 +2360,13 @@ filelength obtain the filelength by PClSeek (A2=0, A3=2, V1 will return the
 length of the file, don't forget to reset the file pointer to the start before
 calling PCread!)<br/>
 
-#### BRK(106h) - PCWrite(filehandle, length, memory_source_address)
+#### BRK(106h) - PCWrite(filehandle, length, memory\_source\_address)
 ```
   out: V0  0 = success, -1 = failure
        V1  number of written bytes or error code if V0 is negative.
 ```
 
-#### BRK(107h) - PClSeek(filehandle, file_offset, seekmode) - Change Filepos
+#### BRK(107h) - PClSeek(filehandle, file\_offset, seekmode) - Change Filepos
 seekmode may be from 0=Begin of file, 1=Current fpos, or 2=End of file.<br/>
 ```
   out: V0  0 = success, -1 = failure
@@ -2375,14 +2375,14 @@ seekmode may be from 0=Begin of file, 1=Current fpos, or 2=End of file.<br/>
 
 
 
-##   BIOS TTY Console (std_io)
+##   BIOS TTY Console (std\_io)
 #### A(3Fh) - Printf(txt,param1,param2,etc.) - Print string to console
 ```
   in:  A0                     Pointer to 0 terminated string
        A1,A2,A3,[SP+10h..]    Argument(s)
 ```
 Prints the specified string to the TTY console. Printf does internally use
-"std_out_putchar" to output the separate characters (and expands char 09h and
+"std\_out\_putchar" to output the separate characters (and expands char 09h and
 0Ah accordingly).<br/>
 The string can contain C-style escape codes (prefixed by "%" each):<br/>
 ```
@@ -2415,7 +2415,7 @@ doesn't work at all (accidently sign-expands 16bit to 32bit, and then displays
 that signed 32bit value as giant unsigned value). Printf supports only octal,
 decimal, and hex (but not binary).<br/>
 
-#### A(3Eh) or B(3Fh) std_out_puts(src) - Write string to TTY
+#### A(3Eh) or B(3Fh) std\_out\_puts(src) - Write string to TTY
 ```
   in: R4=address of string (terminated by 00h)
 ```
@@ -2424,32 +2424,32 @@ in a special way: If R4 points to a 00h character then nothing is output (as
 one would expect it), but, if R4 is 00000000h then "\<NULL\>" is output
 (only that six letters; without appending any CR or LF).<br/>
 
-#### A(3Dh) or B(3Eh) std_in_gets(dst) - Read string from TTY (keyboard input)
+#### A(3Dh) or B(3Eh) std\_in\_gets(dst) - Read string from TTY (keyboard input)
 ```
   in: r4=dst (pointer to a 128-byte buffer) - out: r2=dst (same is incoming r4)
 ```
-Internally uses "std_in_getchar" to receive the separate characters (which are
+Internally uses "std\_in\_getchar" to receive the separate characters (which are
 thus masked by 7Fh). The received characters are stored in the buffer, and are
-additionally sent back as echo to the TTY via std_out_putc.<br/>
+additionally sent back as echo to the TTY via std\_out\_putc.<br/>
 The following characters are handled in a special way: 09h (TAB) is replaced by
 a single SPC. 08h or 7FH (BS or DEL) are removing the last character from the
 buffer (unless it is empty) and send 08h,20h,08h (BS,SPC,BS) to the TTY. 0Dh or
 0Ah (CR or LF) do terminate the input (append 00h to the buffer, send 0Ah to
-the TTY, which is expanded to 0Dh,0Ah by the std_out_putc function, and do then
-return from the std_in_gets function).<br/>
+the TTY, which is expanded to 0Dh,0Ah by the std\_out\_putc function, and do then
+return from the std\_in\_gets function).<br/>
 The sequence 16h,NNh forces NNh to be stored in the buffer (even if NNh is a
 special character like 00h..1Fh or 7Fh). If the buffer is full (circa max 125
 chars, plus one extra byte for the ending 00h), or if an unknown control code
 in range of 00h..1Fh is received without the 16h prefix, then 07h (BELL) is
 sent to the TTY.<br/>
 
-#### A(3Bh) or B(3Ch) std_in_getchar() - Read character from TTY
+#### A(3Bh) or B(3Ch) std\_in\_getchar() - Read character from TTY
 Reads one character from the TTY console, by internally redirecting to
 "FileRead(0,tempbuf,1)". The returned character is ANDed by 7Fh (so, to read a
 fully intact 8bit character, "FileRead(0,tempbuf,1)" must be used instead of
 this function).<br/>
 
-#### A(3Ch) or B(3Dh) std_out_putchar(char) - Write character to TTY
+#### A(3Ch) or B(3Dh) std\_out\_putchar(char) - Write character to TTY
 Writes the character to the TTY console, by internally redirecting to
 "FileWrite(1,tempbuf,1)". Char 09h (TAB) is expanded to one or more SPC
 characters, until reaching the next tabulation boundary (every 8 characters).
@@ -2458,22 +2458,22 @@ should be handled at the remote terminal side) are 08h (BS, backspace, move
 cursor one position to the left), and 07h (BELL, produce a short beep sound).<br/>
 
 #### C(13h) FlushStdInOutPut()
-Closes and re-opens the std_in (fd=0) and std_out (fd=1) file handles.<br/>
+Closes and re-opens the std\_in (fd=0) and std\_out (fd=1) file handles.<br/>
 
 #### C(1Bh) KernelRedirect(ttyflag)  ;PS2: ttyflag=1 causes SystemError
 Removes, re-mounts, and flushes the TTY device, the parameter selects whether
 to mount the real DUART-TTY device (r4=1), or a Dummy-TTY device (r4=0), the
-latter one sends any std_out to nowhere. Values other than r4=0 or r4=1 do
+latter one sends any std\_out to nowhere. Values other than r4=0 or r4=1 do
 remove the device, but do not re-mount it (which might result in problems).<br/>
 Caution: Trying to use r4=1 on a PSX that does not has the DUART hardware
 installed causes the BIOS to hang (so one should first detect the DUART
 hardware, eg. by writing two different bytes to Port 1F802020h.1st/2nd access,
 and the read and verify that two bytes).<br/>
 
-#### Activating std_io
-The std_io functions can be enabled via C(1Bh) KernelRedirect(ttyflag), the
+#### Activating std\_io
+The std\_io functions can be enabled via C(1Bh) KernelRedirect(ttyflag), the
 BIOS is unable to detect the presence of the TTY hardware, by default the BIOS
-bootcode disables std_io by setting the initial KernelRedirect value at
+bootcode disables std\_io by setting the initial KernelRedirect value at
 [A000B9B0h] to zero, this is hardcoded shortly after the POST(E) output:<br/>
 ```
   call    output_post_r4        ;\output POST(E)
@@ -2507,19 +2507,19 @@ handles (fd=0 and fd=1) would cause such functions to work unstable.<br/>
 
 
 ##   BIOS Character Sets
-#### B(51h) Krom2RawAdd(shiftjis_code)
+#### B(51h) Krom2RawAdd(shiftjis\_code)
 ```
   In: r4  = 16bit Shift-JIS character code
   Out: r2 = address in BIOS ROM of the desired character (or -1 = error)
 ```
 r4 should be 8140h..84BEh (charset 2), or 889Fh..9872h (charset 3).<br/>
 
-#### B(53h) Krom2Offset(shiftjis_code)
+#### B(53h) Krom2Offset(shiftjis\_code)
 ```
   In: r4  = 16bit Shift-JIS character code
   Out: r2 = offset within charset (without charset base address)
 ```
-This is a subfunction for B(51h) Krom2RawAdd(shiftjis_code).<br/>
+This is a subfunction for B(51h) Krom2RawAdd(shiftjis\_code).<br/>
 
 #### Character Sets in ROM (112Kbytes)
 The character sets are located at BFC64000h and up, intermixed with some other
@@ -2543,7 +2543,7 @@ char(8FA6E0h..8FABF7h).<br/>
 Version (and Copyright) string is NOT included in SCPH1000 version (that BIOS
 includes further japanese 8x15 pix chars in that region).<br/>
 For charset 2 and 3 it may be recommended to use the B(51h)
-Krom2RawAdd(shiftjis_code) to obtain the character addresses. Not sure if that
+Krom2RawAdd(shiftjis\_code) to obtain the character addresses. Not sure if that
 BIOS function (or another BIOS function) allows to retrieve charset 1, 4, 5,
 and 6 addresses?<br/>
 
@@ -2745,7 +2745,7 @@ care), so the nocash PSX bios (or other homebrewn BIOSes) can detect and
 reproduce them. Or alternately, don't use the BIOS, and access I/O ports
 directly, which is much better and faster anyways.<br/>
 
-#### patch_missing_cop0r13_in_exception_handler:
+#### patch\_missing\_cop0r13\_in\_exception\_handler:
 In newer Kernel version, the exception handler reads cop0r13/cause to r2,
 examines the Excode value in r2, and if the exception was caused by an
 interrupt, and if the next opcode (at EPC) is a GTE/COP2 command, then it does
@@ -2792,7 +2792,7 @@ Racer at 80047B14h:<br/>
   175BFFFC jne  k0,k1,@@copy_lop              ;      40026800 mov  r2,cop0r13
   AC43FFFC +mov [r2-4h],r3                    ;/     00000000 nop
 ```
-Alternately, slightly different code used in metal_gear_solid at 80095CC0h, and
+Alternately, slightly different code used in metal\_gear\_solid at 80095CC0h, and
 in alone1 at 800A3ECCh:<br/>
 ```
   24090056 mov  r9,56h                        ;\
@@ -2864,7 +2864,7 @@ Alternately, a bugged/nonfunctional homebrew variant (used by Hitmen's
           @@verify_mismatch:
 ```
 
-#### early_card_irq_patch:
+#### early\_card\_irq\_patch:
 Because of a hardware glitch the card IRQ cannot be acknowledged while the
 external IRQ signal is still LOW, making it neccessary to insert a delay that
 waits until the signal gets HIGH before acknowledging the IRQ.<br/>
@@ -2938,13 +2938,13 @@ Alternately, elo2 uses slightly different code at 8003961Ch:<br/>
   AC22xxxx +mov [r1+xxxxh],r2 ;/              ;03E00008 ret
            ...                                ;00000000 +nop
 ```
-Note: The above @@wait_lop's should be more preferably done with timeouts (else
+Note: The above @@wait\_lop's should be more preferably done with timeouts (else
 they may hang endless if a Sony Mouse is newly connected; the mouse does have
 /ACK stuck LOW on power-up).<br/>
 
-#### patch_uninstall_early_card_irq_handler:
-Used to uninstall the "early_card_irq_vector" (the BIOS installs that vector
-from inside of B(4Ah) InitCard(pad_enable), and, without patches, the BIOS
+#### patch\_uninstall\_early\_card\_irq\_handler:
+Used to uninstall the "early\_card\_irq\_vector" (the BIOS installs that vector
+from inside of B(4Ah) InitCard(pad\_enable), and, without patches, the BIOS
 doesn't allow to uninstall it thereafter).<br/>
 Used in Breath of Fire III (SLES-01304) at 8017E790, and also in Ace Combat 2
 (SLUS-00404) at 801D23F4:<br/>
@@ -2984,11 +2984,11 @@ Alternately, more inefficient, used in Blaster Master-Blasting Again
   1549FFFB jne  r10,r9,@@copy_lop ;   @@new_data_end:
   24420004 +add r2,4h   ;dst      ;/
 ```
-Note: the above code is same as "patch_install_lightgun_irq_handler", except
+Note: the above code is same as "patch\_install\_lightgun\_irq\_handler", except
 that it writes to r2+70h, instead of r2+80h.<br/>
 
-#### patch_card_specific_delay:
-Same purpose as the "early_card_irq_patch" (but for the command/status bytes
+#### patch\_card\_specific\_delay:
+Same purpose as the "early\_card\_irq\_patch" (but for the command/status bytes
 rather than for the data bytes). The patch looks buggy since it inserts the
 delay AFTER the acknowledge, but it DOES work (the BIOS accidently acknowledges
 the IRQ twice; and the delay occurs PRIOR to 2nd acknowledge).<br/>
@@ -3037,8 +3037,8 @@ Evil 2 at 800910E4h:<br/>
   AC4809C4 +mov [r2+9C4h],r8                  ;
 ```
 
-#### patch_card_info_step4:
-The "card_info" function sends an incomplete read command to the card; in order
+#### patch\_card\_info\_step4:
+The "card\_info" function sends an incomplete read command to the card; in order
 to receive status information. After receiving the last byte, the function does
 accidently send a further byte to the card, so the card responds by another
 byte (and another IRQ7), which is not processed nor acknowledged by the BIOS.
@@ -3057,10 +3057,10 @@ Used in alone1 at 800AE214h:<br/>
   AC600000 +mov [r3],0        ;=nop           ;/
 ```
 
-#### patch_pad_error_handling_and_get_pad_enable_functions:
+#### patch\_pad\_error\_handling\_and\_get\_pad\_enable\_functions:
 If a transmission error occurs (or if there's no controller connected), then
 the Pad handler handler does usually issue a strange chip select signal to the
-OTHER controller slot, and does then execute the bizarre_pad_delay function.
+OTHER controller slot, and does then execute the bizarre\_pad\_delay function.
 The patch below overwrites that behaviour by NOPs. Purpose of the original (and
 patched) behaviour is unknown.<br/>
 Used by Perfect Assassin at 800519D4h:<br/>
@@ -3119,7 +3119,7 @@ Pandemonium II (at 80083C94h and at 8010B77Ch):<br/>
   24420004 +add r2,4h                         ;/
 ```
 
-#### patch_optional_pad_output:
+#### patch\_optional\_pad\_output:
 The normal BIOS functions are only allowing to READ from the controllers, but
 not to SEND data to them (which would be required to control Rumble motors, and
 to auto-activate Analog mode without needing the user to press the Analog
@@ -3177,7 +3177,7 @@ Alternately, more inefficient (with NOPs), used in Lemmings at 80036618h:<br/>
   00000000 +nop                               ;/
 ```
 
-#### patch_no_pad_card_auto_ack:
+#### patch\_no\_pad\_card\_auto\_ack:
 This patch suppresses automatic IRQ0 (vblank) acknowleding in the Pad/Card IRQ
 handler, that, even if auto-ack is enabled. Obviously, one could as well
 disable auto-ack via B(5Bh) ChangeClearPad(int), so this patch is total
@@ -3220,7 +3220,7 @@ actually support the same IRQ to be processed by two different IRQ handlers,
 eg. the custom handler may acknowledge the IRQ even when the Pad/Card handler
 didn't process it, so pad input may become bumpy.<br/>
 
-#### patch_install_lightgun_irq_handler:
+#### patch\_install\_lightgun\_irq\_handler:
 Used in Sporting Clays at 80027D68h (when Konami Lightgun connected):<br/>
 ```
   240A00B0 mov  r10,0B0h     ;\
@@ -3265,11 +3265,11 @@ coordinate (timer0) to a variable in RAM, thus getting the timer0 value
 unpredictable timing offsets that could be caused by cache hits/misses during
 later IRQ handling (and may also eliminate a rather irrelevant 1-cycle
 inaccuracy depending on whether EPC was pointing to a GTE opcode, and also
-eliminates constant cycle offsets depending on whether early_card_irq_handler
+eliminates constant cycle offsets depending on whether early\_card\_irq\_handler
 was installed and enabled, and might eliminate timing differences for different
 BIOS versions).<br/>
 
-#### set_conf_without_realloc:
+#### set\_conf\_without\_realloc:
 Used in Spec Ops Airborne Commando at 80070AE8h, and also in the homebrew game
 Roll Boss Rush at 80010B68h and 8001B85Ch. Purpose is unknown (maybe to
 override improperly defined .EXE headers).<br/>

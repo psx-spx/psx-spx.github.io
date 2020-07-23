@@ -298,8 +298,8 @@ Additionally, the OP0 and OP1 outputs are controlled via MR2A.5 and MR2B.5.<br/>
 BGR Test switches between Baud Rate Set1/Set2 and Set3/Set4.<br/>
 1X/16X Test switches between whatever...?<br/>
 
-#### 1F80202Eh/Read - CT_START - DUART Start Counter Command (Read=Strobe)
-#### 1F80202Fh/Read - CT_STOP - DUART Stop Counter Command (Read=Strobe)
+#### 1F80202Eh/Read - CT\_START - DUART Start Counter Command (Read=Strobe)
+#### 1F80202Fh/Read - CT\_STOP - DUART Stop Counter Command (Read=Strobe)
 ```
   7-0  Not used (just issue a dummy-read to strobe start/stop command)
 ```
@@ -333,7 +333,7 @@ Note: The Motorola 68681 should be the same as the Philips/Signetics 2681.<br/>
 Unknown if the Interrupt signal is connected to the PSX... there seems to be no
 spare IRQ for it, though it \<might\> share an IRQ with whatever other
 hardware...?<br/>
-The BIOS seems to use only one of the two channels; for the std_io functions:<br/>
+The BIOS seems to use only one of the two channels; for the std\_io functions:<br/>
 [BIOS TTY Console (std_io)](kernelbios.md#bios-tty-console-stdio)<br/>
 Aside from the external DUART, the PSX additionally contains an internal UART,<br/>
 [Serial Port (SIO)](serialportsio.md)<br/>

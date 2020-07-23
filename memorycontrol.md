@@ -47,7 +47,7 @@ the internal I/O ports, and crash the PSX. The Size bits seem to be ignored for
 SPU/CDROM. The SPU timings seem to be applied for both the 200h-byte SPU region
 at 1F801C00h and for the 200h-byte unknown region at 1F801E00h.<br/>
 
-#### 1F801020h - COM_DELAY / COMMON_DELAY (00031125h or 0000132Ch or 00001325h)
+#### 1F801020h - COM\_DELAY / COMMON\_DELAY (00031125h or 0000132Ch or 00001325h)
 ```
   0-3   COM0 - Offset A   ;used for SPU/EXP2 (and for adjusted CDROM timings)
   4-7   COM1 - No effect? ;used for EXP2
@@ -76,7 +76,7 @@ values or so).<br/>
 And the purpose... probably allows to define the length of the chipselect
 signals, and of gaps between that signals...?<br/>
 
-#### 1F801060h - RAM_SIZE (R/W) (usually 00000B88h) (or 00000888h)
+#### 1F801060h - RAM\_SIZE (R/W) (usually 00000B88h) (or 00000888h)
 ```
   0-2   Unknown (no effect)
   3     Crashes when zero (except PU-7 and EARLY-PU-8, which <do> set bit3=0)
@@ -105,7 +105,7 @@ seems to be always Locked.<br/>
 The HighZ regions are FFh-filled, that even when grounding data lines on the
 system bus (ie. it is NOT a mirror of the PIO expansion region).<br/>
 Locked means that the CPU generates an exception when accessing that area.<br/>
-Note: Wipeout uses a BIOS function that changes RAM_SIZE to 00000888h (ie. with
+Note: Wipeout uses a BIOS function that changes RAM\_SIZE to 00000888h (ie. with
 corrected size of 2MB, and with the unknown Bit8 cleared). Gundam Battle
 Assault 2 does actually use the "8MB" space (with stacktop in mirrored RAM at
 807FFFxxh).<br/>

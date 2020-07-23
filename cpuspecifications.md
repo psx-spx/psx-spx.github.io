@@ -52,7 +52,7 @@ for most CPUs) - Full means that SP points to the first ALLOCATED word on the
 stack, so the allocated memory is at SP+0 and above, free memory at SP-1 and
 below, Wasted means that when calling a sub-function with N parameters, then
 the caller must pre-allocate N works on stack, and the sub-function may freely
-use and destroy these words; at [SP+0..N*4-1].<br/>
+use and destroy these words; at [SP+0..N\*4-1].<br/>
 
 For example, "push ra,r16,r17" would be implemented as:<br/>
 ```
@@ -294,7 +294,7 @@ The mul/div opcodes are starting the multiply/divide operation, starting takes
 only a single clock cycle, however, trying to read the result from the hi/lo
 registers while the mul/div operation is busy will halt the CPU until the
 mul/div has completed. For multiply, the execution time depends on rs (ie.
-"small*large" can be much faster than "large*small").<br/>
+"small\*large" can be much faster than "large\*small").<br/>
 ```
   __umul_execution_time_____________________________________________________
   Fast  (6 cycles)   rs = 00000000h..000007FFh

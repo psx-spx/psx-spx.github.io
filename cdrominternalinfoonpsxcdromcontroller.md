@@ -48,7 +48,7 @@ Later version is CXD1817R (Servo/Signal/Decoder Combo).<br/>
 Even later PSX mainboards have it integrated in the Sound Chip: CXD2938Q
 (SPU+CDROM) with some changed bits and New SCEx transfer:<br/>
 [CDROM Internal Commands CX(0x..Ex) - CXD2938Q Servo/Signal/SPU Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex---cxd2938q-servosignalspu-combo)<br/>
-Finally, PM-41(2) boards are using a CXD2941R chip (SPU+CDROM+SPU_RAM), unknown
+Finally, PM-41(2) boards are using a CXD2941R chip (SPU+CDROM+SPU\_RAM), unknown
 if/how far the CDROM part of that chip differs from CXD2938Q.<br/>
 Some general notes:<br/>
 [CDROM Internal Commands CX(xx) - Notes](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx---notes)<br/>
@@ -1746,7 +1746,7 @@ XXX<br/>
   $EX            OV64    OV64             -
   $7X-9X,DX,FX   Z       0                -
 ```
-*1 $38 outputs AGOK during AGT and AGF command settings, and XAVEBSY during
+\*1 $38 outputs AGOK during AGT and AGF command settings, and XAVEBSY during
 AVRG measurement.<br/>
 SSTP is output in all other cases.<br/>
 
@@ -2030,7 +2030,7 @@ commands:<br/>
   -          CX(Xxxxxx) CX(Xxxxxx) SerialSense, CX(Xxxx) with extra 8bit junk
 ```
 Note: for vC2, some CX(38xxxx) values may differ depending on
-"set_mid_lsb_to_140Eh".<br/>
+"set\_mid\_lsb\_to\_140Eh".<br/>
 For vC2, CX(Dx) and CX(Ex) should be officially zero-padded to CX(Dx00) and
 CX(Ex00), but the vC2 BIOS doesn't do that, it still uses short 8bit form.<br/>
 For vC2, CX(Dx) and CX(Ex) should be apparently zero-padded to CX(Dx0000) and

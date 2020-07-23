@@ -120,7 +120,7 @@ These commands act identical as MDEC(0).<br/>
 
 
 ##   MDEC Decompression
-#### decode_colored_macroblock ;MDEC(1) command (at 15bpp or 24bpp depth)
+#### decode\_colored\_macroblock ;MDEC(1) command (at 15bpp or 24bpp depth)
 ```
   rl_decode_block(Crblk,src,iq_uv)                 ;Cr (low resolution)
   rl_decode_block(Cbblk,src,iq_uv)                 ;Cb (low resolution)
@@ -130,12 +130,12 @@ These commands act identical as MDEC(0).<br/>
   rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(8,8)  ;Y4 (and lower-right Cr,Cb)
 ```
 
-#### decode_monochrome_macroblock ;MDEC(1) command (at 4bpp or 8bpp depth)
+#### decode\_monochrome\_macroblock ;MDEC(1) command (at 4bpp or 8bpp depth)
 ```
   rl_decode_block(Yblk,src,iq_y), y_to_mono        ;Y
 ```
 
-#### rl_decode_block(blk,src,qt)
+#### rl\_decode\_block(blk,src,qt)
 ```
   for i=0 to 63, blk[i]=0, next i   ;initially zerofill all entries (for skip)
  @@skip:
@@ -157,7 +157,7 @@ These commands act identical as MDEC(0).<br/>
   return (with "src" address advanced)
 ```
 
-#### fast_idct_core(blk) ;fast "idct_core" version
+#### fast\_idct\_core(blk) ;fast "idct\_core" version
 Fast code with only 80 multiplications, works only if the scaletable from
 MDEC(3) command contains standard values (which is the case for all known PSX
 games).<br/>
@@ -189,9 +189,9 @@ games).<br/>
   next pass
 ```
 
-#### real_idct_core(blk) ;low level "idct_core" version
+#### real\_idct\_core(blk) ;low level "idct\_core" version
 Low level code with 1024 multiplications, using the scaletable from the MDEC(3)
-command. Computes dst=src*scaletable (using normal matrix maths, but with "src"
+command. Computes dst=src\*scaletable (using normal matrix maths, but with "src"
 being diagonally mirrored, ie. the matrices are processed column by column,
 instead of row by column), repeated with src/dst exchanged.<br/>
 ```
@@ -215,9 +215,9 @@ working roughly like that, still the results aren't perfect.<br/>
 Maybe the real hardware is doing further roundings in other places, possibly
 stripping some fractional bits before summing up "sum", possibly stripping
 different amounts of bits in the two "pass" cycles, and possibly keeping a
-final fraction passed on to the y_to_mono stage.<br/>
+final fraction passed on to the y\_to\_mono stage.<br/>
 
-#### yuv_to_rgb(xx,yy)
+#### yuv\_to\_rgb(xx,yy)
 ```
   for y=0 to 7
     for x=0 to 7
@@ -232,10 +232,10 @@ final fraction passed on to the y_to_mono stage.<br/>
     next x
   next y
 ```
-Note: The exact fixed point resolution for "yuv_to_rgb" is unknown. And,
-there's probably also some 9bit limit (similar as in "y_to_mono").<br/>
+Note: The exact fixed point resolution for "yuv\_to\_rgb" is unknown. And,
+there's probably also some 9bit limit (similar as in "y\_to\_mono").<br/>
 
-#### y_to_mono
+#### y\_to\_mono
 ```
   for i=0 to 63
     Y=[Yblk+i]
@@ -246,7 +246,7 @@ there's probably also some 9bit limit (similar as in "y_to_mono").<br/>
   next i
 ```
 
-#### set_iqtab  ;MDEC(2) command
+#### set\_iqtab  ;MDEC(2) command
 ```
   iqtab_core(iq_y,src), src=src+64       ;luminance quant table
   if command_word.bit0=1
@@ -254,15 +254,15 @@ there's probably also some 9bit limit (similar as in "y_to_mono").<br/>
   endif
 ```
 
-#### iqtab_core(iq,src)  ;src = 64 unsigned paramter bytes
+#### iqtab\_core(iq,src)  ;src = 64 unsigned paramter bytes
 ```
   for i=0 to 63, iq[i]=src[i], next i
 ```
-Note: For "fast_idct_core" one could precalc "iq[i]=src[i]*scalezag[i]", but
+Note: For "fast\_idct\_core" one could precalc "iq[i]=src[i]\*scalezag[i]", but
 that would conflict with the RLE saturation/rounding steps (though those steps
 aren't actually required, so a very-fast decoder could omit them).<br/>
 
-#### scalefactor[0..7] = cos((0..7)*90'/8)  ;for [1..7]: multiplied by sqrt(2)
+#### scalefactor[0..7] = cos((0..7)\*90'/8)  ;for [1..7]: multiplied by sqrt(2)
 ```
   1.000000000, 1.387039845, 1.306562965, 1.175875602,
   1.000000000, 0.785694958, 0.541196100, 0.275899379
@@ -280,7 +280,7 @@ aren't actually required, so a very-fast decoder could omit them).<br/>
   35,36,48,49,57,58,62,63
 ```
 
-#### scalezag[0..63] (precalulated factors, for "fast_idct_core")
+#### scalezag[0..63] (precalulated factors, for "fast\_idct\_core")
 ```
   for y=0 to 7
    for x=0 to 7
@@ -294,7 +294,7 @@ aren't actually required, so a very-fast decoder could omit them).<br/>
   for i=0 to 63, zagzig[zigzag[i]]=i, next i
 ```
 
-#### set_scale_table:  ;MDEC(3) command
+#### set\_scale\_table:  ;MDEC(3) command
 This command defines the IDCT scale matrix, which should be usually/always:<br/>
 ```
   5A82 5A82 5A82 5A82 5A82 5A82 5A82 5A82

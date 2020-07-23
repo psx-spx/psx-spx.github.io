@@ -645,7 +645,7 @@ edge, which can be utilised by setting the start of the screen earlier and the
 end later. The size of the pixels is NOT changed with these settings, the GPU
 simply sends more data to the screen. Some monitors/TVs have a smaller display
 area and the extended size might not be visible on those sets. "(Mine is
-capable of about 330 pixels horizontal, and 272 vertical in 320*240 mode)"<br/>
+capable of about 330 pixels horizontal, and 272 vertical in 320\*240 mode)"<br/>
 
 #### GP1(05h) - Start of Display area (in VRAM)
 ```
@@ -655,7 +655,7 @@ capable of about 330 pixels horizontal, and 272 vertical in 320*240 mode)"<br/>
 ```
 Upper/left Display source address in VRAM. The size and target position on
 screen is set via Display Range registers; target=X1,Y2;
-size=(X2-X1/cycles_per_pix), (Y2-Y1).<br/>
+size=(X2-X1/cycles\_per\_pix), (Y2-Y1).<br/>
 
 #### GP1(06h) - Horizontal Display range (on Screen)
 ```
@@ -664,8 +664,8 @@ size=(X2-X1/cycles_per_pix), (Y2-Y1).<br/>
 ```
 Specifies the horizontal range within which the display area is displayed. For
 resolutions other than 320 pixels it may be necessary to fine adjust the value
-to obtain an exact match (eg. X2=X1+pixels*cycles_per_pix).<br/>
-The number of displayed pixels per line is "(((X2-X1)/cycles_per_pix)+2) AND
+to obtain an exact match (eg. X2=X1+pixels\*cycles\_per\_pix).<br/>
+The number of displayed pixels per line is "(((X2-X1)/cycles\_per\_pix)+2) AND
 NOT 3" (ie. the hardware is rounding the width up/down to a multiple of 4
 pixels).<br/>
 Most games are using a width equal to the horizontal resolution (ie. 256, 320,

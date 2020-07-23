@@ -1,5 +1,5 @@
 #   Timers
-#### 1F801100h+N*10h - Timer 0..2 Current Counter Value (R/W)
+#### 1F801100h+N\*10h - Timer 0..2 Current Counter Value (R/W)
 ```
   0-15  Current Counter value (incrementing)
   16-31 Garbage
@@ -9,7 +9,7 @@ it to any value). It gets forcefully reset to 0000h on any write to the Counter
 Mode register, and on counter overflow (either when exceeding FFFFh, or when
 exceeding the selected target value).<br/>
 
-#### 1F801104h+N*10h - Timer 0..2 Counter Mode (R/W)
+#### 1F801104h+N\*10h - Timer 0..2 Counter Mode (R/W)
 ```
   0     Synchronization Enable (0=Free Run, 1=Synchronize via Bit1-2)
   1-2   Synchronization Mode   (0-3, see lists below)
@@ -48,7 +48,7 @@ the Mode register, and becomes inverted on each IRQ (in one-shot mode, it
 remains zero after the IRQ) (in repeat mode it inverts Bit10 on each IRQ, so
 IRQ4/5/6 are triggered only each 2nd time, ie. when Bit10 changes from 1 to 0).<br/>
 
-#### 1F801108h+N*10h - Timer 0..2 Counter Target Value (R/W)
+#### 1F801108h+N\*10h - Timer 0..2 Counter Target Value (R/W)
 ```
   0-15  Counter Target value
   16-31 Garbage

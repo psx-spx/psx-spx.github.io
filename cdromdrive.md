@@ -360,9 +360,9 @@ E = Error 80h appears on some commands (02h..09h, 0Bh..0Dh, 10h..16h, 1Ah,
 1Bh?, and 1Dh) when the disk is missing, or when the drive unit is disconnected
 from the mainboard.<br/>
 
-#### sub_function numbers (for command 19h)
-Test commands are invoked with command number 19h, followed by a sub_function
-number as first parameter byte. The Kernel seems to be using only sub_function
+#### sub\_function numbers (for command 19h)
+Test commands are invoked with command number 19h, followed by a sub\_function
+number as first parameter byte. The Kernel seems to be using only sub\_function
 20h (to detect the CDROM Controller version).<br/>
 ```
   sub  params  response           ;Effect
@@ -412,9 +412,9 @@ number as first parameter byte. The Kernel seems to be using only sub_function
   76h ***  a,b,c,d   INT3(stat)       ;Decoder Prepare Transfer to/from SRAM
   77h..FFh -         INT5(11h,10h)    ;N/A
 ```
-* sub_functions 06h..08h, 30h..31h, and 4xh are supported only in vC0 and vC1.<br/>
-** sub_function 51h is supported only in BIOS version vC2 and up.<br/>
-*** sub_functions 22h..25h, 71h..76h supported only in BIOS version vC1 and up.<br/>
+\* sub\_functions 06h..08h, 30h..31h, and 4xh are supported only in vC0 and vC1.<br/>
+\*\* sub\_function 51h is supported only in BIOS version vC2 and up.<br/>
+\*\*\* sub\_functions 22h..25h, 71h..76h supported only in BIOS version vC1 and up.<br/>
 
 #### Unsupported GetQ,VCD,SecretUnlock (command 1Dh,1Fh,5xh)
 INT5 will be returned if the command is unsupported. That, WITHOUT removing the
@@ -830,7 +830,7 @@ boundaries (eg. if track=N Index=0 starts at 12:34:56, and Track=N Index=1
 starts at 12:36:56, then GetTD(N) will return 12:36, ie. the sector number is
 truncated, and the Index=0 region is skipped).<br/>
 
-#### GetQ - Command 1Dh,adr,point --\> INT3(stat) --\> INT2(10bytesSubQ,peak_lo)
+#### GetQ - Command 1Dh,adr,point --\> INT3(stat) --\> INT2(10bytesSubQ,peak\_lo)
 ```
   Caution: Supported only in BIOS version vC1 and up. Not supported in vC0.
   Caution: When unsupported, Parameter Fifo isn't cleared after the command.
@@ -1120,8 +1120,8 @@ match). Typically, the values are "01h,01h" for Licensed PSX Data CDs, or
 "00h,00h" for disk missing, unlicensed data CDs, Audio CDs.<br/>
 The counters are reset to zero, and SCEx receive mode is active for a few
 seconds after booting a new disk (on power up, on closing the drive door, on
-sending a Reset command, and on sub_function 04h). The disk is unlocked if the
-"success" counter is nonzero, the only exception is sub_function 04h which does
+sending a Reset command, and on sub\_function 04h). The disk is unlocked if the
+"success" counter is nonzero, the only exception is sub\_function 04h which does
 update the counters, but does not lock/unlock the disk.<br/>
 
 
@@ -1314,14 +1314,14 @@ That two bytes are 0Ch,08h after Read commands.<br/>
   changes to [1F1h] which may occur after read command (eg. may be 20h)
 ```
 
-#### 19h,76h,len_lo,len_hi,addr_lo,addr_hi --\> INT3(stat) ;Prepare SRAM Transfer
+#### 19h,76h,len\_lo,len\_hi,addr\_lo,addr\_hi --\> INT3(stat) ;Prepare SRAM Transfer
 Prepare Transfer to/from 32K SRAM.<br/>
 After INT3, data can be read (same way as sector data after INT1).<br/>
 
 
 
 ##   CDROM - Test Commands - Read HC05 SUB-CPU RAM and I/O Ports
-#### 19h,60h,addr_lo,addr_hi --\> INT3(data) ;Read one byte from Drive RAM or I/O
+#### 19h,60h,addr\_lo,addr\_hi --\> INT3(data) ;Read one byte from Drive RAM or I/O
 Reads one byte from the controller's RAM or I/O area, see the memory map below
 for more info. Among others, the command allows to read Subchannel Q data, eg.
 at [200h..209h], including ADR=2/UPC/EAN and ADR=3/ISRC values (which are
@@ -1792,7 +1792,7 @@ error).<br/>
   Read (double speed)    0036cd2h  00322dfh..003ab2bh
 ```
 The INT1 rate needs to be precise for CD-DA and CD-XA Audio streaming, exact
-clock cycle values should be: SystemClock*930h/4/44100Hz for Single Speed (and
+clock cycle values should be: SystemClock\*930h/4/44100Hz for Single Speed (and
 half as much for Double Speed) (the "Average" values are AVERAGE values, not
 exact values).<br/>
 
@@ -2487,7 +2487,7 @@ Character Set values (for ID1=8Fh, ID2=00h, DATA[0]=charset):<br/>
 09h (or 0909h for 16bit charset) may be used to indicate the same as previous
 track. It shall not used for the first track."<br/>
 
-#### adjust_crc_16_ccitt(addr_len)  ;for CD-TEXT and Subchannel Q
+#### adjust\_crc\_16\_ccitt(addr\_len)  ;for CD-TEXT and Subchannel Q
 ```
   lsb=00h, msb=00h      ;-initial value (zero for both CD-TEXT and Sub-Q)
   for i=0 to len-1      ;-len (10h for CD-TEXT, 0Ah for Sub-Q)
@@ -2541,7 +2541,7 @@ track. It shall not used for the first track."<br/>
   92Ch 4    EDC (checksum accross [010h..92Bh]) (or 00000000h if no EDC)
 ```
 
-#### encode_sector
+#### encode\_sector
 ```
   sector[000h]=00h,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,00h
   sector[00ch]=bcd(adr/75/60)      ;0..7x
@@ -2570,7 +2570,7 @@ track. It shall not used for the first track."<br/>
     adjust_edc(sector+10h,914h+8)            ;edc is optional for form2
 ```
 
-#### calc_parity(sector,offs,len,j0,step1,step2)
+#### calc\_parity(sector,offs,len,j0,step1,step2)
 ```
   src=00ch, dst=81ch+offs, srcmax=dst
   for i=0 to len-1
@@ -2583,10 +2583,10 @@ track. It shall not used for the first track."<br/>
     sector[dst+2*len+1]=y AND 0FFh, [dst+1]=y SHR 8
     dst=dst+2, src=base+step2
 ```
-calc_p_parity(sector) = calc_parity(sector,0,43,19,2*43,2)<br/>
-calc_q_parity(sector) = calc_parity(sector,43*4,26,0,2*44,2*43)<br/>
+calc\_p\_parity(sector) = calc\_parity(sector,0,43,19,2\*43,2)<br/>
+calc\_q\_parity(sector) = calc\_parity(sector,43\*4,26,0,2\*44,2\*43)<br/>
 
-#### adjust_edc(addr,len)
+#### adjust\_edc(addr,len)
 ```
   x=00000000h
   for i=0 to len-1
@@ -2594,7 +2594,7 @@ calc_q_parity(sector) = calc_parity(sector,43*4,26,0,2*44,2*43)<br/>
   word[addr+len]=x  ;append EDC value (little endian)
 ```
 
-#### init_tables
+#### init\_tables
 ```
   for i=0 to FFh
     x=i, for j=0 to 7, x=x shr 1, if carry then x=x xor D8018001h
@@ -2700,7 +2700,7 @@ various ways to arrange multiple files or channels, for example,<br/>
   eight different files with one 1/8 audio channel each
   etc.
 ```
-(*) If the Audio and Video data belongs together then both should use the SAME
+(\*) If the Audio and Video data belongs together then both should use the SAME
 channel.<br/>
 Note: Above interleave values are assuming that PSX Game Disks are always
 running at double speed (that's fastest for normal data files, and ADPCM files
@@ -2796,7 +2796,7 @@ or, for 8bit ADPCM format:<br/>
   24-31 Byte for 4th Block/Mono, or 2nd Block/Right   (-80h..+7Fh)
 ```
 
-#### decode_sector(src)
+#### decode\_sector(src)
 ```
   src=src+12+4+8   ;skip sync,header,subheader
   for i=0 to 11h
@@ -2814,7 +2814,7 @@ or, for 8bit ADPCM format:<br/>
   src=src+14h+4    ;skip padding,edc
 ```
 
-#### decode_28_nibbles(src,blk,nibble,dst,old,older)
+#### decode\_28\_nibbles(src,blk,nibble,dst,old,older)
 ```
   shift  = 12 - (src[4+blk*2+nibble] AND 0Fh)
   filter =      (src[4+blk*2+nibble] AND 30h) SHR 4
@@ -2840,7 +2840,7 @@ supports five filters (0..4).<br/>
 The incoming old/older values are usually that from the previous part, or
 garbage (in case of decoding errors in the previous part), or whatever (in case
 there was no previous part) (ie. maybe zero on power-up?) (and maybe there's
-also a way to reset the values to zero at the begin of a new file, or *maybe*
+also a way to reset the values to zero at the begin of a new file, or \*maybe\*
 it's silently done automatically when issuing seek commands?).<br/>
 
 #### 25-point Zigzag Interpolation
@@ -3110,8 +3110,8 @@ Playstation disks usually have only two Volume Descriptors,<br/>
 ##   CDROM ISO File and Directory Descriptors
 The location of the Root Directory is described by a 34-byte Directory Record
 being located in Primary Volume Descriptor entries 09Ch..0BDh. The data therein
-is: Block Number (usually 22 on PSX disks), LEN_FI=01h, Name=00h, and,
-LEN_SU=00h (due to the 34-byte limit).<br/>
+is: Block Number (usually 22 on PSX disks), LEN\_FI=01h, Name=00h, and,
+LEN\_SU=00h (due to the 34-byte limit).<br/>
 
 #### Format of a Directory Record
 ```
@@ -3129,8 +3129,8 @@ LEN_SU=00h (due to the 34-byte limit).<br/>
   xxh 0..1   Padding Field (00h) (only if LEN_FI is even)
   xxh LEN_SU System Use (LEN_SU bytes) (see below for CD-XA disks)
 ```
-LEN_SU can be calculated as "LEN_DR-(33+LEN_FI+Padding)". For CD-XA disks (as
-used in the PSX), LEN_SU is 14 bytes:<br/>
+LEN\_SU can be calculated as "LEN\_DR-(33+LEN\_FI+Padding)". For CD-XA disks (as
+used in the PSX), LEN\_SU is 14 bytes:<br/>
 ```
   00h 2      Owner ID Group  (whatever, usually 0000h, big endian)
   02h 2      Owner ID User   (whatever, usually 0000h, big endian)
@@ -3185,7 +3185,7 @@ size and location of the tables is stored in Volume Descriptor entries
 ```
 The first entry (directory number 0001h) is the root directory, the root
 doesn't have a name, nor a parent (the name field contains a 00h byte, rather
-than ASCII text, LEN_DI is 01h, and parent is 0001h, making the root it's own
+than ASCII text, LEN\_DI is 01h, and parent is 0001h, making the root it's own
 parent; ignoring the fact that incest is forbidden in many countries).<br/>
 The next entries (directory number 0002h and up) (if any) are sub-directories
 within the root (sorted in alphabetical order, and all having parent=0001h).
@@ -3340,8 +3340,8 @@ AUTOEXEC.BAT files for MSDOS. A typical SYSTEM.CNF would look like so:<br/>
   STACK = 801FFF00                ;HEX (=memtop-256)
 ```
 The first line specifies the executable to load, from the "cdrom:" drive, "\"
-root directory, filename "abcd_123.45" (case-insensitive, the real name in the
-disk directory would be uppercase, ie. "ABCD_123.45"), and, finally ";1" is the
+root directory, filename "abcd\_123.45" (case-insensitive, the real name in the
+disk directory would be uppercase, ie. "ABCD\_123.45"), and, finally ";1" is the
 file's version number (a rather strange ISO-filesystem specific feature) (the
 version number should be usually/always 1). Additionally, "arg" may contain an
 optional 128-byte command line argument string, which is copied to address
@@ -3350,17 +3350,17 @@ don't use that feature).<br/>
 Each line in the file should be terminated by 0Dh,0Ah characters... not sure if
 it's also working with only 0Dh, or only 0Ah...?<br/>
 
-A note on the "ABCD_123.45" file:<br/>
+A note on the "ABCD\_123.45" file:<br/>
 This is a normal executable (exactly as for the .EXE files, described below),
 however, the filename/extension is taken from the game code (the "ABCD-12345"
 text that is printed on the CD cover), but, with the minus replaced by an
 underscore, and due to the 8-letter filename limit, the last two characters are
 stored in the extension region.<br/>
-That "XXXX_NNN.NN" naming convention seems to apply for all official licensed
+That "XXXX\_NNN.NN" naming convention seems to apply for all official licensed
 PSX games, not sure if it's possible to specify something like "FILENAME.EXE"
 as boot-file.<br/>
 
-#### XXXX_NNN.NN (Boot-Executable) (filename specified in SYSTEM.CNF)
+#### XXXX\_NNN.NN (Boot-Executable) (filename specified in SYSTEM.CNF)
 #### FILENAME.EXE (General-Purpose Executable)
 PSX executables are having an 800h-byte header, followed by the code/data.<br/>
 ```
@@ -3465,7 +3465,7 @@ color of the disks, and works also with normal silver disks.<br/>
 
 #### Disk-Swap-Trick
 Once when the PSX has recognized a disk with the "SCEx" signal, it'll be
-satisfied until a new disk is inserted, which is sensed by the SHELL_OPEN
+satisfied until a new disk is inserted, which is sensed by the SHELL\_OPEN
 switch. When having that switch blocked, it is possible to insert a CDR without
 the PSX noticing that the disk was changed.<br/>
 Additionally, the trick requires some boot software that stops the drive motor
@@ -3598,7 +3598,7 @@ protection, ie. games that refuse to run if they detect a modchip. The
 detection relies on the fact that the SCEx signal is normally received only
 when booting the disk, whilst older modchips were sending that signal
 permanently. Stealth modchips are sending the signal only on power-up (and when
-inserting a new disk, which can be sensed via SHELL_OPEN signal).<br/>
+inserting a new disk, which can be sensed via SHELL\_OPEN signal).<br/>
 Modchip detection reportedly works like so (not too sure if all commands are
 required, some seem to be rather offtopic):<br/>
 ```
@@ -3897,7 +3897,7 @@ usually TOC info for Track 1 and up.<br/>
 The .CCD file doesn't define the "PreGapSize" (the number of missing sectors at
 begin of first track). It seems to be simply constant " PreGapSize=150". Unless
 one is supposed to calculate it as
-"PreGapSize=((PMin*60+PSec)*75+PFrame)-PLBA".<br/>
+"PreGapSize=((PMin\*60+PSec)\*75+PFrame)-PLBA".<br/>
 The SectorSize seems to be also constant, "SectorSize=930h".<br/>
 
 #### Non-BCD Caution
@@ -4274,7 +4274,7 @@ the tracks could use separate filename blocks; with different filenames).<br/>
 ```
   00h 6  Filename, terminated by zero (usually "*.mdf",00h)
 ```
-Contains the filename of the of the sector data (usually "*.mdf", indicating to
+Contains the filename of the of the sector data (usually "\*.mdf", indicating to
 use the same name as for the .mds file, but with .mdf extension).<br/>
 
 #### Missing
@@ -4624,7 +4624,7 @@ checksums.<br/>
 M3S files are containing Subchannel Q data for all sectors on Minute=03 (the
 region where PSX libcrypt data is located) (there is no support for storing the
 (unused) libcrypt backup copy on Minute=09). The .M3S filesize is 72000 bytes
-(60 seconds * 75 sectors * 16 bytes). The 16 bytes per sector are:<br/>
+(60 seconds \* 75 sectors \* 16 bytes). The 16 bytes per sector are:<br/>
 ```
   Q0..Q9   Subchannel Q data (normally position data)
   Q10..Q11 Subchannel Q checksum

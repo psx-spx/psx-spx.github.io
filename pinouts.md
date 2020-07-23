@@ -733,7 +733,7 @@ while power is on, better measure them at the CPU side.<br/>
 Pin 1..36 = MIPS-CPU bus. Pin 45..87 = SPU-RAM bus (A0,A10-A15,/WE1,OE1=NC).
 Pin 91..99 = Digital serial audio in/out (A=CDROM, B=EXP, O=OUT).<br/>
 
-#### IC732 - SONY CXD2941R (SPU+CDROM+SPU_RAM) (on PM-41(2) boards)
+#### IC732 - SONY CXD2941R (SPU+CDROM+SPU\_RAM) (on PM-41(2) boards)
 ```
   1-DA16   23-FILO  45-LOCK  67-FSTO  89-SCSY   111-XCS   133-HD9   155-VSS5
   2-DA15   24-FILI  46-SSTP  68-COUT  90-SCLK   112-XRD   134-HD8   156-HA1
@@ -824,7 +824,7 @@ SPU.Pin42 via capacitor to SPU.Pin41, and via resistor?/diode? to IC723.10<br/>
   SPU206  (*) circa 2.27MHz
   SPU70   (*) whatever clock (with SHORT low pulses)
 ```
-(*) these frequencies are twice as fast in double speed mode.<br/>
+(\*) these frequencies are twice as fast in double speed mode.<br/>
 
 #### CXD2938Q CDROM signals
 ```
@@ -970,7 +970,7 @@ and even later boards have it integrated in the SPU.<br/>
 ```
 Datasheet exists. The CXD2545Q combines the functionality of CXA1782BR+CXD2510Q
 from older boards (later boards have it integrated in the SPU). XTAI/XTAO input
-is 16.9344MHz (44.1kHz*180h), with XTSL=GND. Clock outputs are
+is 16.9344MHz (44.1kHz\*180h), with XTSL=GND. Clock outputs are
 FSTO=16.9344MHz/3, FSOF=16.9344MHz/4, C16M=16.9344MHz/1.<br/>
 
 #### IC101 - SONY CXD2515Q - Signal Processor + Servo Amp (used on DTL-H2010)
