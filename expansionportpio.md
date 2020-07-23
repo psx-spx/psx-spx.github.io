@@ -4,7 +4,7 @@ bytes would contain the expansion ROM header.<br/>
 
 For region 1, the CPU outputs a chip select signal (CPU Pin 98, /EXP).<br/>
 For region 2, the CPU doesn't produce a chip select signal (the region is
-intended to contain multiple I/O ports, which do require an address decoder
+intended to contain multiple I/O ports, which require an address decoder
 anyways, that address decoder could treat any /RD or /WR with A13=Hi and A23=Hi
 and A22=Lo as access to expansion region 2 (for /WR, A22 may be ignored;
 assuming that the BIOS is read-only).<br/>
