@@ -41,7 +41,71 @@ For Expansion 3, the address seems to be fixed (1FA00000h).<br/>
   30    Wide DMA           (0=use bit 12, 1=override to full 32 bits)
   31    Wait               (1=wait on external device before being ready)
 ```
-Trying to access addresses that exceed the selected size causes an exception.
+When booting, all these registers are using the maximum cycle delays for both
+reads and writes. When booting, the BIOS will immediately select a faster read
+access delay, resulting in a visible speed up when booting. The effects aren't
+immediate however. The BIOS boots using the following instructions:
+
+```mips
+bfc00000    lui        $t0, 0x0013
+bfc00004    ori        $t0, 0x243f
+bfc00008    lui        $at, 0x1f80
+bfc0000c    sw         $t0, 0x1010($at)
+bfc00010    nop
+bfc00014    li         $t0, 0x0b88
+bfc00018    lui        $at, 0x1f80
+bfc0001c    sw         $t0, 0x1060($at)
+bfc00020    nop
+```
+
+When using a logic analyzer to monitor the boot sequence, the instruction at
+bfc00014 is still read using the old timings since reset, and then the instruction
+at bfc00018 is finally read using the sped up timings.
+
+Reads and writes access times aren't symmetrical, and are each controlled with
+their own values. By default, EXP1 will be set to 16 cycles when writing, which
+is the slowest possible. If the programmer wants to write to a flash chip on
+EXP1, or communicate with a computer, speeding up write access is recommended.
+
+The fastest a port could go would be by setting the lowest 16 bits to zero, which
+will result in 3 CPU cycles for a single byte access.
+
+!CS always goes active at least one cycle before !WR or !RD go active. The various
+timing changes are between all the events inside the data read/write waveform. The
+whole formula for computing the total access time is fairly complex overall, and
+difficult to properly describe.
+
+ - The pre-strobe period will add delays between the moment the data bus is set,
+and the moment !CS goes active.
+ - The hold period will keep the data in the data bus for some more cycles after
+!WR goes inactive, and before !CS goes inactive. The accessed device is supposed
+to sample the data bus during this interval.
+ - The floating period will keep the data bus floating for some more cycles after
+!RD goes inactive, and before !CS goes inactive. The accessed device is supposed
+to stop driving the data bus during this interval. The CPU will sample the data
+bus somewhere before or exactly when !CS goes inactive.
+ - The recovery period will add delays between two operations.
+
+The data bus width will influence if the CPU does full 16 bits reads, or only
+8 bits. When doing 32 bits operations, the CPU will issue 2 16-bits operations,
+or 4 8-bits operations, keeping !CS active the whole time, and strobing !WR or
+!RD accordingly. When doing these sequences, the address bus will also increment
+automatically between each operation, if the auto-increment bit is active.
+
+This means it is possible to slightly shorten the read time of 4 bytes off the
+same address by disabling auto-increment, and reading a full word. The CPU will
+then read 4 bytes off the same address, and place them all into each byte of
+the loaded register.
+
+The DMA timing override portion will replace the access timing when doing DMA,
+only if the DMA override flag is set.
+
+The Wide DMA flag will enable full 32 bits DMA operations on the bus, by reusing
+the low 16-bits address signals as the high 16-bits data. This means that if
+the CPU is doing Wide DMA reads, the low 16-bits of the address bus will become
+inputs.
+
+Trying to access addresses that exceed the selected size causes a bus exception.
 Maximum size would be Expansion 1 = 17h (8MB), BIOS = 16h (4MB), Expansion 2 =
 0Dh (8KB), Expansion 3 = 15h (2MB). Trying to select larger sizes would overlap
 the internal I/O ports, and crash the PSX. The Size bits seem to be ignored for
@@ -73,8 +137,6 @@ Access(es), eg. for a 32bit access with 8bit bus: Total=1ST+SEQ+SEQ+SEQ.<br/>
 If the access is done from code in (uncached) RAM, then 0..4 cycles are added
 to the Total value (the exact number seems to vary depending on the used COMx
 values or so).<br/>
-And the purpose... probably allows to define the length of the chipselect
-signals, and of gaps between that signals...?<br/>
 
 #### 1F801060h - RAM\_SIZE (R/W) (usually 00000B88h) (or 00000888h)
 ```
