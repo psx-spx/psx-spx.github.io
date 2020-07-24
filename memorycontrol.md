@@ -9,7 +9,7 @@ expansion hardware (allowing to increase the memory size and bus width).<br/>
   0-23   Base Address   (Read/Write)
   24-31  Fixed          (Read only, always 1Fh)
 ```
-For Exansion 1, the address is forcefully aligned to the selected expansion
+For Expansion 1, the address is forcefully aligned to the selected expansion
 size (see below), ie. if the size is bigger than 1 byte, then the lower bit(s)
 of the base address are ignored.<br/>
 For Expansion 2, trying to use ANY other value than 1F802000h seems to disable
@@ -24,21 +24,22 @@ For Expansion 3, the address seems to be fixed (1FA00000h).<br/>
 #### 1F801018h - CDROM Delay/Size (00020843h or 00020943h)
 #### 1F80101Ch - Expansion 2 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)
 ```
-  0-3   Unknown (R/W)
-  4-7   Access Time        (00h..0Fh=00h..0Fh Cycles)
-  8     Use COM0 Time      (0=No, 1=Yes, add to Access Time)
-  9     Use COM1 Time      (0=No, 1=Probably Yes, but has no effect?)
-  10    Use COM2 Time      (0=No, 1=Yes, add to Access Time)
-  11    Use COM3 Time      (0=No, 1=Yes, clip to MIN=(COM3+6) or so?)
-  12    Data Bus-width     (0=8bit, 1=16bit)
-  13-15 Unknown (R/W)
+  0-3   Write Delay        (00h..0Fh=01h..10h Cycles)
+  4-7   Read Delay         (00h..0Fh=01h..10h Cycles)
+  8     Recovery Period    (0=No, 1=Yes, uses COM0 timings)
+  9     Hold Period        (0=No, 1=Yes, uses COM1 timings)
+  10    Floating Period    (0=No, 1=Yes, uses COM2 timings)
+  11    Pre-strobe Period  (0=No, 1=Yes, uses COM3 timings)
+  12    Data Bus-width     (0=8bits, 1=16bits)
+  13    Auto Increment     (0=No, 1=Yes)
+  14-15 Unknown (R/W)
   16-20 Memory Window Size (1 SHL N bytes) (0..1Fh = 1 byte ... 2 gigabytes)
   21-23 Unknown (always zero)
-  24-27 Unknown (R/W) ;must be non-zero for SPU-RAM reads
-  28    Unknown (always zero)
-  29    Unknown (R/W)
-  30    Unknown (always zero)
-  31    Unknown (R/W) (Port 1F801008h only; always zero for other ports)
+  24-27 DMA timing override
+  28    Address error flag. Write 1 to it to clear it.
+  29    DMA timing select  (0=use normal timings, 1=use bits 24-27)
+  30    Wide DMA           (0=use bit 12, 1=override to full 32 bits)
+  31    Wait               (1=wait on external device before being ready)
 ```
 Trying to access addresses that exceed the selected size causes an exception.
 Maximum size would be Expansion 1 = 17h (8MB), BIOS = 16h (4MB), Expansion 2 =
@@ -49,12 +50,11 @@ at 1F801C00h and for the 200h-byte unknown region at 1F801E00h.<br/>
 
 #### 1F801020h - COM\_DELAY / COMMON\_DELAY (00031125h or 0000132Ch or 00001325h)
 ```
-  0-3   COM0 - Offset A   ;used for SPU/EXP2 (and for adjusted CDROM timings)
-  4-7   COM1 - No effect? ;used for EXP2
-  8-11  COM2 - Offset B   ;used for BIOS/EXP1/EXP2
-  12-15 COM3 - Min Value  ;used for CDROM
-  16-17 COM? - Unknown    ;used for whatever
-  18-31 Unknown/unused (read: always 0000h)
+  0-3   COM0 - Recovery period cycles
+  4-7   COM1 - Hold period cycles
+  8-11  COM2 - Floating release cycles
+  12-15 COM3 - Strobe active-going edge delay
+  16-31 Unknown/unused (read: always 0000h)
 ```
 This register contains clock cycle offsets that can be added to the Access Time
 values in Port 1F801008h..1Ch. Works (somehow) like so:<br/>
