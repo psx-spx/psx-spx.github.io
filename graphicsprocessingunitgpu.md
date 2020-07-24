@@ -33,6 +33,10 @@ and Text output.<br/>
 ```
 It (=GP0 only?) has a 64-byte (16-word) command FIFO buffer.<br/>
 Optionally, Port 1F801810h (Read/Write) can be also accessed via DMA2.<br/>
+The communication between the CPU and the GPU is a 32-bits data-only bus called
+the VBUS. Aside from address line 2 being connected, in order to make the difference
+between port 0 and 1, there are no other address line between the two chips.<br/>
+Thus the GPU can be seen as a blackbox that executes 32 bits commands.<br/>
 
 #### GPU Timers / Synchronization
 Most of the Timers are bound to GPU timings, see<br/>
@@ -41,33 +45,75 @@ Most of the Timers are bound to GPU timings, see<br/>
 
 #### GPU-related DMA Channels (DMA2 and DMA6)
 ```
-  Channel                  Recommended for
-  DMA2 in Linked Mode    - Sending rendering commands  ;GP0(20h..7Fh,E1h..E6h)
-  DMA2 in Continous Mode - VRAM transfers to/from GPU  ;GP0(A0h,C0h)
-  DMA6                   - Initializing the Link List  ;Main RAM
+  Channel                   Recommended for
+  DMA2 in Linked Mode     - Sending rendering commands  ;GP0(20h..7Fh,E1h..E6h)
+  DMA2 in Continuous Mode - VRAM transfers to/from GPU  ;GP0(A0h,C0h)
+  DMA6                    - Initializing the Link List  ;Main RAM
 ```
 Note: Before using DMA2, set up the DMA Direction in GP1(04h).<br/>
 DMA2 is equivalent to accessing Port 1F801810h (GP0/GPUREAD) by software.<br/>
 DMA6 just initializes data in Main RAM (not physically connected to the GPU).<br/>
 
 #### GPU Command Summary
-Commands/Packets consist of a 8bit command number (MSBs) and a 24bit parameter
-(LSBs), which are written as 32bit value to GP0 or GP1.<br/>
+While it is probably more simple for the MIPS software to see GPU commands
+as a collection of bytes, the GPU will only see 32 bits words being sent to it.
+Therefore, while the Sony libraries will fill up structures to send to the GPU
+using byte-level granularity, it is much more simple to see these as bitmasks
+from the GPU's point of view.<br/>
+So when processing commands on GP0, the GPU will first inspect the top 3 bits
+of the 32 bits command being sent. Depending on the value of these 3 bits,
+further decoding of the other bits can be done.<br/>
+Commands sent to GP1 are more simple in nature to decode.<br/>
+<br/>
+Top 3 bits of a GP0 command:
 ```
-  GP0(00h)                 - Nop?
-  GP0(01h,02h,80h,A0h,C0h) - Direct VRAM Access
-  GP0(03h)                 - Unknown (does take up FIFO space!!!)
-  GP0(1Fh)                 - Interrupt Request (IRQ1)
-  GP0(20h..3Fh)            - Render Polygons
-  GP0(40h..5Fh)            - Render Lines
-  GP0(60h..7Fh)            - Render Rectangles
-  GP0(E1h..E6h)            - Rendering Attributes
-  GP1(00h..09h,10h,20h)    - Display Control (these via GP1 register)
+  0 (000)      Misc commands
+  1 (001)      Polygon primitive
+  2 (010)      Line primitive
+  3 (011)      Rectangle primitive
+  4 (100)      VRAM-to-VRAM blit
+  5 (101)      CPU-to-VRAM blit
+  6 (110)      VRAM-to-CPU blit
+  7 (111)      Environment commands
 ```
 Some GP0 commands require additional parameters, which are written (following
-to the command) as further 32bit values to GP0. The execution of the command
+the initial command) as further 32bit values to GP0. The execution of the command
 starts when all parameters have been received (or, in case of Polygon/Line
-commands, when the first 3/2 vertices have been received).<br/>
+commands, when the first 3/2 vertices have been received).
+
+The astute reader will realize that there are shared bits between primitives, such
+as the gouraud shading flag.
+
+Unlike all the others, the environment commands are more clear to be seen as a single
+8 bits command, therefore the rest of the document will refer to them by their
+full 8 bits value.
+
+#### Clear Cache
+```
+  1st  Command           (01000000h)
+```
+The GPU has a small texture cache, in order to reduce VRAM access. This command
+flushes it, when mutating the VRAM, similar to how the CPU i-cache must be
+flushed after writing new code and before executing it.<br/>
+Note that it is possible to abuse the texture cache by changing pixels in VRAM that
+the GPU loaded in its cache, therefore creating weird drawing effects, but this is
+only seen in some demos, and never in actual games.<br/>
+
+#### Quick Rectangle Fill
+```
+  1st  Color+Command     (02BbGgRrh)  ;24bit RGB value (see note)
+  2nd  Top Left Corner   (YyyyXxxxh)  ;Xpos counted in halfwords, steps of 10h
+  3rd  Width+Height      (YsizXsizh)  ;Xsiz counted in halfwords, steps of 10h
+```
+Fills the area in the frame buffer with the value in RGB. Horizontally the
+filling is done in 16-pixel (32-bytes) units (see below masking/rounding).<br/>
+The "Color" parameter is a 24bit RGB value, however, the actual fill data is
+16bit: The hardware automatically converts the 24bit RGB value to 15bit RGB
+(with bit15=0).<br/>
+Fill is NOT affected by the Mask settings (acts as if Mask.Bit0,1 are both
+zero).<br/>
+This command is typically used to do a quick clear, as it'll be faster to run
+than an equivalent Rectangle command.
 
 #### VRAM Overview / VRAM Addressing
 VRAM is 1MByte (not mapped to the CPU bus) (it can be read/written only via I/O
@@ -88,90 +134,73 @@ The horizontal coordinates are addressing memory in
 using) (or a mixup thereof, eg. a halfword-base address, plus a 4bit texture
 coordinate).<br/>
 
-
-
 ##   GPU Render Polygon Commands
-#### GP0(20h) - Monochrome three-point polygon, opaque
-#### GP0(22h) - Monochrome three-point polygon, semi-transparent
-#### GP0(28h) - Monochrome four-point polygon, opaque
-#### GP0(2Ah) - Monochrome four-point polygon, semi-transparent
+When the upper 3 bits of the first GP0 command are set to 1 (001), then the command can
+be decoded using the following bitfield:
 ```
-  1st  Color+Command     (CcBbGgRrh)
-  2nd  Vertex1           (YyyyXxxxh)
-  3rd  Vertex2           (YyyyXxxxh)
-  4th  Vertex3           (YyyyXxxxh)
- (5th) Vertex4           (YyyyXxxxh) (if any)
-```
-
-#### GP0(24h) - Textured three-point polygon, opaque, texture-blending
-#### GP0(25h) - Textured three-point polygon, opaque, raw-texture
-#### GP0(26h) - Textured three-point polygon, semi-transparent, texture-blending
-#### GP0(27h) - Textured three-point polygon, semi-transparent, raw-texture
-#### GP0(2Ch) - Textured four-point polygon, opaque, texture-blending
-#### GP0(2Dh) - Textured four-point polygon, opaque, raw-texture
-#### GP0(2Eh) - Textured four-point polygon, semi-transparent, texture-blending
-#### GP0(2Fh) - Textured four-point polygon, semi-transparent, raw-texture
-```
-  1st  Color+Command     (CcBbGgRrh) (color is ignored for raw-textures)
-  2nd  Vertex1           (YyyyXxxxh)
-  3rd  Texcoord1+Palette (ClutYyXxh)
-  4th  Vertex2           (YyyyXxxxh)
-  5th  Texcoord2+Texpage (PageYyXxh)
-  6th  Vertex3           (YyyyXxxxh)
-  7th  Texcoord3         (0000YyXxh)
- (8th) Vertex4           (YyyyXxxxh) (if any)
- (9th) Texcoord4         (0000YyXxh) (if any)
+ bit number   value   meaning
+  31-29        001    polygon render
+    28         1/0    gouraud / flat shading
+    27         1/0    4 / 3 vertices
+    26          1     textured / untextured
+    25         1/0    semi transparent / solid
+    24          0     texture blending
+   23-0        rgb    first color value.
 ```
 
-#### GP0(30h) - Shaded three-point polygon, opaque
-#### GP0(32h) - Shaded three-point polygon, semi-transparent
-#### GP0(38h) - Shaded four-point polygon, opaque
-#### GP0(3Ah) - Shaded four-point polygon, semi-transparent
+Subsequent data sent to GP0 to complete this command will be the vertex data for the
+command. The meaning and count of these words will be altered by the initial flags
+sent in the first command.
+
+If doing flat rendering, no further color will be sent. If doing gouraud shading,
+there will be one more color per vertex sent, and the initial color will be the
+one for vertex 0.
+
+If doing 3 or 4 vertices rendering, this will affect the total number of vertex sent.
+
+If doing textured rendering, each vertex sent will also have a U/V texture coordinate
+attached to it, as well as a CLUT index.
+
+So each vertex data can be seen as the following set of words:
 ```
-  1st  Color1+Command    (CcBbGgRrh)
-  2nd  Vertex1           (YyyyXxxxh)
-  3rd  Color2            (00BbGgRrh)
-  4th  Vertex2           (YyyyXxxxh)
-  5th  Color3            (00BbGgRrh)
-  6th  Vertex3           (YyyyXxxxh)
- (7th) Color4            (00BbGgRrh) (if any)
- (8th) Vertex4           (YyyyXxxxh) (if any)
+Color      xxBBGGRR    - optional, only present for gouraud shading
+Vertex     YYYYXXXX    - required, two signed 16 bits values
+UV         ClutUUVV    - optional, only present for textured polygons
 ```
 
-#### GP0(34h) - Shaded Textured three-point polygon, opaque, texture-blending
-#### GP0(36h) - Shaded Textured three-point polygon, semi-transparent, tex-blend
-#### GP0(3Ch) - Shaded Textured four-point polygon, opaque, texture-blending
-#### GP0(3Eh) - Shaded Textured four-point polygon, semi-transparent, tex-blend
+The Clut index is only relevant for the first vertex seen in the stream of data. Any
+further Clut index ought to be set to 0.
+
+So for example, a solid flat blue triangle of coordinate (10, 20), (30, 40), (50, 60)
+will be drawn using the following draw call data:
 ```
-  1st  Color1+Command    (CcBbGgRrh)
-  2nd  Vertex1           (YyyyXxxxh)
-  3rd  Texcoord1+Palette (ClutYyXxh)
-  4th  Color2            (00BbGgRrh)
-  5th  Vertex2           (YyyyXxxxh)
-  6th  Texcoord2+Texpage (PageYyXxh)
-  7th  Color3            (00BbGgRrh)
-  8th  Vertex3           (YyyyXxxxh)
-  9th  Texcoord3         (0000YyXxh)
- (10th) Color4           (00BbGgRrh) (if any)
- (11th) Vertex4          (YyyyXxxxh) (if any)
- (12th) Texcoord4        (0000YyXxh) (if any)
+200000FF
+00100020
+00300040
+00500060
 ```
 
-#### GP0(35h,37h,3Dh,3Fh) - Undocumented/Nonsense (Raw Texture + UNUSED shading)
-These are undocumented inefficient nonsense commands: Parameters are same as
-for GP0(34h,36h,3Ch,3Eh), ie. with colors for all vertices, but without
-actually using that colors. Instead, the commands are rendering raw textures
-without blending.<br/>
-In other words, the commands have same function as GP0(25h,27h,2Dh,2Fh), but
-with additional/unused parameters (and possible additional/unused internal
-gouraud shading calculations).<br/>
-For whatever reason, Castlevania is actually using these nonsense commands,
-namely GP0(3Dh) and GP0(3Fh).<br/>
+And a quad with gouraud shading texture-blend will have the following structure:
+```
+2CR1G1B1
+Yyy1Xxx1
+ClutU1V1
+00R2G2B2
+Yyy2Xxx2
+0000U2V2
+00R3G3B3
+Yyy3Xxx3
+0000U3V3
+00R4G4B4
+Yyy4Xxx4
+0000U4V4
+```
 
-#### GP0(21h,23h,29h,2Bh,31h,33h,39h,3Bh) - Undocumented/Nonsense
-These commands have texture-blending disabled, which is nonsense because they
-are using untextured polygons anyways, ie. they are probably same as
-GP0(20h,22h,28h,2Ah,30h,32h,38h,3Ah).<br/>
+Some combination of these flags can be seen as nonsense however, but it's important
+to realize that the GPU will still process them properly. For instance, specifying
+gouraud shading without texture blending will force the user to send the colors for
+each vertex to satisfy the GPU's state machine, without them being actually used for
+the rendering.
 
 #### Notes
 Polygons are displayed up to \<excluding\> their lower-right coordinates.<br/>
@@ -183,34 +212,29 @@ ordering, can be implemented at the GTE side).<br/>
 Dither enable (in Texpage command) affects ONLY polygons that do use Gouraud
 Shading or Texture Blending.<br/>
 
-
-
 ##   GPU Render Line Commands
-#### GP0(40h) - Monochrome line, opaque
-#### GP0(42h) - Monochrome line, semi-transparent
-#### GP0(48h) - Monochrome Poly-line, opaque
-#### GP0(4Ah) - Monochrome Poly-line, semi-transparent
+When the upper 3 bits of the first GP0 command are set to 2 (010), then the command can
+be decoded using the following bitfield:
 ```
-  1st   Color+Command     (CcBbGgRrh)
-  2nd   Vertex1           (YyyyXxxxh)
-  3rd   Vertex2           (YyyyXxxxh)
- (...)  VertexN           (YyyyXxxxh) (poly-line only)
- (Last) Termination Code  (55555555h) (poly-line only)
+ bit number   value   meaning
+  31-29        010    line render
+    28         1/0    gouraud / flat shading
+    27         1/0    polyline / single line
+    25         1/0    semi transparent / solid
+   23-0        rgb    first color value.
 ```
 
-#### GP0(50h) - Shaded line, opaque
-#### GP0(52h) - Shaded line, semi-transparent
-#### GP0(58h) - Shaded Poly-line, opaque
-#### GP0(5Ah) - Shaded Poly-line, semi-transparent
+So each vertex can be seen as the following list of words:
 ```
-  1st   Color1+Command    (CcBbGgRrh)
-  2nd   Vertex1           (YyyyXxxxh)
-  3rd   Color2            (00BbGgRrh)
-  4th   Vertex2           (YyyyXxxxh)
- (...)  ColorN            (00BbGgRrh) (poly-line only)
- (...)  VertexN           (YyyyXxxxh) (poly-line only)
- (Last) Termination Code  (55555555h) (poly-line only)
+Color      xxBBGGRR    - optional, only present for gouraud shading
+Vertex     YYYYXXXX    - required, two signed 16 bits values
 ```
+
+When the polyline mode is active, then there is no fixed amount of words
+to be sent. The last word will have a magic value, which will usually be
+55555555, but also sometimes 50005000. Note that the magic value can then
+either be for the color word, or the vertex word.
+
 
 #### Note
 Lines are displayed up to \<including\> their lower-right coordinates (ie.
@@ -219,10 +243,6 @@ If dithering is enabled (via Texpage command), then both monochrome and shaded
 lines are drawn with dithering (this differs from monochrome polygons and
 monochrome rectangles).<br/>
 
-#### Termination Codes for Poly-Lines (aka Linestrips)
-The termination code should be usually 55555555h, however, Wild Arms 2 uses
-50005000h (unknown which exact bits/values are relevant there).<br/>
-
 #### Wire-Frame
 Poly-Lines can be used (among others) to create Wire-Frame polygons (by setting
 the last Vertex equal to Vertex 1).<br/>
@@ -230,48 +250,39 @@ the last Vertex equal to Vertex 1).<br/>
 
 
 ##   GPU Render Rectangle Commands
-Rectangles are drawn much faster than polygons. Unlike for polygons, gouroud
+Rectangles are drawn much faster than polygons. Unlike polygons, gouraud
 shading is not possible, dithering isn't applied, the rectangle must forcefully
 have horizontal and vertical edges, textures cannot be rotated or scaled, and,
-of course, the GPU does render Rectangles at once (without splitting them into
-triangles).<br/>
+of course, the GPU does render Rectangles as a single entity, without splitting
+them into two triangles.<br/>
 
-#### GP0(60h) - Monochrome Rectangle (variable size) (opaque)
-#### GP0(62h) - Monochrome Rectangle (variable size) (semi-transparent)
-#### GP0(68h) - Monochrome Rectangle (1x1) (Dot) (opaque)
-#### GP0(6Ah) - Monochrome Rectangle (1x1) (Dot) (semi-transparent)
-#### GP0(70h) - Monochrome Rectangle (8x8) (opaque)
-#### GP0(72h) - Monochrome Rectangle (8x8) (semi-transparent)
-#### GP0(78h) - Monochrome Rectangle (16x16) (opaque)
-#### GP0(7Ah) - Monochrome Rectangle (16x16) (semi-transparent)
+The Rectangle command can be decoded using the following bitfield:
 ```
-  1st  Color+Command     (CcBbGgRrh)
-  2nd  Vertex            (YyyyXxxxh)
- (3rd) Width+Height      (YsizXsizh) (variable size only) (max 1023x511)
+ bit number   value   meaning
+  31-29        011    rectangle render
+  28-27        sss    rectangle size
+    26         1/0    textured / untextured
+    25         1/0    semi transparent / solid
+   23-0        rgb    first color value.
 ```
 
-#### GP0(64h) - Textured Rectangle, variable size, opaque, texture-blending
-#### GP0(65h) - Textured Rectangle, variable size, opaque, raw-texture
-#### GP0(66h) - Textured Rectangle, variable size, semi-transp, texture-blending
-#### GP0(67h) - Textured Rectangle, variable size, semi-transp, raw-texture
-#### GP0(6Ch) - Textured Rectangle, 1x1 (nonsense), opaque, texture-blending
-#### GP0(6Dh) - Textured Rectangle, 1x1 (nonsense), opaque, raw-texture
-#### GP0(6Eh) - Textured Rectangle, 1x1 (nonsense), semi-transp, texture-blending
-#### GP0(6Fh) - Textured Rectangle, 1x1 (nonsense), semi-transp, raw-texture
-#### GP0(74h) - Textured Rectangle, 8x8, opaque, texture-blending
-#### GP0(75h) - Textured Rectangle, 8x8, opaque, raw-texture
-#### GP0(76h) - Textured Rectangle, 8x8, semi-transparent, texture-blending
-#### GP0(77h) - Textured Rectangle, 8x8, semi-transparent, raw-texture
-#### GP0(7Ch) - Textured Rectangle, 16x16, opaque, texture-blending
-#### GP0(7Dh) - Textured Rectangle, 16x16, opaque, raw-texture
-#### GP0(7Eh) - Textured Rectangle, 16x16, semi-transparent, texture-blending
-#### GP0(7Fh) - Textured Rectangle, 16x16, semi-transparent, raw-texture
+The `size` parameter can be seen as the following enum:
+
 ```
-  1st  Color+Command     (CcBbGgRrh) (color is ignored for raw-textures)
-  2nd  Vertex            (YyyyXxxxh) (upper-left edge of the rectangle)
-  3rd  Texcoord+Palette  (ClutYyXxh) (for 4bpp Textures Xxh must be even!)
- (4th) Width+Height      (YsizXsizh) (variable size only) (max 1023x511)
+  0 (00)      variable size
+  1 (01)      single pixel (1x1)
+  2 (10)      8x8 sprite
+  3 (11)      16x16 sprite
 ```
+
+Therefore, the whole draw call can be seen as the following sequence of words:
+```
+Color      ccBBGGRR    - command + color; color is ignored when textured
+Vertex1    YYYYXXXX    - required, indicates the upper left corner to render
+UV         ClutUUVV    - optional, only present for textured rectangles
+Vertex2    YYYYXXXX    - optional, bottom right corner for variable sized rectangles
+```
+
 Unlike for Textured-Polygons, the "Texpage" must be set up separately for
 Rectangles, via GP0(E1h). Width and Height can be up to 1023x511, however, the
 maximum size of the texture window is 256x256 (so the source data will be
@@ -439,66 +450,46 @@ for 15bit textures). However, Mask does NOT affect the Fill-VRAM command.<br/>
 GP0(E3h..E5h) do not take up space in the FIFO, so they are probably executed
 immediately (even if there're still other commands in the FIFO). Best use them
 only if you are sure that the FIFO is empty (otherwise the new Drawing Area
-settings might accidently affect older Rendering Commands in the FIFO).<br/>
+settings might accidentally affect older Rendering Commands in the FIFO).<br/>
 
 
 
 ##   GPU Memory Transfer Commands
-#### GP0(01h) - Clear Cache
-```
-  1st  Command           (Cc000000h)
-```
-"Seems to be the same as the GP1 command." Uh, which GP1 command?<br/>
-Before using GP(A0h) or GP(C0h) one should reportedly send:<br/>
-Clear Cache       (01000000h)<br/>
-"Reset command buffer (write to GP1 or GP0)" Uh? Bullshit.<br/>
-However, there \<may\> be some situations in which it is neccessary to
-flush the texture cache.<br/>
 
-#### GP0(02h) - Fill Rectangle in VRAM
-```
-  1st  Color+Command     (CcBbGgRrh)  ;24bit RGB value (see note)
-  2nd  Top Left Corner   (YyyyXxxxh)  ;Xpos counted in halfwords, steps of 10h
-  3rd  Width+Height      (YsizXsizh)  ;Xsiz counted in halfwords, steps of 10h
-```
-Fills the area in the frame buffer with the value in RGB. Horizontally the
-filling is done in 16-pixel (32-bytes) units (see below masking/rounding).<br/>
-The "Color" parameter is a 24bit RGB value, however, the actual fill data is
-16bit: The hardware automatically converts the 24bit RGB value to 15bit RGB
-(with bit15=0).<br/>
-Fill is NOT affected by the Mask settings (acts as if Mask.Bit0,1 are both
-zero).<br/>
+The next three commands being described are when the high 3 bits are set to the
+values 4 (100), 5 (101), and 6 (110). For them, the remaining 29 bits are ignored,
+and can be set to any arbitrary value.
 
-#### GP0(80h) - Copy Rectangle (VRAM to VRAM)
+#### VRAM to VRAM blitting - command 4 (100)
 ```
-  1st  Command           (Cc000000h)
+  1st  Command
   2nd  Source Coord      (YyyyXxxxh)  ;Xpos counted in halfwords
   3rd  Destination Coord (YyyyXxxxh)  ;Xpos counted in halfwords
   4th  Width+Height      (YsizXsizh)  ;Xsiz counted in halfwords
 ```
-Copys data within framebuffer. The transfer is affected by Mask setting.<br/>
+Copies data within framebuffer. The transfer is affected by Mask setting.<br/>
 
-#### GP0(A0h) - Copy Rectangle (CPU to VRAM)
+#### CPU to VRAM blitting - command 5 (101)
 ```
-  1st  Command           (Cc000000h)
+  1st  Command
   2nd  Destination Coord (YyyyXxxxh)  ;Xpos counted in halfwords
   3rd  Width+Height      (YsizXsizh)  ;Xsiz counted in halfwords
   ...  Data              (...)      <--- usually transferred via DMA
 ```
 Transfers data from CPU to frame buffer. If the number of halfwords to be sent
-is odd, an extra halfword should be sent (packets consist of 32bit units). The
+is odd, an extra halfword should be sent, as packets consist of 32bits words. The
 transfer is affected by Mask setting.<br/>
 
-#### GP0(C0h) - Copy Rectangle (VRAM to CPU)
+#### VRAM to CPU blitting - command 6 (110)
 ```
-  1st  Command           (Cc000000h) ;\
+  1st  Command                       ;\
   2nd  Source Coord      (YyyyXxxxh) ; write to GP0 port (as usually)
   3rd  Width+Height      (YsizXsizh) ;/
   ...  Data              (...)       ;<--- read from GPUREAD port (or via DMA)
 ```
 Transfers data from frame buffer to CPU. Wait for bit27 of the status register
 to be set before reading the image data. When the number of halfwords is odd,
-an extra halfword is read at the end (packets consist of 32bit units).<br/>
+an extra halfword is added at the end, as packets consist of 32bits words.<br/>
 
 #### Masking and Rounding for FILL Command parameters
 ```
@@ -571,12 +562,6 @@ Like GP0(00h), these commands don't take up space in the FIFO. So, maybe, they
 are same as GP0(00h), however, the Drawing Area/Offset commands GP0(E3h..E5h)
 don't take up FIFO space either, so not taking up FIFO space doesn't
 neccessarily mean that the command has no function.<br/>
-
-#### GP0(81h..9Fh) - Mirror of GP0(80h) - Copy Rectangle (VRAM to VRAM)
-#### GP0(A1h..BFh) - Mirror of GP0(A0h) - Copy Rectangle (CPU to VRAM)
-#### GP0(C1h..DFh) - Mirror of GP0(C0h) - Copy Rectangle (VRAM to CPU)
-Mirrors.<br/>
-
 
 
 ##   GPU Display Control Commands (GP1)
