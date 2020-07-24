@@ -98,7 +98,7 @@ Possible values for Bit9-11 are:<br/>
   6 = 2MB Memory + 2MB HighZ + 4MB Locked     ;<-- HighZ = Second /RAS
   7 = 8MB Memory
 ```
-The BIOS initializes this to setting 5 (8MB) (ie. the 2MB RAM repated 4 times),
+The BIOS initializes this to setting 5 (8MB) (ie. the 2MB RAM repeated 4 times),
 although the "correct" would be setting 4 (2MB, plus other 6MB Locked). The
 remaining memory, after the first 8MB, and up to the Expansion/IO/BIOS region
 seems to be always Locked.<br/>
