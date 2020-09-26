@@ -502,6 +502,8 @@ Fill does NOT occur when Xsiz=0 or Ysiz=0 (unlike as for Copy commands).
 Xsiz=400h works only indirectly: Param=400h is handled as Xsiz=0, however,
 Param=3F1h..3FFh is rounded-up and handled as Xsiz=400h.<br/>
 
+Note that because of the height (Ysiz) masking, a maximum of 511 rows can be filled in a single command. Calling a fill with a full VRAM height of 512 rows will be ineffective as the height will be masked to 0.
+
 #### Masking for COPY Commands parameters
 ```
   Xpos=(Xpos AND 3FFh)                       ;range 0..3FFh
