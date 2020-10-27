@@ -702,9 +702,13 @@ reverb write(s) are triggering interrupts.<br/>
 Data Transfers (usually via DMA4) to/from SPU-RAM do also trap SPU interrupts.<br/>
 
 #### Note
-IRQ Address is used by Metal Gear Solid, Legend of Mana, Tokimeki Memorial 2,
-Crash Team Racing, The Misadventures of Tron Bonne, and (somewhat?) by Need For
-Speed 3.<br/>
+The IRQ Address is used in the following games (not exhaustive):
+Metal Gear Solid: Dialogue and Konami intro.
+Legend of Mana
+Tokimeki Memorial 2
+Crash Team Racing: Lip sync, requires capture buffers.
+The Misadventures of Tron Bonne: Dialogues. 
+Need For Speed 3: (somewhat?).<br/>
 
 
 
