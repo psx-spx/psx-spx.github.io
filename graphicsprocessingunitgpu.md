@@ -596,7 +596,7 @@ command.<br/>
 ```
   0-23  Not used (zero)
 ```
-Resets the command buffer.<br/>
+Resets the command buffer and CLUT cache.<br/>
 
 #### GP1(02h) - Acknowledge GPU Interrupt (IRQ1)
 ```
@@ -1153,8 +1153,7 @@ from 16 to 31.<br/>
 
 ##   GPU Texture Caching
 The GPU has 2 Kbyte Texture Cache<br/>
-The Texture Cache is (maybe) also used for CLUT data - or is there a separate
-CLUT Cache - or is the CLUT uncached - but that'd be trash?<br/>
+There is also a CLUT cache that is preserved between GPU drawing commands. The CLUT cache is invalidated when different CLUT index values are used or when GP0(01h) is issued. It is unknown if the CLUT cache overlaps or is shared with the Texture Cache.
 
 If polygons with texture are displayed, the GPU needs to read these from the
 frame buffer. This slows down the drawing process, and as a result the number
