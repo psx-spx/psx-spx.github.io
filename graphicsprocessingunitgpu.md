@@ -445,6 +445,7 @@ write-protected, and cannot be overwritten by (new) rendering commands.<br/>
 The mask setting affects all rendering commands, as well as CPU-to-VRAM and
 VRAM-to-VRAM transfer commands (where it acts on the separate halfwords, ie. as
 for 15bit textures). However, Mask does NOT affect the Fill-VRAM command.<br/>
+This setting is used in games such as Metal Gear Solid and Silent Hill.
 
 #### Note
 GP0(E3h..E5h) do not take up space in the FIFO, so they are probably executed
