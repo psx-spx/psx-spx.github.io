@@ -1,3 +1,6 @@
 site_name: PlayStation Specifications
 
 theme: jekyll-theme-minimal
+
+- name: Deploy MkDocs
+  uses: mhausenblas/mkdocs-deploy-gh-pages@1.16
