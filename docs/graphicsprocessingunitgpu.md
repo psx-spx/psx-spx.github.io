@@ -445,6 +445,7 @@ write-protected, and cannot be overwritten by (new) rendering commands.<br/>
 The mask setting affects all rendering commands, as well as CPU-to-VRAM and
 VRAM-to-VRAM transfer commands (where it acts on the separate halfwords, ie. as
 for 15bit textures). However, Mask does NOT affect the Fill-VRAM command.<br/>
+This setting is used in games such as Metal Gear Solid and Silent Hill.
 
 #### Note
 GP0(E3h..E5h) do not take up space in the FIFO, so they are probably executed
@@ -501,6 +502,8 @@ an extra halfword is added at the end, as packets consist of 32bits words.<br/>
 Fill does NOT occur when Xsiz=0 or Ysiz=0 (unlike as for Copy commands).
 Xsiz=400h works only indirectly: Param=400h is handled as Xsiz=0, however,
 Param=3F1h..3FFh is rounded-up and handled as Xsiz=400h.<br/>
+
+Note that because of the height (Ysiz) masking, a maximum of 511 rows can be filled in a single command. Calling a fill with a full VRAM height of 512 rows will be ineffective as the height will be masked to 0.
 
 #### Masking for COPY Commands parameters
 ```
@@ -594,7 +597,7 @@ command.<br/>
 ```
   0-23  Not used (zero)
 ```
-Resets the command buffer.<br/>
+Resets the command buffer and CLUT cache.<br/>
 
 #### GP1(02h) - Acknowledge GPU Interrupt (IRQ1)
 ```
@@ -644,7 +647,7 @@ size=(X2-X1/cycles\_per\_pix), (Y2-Y1).<br/>
 
 #### GP1(06h) - Horizontal Display range (on Screen)
 ```
-  0-11   X1 (260h+0)       ;12bit       ;\counted in 53.222400MHz units,
+  0-11   X1 (260h+0)       ;12bit       ;\counted in video clock units,
   12-23  X2 (260h+320*8)   ;12bit       ;/relative to HSYNC
 ```
 Specifies the horizontal range within which the display area is displayed. For
@@ -660,11 +663,12 @@ due to programming bugs). Pandemonium 2 is using a bigger "overscan" width
 The 260h value is the first visible pixel on normal TV Sets, this value is used
 by MOST NTSC games, and SOME PAL games (see below notes on Mis-Centered PAL
 games).<br/>
+Video clock unit used depends on console region, regardless of NTSC/PAL video mode set by GP1(08h).3; see section on [nominal video clocks](#nominal-video-clock) for values.<br/>
 
 #### GP1(07h) - Vertical Display range (on Screen)
 ```
-  0-9   Y1 (NTSC=88h-(224/2), (PAL=A3h-(264/2))  ;\scanline numbers on screen,
-  10-19 Y2 (NTSC=88h+(224/2), (PAL=A3h+(264/2))  ;/relative to VSYNC
+  0-9   Y1 (NTSC=88h-(240/2), (PAL=A3h-(288/2))  ;\scanline numbers on screen,
+  10-19 Y2 (NTSC=88h+(240/2), (PAL=A3h+(288/2))  ;/relative to VSYNC
   20-23 Not used (zero)
 ```
 Specifies the vertical range within which the display area is displayed. The
@@ -674,9 +678,9 @@ to generate vblank interrupts (IRQ0).<br/>
 The 88h/A3h values are the middle-scanlines on normal TV Sets, these values are
 used by MOST NTSC games, and SOME PAL games (see below notes on Mis-Centered
 PAL games).<br/>
-The 224/264 values are for fullscreen pictures. Many NTSC games display 240
-lines (overscan with hidden lines). Many PAL games display only 256 lines
-(underscan with black borders).<br/>
+The 240/288 values are for fullscreen pictures. Many NTSC games display 240
+lines, but on most analog television sets, only 224 lines are visible (8 lines of overscan on top and 8 lines of overscan on bottom). Many PAL games display only 256 lines (underscan with black borders).<br/>
+Some games such as Chrono Cross will occasionally adjust these values to create a screen shake effect, so proper emulation of this command is necessary for those particular cases.<br/>
 
 #### GP1(08h) - Display mode
 ```
@@ -1150,8 +1154,7 @@ from 16 to 31.<br/>
 
 ##   GPU Texture Caching
 The GPU has 2 Kbyte Texture Cache<br/>
-The Texture Cache is (maybe) also used for CLUT data - or is there a separate
-CLUT Cache - or is the CLUT uncached - but that'd be trash?<br/>
+There is also a CLUT cache that is preserved between GPU drawing commands. The CLUT cache is invalidated when different CLUT index values are used or when GP0(01h) is issued. It is unknown if the CLUT cache overlaps or is shared with the Texture Cache.
 
 If polygons with texture are displayed, the GPU needs to read these from the
 frame buffer. This slows down the drawing process, and as a result the number
@@ -1201,6 +1204,47 @@ but also on entry 9 of block 2, these cannot be in the cache at once.<br/>
 
 
 ##   GPU Timings
+#### Nominal Video Clock
+
+```
+  NTSC video clock = 53.693175 MHz
+  PAL video clock  = 53.203425 MHz
+```
+Consoles will always use the video clock for its region, regardless of the GPU being configured in NTSC or PAL output mode, because an NTSC console lacks a PAL reference clock and vice versa. Without modifications for an additional oscillator for the other region, consoles may experience drift over time when playing content from a different video region. See vertical refresh rates below.
+
+#### Vertical Video Timings
+```
+  263 scanlines per field for NTSC non-interlaced
+  262.5 scanlines per field for NTSC interlaced
+
+  314 scanlines per field for PAL non-interlaced
+  312.5 scanlines per field for PAL interlaced
+```
+Horizontal blanking and vertical blanking signals occur on the video output side as expected for NTSC/PAL signals. These are not necessarily the same as the timmer/interrupt HBLANK and VBLANK.
+
+#### Vertical Refresh Rates
+```
+  NTSC mode on NTSC video clock
+  Interlaced:     59.940 Hz
+  Non-interlaced: 59.826 Hz
+
+  PAL mode on PAL video clock
+  Interlaced:     50.000 Hz
+  Non-interlaced: 49.761 Hz
+
+  NTSC mode on PAL video clock
+  Interlaced:     59.393 Hz
+  Non-interlaced: 59.280 Hz
+
+  PAL mode on NTSC video clock
+  Interlaced:     50.460 Hz
+  Non-interlaced: 50.219 Hz
+```
+For emulation purposes, it's recommended to use an NTSC video clock when running NTSC content (or in NTSC mode) and a PAL clock when running PAL content (or in PAL mode).
+
+TODO: Derivations for vertical refresh rates; horizontal timing notes
+
+**Nocash's original GPU Timings notes:**
 #### Video Clock
 The PSone/PAL video clock is the cpu clock multiplied by 11/7.<br/>
 ```

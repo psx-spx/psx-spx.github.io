@@ -47,6 +47,7 @@ clock cycles when an IRQ occurs). In Toggle mode, Bit10 is set after writing to
 the Mode register, and becomes inverted on each IRQ (in one-shot mode, it
 remains zero after the IRQ) (in repeat mode it inverts Bit10 on each IRQ, so
 IRQ4/5/6 are triggered only each 2nd time, ie. when Bit10 changes from 1 to 0).<br/>
+The "free run" mode is simply saying that the counter will not reset at a given threshold value.
 
 #### 1F801108h+N\*10h - Timer 0..2 Counter Target Value (R/W)
 ```

@@ -12,7 +12,7 @@
 [SPU Reverb Formula](soundprocessingunitspu.md#spu-reverb-formula)<br/>
 [SPU Reverb Examples](soundprocessingunitspu.md#spu-reverb-examples)<br/>
 [SPU Unknown Registers](soundprocessingunitspu.md#spu-unknown-registers)<br/>
-
+[SPU Internal Timing](soundprocessingunitspu.md#spu-internal-timing)<br/>
 
 
 ##   SPU Overview
@@ -702,9 +702,14 @@ reverb write(s) are triggering interrupts.<br/>
 Data Transfers (usually via DMA4) to/from SPU-RAM do also trap SPU interrupts.<br/>
 
 #### Note
-IRQ Address is used by Metal Gear Solid, Legend of Mana, Tokimeki Memorial 2,
-Crash Team Racing, The Misadventures of Tron Bonne, and (somewhat?) by Need For
-Speed 3.<br/>
+The IRQ Address is used in the following games (not exhaustive):
+Metal Gear Solid: Dialogue and Konami intro.
+Legend of Mana
+Hercules: the memory card loading screen's lip sync.
+Tokimeki Memorial 2
+Crash Team Racing: Lip sync, requires capture buffers.
+The Misadventures of Tron Bonne: Dialogues. 
+Need For Speed 3: (somewhat?).<br/>
 
 
 
@@ -984,5 +989,93 @@ seem to modify the registers at any time during sound output, nor reverb
 calculations, nor activated external audio input... the registers seem to be
 just some kind of general-purpose RAM.<br/>
 
+##   SPU Internal State Machine from SPU RAM Timing
+### Introduction
+
+The 33.8 Mhz clock of the PSX is a well chosen value.
+It is exactly 768 x 44.1 Khz = For each audio sample in CD quality, there are 768 cycles of system clock.
+So, the state machine has to repeat its complete cycle every 768 system clock cycles.
+
+Now the full job to do within those 768 cycles:
+- 24 channels to process.
+- Reverb to compute and write back.
+- Write back to voice 1 / 3, audio CD L/R.
+- Do transfer from/to CPU bus of SPU RAM data if asked.
+
+### First look at the data from logic analyzer.
+
+By looking at the signal of the SPU RAM chip, it is possible to figure out what it is reading and writing.
+- A read or a write to the SPU Ram is happening in 8 clock cycles. (Did not check in detail, but probably allow refresh and everything)
+- Each channel is using 24 cycles. (3 operations of 8 cycles)
+  - Has TWO read for the current ADPCM block : one to the header of the currently played ADPCM block, one to the current 16 bit of the ADPCM.
+  - A unrelated READ (see later)
+- 8 Cycle for each operation : WRITE CD Left, WRITE CD Right, Voice 1 WRITE, Voice 3 WRITE.
+- Reverb operations : 14 memory operations of 8 cycles.
+
+### Sequence of work
+
+When doing the analysis from data, it is possible to figure out what are the operations, in what order they are done.
+But it is not possible to figure out what is the FIRST operation in the loop.
+So we arbitrarely decide to start the loop at 'Voice 1' (voice being from 1 to 24).
+
+- Voice 1
+- Write CD Left
+- Write CD Right
+- Write Voice 1
+- Write Voice 3
+- Reverb
+- Voice 2
+- Voice 3
+- Voice 4
+- ...
+- ...
+- Voice 23
+- Voice 24
+
+As written earlier, each Voice is 3x RAM access (one unrelated), reverb is 14x RAM access, then 4x RAM access for the all write.
 
 
+### What we can guess from those information.
+- If system wants to keep reverb done in the end, and write in sync against Voice 1 and 3, then the loop would most likely start at Voice 2.
+- ADPCM decoder has to keep ADPCM decoder internal state about the samples. As the algorithm depends on the previous value inside a block, it can't do a direct access to a given sample in the block.
+- We also understand how reverb is using 22 Khz because of the lack of bandwidth to do everything in 768 cycles if done at 44.1 Khz.
+- Even when voices are not active, they always read something. It is possible to guess that the sample is simply ignored at some point in the data path (volume set to zero internally or mux not selecting the value). Interestingly, it may be possible if garbage is introduced in those read, to know how it is cancelled (enabling suddenly the channel and reading the sample out of the channel 1 or 3) -> DSP keeps history of sample for Gaussian Interpolation.
+
+### Reverb Computation Order ####
+```
+             [Left Side]        [Right Side]
+READ REVERB   dLSame            dRSame
+READ REVERB   mLSame-1          mRSame-1
+READ REVERB   dRDiff            dLDiff
+XXXX REVERB   mLSame            mRSame          <-- WRITE becomes READ if REVERB DISABLED.
+READ REVERB   mLDiff-1          mRDiff-1
+READ REVERB   mLComb1           mRComb1
+XXXX REVERB   mLDiff            mRDiff          <-- WRITE becomes READ if REVERB DISABLED.
+READ REVERB   mLComb2           mRComb2
+READ REVERB   mLComb3           mRComb3
+READ REVERB   mLComb4           mRComb4
+READ REVERB   mLAPF1 - dAPF1    mRAPF1 - dAPF1
+READ REVERB   mLAPF2 - dAPF2    mRAPF2 - dAPF2
+XXXX REVERB   mLAPF1            mRAPF1          <-- WRITE becomes READ if REVERB DISABLED.
+XXXX REVERB   mLAPF2            mRAPF2          <-- WRITE becomes READ if REVERB DISABLED.
+```
+We anticipate that the easiest way in hardware to disable/enable the REVERB function would be to switch those WRITE into READ.
+
+### Voices
+```
+Read Header word in current ADPCM block.
+Read Current Sample 16 bit word in current ADPCM block.
+Read [UNRELATED ADR ? Not related to current block...]
+```
+
+### Notes
+- Remaining cycles.
+  - With 24x8 + 4x8 + 14x8 = 720 cycles out of 768 cycles.
+  - That would mean 6 READ/WRITE should still be possible.
+- UNRELATED READ in voices : probably used for transfer from [CPU->SPU RAM] or [SPU RAM->CPU]
+  - That would equate to a transfer performance of 24 x 2 byte x 44100 Khz = 2,116,800 bytes/sec
+- The fixed READ timing would explain also why CPU can't read directly SPU RAM. As the SPU need to be the master to push the data.
+  - It only works with DMA waiting for the data to be sent.
+
+Everything is not fully clear yet, testing of SPU with proper tests to validate/invalidate various assumption.
+Our finding are based on a logic analyzer log using the PSX boot sounds, knowing the values of the registers thanks to emulators.

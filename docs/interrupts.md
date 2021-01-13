@@ -15,7 +15,7 @@ Mask: Read/Write I\_MASK (0=Disabled, 1=Enabled)<br/>
   7     IRQ7 Controller and Memory Card - Byte Received Interrupt
   8     IRQ8 SIO
   9     IRQ9 SPU
-  10    IRQ10 Controller - Lightpen Interrupt (reportedly also PIO...?)
+  10    IRQ10 Controller - Lightpen Interrupt. Also shared by PIO and DTL cards.
   11-15 Not used (always zero)
   16-31 Garbage
 ```

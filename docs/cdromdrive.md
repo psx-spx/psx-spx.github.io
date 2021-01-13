@@ -1820,6 +1820,28 @@ before the cdrom controller receives and skips further sectors). Otherwise
 sectors would be lost without notice (there appear to be absolutely no overrun
 status flags, nor overrun error interrupts).<br/>
 
+#### Update:
+This is confirmed, as found in the SCEA_BBS.pdf bulletin board archive:
+```
+12/29/95 10:24 AM
+Re(4): CD buffer
+Thomas Boyd
+CD
+Dan Burnash
+OK. This is the story of the CD ROM subsystem sector buffer:
+The CD-ROM subsystem sector buffer is currently 32K. It is located in the CD-ROM subsystem.
+It uses a sort-of tripple buffering system to read sectors in and make one (and ONLY one) sector
+available to the user.
+Common questions that spring to mind and their answers:
+Q: 32K - (2352 bytes/sector)*(3 buffered sectors) = lots of leftover RAM! Can I use it? A: No. It is
+not accessible by anything but the CD-ROM subsystem.
+Q: How dissappointing. As consolation, can I be told what the extra memory is used for? A: The
+memory was going to be used for sound mapping, but (1) the system would be too slow, and
+(2) sound mapping is already done by the SPU. The current implementation of this memory is ...
+nothing. It is vestigal and will be cut out in future manufacturing cost reduction designs.
+Tom
+```
+
 #### Sector Buffer Test Cases
 ```
   Setloc(0:2:0)+Read
