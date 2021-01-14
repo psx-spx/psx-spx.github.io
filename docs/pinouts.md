@@ -44,6 +44,8 @@
   9 In  /ACK   IRQ7 Acknowledge (each eight CLKs)
   Shield       Ground (Joypad only, not memory card)
 ```
+![Controller pinout](controller-pinout.jpg)
+
 /JOYn are two separate signals (/JOY1 for left card/pad, /JOY2 for right
 card/pad) (whether it is an card or pad access depends on the first CMD bit).
 All other signals are exactly the same on all four connectors (except that pin8
