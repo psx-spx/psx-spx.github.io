@@ -33,7 +33,7 @@ Additionally, there are a number of memory mirrors.<br/>
 ```
 Kernel Memory: KSEG1 is the normal physical memory (uncached), KSEG0 is a
 mirror thereof (but with cache enabled). KSEG2 is usually intended to contain
-virtual kernel memory, in the PSX it's containing Cache Control hardware registers.<br/>
+virtual kernel memory, but in the PSX it's containing Cache Control hardware registers.<br/>
 User Memory: KUSEG is intended to contain 2GB virtual memory (on extended MIPS
 processors), the PSX doesn't support virtual memory, and KUSEG simply contains
 a mirror of KSEG0/KSEG1 (in the first 512MB) (trying to access memory in the
