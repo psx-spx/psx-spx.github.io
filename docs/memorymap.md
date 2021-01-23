@@ -9,7 +9,7 @@
   1F802000h 9F802000h BF802000h  8K     Expansion Region 2 (I/O Ports)
   1FA00000h 9FA00000h BFA00000h  2048K  Expansion Region 3 (SRAM BIOS region for DTL cards)
   1FC00000h 9FC00000h BFC00000h  512K   BIOS ROM (Kernel) (4096K max)
-        FFFE0000h (KSEG2)        0.5K   I/O Ports (Cache Control)
+        FFFE0000h (in KSEG2)     0.5K   Internal CPU control registers (Cache Control)
 ```
 Additionally, there are a number of memory mirrors.<br/>
 
@@ -33,7 +33,7 @@ Additionally, there are a number of memory mirrors.<br/>
 ```
 Kernel Memory: KSEG1 is the normal physical memory (uncached), KSEG0 is a
 mirror thereof (but with cache enabled). KSEG2 is usually intended to contain
-virtual kernel memory, in the PSX it's containing Cache Control I/O Ports.<br/>
+virtual kernel memory, in the PSX it's containing Cache Control hardware registers.<br/>
 User Memory: KUSEG is intended to contain 2GB virtual memory (on extended MIPS
 processors), the PSX doesn't support virtual memory, and KUSEG simply contains
 a mirror of KSEG0/KSEG1 (in the first 512MB) (trying to access memory in the
