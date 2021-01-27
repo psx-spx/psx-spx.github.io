@@ -366,6 +366,3 @@ need to push/pull drive tray manually.<br/>
 A rare SCEx-free Playstation that can boot from CDR's without SCEx strings;
 maybe intended for beta-testers. Marked "Property of Sony Computer
 Entertainment", "U/C".<br/>
-
-
-

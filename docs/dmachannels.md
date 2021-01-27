@@ -190,6 +190,3 @@ RAM, but these situations aren't supported).<br/>
 However, the CPU operation resumes during periods when DMA gets interrupted
 (ie. after SyncMode 1 blocks, after SyncMode 2 list entries) (or in SyncMode 0
 with Chopping enabled).<br/>
-
-
-

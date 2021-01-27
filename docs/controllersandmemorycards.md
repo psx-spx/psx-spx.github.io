@@ -6,17 +6,17 @@
 [Controller and Memory Card Multitap Adaptor](controllersandmemorycards.md#controller-and-memory-card-multitap-adaptor)<br/>
 
 #### Controllers
-[Controllers - Communication Sequence](controllersandmemorycards.md#controllers---communication-sequence)<br/>
-[Controllers - Standard Digital/Analog Controllers](controllersandmemorycards.md#controllers---standard-digitalanalog-controllers)<br/>
-[Controllers - Mouse](controllersandmemorycards.md#controllers---mouse)<br/>
-[Controllers - Racing Controllers](controllersandmemorycards.md#controllers---racing-controllers)<br/>
-[Controllers - Lightguns](controllersandmemorycards.md#controllers---lightguns)<br/>
-[Controllers - Rumble Configuration](controllersandmemorycards.md#controllers---rumble-configuration)<br/>
-[Controllers - Dance Mats](controllersandmemorycards.md#controllers---dance-mats)<br/>
-[Controllers - Fishing Controllers](controllersandmemorycards.md#controllers---fishing-controllers)<br/>
-[Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers---i-mode-adaptor-mobile-internet)<br/>
-[Controllers - Additional Inputs](controllersandmemorycards.md#controllers---additional-inputs)<br/>
-[Controllers - Misc](controllersandmemorycards.md#controllers---misc)<br/>
+[Controllers - Communication Sequence](controllersandmemorycards.md#controllers-communication-sequence)<br/>
+[Controllers - Standard Digital/Analog Controllers](controllersandmemorycards.md#controllers-standard-digitalanalog-controllers)<br/>
+[Controllers - Mouse](controllersandmemorycards.md#controllers-mouse)<br/>
+[Controllers - Racing Controllers](controllersandmemorycards.md#controllers-racing-controllers)<br/>
+[Controllers - Lightguns](controllersandmemorycards.md#controllers-lightguns)<br/>
+[Controllers - Rumble Configuration](controllersandmemorycards.md#controllers-rumble-configuration)<br/>
+[Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
+[Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
+[Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers-i-mode-adaptor-mobile-internet)<br/>
+[Controllers - Additional Inputs](controllersandmemorycards.md#controllers-additional-inputs)<br/>
+[Controllers - Misc](controllersandmemorycards.md#controllers-misc)<br/>
 
 #### Memory Cards
 [Memory Card Read/Write Commands](controllersandmemorycards.md#memory-card-readwrite-commands)<br/>
@@ -28,7 +28,7 @@
 [Pocketstation](pocketstation.md)<br/>
 
 #### Pinouts
-[Pinouts - Controller Ports and Memory-Card Ports](pinouts.md#pinouts---controller-ports-and-memory-card-ports)<br/>
+[Pinouts - Controller Ports and Memory-Card Ports](pinouts.md#pinouts-controller-ports-and-memory-card-ports)<br/>
 
 
 
@@ -407,7 +407,7 @@ restrictions (+3.5V is passed through something; maybe some fuse, loop, or 1
 ohm resistor or so) (and +7.5V is passed without any restrictions).<br/>
 
 #### See also
-[Pinouts - Component List and Chipset Pin-Outs for Multitap, SCPH-1070](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-multitap-scph-1070)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Multitap, SCPH-1070](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-multitap-scph-1070)<br/>
 
 
 
@@ -435,7 +435,7 @@ The TAP byte should be usually zero, unless one wants to activate Multitap
 The two MOT bytes are meant to control the rumble motors (for normal non-rumble
 controllers, that bytes should be 00h), however, the MOT bytes have no effect
 unless rumble is enabled via config commands, for details, see<br/>
-[Controllers - Rumble Configuration](controllersandmemorycards.md#controllers---rumble-configuration)<br/>
+[Controllers - Rumble Configuration](controllersandmemorycards.md#controllers-rumble-configuration)<br/>
 
 #### Controller ID (Halfword Number 0)
 ```
@@ -570,10 +570,10 @@ confusing (that's probably why the LED=Green mode wasn't implemented on the
 Dual Shock).<br/>
 
 #### See also
-[Pinouts - Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-analog-joypad-scph-110)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-110)<br/>
 
 
 
@@ -963,12 +963,12 @@ each other).<br/>
 Namco's Cinch-based lightguns are extracting Vsync/Hsync timings from the video
 signal (via a cinch adaptor) (so they are working completely independed of
 software timings).<br/>
-[Controllers - Lightguns - Namco (GunCon)](controllersandmemorycards.md#controllers---lightguns---namco-guncon)<br/>
+[Controllers - Lightguns - Namco (GunCon)](controllersandmemorycards.md#controllers-lightguns-namco-guncon)<br/>
 
 #### Konami Lightgun (IRQ10)
 Konami's IRQ10-based lightguns are using the lightgun input on the controller
 slot (which requires IRQ10/timings being properly handled at software side).<br/>
-[Controllers - Lightguns - Konami Justifier/Hyperblaster (IRQ10)](controllersandmemorycards.md#controllers---lightguns---konami-justifierhyperblaster-irq10)<br/>
+[Controllers - Lightguns - Konami Justifier/Hyperblaster (IRQ10)](controllersandmemorycards.md#controllers-lightguns-konami-justifierhyperblaster-irq10)<br/>
 The IRQ10-method is reportedly less accurate (although that may be just due to
 bugs at software side).<br/>
 
@@ -980,7 +980,7 @@ additionally have a rumble/vibration function; though unknown how that rumble
 feature is accessed, and which games are supporting it).<br/>
 
 #### Lightgun Games
-[Controllers - Lightguns - PSX Lightgun Games](controllersandmemorycards.md#controllers---lightguns---psx-lightgun-games)<br/>
+[Controllers - Lightguns - PSX Lightgun Games](controllersandmemorycards.md#controllers-lightguns-psx-lightgun-games)<br/>
 
 #### Compatibilty Notes (IRQ10 vs Cinch, PAL vs NTSC, Calibration)
 Some lightguns are reportedly working only with PAL or only with NTSC games
@@ -1092,7 +1092,7 @@ X=X\*320/385).<br/>
 ```
 
 #### See also
-[Pinouts - Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103)<br/>
 
 
 
@@ -2282,6 +2282,3 @@ games).<br/>
 
 #### Pocketstation (Memory Card with built-in LCD screen and buttons)
 [Pocketstation](pocketstation.md)<br/>
-
-
-

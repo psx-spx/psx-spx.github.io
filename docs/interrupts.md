@@ -50,7 +50,7 @@ won't be ever set in future).<br/>
 Relevant COP0 registers are cop0r13 (CAUSE, reason flags), and cop0r12 (SR,
 control flags), and cop0r14 (EPC, return address), and, cop0cmd=10h (aka RFE
 opcode) is used to prepare the return from interrupts. For more info, see<br/>
-[COP0 - Exception Handling](cpuspecifications.md#cop0---exception-handling)<br/>
+[COP0 - Exception Handling](cpuspecifications.md#cop0-exception-handling)<br/>
 
 #### PSX specific COP0 Notes
 COP0 has six hardware interrupt bits, of which, the PSX uses only cop0r13.bit10
@@ -68,6 +68,3 @@ resulting in high power consumption, and, in case of emulators, high CPU
 emulation load. To save energy, and to make emulation smoother on slower
 computers, I've added a Halt function for use in emulators:<br/>
 [EXP2 Nocash Emulation Expansion](expansionportpio.md#exp2-nocash-emulation-expansion)<br/>
-
-
-

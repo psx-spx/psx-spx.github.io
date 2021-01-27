@@ -2145,6 +2145,3 @@ Usage: Call "init\_tty" at the executable's entrypoint (with incoming R0 passed
 on). Call "tty\_wrchr" to output ASCII characters.<br/>
 Note: The TTY messages are supported only in no$gba debug version (not no$gba
 gaming version).<br/>
-
-
-

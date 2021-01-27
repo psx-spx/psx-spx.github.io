@@ -34,6 +34,3 @@ and DIP switches.<br/>
 
 Note: There's no documentation for those arcade boards yet, however, it might
 be possible to extract that info from MAME source code.<br/>
-
-
-

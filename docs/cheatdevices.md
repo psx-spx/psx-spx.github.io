@@ -5,26 +5,26 @@ connector requires a special Comms Link ISA card (or a "FiveWire" mod for
 making it compatible with normal PC parallel ports). Later "PAR3" models are
 said to not require Comms Link, and do thus probably work directly with normal
 parallel ports).<br/>
-[Cheat Devices - Datel I/O](cheatdevices.md#cheat-devices---datel-io)<br/>
-[Cheat Devices - Datel DB25 Comms Link Protocol](cheatdevices.md#cheat-devices---datel-db25-comms-link-protocol)<br/>
-[Cheat Devices - Datel Chipset Pinouts](cheatdevices.md#cheat-devices---datel-chipset-pinouts)<br/>
-[Cheat Devices - Datel Cheat Code Format](cheatdevices.md#cheat-devices---datel-cheat-code-format)<br/>
+[Cheat Devices - Datel I/O](cheatdevices.md#cheat-devices-datel-io)<br/>
+[Cheat Devices - Datel DB25 Comms Link Protocol](cheatdevices.md#cheat-devices-datel-db25-comms-link-protocol)<br/>
+[Cheat Devices - Datel Chipset Pinouts](cheatdevices.md#cheat-devices-datel-chipset-pinouts)<br/>
+[Cheat Devices - Datel Cheat Code Format](cheatdevices.md#cheat-devices-datel-cheat-code-format)<br/>
 
 #### Xplorer/Xploder/X-Terminator (FCD/Blaze)
 The FCD/Blaze devices are all same hardware-wise (with some cosmetic PCB
 revisions, and with extra SRAM and bigger FLASH installed in some carts). The
 DB25 connector can be directly connected to a PC parallel port.<br/>
-[Cheat Devices - Xplorer Memory and I/O Map](cheatdevices.md#cheat-devices---xplorer-memory-and-io-map)<br/>
-[Cheat Devices - Xplorer DB25 Parallel Port Function Summary](cheatdevices.md#cheat-devices---xplorer-db25-parallel-port-function-summary)<br/>
-[Cheat Devices - Xplorer DB25 Parallel Port Command Handler](cheatdevices.md#cheat-devices---xplorer-db25-parallel-port-command-handler)<br/>
-[Cheat Devices - Xplorer DB25 Parallel Port Low Level Transfer Protocol](cheatdevices.md#cheat-devices---xplorer-db25-parallel-port-low-level-transfer-protocol)<br/>
-[Cheat Devices - Xplorer Versions](cheatdevices.md#cheat-devices---xplorer-versions)<br/>
-[Cheat Devices - Xplorer Chipset Pinouts](cheatdevices.md#cheat-devices---xplorer-chipset-pinouts)<br/>
-[Cheat Devices - Xplorer Cheat Code Format](cheatdevices.md#cheat-devices---xplorer-cheat-code-format)<br/>
-[Cheat Devices - Xplorer Cheat Code and ROM-Image Decryption](cheatdevices.md#cheat-devices---xplorer-cheat-code-and-rom-image-decryption)<br/>
+[Cheat Devices - Xplorer Memory and I/O Map](cheatdevices.md#cheat-devices-xplorer-memory-and-io-map)<br/>
+[Cheat Devices - Xplorer DB25 Parallel Port Function Summary](cheatdevices.md#cheat-devices-xplorer-db25-parallel-port-function-summary)<br/>
+[Cheat Devices - Xplorer DB25 Parallel Port Command Handler](cheatdevices.md#cheat-devices-xplorer-db25-parallel-port-command-handler)<br/>
+[Cheat Devices - Xplorer DB25 Parallel Port Low Level Transfer Protocol](cheatdevices.md#cheat-devices-xplorer-db25-parallel-port-low-level-transfer-protocol)<br/>
+[Cheat Devices - Xplorer Versions](cheatdevices.md#cheat-devices-xplorer-versions)<br/>
+[Cheat Devices - Xplorer Chipset Pinouts](cheatdevices.md#cheat-devices-xplorer-chipset-pinouts)<br/>
+[Cheat Devices - Xplorer Cheat Code Format](cheatdevices.md#cheat-devices-xplorer-cheat-code-format)<br/>
+[Cheat Devices - Xplorer Cheat Code and ROM-Image Decryption](cheatdevices.md#cheat-devices-xplorer-cheat-code-and-rom-image-decryption)<br/>
 
 #### FLASH Chips (for both Xplorer and Datel)
-[Cheat Devices - FLASH/EEPROMs](cheatdevices.md#cheat-devices---flasheeproms)<br/>
+[Cheat Devices - FLASH/EEPROMs](cheatdevices.md#cheat-devices-flasheeproms)<br/>
 
 http://gamehacking.org/faqs/hackv500c.html - cheat code formats<br/>
 http://doc.kodewerx.org/hacking\_psx.html - cheat code formats<br/>
@@ -1049,6 +1049,3 @@ The above Atmel/SST/Winbond chips are commonly used in Datel or Xplorer carts
 it's reportedly working "well enough" to encounter flash corruption upon
 programming attempts). The two ST/AMD chips aren't really common in PSX world
 (except that I've personally used them in my PSones).<br/>
-
-
-
