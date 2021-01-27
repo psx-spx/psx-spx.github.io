@@ -4,17 +4,17 @@
 
 #### Playstation CDROM Commands
 [CDROM Controller Command Summary](cdromdrive.md#cdrom-controller-command-summary)<br/>
-[CDROM - Control Commands](cdromdrive.md#cdrom---control-commands)<br/>
-[CDROM - Seek Commands](cdromdrive.md#cdrom---seek-commands)<br/>
-[CDROM - Read Commands](cdromdrive.md#cdrom---read-commands)<br/>
-[CDROM - Status Commands](cdromdrive.md#cdrom---status-commands)<br/>
-[CDROM - CD Audio Commands](cdromdrive.md#cdrom---cd-audio-commands)<br/>
-[CDROM - Test Commands](cdromdrive.md#cdrom---test-commands)<br/>
-[CDROM - Secret Unlock Commands](cdromdrive.md#cdrom---secret-unlock-commands)<br/>
-[CDROM - Video CD Commands](cdromdrive.md#cdrom---video-cd-commands)<br/>
-[CDROM - Mainloop/Responses](cdromdrive.md#cdrom---mainloopresponses)<br/>
-[CDROM - Response Timings](cdromdrive.md#cdrom---response-timings)<br/>
-[CDROM - Response/Data Queueing](cdromdrive.md#cdrom---responsedata-queueing)<br/>
+[CDROM - Control Commands](cdromdrive.md#cdrom-control-commands)<br/>
+[CDROM - Seek Commands](cdromdrive.md#cdrom-seek-commands)<br/>
+[CDROM - Read Commands](cdromdrive.md#cdrom-read-commands)<br/>
+[CDROM - Status Commands](cdromdrive.md#cdrom-status-commands)<br/>
+[CDROM - CD Audio Commands](cdromdrive.md#cdrom-cd-audio-commands)<br/>
+[CDROM - Test Commands](cdromdrive.md#cdrom-test-commands)<br/>
+[CDROM - Secret Unlock Commands](cdromdrive.md#cdrom-secret-unlock-commands)<br/>
+[CDROM - Video CD Commands](cdromdrive.md#cdrom-video-cd-commands)<br/>
+[CDROM - Mainloop/Responses](cdromdrive.md#cdrom-mainloopresponses)<br/>
+[CDROM - Response Timings](cdromdrive.md#cdrom-response-timings)<br/>
+[CDROM - Response/Data Queueing](cdromdrive.md#cdrom-responsedata-queueing)<br/>
 
 #### General CDROM Disk Format
 [CDROM Disk Format](cdromdrive.md#cdrom-disk-format)<br/>
@@ -29,11 +29,11 @@
 [CDROM Video CDs (VCD)](cdromvideocdsvcd.md)<br/>
 
 #### Playstation CDROM Protection
-[CDROM Protection - SCEx Strings](cdromdrive.md#cdrom-protection---scex-strings)<br/>
-[CDROM Protection - Bypassing it](cdromdrive.md#cdrom-protection---bypassing-it)<br/>
-[CDROM Protection - Modchips](cdromdrive.md#cdrom-protection---modchips)<br/>
-[CDROM Protection - Chipless Modchips](cdromdrive.md#cdrom-protection---chipless-modchips)<br/>
-[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection---libcrypt)<br/>
+[CDROM Protection - SCEx Strings](cdromdrive.md#cdrom-protection-scex-strings)<br/>
+[CDROM Protection - Bypassing it](cdromdrive.md#cdrom-protection-bypassing-it)<br/>
+[CDROM Protection - Modchips](cdromdrive.md#cdrom-protection-modchips)<br/>
+[CDROM Protection - Chipless Modchips](cdromdrive.md#cdrom-protection-chipless-modchips)<br/>
+[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection-libcrypt)<br/>
 
 #### General CDROM Disk Images
 [CDROM Disk Images CCD/IMG/SUB (CloneCD)](cdromdrive.md#cdrom-disk-images-ccdimgsub-clonecd)<br/>
@@ -813,7 +813,7 @@ in BCD.<br/>
   asect:  sector number on entire disk (00h to 74h)
 ```
 Note: GetlocP is also used for reading the LibCrypt protection data:<br/>
-[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection---libcrypt)<br/>
+[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection-libcrypt)<br/>
 
 #### GetTN - Command 13h --\> INT3(stat,first,last) ;BCD
 Get first track number, and last track number in the TOC of the current
@@ -1034,11 +1034,11 @@ to the SPU (the hardware does always decompress all 900h bytes).<br/>
 
 
 ##   CDROM - Test Commands
-[CDROM - Test Commands - Version, Switches, Region, Chipset, SCEx](cdromdrive.md#cdrom---test-commands---version-switches-region-chipset-scex)<br/>
-[CDROM - Test Commands - Test Drive Mechanics](cdromdrive.md#cdrom---test-commands---test-drive-mechanics)<br/>
-[CDROM - Test Commands - Prototype Debug Transmission](cdromdrive.md#cdrom---test-commands---prototype-debug-transmission)<br/>
-[CDROM - Test Commands - Read/Write Decoder RAM and I/O Ports](cdromdrive.md#cdrom---test-commands---readwrite-decoder-ram-and-io-ports)<br/>
-[CDROM - Test Commands - Read HC05 SUB-CPU RAM and I/O Ports](cdromdrive.md#cdrom---test-commands---read-hc05-sub-cpu-ram-and-io-ports)<br/>
+[CDROM - Test Commands - Version, Switches, Region, Chipset, SCEx](cdromdrive.md#cdrom-test-commands-version-switches-region-chipset-scex)<br/>
+[CDROM - Test Commands - Test Drive Mechanics](cdromdrive.md#cdrom-test-commands-test-drive-mechanics)<br/>
+[CDROM - Test Commands - Prototype Debug Transmission](cdromdrive.md#cdrom-test-commands-prototype-debug-transmission)<br/>
+[CDROM - Test Commands - Read/Write Decoder RAM and I/O Ports](cdromdrive.md#cdrom-test-commands-readwrite-decoder-ram-and-io-ports)<br/>
+[CDROM - Test Commands - Read HC05 SUB-CPU RAM and I/O Ports](cdromdrive.md#cdrom-test-commands-read-hc05-sub-cpu-ram-and-io-ports)<br/>
 
 
 
@@ -3516,7 +3516,7 @@ position). So, eventually, a customized BIOS could convert the "raw" data to
 There is an "official" backdoor that allows to disable the SCEx protection by
 software via secret commands (for example, sending those commands can be done
 via BIOS patches, nocash BIOS clone, or Expansion ROMs).<br/>
-[CDROM - Secret Unlock Commands](cdromdrive.md#cdrom---secret-unlock-commands)<br/>
+[CDROM - Secret Unlock Commands](cdromdrive.md#cdrom-secret-unlock-commands)<br/>
 
 #### Booting via Memory Card
 Some games that load data from memory cards may get confused if the save data
@@ -3685,7 +3685,7 @@ wires to unlock the CDROM:<br/>
 With the "sync" connection, the SCEx signal from the disk is disabled (ie. even
 original licensed disks are no longer recognized, unless SCEx is output via A20
 by software). For more variants, see:<br/>
-[CDROM Protection - Chipless Modchips](cdromdrive.md#cdrom-protection---chipless-modchips)<br/>
+[CDROM Protection - Chipless Modchips](cdromdrive.md#cdrom-protection-chipless-modchips)<br/>
 
 
 
@@ -4511,9 +4511,9 @@ Chunk Footer in v1 and up:<br/>
 ```
 The "Compressed ZLIB Data" parts contain Deflate'd data (starting with 2-byte
 ZLIB header, and ending with 4-byte ZLIB/ADLER checksum), for details see:<br/>
-[Inflate - Core Functions](cdromvideocdsvcd.md#inflate---core-functions)<br/>
-[Inflate - Initialization & Tree Creation](cdromvideocdsvcd.md#inflate---initialization--tree-creation)<br/>
-[Inflate - Headers and Checksums](cdromvideocdsvcd.md#inflate---headers-and-checksums)<br/>
+[Inflate - Core Functions](cdromvideocdsvcd.md#inflate-core-functions)<br/>
+[Inflate - Initialization & Tree Creation](cdromvideocdsvcd.md#inflate-initialization--tree-creation)<br/>
+[Inflate - Headers and Checksums](cdromvideocdsvcd.md#inflate-headers-and-checksums)<br/>
 
 #### .CDZ Chunks / Content
 The chunk(s) have following content:<br/>
@@ -4837,6 +4837,3 @@ Unknown if this format does have a file extension (if yes: which?).<br/>
 Unknown if subchannel data is meant to be interleaved or not.<br/>
 The format supports only around max 62 tracks (in case each track is 4 bytes).<br/>
 There is no support for "special" features like multi-sessions, cd-text.<br/>
-
-
-

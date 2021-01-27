@@ -78,22 +78,22 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 [CDROM Drive](cdromdrive.md)<br/>
 [CDROM Controller I/O Ports](cdromdrive.md#cdrom-controller-io-ports)<br/>
 [CDROM Controller Command Summary](cdromdrive.md#cdrom-controller-command-summary)<br/>
-[CDROM - Control Commands](cdromdrive.md#cdrom---control-commands)<br/>
-[CDROM - Seek Commands](cdromdrive.md#cdrom---seek-commands)<br/>
-[CDROM - Read Commands](cdromdrive.md#cdrom---read-commands)<br/>
-[CDROM - Status Commands](cdromdrive.md#cdrom---status-commands)<br/>
-[CDROM - CD Audio Commands](cdromdrive.md#cdrom---cd-audio-commands)<br/>
-[CDROM - Test Commands](cdromdrive.md#cdrom---test-commands)<br/>
-[CDROM - Test Commands - Version, Switches, Region, Chipset, SCEx](cdromdrive.md#cdrom---test-commands---version-switches-region-chipset-scex)<br/>
-[CDROM - Test Commands - Test Drive Mechanics](cdromdrive.md#cdrom---test-commands---test-drive-mechanics)<br/>
-[CDROM - Test Commands - Prototype Debug Transmission](cdromdrive.md#cdrom---test-commands---prototype-debug-transmission)<br/>
-[CDROM - Test Commands - Read/Write Decoder RAM and I/O Ports](cdromdrive.md#cdrom---test-commands---readwrite-decoder-ram-and-io-ports)<br/>
-[CDROM - Test Commands - Read HC05 SUB-CPU RAM and I/O Ports](cdromdrive.md#cdrom---test-commands---read-hc05-sub-cpu-ram-and-io-ports)<br/>
-[CDROM - Secret Unlock Commands](cdromdrive.md#cdrom---secret-unlock-commands)<br/>
-[CDROM - Video CD Commands](cdromdrive.md#cdrom---video-cd-commands)<br/>
-[CDROM - Mainloop/Responses](cdromdrive.md#cdrom---mainloopresponses)<br/>
-[CDROM - Response Timings](cdromdrive.md#cdrom---response-timings)<br/>
-[CDROM - Response/Data Queueing](cdromdrive.md#cdrom---responsedata-queueing)<br/>
+[CDROM - Control Commands](cdromdrive.md#cdrom-control-commands)<br/>
+[CDROM - Seek Commands](cdromdrive.md#cdrom-seek-commands)<br/>
+[CDROM - Read Commands](cdromdrive.md#cdrom-read-commands)<br/>
+[CDROM - Status Commands](cdromdrive.md#cdrom-status-commands)<br/>
+[CDROM - CD Audio Commands](cdromdrive.md#cdrom-cd-audio-commands)<br/>
+[CDROM - Test Commands](cdromdrive.md#cdrom-test-commands)<br/>
+[CDROM - Test Commands - Version, Switches, Region, Chipset, SCEx](cdromdrive.md#cdrom-test-commands-version-switches-region-chipset-scex)<br/>
+[CDROM - Test Commands - Test Drive Mechanics](cdromdrive.md#cdrom-test-commands-test-drive-mechanics)<br/>
+[CDROM - Test Commands - Prototype Debug Transmission](cdromdrive.md#cdrom-test-commands-prototype-debug-transmission)<br/>
+[CDROM - Test Commands - Read/Write Decoder RAM and I/O Ports](cdromdrive.md#cdrom-test-commands-readwrite-decoder-ram-and-io-ports)<br/>
+[CDROM - Test Commands - Read HC05 SUB-CPU RAM and I/O Ports](cdromdrive.md#cdrom-test-commands-read-hc05-sub-cpu-ram-and-io-ports)<br/>
+[CDROM - Secret Unlock Commands](cdromdrive.md#cdrom-secret-unlock-commands)<br/>
+[CDROM - Video CD Commands](cdromdrive.md#cdrom-video-cd-commands)<br/>
+[CDROM - Mainloop/Responses](cdromdrive.md#cdrom-mainloopresponses)<br/>
+[CDROM - Response Timings](cdromdrive.md#cdrom-response-timings)<br/>
+[CDROM - Response/Data Queueing](cdromdrive.md#cdrom-responsedata-queueing)<br/>
 [CDROM Disk Format](cdromdrive.md#cdrom-disk-format)<br/>
 [CDROM Subchannels](cdromdrive.md#cdrom-subchannels)<br/>
 [CDROM Sector Encoding](cdromdrive.md#cdrom-sector-encoding)<br/>
@@ -103,11 +103,11 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 [CDROM ISO File and Directory Descriptors](cdromdrive.md#cdrom-iso-file-and-directory-descriptors)<br/>
 [CDROM ISO Misc](cdromdrive.md#cdrom-iso-misc)<br/>
 [CDROM File Formats](cdromdrive.md#cdrom-file-formats)<br/>
-[CDROM Protection - SCEx Strings](cdromdrive.md#cdrom-protection---scex-strings)<br/>
-[CDROM Protection - Bypassing it](cdromdrive.md#cdrom-protection---bypassing-it)<br/>
-[CDROM Protection - Modchips](cdromdrive.md#cdrom-protection---modchips)<br/>
-[CDROM Protection - Chipless Modchips](cdromdrive.md#cdrom-protection---chipless-modchips)<br/>
-[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection---libcrypt)<br/>
+[CDROM Protection - SCEx Strings](cdromdrive.md#cdrom-protection-scex-strings)<br/>
+[CDROM Protection - Bypassing it](cdromdrive.md#cdrom-protection-bypassing-it)<br/>
+[CDROM Protection - Modchips](cdromdrive.md#cdrom-protection-modchips)<br/>
+[CDROM Protection - Chipless Modchips](cdromdrive.md#cdrom-protection-chipless-modchips)<br/>
+[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection-libcrypt)<br/>
 [CDROM Disk Images CCD/IMG/SUB (CloneCD)](cdromdrive.md#cdrom-disk-images-ccdimgsub-clonecd)<br/>
 [CDROM Disk Images CDI (DiscJuggler)](cdromdrive.md#cdrom-disk-images-cdi-discjuggler)<br/>
 [CDROM Disk Images CUE/BIN/CDT (Cdrwin)](cdromdrive.md#cdrom-disk-images-cuebincdt-cdrwin)<br/>
@@ -120,7 +120,7 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 [CDROM Internal Info on PSX CDROM Controller](cdrominternalinfoonpsxcdromcontroller.md)<br/>
 [CDROM Internal HC05 Instruction Set](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-instruction-set)<br/>
 [CDROM Internal HC05 On-Chip I/O Ports](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-on-chip-io-ports)<br/>
-[CDROM Internal HC05 On-Chip I/O Ports - Extras](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-on-chip-io-ports---extras)<br/>
+[CDROM Internal HC05 On-Chip I/O Ports - Extras](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-on-chip-io-ports-extras)<br/>
 [CDROM Internal HC05 I/O Port Usage in PSX](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-io-port-usage-in-psx)<br/>
 [CDROM Internal HC05 Motorola Selftest Mode](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-motorola-selftest-mode)<br/>
 [CDROM Internal HC05 Motorola Selftest Mode (52pin chips)](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-motorola-selftest-mode-52pin-chips)<br/>
@@ -129,12 +129,12 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 [CDROM Internal CXD1815Q Sub-CPU Sector Status Registers](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-cxd1815q-sub-cpu-sector-status-registers)<br/>
 [CDROM Internal CXD1815Q Sub-CPU Address Registers](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-cxd1815q-sub-cpu-address-registers)<br/>
 [CDROM Internal CXD1815Q Sub-CPU Misc Registers](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-cxd1815q-sub-cpu-misc-registers)<br/>
-[CDROM Internal Commands CX(0x..3x) - CXA1782BR Servo Amplifier](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0x3x---cxa1782br-servo-amplifier)<br/>
-[CDROM Internal Commands CX(4x..Ex) - CXD2510Q Signal Processor](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx4xex---cxd2510q-signal-processor)<br/>
-[CDROM Internal Commands CX(0x..Ex) - CXD2545Q Servo/Signal Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex---cxd2545q-servosignal-combo)<br/>
-[CDROM Internal Commands CX(0x..Ex) - CXD2938Q Servo/Signal/SPU Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex---cxd2938q-servosignalspu-combo)<br/>
-[CDROM Internal Commands CX(xx) - Notes](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx---notes)<br/>
-[CDROM Internal Commands CX(xx) - Summary of Used CX(xx) Commands](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx---summary-of-used-cxxx-commands)<br/>
+[CDROM Internal Commands CX(0x..3x) - CXA1782BR Servo Amplifier](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0x3x-cxa1782br-servo-amplifier)<br/>
+[CDROM Internal Commands CX(4x..Ex) - CXD2510Q Signal Processor](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx4xex-cxd2510q-signal-processor)<br/>
+[CDROM Internal Commands CX(0x..Ex) - CXD2545Q Servo/Signal Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex-cxd2545q-servosignal-combo)<br/>
+[CDROM Internal Commands CX(0x..Ex) - CXD2938Q Servo/Signal/SPU Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex-cxd2938q-servosignalspu-combo)<br/>
+[CDROM Internal Commands CX(xx) - Notes](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx-notes)<br/>
+[CDROM Internal Commands CX(xx) - Summary of Used CX(xx) Commands](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx-summary-of-used-cxxx-commands)<br/>
 [CDROM Internal Coefficients (for CXD2545Q)](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-coefficients-for-cxd2545q)<br/>
 [CDROM Video CDs (VCD)](cdromvideocdsvcd.md)<br/>
 [VCD ISO Basic Files (INFO, ENTRIES, AVSEQnn, ISO Filesystem)](cdromvideocdsvcd.md#vcd-iso-basic-files-info-entries-avseqnn-iso-filesystem)<br/>
@@ -145,28 +145,28 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 [VCD MPEG-1 Video Stream](cdromvideocdsvcd.md#vcd-mpeg-1-video-stream)<br/>
 [VCD MP2 Audio Stream](cdromvideocdsvcd.md#vcd-mp2-audio-stream)<br/>
 [Inflate](cdromvideocdsvcd.md#inflate)<br/>
-[Inflate - Core Functions](cdromvideocdsvcd.md#inflate---core-functions)<br/>
-[Inflate - Initialization & Tree Creation](cdromvideocdsvcd.md#inflate---initialization--tree-creation)<br/>
-[Inflate - Headers and Checksums](cdromvideocdsvcd.md#inflate---headers-and-checksums)<br/>
+[Inflate - Core Functions](cdromvideocdsvcd.md#inflate-core-functions)<br/>
+[Inflate - Initialization & Tree Creation](cdromvideocdsvcd.md#inflate-initialization--tree-creation)<br/>
+[Inflate - Headers and Checksums](cdromvideocdsvcd.md#inflate-headers-and-checksums)<br/>
 [Controllers and Memory Cards](controllersandmemorycards.md)<br/>
 [Controller and Memory Card I/O Ports](controllersandmemorycards.md#controller-and-memory-card-io-ports)<br/>
 [Controller and Memory Card Misc](controllersandmemorycards.md#controller-and-memory-card-misc)<br/>
 [Controller and Memory Card Signals](controllersandmemorycards.md#controller-and-memory-card-signals)<br/>
 [Controller and Memory Card Multitap Adaptor](controllersandmemorycards.md#controller-and-memory-card-multitap-adaptor)<br/>
-[Controllers - Communication Sequence](controllersandmemorycards.md#controllers---communication-sequence)<br/>
-[Controllers - Standard Digital/Analog Controllers](controllersandmemorycards.md#controllers---standard-digitalanalog-controllers)<br/>
-[Controllers - Mouse](controllersandmemorycards.md#controllers---mouse)<br/>
-[Controllers - Racing Controllers](controllersandmemorycards.md#controllers---racing-controllers)<br/>
-[Controllers - Lightguns](controllersandmemorycards.md#controllers---lightguns)<br/>
-[Controllers - Lightguns - Namco (GunCon)](controllersandmemorycards.md#controllers---lightguns---namco-guncon)<br/>
-[Controllers - Lightguns - Konami Justifier/Hyperblaster (IRQ10)](controllersandmemorycards.md#controllers---lightguns---konami-justifierhyperblaster-irq10)<br/>
-[Controllers - Lightguns - PSX Lightgun Games](controllersandmemorycards.md#controllers---lightguns---psx-lightgun-games)<br/>
-[Controllers - Rumble Configuration](controllersandmemorycards.md#controllers---rumble-configuration)<br/>
-[Controllers - Dance Mats](controllersandmemorycards.md#controllers---dance-mats)<br/>
-[Controllers - Fishing Controllers](controllersandmemorycards.md#controllers---fishing-controllers)<br/>
-[Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers---i-mode-adaptor-mobile-internet)<br/>
-[Controllers - Additional Inputs](controllersandmemorycards.md#controllers---additional-inputs)<br/>
-[Controllers - Misc](controllersandmemorycards.md#controllers---misc)<br/>
+[Controllers - Communication Sequence](controllersandmemorycards.md#controllers-communication-sequence)<br/>
+[Controllers - Standard Digital/Analog Controllers](controllersandmemorycards.md#controllers-standard-digitalanalog-controllers)<br/>
+[Controllers - Mouse](controllersandmemorycards.md#controllers-mouse)<br/>
+[Controllers - Racing Controllers](controllersandmemorycards.md#controllers-racing-controllers)<br/>
+[Controllers - Lightguns](controllersandmemorycards.md#controllers-lightguns)<br/>
+[Controllers - Lightguns - Namco (GunCon)](controllersandmemorycards.md#controllers-lightguns-namco-guncon)<br/>
+[Controllers - Lightguns - Konami Justifier/Hyperblaster (IRQ10)](controllersandmemorycards.md#controllers-lightguns-konami-justifierhyperblaster-irq10)<br/>
+[Controllers - Lightguns - PSX Lightgun Games](controllersandmemorycards.md#controllers-lightguns-psx-lightgun-games)<br/>
+[Controllers - Rumble Configuration](controllersandmemorycards.md#controllers-rumble-configuration)<br/>
+[Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
+[Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
+[Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers-i-mode-adaptor-mobile-internet)<br/>
+[Controllers - Additional Inputs](controllersandmemorycards.md#controllers-additional-inputs)<br/>
+[Controllers - Misc](controllersandmemorycards.md#controllers-misc)<br/>
 [Memory Card Read/Write Commands](controllersandmemorycards.md#memory-card-readwrite-commands)<br/>
 [Memory Card Data Format](controllersandmemorycards.md#memory-card-data-format)<br/>
 [Memory Card Images](controllersandmemorycards.md#memory-card-images)<br/>
@@ -213,10 +213,10 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 [CPU Jump Opcodes](cpuspecifications.md#cpu-jump-opcodes)<br/>
 [CPU Coprocessor Opcodes](cpuspecifications.md#cpu-coprocessor-opcodes)<br/>
 [CPU Pseudo Opcodes](cpuspecifications.md#cpu-pseudo-opcodes)<br/>
-[COP0 - Register Summary](cpuspecifications.md#cop0---register-summary)<br/>
-[COP0 - Exception Handling](cpuspecifications.md#cop0---exception-handling)<br/>
-[COP0 - Misc](cpuspecifications.md#cop0---misc)<br/>
-[COP0 - Debug Registers](cpuspecifications.md#cop0---debug-registers)<br/>
+[COP0 - Register Summary](cpuspecifications.md#cop0-register-summary)<br/>
+[COP0 - Exception Handling](cpuspecifications.md#cop0-exception-handling)<br/>
+[COP0 - Misc](cpuspecifications.md#cop0-misc)<br/>
+[COP0 - Debug Registers](cpuspecifications.md#cop0-debug-registers)<br/>
 [Kernel (BIOS)](kernelbios.md)<br/>
 [BIOS Overview](kernelbios.md#bios-overview)<br/>
 [BIOS Memory Map](kernelbios.md#bios-memory-map)<br/>
@@ -247,45 +247,45 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 [BIOS Patches](kernelbios.md#bios-patches)<br/>
 [Arcade Cabinets](arcadecabinets.md)<br/>
 [Cheat Devices](cheatdevices.md)<br/>
-[Cheat Devices - Datel I/O](cheatdevices.md#cheat-devices---datel-io)<br/>
-[Cheat Devices - Datel DB25 Comms Link Protocol](cheatdevices.md#cheat-devices---datel-db25-comms-link-protocol)<br/>
-[Cheat Devices - Datel Chipset Pinouts](cheatdevices.md#cheat-devices---datel-chipset-pinouts)<br/>
-[Cheat Devices - Datel Cheat Code Format](cheatdevices.md#cheat-devices---datel-cheat-code-format)<br/>
-[Cheat Devices - Xplorer Memory and I/O Map](cheatdevices.md#cheat-devices---xplorer-memory-and-io-map)<br/>
-[Cheat Devices - Xplorer DB25 Parallel Port Function Summary](cheatdevices.md#cheat-devices---xplorer-db25-parallel-port-function-summary)<br/>
-[Cheat Devices - Xplorer DB25 Parallel Port Command Handler](cheatdevices.md#cheat-devices---xplorer-db25-parallel-port-command-handler)<br/>
-[Cheat Devices - Xplorer DB25 Parallel Port Low Level Transfer Protocol](cheatdevices.md#cheat-devices---xplorer-db25-parallel-port-low-level-transfer-protocol)<br/>
-[Cheat Devices - Xplorer Versions](cheatdevices.md#cheat-devices---xplorer-versions)<br/>
-[Cheat Devices - Xplorer Chipset Pinouts](cheatdevices.md#cheat-devices---xplorer-chipset-pinouts)<br/>
-[Cheat Devices - Xplorer Cheat Code Format](cheatdevices.md#cheat-devices---xplorer-cheat-code-format)<br/>
-[Cheat Devices - Xplorer Cheat Code and ROM-Image Decryption](cheatdevices.md#cheat-devices---xplorer-cheat-code-and-rom-image-decryption)<br/>
-[Cheat Devices - FLASH/EEPROMs](cheatdevices.md#cheat-devices---flasheeproms)<br/>
+[Cheat Devices - Datel I/O](cheatdevices.md#cheat-devices-datel-io)<br/>
+[Cheat Devices - Datel DB25 Comms Link Protocol](cheatdevices.md#cheat-devices-datel-db25-comms-link-protocol)<br/>
+[Cheat Devices - Datel Chipset Pinouts](cheatdevices.md#cheat-devices-datel-chipset-pinouts)<br/>
+[Cheat Devices - Datel Cheat Code Format](cheatdevices.md#cheat-devices-datel-cheat-code-format)<br/>
+[Cheat Devices - Xplorer Memory and I/O Map](cheatdevices.md#cheat-devices-xplorer-memory-and-io-map)<br/>
+[Cheat Devices - Xplorer DB25 Parallel Port Function Summary](cheatdevices.md#cheat-devices-xplorer-db25-parallel-port-function-summary)<br/>
+[Cheat Devices - Xplorer DB25 Parallel Port Command Handler](cheatdevices.md#cheat-devices-xplorer-db25-parallel-port-command-handler)<br/>
+[Cheat Devices - Xplorer DB25 Parallel Port Low Level Transfer Protocol](cheatdevices.md#cheat-devices-xplorer-db25-parallel-port-low-level-transfer-protocol)<br/>
+[Cheat Devices - Xplorer Versions](cheatdevices.md#cheat-devices-xplorer-versions)<br/>
+[Cheat Devices - Xplorer Chipset Pinouts](cheatdevices.md#cheat-devices-xplorer-chipset-pinouts)<br/>
+[Cheat Devices - Xplorer Cheat Code Format](cheatdevices.md#cheat-devices-xplorer-cheat-code-format)<br/>
+[Cheat Devices - Xplorer Cheat Code and ROM-Image Decryption](cheatdevices.md#cheat-devices-xplorer-cheat-code-and-rom-image-decryption)<br/>
+[Cheat Devices - FLASH/EEPROMs](cheatdevices.md#cheat-devices-flasheeproms)<br/>
 [PSX Dev-Board Chipsets](psxdevboardchipsets.md)<br/>
 [Hardware Numbers](hardwarenumbers.md)<br/>
 [Pinouts](pinouts.md)<br/>
-[Pinouts - Controller Ports and Memory-Card Ports](pinouts.md#pinouts---controller-ports-and-memory-card-ports)<br/>
-[Pinouts - Audio, Video, Power, Expansion Ports](pinouts.md#pinouts---audio-video-power-expansion-ports)<br/>
-[Pinouts - SIO Pinouts](pinouts.md#pinouts---sio-pinouts)<br/>
-[Pinouts - Chipset Summary](pinouts.md#pinouts---chipset-summary)<br/>
-[Pinouts - CPU Pinouts](pinouts.md#pinouts---cpu-pinouts)<br/>
-[Pinouts - GPU Pinouts (for old 160-pin GPU)](pinouts.md#pinouts---gpu-pinouts-for-old-160-pin-gpu)<br/>
-[Pinouts - GPU Pinouts (for new 208-pin GPU)](pinouts.md#pinouts---gpu-pinouts-for-new-208-pin-gpu)<br/>
-[Pinouts - SPU Pinouts](pinouts.md#pinouts---spu-pinouts)<br/>
-[Pinouts - DRV Pinouts](pinouts.md#pinouts---drv-pinouts)<br/>
-[Pinouts - VCD Pinouts](pinouts.md#pinouts---vcd-pinouts)<br/>
-[Pinouts - HC05 Pinouts](pinouts.md#pinouts---hc05-pinouts)<br/>
-[Pinouts - MEM Pinouts](pinouts.md#pinouts---mem-pinouts)<br/>
-[Pinouts - CLK Pinouts](pinouts.md#pinouts---clk-pinouts)<br/>
-[Pinouts - PWR Pinouts](pinouts.md#pinouts---pwr-pinouts)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-analog-joypad-scph-110)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Multitap, SCPH-1070](pinouts.md#pinouts---component-list-and-chipset-pin-outs-for-multitap-scph-1070)<br/>
-[Pinouts - Memory Cards](pinouts.md#pinouts---memory-cards)<br/>
-[Mods - Nocash PSX-XBOO Upload](pinouts.md#mods---nocash-psx-xboo-upload)<br/>
-[Mods - PAL/NTSC Color Mods](pinouts.md#mods---palntsc-color-mods)<br/>
+[Pinouts - Controller Ports and Memory-Card Ports](pinouts.md#pinouts-controller-ports-and-memory-card-ports)<br/>
+[Pinouts - Audio, Video, Power, Expansion Ports](pinouts.md#pinouts-audio-video-power-expansion-ports)<br/>
+[Pinouts - SIO Pinouts](pinouts.md#pinouts-sio-pinouts)<br/>
+[Pinouts - Chipset Summary](pinouts.md#pinouts-chipset-summary)<br/>
+[Pinouts - CPU Pinouts](pinouts.md#pinouts-cpu-pinouts)<br/>
+[Pinouts - GPU Pinouts (for old 160-pin GPU)](pinouts.md#pinouts-gpu-pinouts-for-old-160-pin-gpu)<br/>
+[Pinouts - GPU Pinouts (for new 208-pin GPU)](pinouts.md#pinouts-gpu-pinouts-for-new-208-pin-gpu)<br/>
+[Pinouts - SPU Pinouts](pinouts.md#pinouts-spu-pinouts)<br/>
+[Pinouts - DRV Pinouts](pinouts.md#pinouts-drv-pinouts)<br/>
+[Pinouts - VCD Pinouts](pinouts.md#pinouts-vcd-pinouts)<br/>
+[Pinouts - HC05 Pinouts](pinouts.md#pinouts-hc05-pinouts)<br/>
+[Pinouts - MEM Pinouts](pinouts.md#pinouts-mem-pinouts)<br/>
+[Pinouts - CLK Pinouts](pinouts.md#pinouts-clk-pinouts)<br/>
+[Pinouts - PWR Pinouts](pinouts.md#pinouts-pwr-pinouts)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-110)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103)<br/>
+[Pinouts - Component List and Chipset Pin-Outs for Multitap, SCPH-1070](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-multitap-scph-1070)<br/>
+[Pinouts - Memory Cards](pinouts.md#pinouts-memory-cards)<br/>
+[Mods - Nocash PSX-XBOO Upload](pinouts.md#mods-nocash-psx-xboo-upload)<br/>
+[Mods - PAL/NTSC Color Mods](pinouts.md#mods-palntsc-color-mods)<br/>
 [About & Credits](aboutcredits.md)<br/>
 
 [extracted from no$psx v2.0 documentation]<br/>

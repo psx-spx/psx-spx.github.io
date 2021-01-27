@@ -147,8 +147,5 @@ Expansion ROM Headers, and Memory Waitstate Control, etc. see:<br/>
 [EXP1 Expansion ROM Header](expansionportpio.md#exp1-expansion-rom-header)<br/>
 [BIOS Memory Map](kernelbios.md#bios-memory-map)<br/>
 [BIOS Memory Allocation](kernelbios.md#bios-memory-allocation)<br/>
-[COP0 - Exception Handling](cpuspecifications.md#cop0---exception-handling)<br/>
+[COP0 - Exception Handling](cpuspecifications.md#cop0-exception-handling)<br/>
 [Unpredictable Things](unpredictablethings.md)<br/>
-
-
-

@@ -6,8 +6,8 @@ disc (whole movies usually being stored on two CDs). VCDs are popular in asia
 #### VCDs on Playstation
 For the Playstation, the asian SCPH-5903 model includes a special daughterboard
 with MPEG decoding hardware for playing VCDs.<br/>
-[CDROM - Video CD Commands](cdromdrive.md#cdrom---video-cd-commands)<br/>
-[Pinouts - VCD Pinouts](pinouts.md#pinouts---vcd-pinouts)<br/>
+[CDROM - Video CD Commands](cdromdrive.md#cdrom-video-cd-commands)<br/>
+[Pinouts - VCD Pinouts](pinouts.md#pinouts-vcd-pinouts)<br/>
 Without that hardware it has been widely believed to be impossible to play VCDs
 on Playstations, although, as of 2017, it turned out that the Playstation's CPU
 and MDEC decoder are fast enough for that purpose (when skipping B-frames,
@@ -892,9 +892,9 @@ data).<br/>
 Inflate/Deflate is a common (de-)compression algorithm. In the PSX world, it's
 used by the .CDZ cdrom-image format.<br/>
 
-[Inflate - Core Functions](cdromvideocdsvcd.md#inflate---core-functions)<br/>
-[Inflate - Initialization & Tree Creation](cdromvideocdsvcd.md#inflate---initialization--tree-creation)<br/>
-[Inflate - Headers and Checksums](cdromvideocdsvcd.md#inflate---headers-and-checksums)<br/>
+[Inflate - Core Functions](cdromvideocdsvcd.md#inflate-core-functions)<br/>
+[Inflate - Initialization & Tree Creation](cdromvideocdsvcd.md#inflate-initialization--tree-creation)<br/>
+[Inflate - Headers and Checksums](cdromvideocdsvcd.md#inflate-headers-and-checksums)<br/>
 
 
 
@@ -1117,6 +1117,3 @@ used by the .CDZ cdrom-image format.<br/>
   s1=s1 mod 65521, s2=s2 mod 65521, length=length-k
  return (s2*10000h+s1)
 ```
-
-
-

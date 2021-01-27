@@ -648,6 +648,3 @@ overflow check).<br/>
 The min(1FFFFh) limit is needed for cases like FE3Fh/7F20h, F015h/780Bh, etc.
 (these do produce UNR result 20000h, and are saturated to 1FFFFh, but without
 setting overflow FLAG bits).<br/>
-
-
-

@@ -187,6 +187,3 @@ Sony... despite of the common use as abbreviation for Playstation 1 (and
 despite of the JMI trademark)... in 2003, Sony has have released a "Playstation
 2 with built-in HDD/DVD Videorecorder" and called that thing "PSX" for the best
 of confusion.<br/>
-
-
-

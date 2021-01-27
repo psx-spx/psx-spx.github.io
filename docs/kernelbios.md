@@ -3316,6 +3316,3 @@ does also require space in unused BIOS RAM addresses (eg. Xplorer v3.20: addr
 #### Note
 Most games include two or three patches. The only game that I've seen so far
 that does NOT use any patches is Wipeout 2097.<br/>
-
-
-

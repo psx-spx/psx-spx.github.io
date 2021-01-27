@@ -485,6 +485,3 @@ acknowledging the previous interrupt.<br/>
   2   Controller Turbo  (0=Normal, 1=Turbo)
   3-7 Reserved (must be zero)
 ```
-
-
-

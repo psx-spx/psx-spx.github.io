@@ -66,6 +66,3 @@ dotclk or hblank as clock source); the GPU clock isn't in sync with the CPU
 clock, so the timer may get changed during the CPU read cycle. As a workaround:
 repeat reading the timer until the received value is the same (or slightly
 bigger) than the previous value.<br/>
-
-
-

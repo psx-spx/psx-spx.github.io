@@ -201,6 +201,3 @@ Used by BIOS to initialize cache (in combination with COP0), like so:<br/>
 Note: FFFE0130h is described in LSI's "L64360" datasheet, chapter 14 (and
 probably also in their LR33300/LR33310 datasheet, if it were available in
 internet).<br/>
-
-
-

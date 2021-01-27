@@ -243,6 +243,3 @@
   COP2 Geometry Transformation Engine (GTE) - 64 registers (most are used)
   COP3 N/A
 ```
-
-
-

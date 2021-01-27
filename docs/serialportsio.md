@@ -160,7 +160,7 @@ and may optionally end with a parity bit, and one or two stop bits.<br/>
 
 #### Note
 For SIO Pinouts, PSone SIO upgrading, and for building RS232 adaptors, see:<br/>
-[Pinouts - SIO Pinouts](pinouts.md#pinouts---sio-pinouts)<br/>
+[Pinouts - SIO Pinouts](pinouts.md#pinouts-sio-pinouts)<br/>
 Aside from the internal SIO port, the PSX BIOS supports two additional external
 serial ports, connected to the expansion port,<br/>
 [EXP2 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#exp2-dual-serial-port-for-tty-debug-terminal)<br/>
@@ -177,6 +177,3 @@ I-Mode adaptor, which would connect to controller port, not to SIO port).<br/>
 #### 8251A Note
 The Playstation Serial Port is apparently based/inspired on the Intel 8251A
 USART chip; which has very similar 8bit Mode/Command/Status registers.<br/>
-
-
-

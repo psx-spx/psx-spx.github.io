@@ -414,6 +414,3 @@ name in SYSTEM.CNF file. There is no fixed rule for the multi-disc numbering;
 some games are using increasing numbers of XNNNN or NNNNX (with X increasing
 from 0 upwards), and some are randomly using values like NNNXX and NNNYY for
 different discs.<br/>
-
-
-

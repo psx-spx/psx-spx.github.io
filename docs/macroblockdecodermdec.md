@@ -423,6 +423,3 @@ compressed data size should match up the transfer unit). The value FE00h can be
 used as dummy value: When FE00h appears at the begin of a new block, or after
 the end of block, then it is simply ignored by the hardware (if it occurs
 elsewhere, then it acts as EOB end code, as described above).<br/>
-
-
-

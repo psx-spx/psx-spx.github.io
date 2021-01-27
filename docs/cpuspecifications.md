@@ -9,10 +9,10 @@
 [CPU Pseudo Opcodes](cpuspecifications.md#cpu-pseudo-opcodes)<br/>
 
 #### System Control Coprocessor (COP0)
-[COP0 - Register Summary](cpuspecifications.md#cop0---register-summary)<br/>
-[COP0 - Exception Handling](cpuspecifications.md#cop0---exception-handling)<br/>
-[COP0 - Misc](cpuspecifications.md#cop0---misc)<br/>
-[COP0 - Debug Registers](cpuspecifications.md#cop0---debug-registers)<br/>
+[COP0 - Register Summary](cpuspecifications.md#cop0-register-summary)<br/>
+[COP0 - Exception Handling](cpuspecifications.md#cop0-exception-handling)<br/>
+[COP0 - Misc](cpuspecifications.md#cop0-misc)<br/>
+[COP0 - Debug Registers](cpuspecifications.md#cop0-debug-registers)<br/>
 
 
 
@@ -848,7 +848,7 @@ handler at 80000080h (not 80000040h).<br/>
 The debug registers are mis-used by "Legacy of Kain: Soul Reaver" (and maybe
 also other games) for storing libcrypt copy-protection related values (ie. just
 as a "hidden" location for storing data, not for actual debugging purposes).<br/>
-[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection---libcrypt)<br/>
+[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection-libcrypt)<br/>
 
 #### Note (Cheat Devices/Expansion ROMs)
 The Expansion ROM header supports only Pre-Boot and Post-Boot vectors, but no
@@ -862,6 +862,3 @@ uses the COP0 break feature.<br/>
 #### Note (Datasheet)
 Note: COP0 debug registers are described in LSI's "L64360" datasheet, chapter
 14. And in their LR33300/LR33310 datasheet, chapter 4.<br/>
-
-
-

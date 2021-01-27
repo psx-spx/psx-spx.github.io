@@ -15,7 +15,7 @@ tweak it to execute custom code in RAM.<br/>
 [CDROM Internal HC05 I/O Port Usage in PSX](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-io-port-usage-in-psx)<br/>
 [CDROM Internal HC05 Motorola Selftest Mode](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-motorola-selftest-mode)<br/>
 The PSX can read HC05 I/O Ports and RAM via Test Commands:<br/>
-[CDROM - Test Commands - Read HC05 SUB-CPU RAM and I/O Ports](cdromdrive.md#cdrom---test-commands---read-hc05-sub-cpu-ram-and-io-ports)<br/>
+[CDROM - Test Commands - Read HC05 SUB-CPU RAM and I/O Ports](cdromdrive.md#cdrom-test-commands-read-hc05-sub-cpu-ram-and-io-ports)<br/>
 
 #### Decoder/FIFO (CXD1199BQ or CXD1815Q)
 This chip handles error correction and ADPCM decoding, and acts as some sort of
@@ -31,7 +31,7 @@ ports.<br/>
 [CDROM Internal CXD1815Q Sub-CPU Address Registers](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-cxd1815q-sub-cpu-address-registers)<br/>
 [CDROM Internal CXD1815Q Sub-CPU Misc Registers](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-cxd1815q-sub-cpu-misc-registers)<br/>
 The PSX can read/write the Decoder I/O Ports and SRAM via Test commands:<br/>
-[CDROM - Test Commands - Read/Write Decoder RAM and I/O Ports](cdromdrive.md#cdrom---test-commands---readwrite-decoder-ram-and-io-ports)<br/>
+[CDROM - Test Commands - Read/Write Decoder RAM and I/O Ports](cdromdrive.md#cdrom-test-commands-readwrite-decoder-ram-and-io-ports)<br/>
 The sector buffer used in the PSX is 32Kx8 SRAM. Old PU-7 boards are using
 CXD1199BQ chips, later boards are using CXD1815Q, and even later boards have
 the stuff intergrated in the SPU. Note: The CXD1199BQ/CXD1815Q are about 99%
@@ -39,27 +39,27 @@ same as described in CXD1199AQ datasheet.<br/>
 
 #### Signal Processor and Servo Amplifier
 Older PSX mainboards are using two separate chips:<br/>
-[CDROM Internal Commands CX(0x..3x) - CXA1782BR Servo Amplifier](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0x3x---cxa1782br-servo-amplifier)<br/>
-[CDROM Internal Commands CX(4x..Ex) - CXD2510Q Signal Processor](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx4xex---cxd2510q-signal-processor)<br/>
+[CDROM Internal Commands CX(0x..3x) - CXA1782BR Servo Amplifier](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0x3x-cxa1782br-servo-amplifier)<br/>
+[CDROM Internal Commands CX(4x..Ex) - CXD2510Q Signal Processor](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx4xex-cxd2510q-signal-processor)<br/>
 Later PSX mainboards have the above intergrated in a single chip, with some
 extended features:<br/>
-[CDROM Internal Commands CX(0x..Ex) - CXD2545Q Servo/Signal Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex---cxd2545q-servosignal-combo)<br/>
+[CDROM Internal Commands CX(0x..Ex) - CXD2545Q Servo/Signal Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex-cxd2545q-servosignal-combo)<br/>
 Later version is CXD1817R (Servo/Signal/Decoder Combo).<br/>
 Even later PSX mainboards have it integrated in the Sound Chip: CXD2938Q
 (SPU+CDROM) with some changed bits and New SCEx transfer:<br/>
-[CDROM Internal Commands CX(0x..Ex) - CXD2938Q Servo/Signal/SPU Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex---cxd2938q-servosignalspu-combo)<br/>
+[CDROM Internal Commands CX(0x..Ex) - CXD2938Q Servo/Signal/SPU Combo](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0xex-cxd2938q-servosignalspu-combo)<br/>
 Finally, PM-41(2) boards are using a CXD2941R chip (SPU+CDROM+SPU\_RAM), unknown
 if/how far the CDROM part of that chip differs from CXD2938Q.<br/>
 Some general notes:<br/>
-[CDROM Internal Commands CX(xx) - Notes](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx---notes)<br/>
-[CDROM Internal Commands CX(xx) - Summary of Used CX(xx) Commands](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx---summary-of-used-cxxx-commands)<br/>
+[CDROM Internal Commands CX(xx) - Notes](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx-notes)<br/>
+[CDROM Internal Commands CX(xx) - Summary of Used CX(xx) Commands](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cxxx-summary-of-used-cxxx-commands)<br/>
 The PSX can manipulate the CX(..) registers via some test commands:<br/>
-[CDROM - Test Commands - Test Drive Mechanics](cdromdrive.md#cdrom---test-commands---test-drive-mechanics)<br/>
+[CDROM - Test Commands - Test Drive Mechanics](cdromdrive.md#cdrom-test-commands-test-drive-mechanics)<br/>
 Note: Datasheets for CXD2510Q/CXA1782BR/CXD2545Q do exist.<br/>
 
 #### CDROM Pinouts
-[Pinouts - DRV Pinouts](pinouts.md#pinouts---drv-pinouts)<br/>
-[Pinouts - HC05 Pinouts](pinouts.md#pinouts---hc05-pinouts)<br/>
+[Pinouts - DRV Pinouts](pinouts.md#pinouts-drv-pinouts)<br/>
+[Pinouts - HC05 Pinouts](pinouts.md#pinouts-hc05-pinouts)<br/>
 
 
 
@@ -498,7 +498,7 @@ mode, or it might reflect initialization of whatever other ports.<br/>
 These ports are unused/reserved. Trying to read them on a PSone does return 20h
 (possibly the prefetched next opcode value from the RAM test command). Other
 HC05 variants contain some extra features in these ports:<br/>
-[CDROM Internal HC05 On-Chip I/O Ports - Extras](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-on-chip-io-ports---extras)<br/>
+[CDROM Internal HC05 On-Chip I/O Ports - Extras](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-on-chip-io-ports-extras)<br/>
 The PSX CDROM BIOS doesn't use any of these ports - execpt, it is writing
 [20h]=2Eh (possibly to disable unused LCD hardware; which might be actually
 present in the huge 80pin HC05 chips on old PU-7 mainboards).<br/>
@@ -706,7 +706,7 @@ which are probably containing Motorola HC05 CPUs, too. Unknown if/how those
 chips can be switched into bootstrap/dumping modes.<br/>
 
 #### Pinouts
-[Pinouts - HC05 Pinouts](pinouts.md#pinouts---hc05-pinouts)<br/>
+[Pinouts - HC05 Pinouts](pinouts.md#pinouts-hc05-pinouts)<br/>
 
 
 
@@ -1530,10 +1530,10 @@ Whereas,<br/>
 
 ##   CDROM Internal Commands CX(0x..Ex) - CXD2545Q Servo/Signal Combo
 #### CXD2545Q - CX(0x) and CX(2x) - same as CXA1782BR Servo Amplifier
-[CDROM Internal Commands CX(0x..3x) - CXA1782BR Servo Amplifier](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0x3x---cxa1782br-servo-amplifier)<br/>
+[CDROM Internal Commands CX(0x..3x) - CXA1782BR Servo Amplifier](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx0x3x-cxa1782br-servo-amplifier)<br/>
 
 #### CXD2545Q - CX(4x..Ex) - same as CXD2510Q Signal Processor
-[CDROM Internal Commands CX(4x..Ex) - CXD2510Q Signal Processor](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx4xex---cxd2510q-signal-processor)<br/>
+[CDROM Internal Commands CX(4x..Ex) - CXD2510Q Signal Processor](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-commands-cx4xex-cxd2510q-signal-processor)<br/>
 One small difference is that the CXD2545Q supports a new "M Track Move"
 function as part of the CX(4xxx) command. And, some "don't care" bits are now
 reserved (ie. some commands need to be padded with additional leading "0"
@@ -2139,6 +2139,3 @@ RAM settings, and CX(39xxxx) allows to readout some of those values serially.<br
   K4E  00  Not used
   K4F  00  Not used
 ```
-
-
-
