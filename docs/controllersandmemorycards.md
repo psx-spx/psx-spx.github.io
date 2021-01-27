@@ -1404,7 +1404,12 @@ button data, can be used to return to normal mode.<br/>
   xx=01h Stay in Configuration mode
 ```
 Back in normal mode, the rumble motors (if they were enabled) can be controlled
-with normal command 42h.<br/>
+with normal command 42h. Some controller revisions will only change config mode
+state upon receiving the entire command sequence while others will set it
+immediately on receiving the xx byte. So while aborting the command sequence
+early (i.e. setting JOY_CTRL to 0 after sending xx, which some homebrew software
+does) may work for setting config mode state on some controllers, in practice
+this technique is undefined behavior and use should be avoided.<br/>
 
 #### Config Mode - Command 44h "D" - Set LED State (analog mode on/off)
 ```

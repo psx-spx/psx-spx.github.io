@@ -1220,7 +1220,7 @@ Consoles will always use the video clock for its region, regardless of the GPU b
   314 scanlines per field for PAL non-interlaced
   312.5 scanlines per field for PAL interlaced
 ```
-Horizontal blanking and vertical blanking signals occur on the video output side as expected for NTSC/PAL signals. These are not necessarily the same as the timmer/interrupt HBLANK and VBLANK.
+Horizontal blanking and vertical blanking signals occur on the video output side as expected for NTSC/PAL signals. These are not necessarily the same as the timer/interrupt HBLANK and VBLANK.
 
 #### Vertical Refresh Rates
 ```
