@@ -13,6 +13,7 @@
 [Controllers - Lightguns](controllersandmemorycards.md#controllers-lightguns)<br/>
 [Controllers - Rumble Configuration](controllersandmemorycards.md#controllers-rumble-configuration)<br/>
 [Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
+[Controllers - Pop'n Controllers](controllersandmemorycards.md#controllers-popn-controllers)
 [Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
 [Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers-i-mode-adaptor-mobile-internet)<br/>
 [Controllers - Additional Inputs](controllersandmemorycards.md#controllers-additional-inputs)<br/>
@@ -1591,6 +1592,11 @@ offered only two steps back-and-forth, and also allowed to do extremly uncool
 side-steps. Not to mention that it would melt when dropping a burning cigarette
 on it. Stay Away!<br/>
 
+
+## Controllers - Pop'n Controllers
+Controllers used for Konami's Pop'n Music series. At least a few different versions of the controller (Pop'n Controller, Pop'n Controller 2, larger arcade-size version, possibly others and in different color variations) have been released for the PS1 and PS2. Unknown if the controllers released in the PS2 era have any additional commands not present in the original Pop'n Controller, but they are supposedly fully compatible with PS1 Pop'n Music games.
+
+Pop'n Controllers report as digital controllers (ID byte 41h), but the left, right, and down d-pad controls are not connected to any physical buttons and are always reported as pressed (in the first transferred button byte, bits 5-7 are always 0). Pop'n Music games check these bits to determine if a Pop'n Controller is connected and will change the in-game controls accordingly if so.
 
 
 ##   Controllers - Fishing Controllers
