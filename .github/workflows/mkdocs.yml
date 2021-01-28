@@ -13,10 +13,11 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        uses: nicolasnoble/mkdocs-deploy-gh-pages@master
         # Or use mhausenblas/mkdocs-deploy-gh-pages@nomaterial to build without the mkdocs-material theme
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CUSTOM_DOMAIN: psx-spx.consoledev.net
           CONFIG_FILE: mkdocs.yml
           EXTRA_PACKAGES: build-base cairo cairo-gobject fontconfig gdk-pixbuf jpeg-dev libffi-dev msttcorefonts-installer pango zlib-dev
+          POST_INSTALL: update-ms-fonts && fc-cache -f
