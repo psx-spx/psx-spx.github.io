@@ -230,10 +230,10 @@ Color      xxBBGGRR    - optional, only present for gouraud shading
 Vertex     YYYYXXXX    - required, two signed 16 bits values
 ```
 
-When the polyline mode is active, then there is no fixed amount of words
-to be sent. The last word will have a magic value, which will usually be
-55555555, but also sometimes 50005000. Note that the magic value can then
-either be for the color word, or the vertex word.
+When polyline mode is active, at least two vertices must be sent to the GPU.
+The vertex list is terminated by the bits 12-15 and 28-31 equaling `0x5`, or
+`(word & 0xF000F000) == 0x50005000`. The terminator value occurs on the first
+word of the vertex (i.e. the color word if it's a gouraud shaded).
 
 
 #### Note
