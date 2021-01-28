@@ -1,4 +1,5 @@
-This is a conversion/edition of Martin "nocash" Korth's Playstation specs document originally hosted at [https://problemkaputt.de/psx-spx.htm](https://problemkaputt.de/psx-spx.htm). See [https://github.com/psx-spx/psx-spx.github.io#readme](https://github.com/psx-spx/psx-spx.github.io#readme) for more details.
+This is a conversion/edition of Martin "nocash" Korth's Playstation specs document originally hosted at [https://problemkaputt.de/psx-spx.htm](https://problemkaputt.de/psx-spx.htm). See [https://github.com/psx-spx/psx-spx.github.io#readme](https://github.com/psx-spx/psx-spx.github.io#readme) for more details.<br />
+You can also download this website as a [single-page pdf](psx-spx.pdf).
 
 [Memory Map](memorymap.md)<br/>
 [I/O Map](iomap.md)<br/>

@@ -8,6 +8,7 @@ authors = []
 python = "^3.9"
 mkdocs = "^1.1.2"
 mkdocs-material = "^6.2.4"
+mkdocs-with-pdf = "^0.8.3"
 
 [tool.poetry.dev-dependencies]
 

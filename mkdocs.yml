@@ -2,3 +2,9 @@ site_name: PlayStation Specifications - psx-spx
 
 theme:
   name: material
+
+plugins:
+  - search
+  - with-pdf:
+      output_path: psx-spx.pdf
+
