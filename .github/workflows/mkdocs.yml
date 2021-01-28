@@ -19,4 +19,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CUSTOM_DOMAIN: psx-spx.consoledev.net
           CONFIG_FILE: mkdocs.yml
-          EXTRA_PACKAGES: build-base
+          EXTRA_PACKAGES: build-base libffi-dev
