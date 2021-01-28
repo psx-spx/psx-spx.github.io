@@ -1,3 +1,5 @@
+## This is the source files for https://psx-spx.consoledev.net/
+
 This is a conversion/edition of Martin "nocash" Korth's Playstation specs document originally hosted at https://problemkaputt.de/psx-spx.htm
 
 Martin is a difficult individual to reach (see http://problemkaputt.de/email.htm, especially the part about gmail), and so far, any attempt at contacting him about collaborating on this document failed.
