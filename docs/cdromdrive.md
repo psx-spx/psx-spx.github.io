@@ -757,6 +757,14 @@ as second response byte, with the following values:<br/>
 when the disk is missing, or when the drive unit is disconnected from the
 mainboard.<br/>
 
+When the shell is opened, INT5 is triggered regardless of whether a command was
+executing or not. When this happens, all bits except shell open and error are cleared
+in the status register. The error byte in the INT5 is set to 08h.<br/>
+
+Some games send a Stop command before changing discs, but others just wait for the
+user to open the shell, causing the disc to stop. The game can then send GetStat commands,
+looping until bit 4 is cleared to detect when the new disc has been inserted.<br/>
+
 #### Stat Seek/Play/Read bits
 There's is only max ONE of the three Seek/Play/Read bits set at a time, ie.
 during Seek, ONLY the seek bit is set (and Read or Play doesn't get until seek
