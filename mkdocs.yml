@@ -8,6 +8,9 @@ plugins:
   - with-pdf:
       output_path: psx-spx.pdf
 
+extra_css:
+    - css/extra.css
+
 nav:
     - 'index.md'
     - 'memorymap.md'
