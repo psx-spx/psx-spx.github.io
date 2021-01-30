@@ -12,12 +12,13 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v1
 
-      - uses: n1hility/cancel-previous-runs@v2
+      - name: Cancel previous run
+        uses: n1hility/cancel-previous-runs@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        # Ignore the failure of a step and avoid terminating the job.
+      - name: Recall previous docker images
+        uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
 
       - name: Deploy docs
