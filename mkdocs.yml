@@ -1,4 +1,5 @@
 site_name: PlayStation Specifications - psx-spx
+site_url: https://psx-sdk.consoledev.net/
 
 theme:
   name: material
