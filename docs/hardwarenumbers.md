@@ -292,6 +292,8 @@ And whatever:<br/>
 ```
   RU029      Konami Beatmania IIDX
   RU014      Konami Pop'n Music (buttons A,B,C,D,E,F,G,H,I, and Select/Start)
+  RU014-J2   Konami Pop'n Controller 2
+  RU036      Konami Pop'n Controller (Arcade Style)
   ?          Produce! Paca Paca Passion
   ?          Sega/Ascii Minimoni Shakatto Tambourine
 ```
