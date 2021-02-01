@@ -1300,6 +1300,8 @@ For backwards compatibility, the above old method does also work on SCPH-1200
 and SCPH-110 (for controlling the right/small motor), alternately those newer
 pads can use the config commands (for gaining access to both motors).<br/>
 
+When the controller enters configuration mode, the old rumble method is disabled until a hard reset. Unknown if it's possible to re-enable the old rumble method programmatically.
+
 #### New Method, two motors, with config commands (SCPH-1200, SCPH-110)
 For using the new rumble method, one must unlock the new rumble mode, for that
 purpose Sony has invented a "slightly" overcomplicated protocol with not less
@@ -1366,6 +1368,9 @@ When issuing command 43h from inside normal mode, the response is same as for
 command 42h (button data) (and analog inputs when in analog mode) (but without
 M1 and M2 parameters). While in config mode, the ID bytes are always "F3h 5Ah"
 (instead of the normal analog/digital ID bytes).<br/>
+
+Entering configuration mode enables the DualShock rumble method and disables the legacy rumble method. Unknown if it's possible to re-enable the old rumble method programmatically.
+
 ```
   xx=00h Stay in Normal mode
   xx=01h Enter Configuration mode
@@ -1420,6 +1425,8 @@ this technique is undefined behavior and use should be avoided.<br/>
 If "sel=02h", then "val" is applied as new LED state (val=00h for LED off aka
 Digital mode, and val=01h for LED on/red aka analog mode).<br/>
 
+Using this command has a side effect of resetting the DualShock rumble configuration to FFh FFh FFh FFh FFh FFh.
+
 #### Config Mode - Command 45h "E" - Get LED State (and whatever values)
 ```
   Send  01h 45h 00h 00h 00h 00h 00h 00h 00h
@@ -1434,42 +1441,34 @@ so.<br/>
   Send  01h 46h 00h xx  00h 00h 00h 00h 00h
   Reply Hiz F3h 5Ah 00h 00h yy  yy  yy  yy
 ```
-Purpose unknown. Response varies: If xx=00h then yy=01h,02h,00h,0ah, else if
-xx=01h then yy=01h,01h,01h,14h.<br/>
+Purpose unknown, but seems to be used by some games to identify the controller as a DualShock Analog Controller since Jogcon returns different values. Response varies: If xx=00h then yy=01h,02h,00h,0ah, else if xx=01h then yy=01h,01h,01h,14h. Other values of xx will cause yy = 00h 00h 00h 00h to be returned. Unknown what happens if the other values after xx are modified, but it is likely that the controller will default to yy = 00h 00h 00h 00h. <br/>
 
 #### Config Mode - Command 47h "G" - Get whatever values
 ```
   Send  01h 47h 00h 00h 00h 00h 00h 00h 00h
   Reply HiZ F3h 5Ah 00h 00h 02h 00h 01h 00h
 ```
-Purpose unknown.<br/>
+Purpose unknown, but seems to be used by some games to identify the controller as a DualShock Analog Controller since Jogcon returns different values. Modifications to the sequence being sent to the controller seem to cause the controller to respond with 00h 00h 00h 00h 00h 00h.<br/>
 
 #### Config Mode - Command 4Ch "L" - Get Variable Response B
 ```
   Send  01h 4Ch 00h xx  00h 00h 00h 00h 00h
   Reply Hiz F3h 5Ah 00h 00h 00h yy  00h 00h
 ```
-Purpose unknown. Response varies: If xx=00h then yy=04h, else if xx=01h then
-yy=07h.<br/>
+Purpose unknown, but as with 46h and 47h, may be used by some games to identify the controller as a DualShock Analog Controller. Response varies: If xx=00h then yy=04h, else if xx=01h then yy=07h. All other xx values and sequences seem to have a 00h 00h 00h 00h 00h 00h response.<br/>
 
-#### Config Mode - Command 4Dh "M" - Unlock Rumble (and select response length)
+#### Config Mode - Command 4Dh "M" - Set Rumble Configuration (and select response length)
 ```
   Send  01h 4Dh 00h aa  bb  cc  dd  ee  ff
   Reply Hiz F3h 5Ah <-----old values----->
 ```
-This command does basically unlock the rumble motors (so they can be controlled
-with command 42h), this is usually done by setting aa..ff to 00h, 01h, FFh,
-FFh, FFh, FFh. There are billons of other combinations for aa..ff, some rules
-are:<br/>
-```
-  when cc.bit1-7 are all zero --> transfer one extra halfword
-  when ee.bit1-7 are all zero --> transfer another extra halfword
-  when cc,dd,ee,ff are ALL nonzero --> unlock small motor
-  when aa=01h --> unlock large motor (and swap VAL1 and VAL2)
-  when bb=01h --> unlock large motor (default)
-  when cc.bit0=1 --> disable large motor (unless cc.bit7=1)
-  when ff.bit0=1 --> disable large motor (unless something)
-```
+Nocash's original notes state that this command unlocks the rumble motors -- however, based on hardware testing, the DualShock rumble mode is unlocked as soon as a controller enters configuration mode. This command just sets the DualShock rumble configuration.
+
+The rumble configuration works as follows: The last 00h byte in the rumble configuration sequence determines which byte in the 42h pad read command will be used for setting the small motor strength. The last 01h byte in the sequence similarly determines which byte will be used for the large motor strength. If either 00h or 01h or both are not present in the configuration sequence, the corresponding motor will not be able to receive any rumble, as expected.
+
+Most games will use 00h 01h FFh FFh FFh FFh, however a number of games will use uncommon sequences. For example, Final Fantasy VIII uses FFh 00h 01h FFh FFh FFh while Armored Core Project Phantasma uses 00h 00h 01h 01h FFh FFh.
+
+Untested Nocash notes:
 The extra halfword(s) increase the transfer length by 1 or 2 halfwords (and
 accordingly, the digital mode ID changes from 41h to 42h or 43h), the
 controller returns 00h bytes for the extra halfwords, in analog mode, the ID
