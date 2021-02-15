@@ -3430,7 +3430,7 @@ the caller's RA,SP,R30,R28,R16 registers (for some bizarre reason, this
 information is saved in the exe header, rather than on the caller's stack).<br/>
 Additionally to the initial PC,R28,SP,R30 values that are contained in the
 header, two parameter values are passed to the executable (in R4 and R5
-registers) (however, usually that values are simply R4=1 and R5=0).<br/>
+registers) (however, usually these values are simply R4=1 and R5=0).<br/>
 Like normal functions, the executable can return control to the caller by
 jumping to the incoming RA address (provided that it hasn't destroyed the stack
 or other important memory locations, and that it has pushed/popped all
