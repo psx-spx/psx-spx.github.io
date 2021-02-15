@@ -359,8 +359,8 @@ tray that contains a normal (top-loading) PSX cdrom drive unit).<br/>
   CN2    4pin Connector to PC power supply (12V/5V and 2xGND)
   CN3   50pin Connector to DTL-H2500 or so? (need "PCS-E50FC" plug?)
 ```
-There is no eject button, unknown if there's some eject motor, or if one does
-need to push/pull drive tray manually.<br/>
+There is no eject button, unknown if there's some eject motor, or if one
+needs to push/pull the drive tray manually.<br/>
 
 #### Sony SCPH-9903 (Gray SCEx-free Playstation)
 A rare SCEx-free Playstation that can boot from CDR's without SCEx strings;

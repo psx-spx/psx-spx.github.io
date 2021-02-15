@@ -779,7 +779,7 @@ address (causing an invalid memory address exception on address 6F726463h, for
 "cdrom:filename.exe").<br/>
 
 #### A(9Ch) - SetConf(num\_EvCB, num\_TCB, stacktop)
-Changes the number of EvCBs and TCBs, and the stacktop. That values are usually
+Changes the number of EvCBs and TCBs, and the stacktop. These values are usually
 initialized from the settings in the SYSTEM.CNF file, so using this function
 usually shouldn't ever be required.<br/>
 The function deallocates all old ExCBs, EvCBs, TCBs (so all Exception handlers,

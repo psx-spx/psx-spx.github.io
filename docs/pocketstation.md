@@ -1382,7 +1382,7 @@ command the hardware to output that info...?<br/>
 Reboots the pocketstation, similar as when pressing the Reset button. Don't
 use! The BIOS bootcode does (without any good reason) reset the RTC registers
 and alarm/century settings in RAM to Time 00:00:00, Date 01 Jan 1999, and Alarm
-00:00 disabled, so, after reset, the user would need to re-enter that values.<br/>
+00:00 disabled, so, after reset, the user would need to re-enter these values.<br/>
 Aside from the annoying destroyed RTC settings, the function is rather
 unstable: it does jump to address 00000000h in RAM, which should usually
 redirect to 04000000h in ROM, however, most pocketstation games are programmed
@@ -2011,7 +2011,7 @@ boundaries required).<br/>
 ##   Pocketstation XBOO Cable
 This circuit allows to connect a pocketstation to PC parallel port, allowing to
 upload executables to real hardware, and also allowing to download TTY debug
-messages (particulary useful as the 32x32 pixel LCD screen is ways too small to
+messages (particulary useful as the 32x32 pixel LCD screen is way too small to
 display any detailed status info).<br/>
 
 #### POC-XBOO Circuit
