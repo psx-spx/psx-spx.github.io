@@ -166,6 +166,77 @@ serial ports, connected to the expansion port,<br/>
 [EXP2 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#exp2-dual-serial-port-for-tty-debug-terminal)<br/>
 
 #### SIO Games
+
+The SIO ports on two consoles can be connected with an SCPH-1040 Link Cable (known as Taisen Cable, or "Fight Cable" in Japan) for multiplayer functionality on games that support this method. This was used by a small number of games in the console's lifecycle, but inconveniently required a second console and copy of the game.
+
+Two-Console Link Cable Games (Incomplete List):
+```
+Andretti Racing
+Armored Core (and Armored Core "Link Versus Demo" disc)
+Armored Core Project Phantasma
+Armored Core Master of Arena
+Assault Rigs
+Ayrton Senna Kart Duel
+Blast Radius
+Bogey Dead 6
+Burning Road
+Bushido Blade
+Bushido Blade 2
+C1 -Circuit-
+CART World Series
+Command & Conquer Red Alert
+Command & Conquer Red Alert Retaliation
+Cool Boarders 2
+Dead in the Water
+Descent
+Descent Maximum
+Destruction Derby
+Duke Nukem Total Meltdown
+Dodgem Arena
+Doom
+Dune 2000
+Explosive Racing (X Racing in NTSC-J)
+Final Doom
+Formula 1
+Formula 1 98
+Grand Tour Racing '98 (Gekisou!! Grand Racing -Total Driving'- in NTSC-J, Total Drivin in PAL)
+Independence Day
+Krazy Ivan
+Leading Jockey Highbred
+Metal Jacket
+Mobile Suit Z-Gundam
+Monaco Grand Prix Racing Simulation 2 (Monaco Grand Prix in NTSC-U/C)
+Motor Toon Grand Prix (reportedly NTSC-U/C version only)
+Motor Toon Grand Prix 2
+Motor Toon Grand Prix USA Edition
+The Need for Speed (Over Drivin' DX in NTSC-J)
+PrePre Vol. 2
+Pro Pinball Big Race USA
+RacinGroovy
+Real Robots Final Attack
+Red Asphalt (Rock & Roll Racing 2 Red Asphalt in PAL)
+Ridge Racer Revolution
+R4 Ridge Racer Type 4
+Robo Pit
+Rogue Trip Vacation 2012
+San Francisco Rush Extreme Racing (reportedly PAL version only)
+Shutokou Battle R
+Sidewinder
+Sidewinder USA
+Soukou Kihei Votoms Gaiden: Ao no Kishi Berserga Monogatari
+Streak Hoverboard Racing
+Test Drive 4
+Test Drive Off-Road (reportedly NTSC-U/C only)
+TOCA 2 Touring Car Challenge (TOCA 2 Touring Cars in PAL)
+Trick'N Snowboarder (Tricky Sliders Freestyle Snowboard in NTSC-J)
+Twisted Metal III
+Wing Over
+Wipeout
+Wipeout 3 Special Edition
+Wipeout XL (Wipeout 2097 in PAL)
+Zero Pilot Ginyoku no Senshi
+```
+
 The serial port is used (for 2-player link) by Wipeout 2097 (that game
 accidently assumes BAUDs based on 64\*1024\*1025 Hz rather than on 600h\*44100
 Hz).<br/>
