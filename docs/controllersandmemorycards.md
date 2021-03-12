@@ -13,7 +13,7 @@
 [Controllers - Lightguns](controllersandmemorycards.md#controllers-lightguns)<br/>
 [Controllers - Rumble Configuration](controllersandmemorycards.md#controllers-rumble-configuration)<br/>
 [Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
-[Controllers - Pop'n Controllers](controllersandmemorycards.md#controllers-popn-controllers)
+[Controllers - Pop'n Controllers](controllersandmemorycards.md#controllers-popn-controllers)<br/>
 [Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
 [Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers-i-mode-adaptor-mobile-internet)<br/>
 [Controllers - Additional Inputs](controllersandmemorycards.md#controllers-additional-inputs)<br/>
@@ -2198,12 +2198,8 @@ should be the same as used in the Memory Card Directory. The title is more or
 less don't care; it may be the SHIFT-JIS title from the Title Sector converted
 to ASCII.<br/>
 
-#### Other
-"There exists another single-save format with a 128 byte header containing a
-raw index frame for the initial block, which must be updated to match the
-destination card, and the raw save data. I have seen this format once, but I
-don't remember what it was called or where it came from. You may want to
-account for this possibility in your format detection logic."<br/>
+#### .MCS Files (Single Save Format)
+MCS files consist of the 128 byte directory frame for the savefile's first block followed by all of that savefile's blocks in linked list order. When importing this format, the directory frame should be parsed for the save filename and the filesize while other fields should be ignored. The rest of the directory frame fields and any extra directory frames, in the case of multi-block saves, should be reconstructed based on the destination memory card.
 
 #### .GME Files (usually 20F40h bytes)
 InterAct GME format, produced by the DexDrive.<br/>
