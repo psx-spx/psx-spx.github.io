@@ -108,12 +108,10 @@ only seen in some demos, and never in actual games.<br/>
 Fills the area in the frame buffer with the value in RGB. Horizontally the
 filling is done in 16-pixel (32-bytes) units (see below masking/rounding).<br/>
 The "Color" parameter is a 24bit RGB value, however, the actual fill data is
-16bit: The hardware automatically converts the 24bit RGB value to 15bit RGB
-(with bit15=0).<br/>
-Fill is NOT affected by the Mask settings (acts as if Mask.Bit0,1 are both
-zero).<br/>
+16bit: The hardware linearly converts the 24bit RGB value to 15bit RGB by dropping the lower 3 bits of each color value and additionally sets the mask bit (bit15) to 0.<br/>
+Rectangle filling is not affected by the GP0(E6h) mask setting, acting as if GP0(E6h).0 and GP0(E6h).1 are both zero.<br/>
 This command is typically used to do a quick clear, as it'll be faster to run
-than an equivalent Rectangle command.
+than an equivalent Render Rectangle command.
 
 #### VRAM Overview / VRAM Addressing
 VRAM is 1MByte (not mapped to the CPU bus) (it can be read/written only via I/O
