@@ -14,6 +14,7 @@
 [Controllers - Rumble Configuration](controllersandmemorycards.md#controllers-rumble-configuration)<br/>
 [Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
 [Controllers - Pop'n Controllers](controllersandmemorycards.md#controllers-popn-controllers)<br/>
+[Controllers - Densha de Go! / Jet de Go! Controllers](controllersandmemorycards.md#controllers-densha-de-go-jet-de-go-controllers)<br/>
 [Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
 [Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers-i-mode-adaptor-mobile-internet)<br/>
 [Controllers - Additional Inputs](controllersandmemorycards.md#controllers-additional-inputs)<br/>
@@ -273,82 +274,54 @@ X = none, - = Hi-Z<br/>
 \* SEL- for memory card in PAD access.<br/>
 
 
-
 ##   Controller and Memory Card Multitap Adaptor
 #### SCPH-1070 (Multitap)
 The Multitap is an external adaptor that allows to connect 4 controllers, and 4
 memory cards to one controller port. When using two adaptors (one on each
 slot), up to 8 controllers and 8 memory cards can be used.<br/>
 
-#### Multitap Controller Access
-Normally joypad reading is done by sending this bytes to the pad:<br/>
-```
-  01 42 00 00 ..   ;normal read
-```
-And with the multitap, there are even two different ways how to access extra
-pads:<br/>
-```
-  01 42 01 00 ..   ;method 1: receive special ID and data from ALL four pads
-  0n 42 00 00 ..   ;method 2: receive data from pad number "n" (1..4)
-```
-The first method seems to be the more commonly used one (and its special ID is
-also good for detecting the multitap); see below for details.<br/>
-The second method works more like "normal" reads, among other it's allowing to
-transfer more than 4 halfwords per slot (unknown if any existing games are
-using that feature).<br/>
-The IRQ10 signal (for Konami Lightguns) is simply wired to all four slots via
-small resistors (without special logic for activating/deactivating the IRQ on
-certain slots).<br/>
+The Multitap has a physical lip that blocks access to the memory card slot above the controller port it is plugged into. This is done to prevent ambiguity/contention between the memory card plugged into Multitap slot A and the memory card slot, since both are accessed via byte 0x81.
 
-#### Multitap Controller Access, Method 1 Details
-Below LONG response is activated by sending "01h" as third command byte;
-observe that sending that byte does NOT affect the current response. Instead,
-it does request that the NEXT command shall return special data, as so:<br/>
+#### Multitap Controller Passthrough Mode
+In passthrough mode, the access byte sent to the Multitap is 0Nh, where N is the desired pad. On receiving a valid access byte, the multitap will send a 01h access byte to the controller to activate it for transfer. All following bytes are passed through normally as if the software is communicating directly with the controller. If the initial Multitap access byte is out of range (i.e. not 01h, 02h, 03h, or 04h) or a controller is not plugged into the port, the Multitap will not ACK the access.
+
+#### Multitap Controller Buffered Transfer All Mode
+To activate the buffered Transfer All mode, 01h must be sent as the third byte in the controller transfer sequence (so the second byte in the command halfword), like so:
 ```
+  0Nh 42h 01h ..
+```
+Sending any value other than 00h or 01h for that byte, in either operation mode, seems to cause the Multitap to end communication at that byte (no ACK). When activating buffered Transfer All mode, the current response is not affected. Instead, it signals the Multitap to send/receive data for all the controllers on the *next* transfer sequence, like so:
+```
+  Access Byte
   Halfword 0      --> Controller ID for MultiTap (5A80h=Multitap)
   Halfword 1..4   --> Player A (Controller ID, Buttons, Analog Inputs, if any)
   Halfword 5..8   --> Player B (Controller ID, Buttons, Analog Inputs, if any)
   Halfword 9..12  --> Player C (Controller ID, Buttons, Analog Inputs, if any)
   Halfword 13..16 --> Player D (Controller ID, Buttons, Analog Inputs, if any)
 ```
-With this method, the Multitap is always sending 4 halfwords per slot (padded
-with FFFFh values for devices like Digital Joypads and Mice; which do use less
-than 4 halfwords); for empty slots it's padding all 4 halfwords with FFFFh.<br/>
-Sending the request is possible ONLY if there is a controller in Slot A (if
-controller Slot A is empty then the Slot A access aborts after the FIRST byte,
-and it's thus impossible to send the request in the THIRD byte).<br/>
-Sending the request works on access to Slot A, trying to send another request
-during the LONG response is glitchy (for whatever strange reason); one must
-thus REPEATEDLY do TWO accesses: one dummy Slot A access (with the request),
-followed by the long Slot A+B+C+D access.<br/>
+With this method, the Multitap always sends 4 halfwords per slot, padded with FFh for devices like Digital Controllers and Mice which use less than 4 halfwords. For Empty slots, all 4 halfwords are filled with FFh bytes. <br/>
+
+A number of things can cause the Transfer All mode to fail. First, the controller corresponding to the access byte must be present, or the transfer will end on the access byte, same as for a passthrough transfer. Secondly, the command halfword must be 42h 00h or 42h 01h, or transfer will end on the second byte of the halfword.<br/>
+
+In Transfer All mode, controller response are buffered by an entire transfer sequence, so software must request another Transfer All to receive the results from the previous Transfer All, like so:</br>
 ```
-  Previous access had REQ=0 and returned Slot A data ---> returns Slot A data
-  Previous access had REQ=0 and returned Slot A-D data -> returns Slot A data
-  Previous access had REQ=1 and returned Slot A data ---> returns Slot A-D data
-  Previous access had REQ=1 and returned Slot A-D data -> returns garbage
-  Previous access had REQ=1 and returned garbage -------> returns Slot A-D data
+  0Nh 42h 01h .. ; Passthrough, request Transfer All mode for next command
+  0Nh 42h 01h .. ; Transfer All, responses should be ignored as previous mode was not Transfer All
+  0Nh 42h 01h .. ; Transfer All, receive responses from previous Transfer All
+  ..             ; And so forth
+  0Nh 42h 00h .. ; Return to Passthrough mode on next transfer sequence if currently in Transfer All mode
 ```
-In practice:<br/>
-Toggling REQ on/off after each command: Returns responses toggling between
-normal Slot A data and long Slot A+B+C+D data.<br/>
-Sending REQ=1 in ALL commands: Returns responses toggling between Garbage and
-long Slot A+B+C+D data.<br/>
-Both of the above is working (one needs only the Slot A+B+C+D part, and it
-doesn't matter if the other part is Slot A, or Garbage; as long as the software
-is able/aware of ignoring the Garbage). Garbage response means that the
-multitap returns ONLY four bytes, like so: Hiz,80h,5Ah,LSB (ie. the leading
-HighZ byte, the 5A80h Multitap ID, and the LSB of the Slot A controller ID),
-and aborts transfer after that four bytes.<br/>
+
+The IRQ10 line (used by the Konami Justifier) is simply wired to all four slots via small resistors without any special logic for activating/deactivating the IRQ on specific slots.<br/>
 
 #### Multitap Memory Card Access
-Normally memory card access is done by sending this bytes to the card:<br/>
+Memory card access is done like so:<br/>
 ```
-  80 xx .. ..      ;normal access
+  8Nh xxh .. ..      ;access memory card in slot "N" (1..4)
 ```
-And with the multitap, memory cards can be accessed as so:<br/>
-```
-  8n xx .. ..      ;access memory card in slot "n" (1..4)
-```
+There is no other known method for accessing memory cards through the Multitap.
+
+Unverified notes from Nocash:<br/>
 That's the way how its done in Silent Hill. Although for the best of confusion,
 it doesn't actually work in that game (probably the developer has just linked
 in the multitap library, without actually supporting the multitap at higher
@@ -356,6 +329,7 @@ program levels).<br/>
 
 #### Multitap Games
 ```
+  Bomberman / Bomberman Party Edition (requires Multitap on Port 2 instead of 1)
   Bomberman World
   Breakout: Off the Wall Fun
   Circuit Breakers
@@ -364,12 +338,16 @@ program levels).<br/>
   Frogger
   Gauntlet: Dark Legacy
   Hot Shots Golf 2 & 3
+  Jigsaw Island: Japan Graffiti / Jigsaw Madness (requires Multitap on Port 2 instead of 1)
   NBA Live (any year) (up to 8 players with two multitaps)
   Need For Speed 3
   Need For Speed 5
   Poy Poy (4 players hitting each other with rocks and trees)
   Running Wild
+  S.C.A.R.S. (requires Multitap on Port 2 instead of 1)
+  Zen Nippon Pro Wrestling: Ouja no Tamashii (requires Multitap on Port 2 instead of 1)
 ```
+Most Multitap games supporting up to 4 or 5 controllers require the device to be plugged into Port 1, but a small number of games strangely require the device to be plugged into Port 2 instead.<br/>
 
 #### Multitap Versions
 ```
@@ -391,7 +369,7 @@ The cable connects to one of the PSX controller ports (which also carries the
 memory card signals). The PSX memory card port is left unused (and is blocked
 by a small edge on the Multitap's plug).<br/>
 
-#### MultiTap Parsed Controller IDs
+#### Software-parsed Controller IDs
 Halfword 0 is parsed (by the BIOS) as usually, ie. the LSB is moved to MSB, and
 LSB is replaced by status byte (so ID 5A80h becomes 8000h=Multitap/okay, or
 xxFFh=bad). Halfwords 1,5,9,13 are NOT parsed (neither by the BIOS nor by the
@@ -1597,6 +1575,8 @@ Controllers used for Konami's Pop'n Music series. At least a few different versi
 
 Pop'n Controllers report as digital controllers (ID byte 41h), but the left, right, and down d-pad controls are not connected to any physical buttons and are always reported as pressed (in the first transferred button byte, bits 5-7 are always 0). Pop'n Music games check these bits to determine if a Pop'n Controller is connected and will change the in-game controls accordingly if so.
 
+## Controllers - Densha de Go! / Jet de Go! Controllers
+Controllers used for Taito's Densha de Go! and Jet de Go! series. Unknown what method is being used by Densha de Go! games for detecting these controllers.
 
 ##   Controllers - Fishing Controllers
 The fishing rods are (next to lightguns) some of the more openly martial
