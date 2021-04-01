@@ -140,9 +140,9 @@ be decoded using the following bitfield:
   31-29        001    polygon render
     28         1/0    gouraud / flat shading
     27         1/0    4 / 3 vertices
-    26          1     textured / untextured
+    26         1/0    textured / untextured
     25         1/0    semi transparent / solid
-    24          0     texture blending
+    24         1/0    texture blending
    23-0        rgb    first color value.
 ```
 
