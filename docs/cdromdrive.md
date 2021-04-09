@@ -3400,10 +3400,10 @@ PSX executables are having an 800h-byte header, followed by the code/data.<br/>
   014h      Initial GP/R28               (usually 0)
   018h      Destination Address in RAM   (usually 80010000h, or higher)
   01Ch      Filesize (must be N*800h)    (excluding 800h-byte header)
-  020h      Unknown/Unused               (usually 0)
-  024h      Unknown/Unused               (usually 0)
-  028h      Memfill Start Address        (usually 0) (when below Size=None)
-  02Ch      Memfill Size in bytes        (usually 0) (0=None)
+  020h      Data section Start Address   (usually 0)
+  024h      Data Section Size in bytes   (usually 0)
+  028h      BSS section Start Address    (usually 0) (when below Size=None)
+  02Ch      BSS section Size in bytes    (usually 0) (0=None)
   030h      Initial SP/R29 & FP/R30 Base (usually 801FFFF0h) (or 0=None)
   034h      Initial SP/R29 & FP/R30 Offs (usually 0, added to above Base)
   038h-04Bh Reserved for A(43h) Function (should be zerofilled in exefile)
@@ -3443,10 +3443,8 @@ you can put an original PSX CDROM into a DOS/Windows computer, and view the
 content of the files in text or hex editors without problems).<br/>
 
 #### PSX.EXE
-Aside from SYSTEM.CNF, the Kernel seems to be also checking for a file named
-PSX.EXE, purpose is unknown, maybe this is the default executable name when
-SYSTEM.CNF is not found?<br/>
-
+Some games do not have a SYSTEM.CNF file, in which case the kernel will
+fallback on loading a file named PSX.EXE.
 
 
 ##   CDROM Protection - SCEx Strings
