@@ -1,5 +1,6 @@
 site_name: PlayStation Specifications - psx-spx
 site_url: https://psx-spx.consoledev.net/
+repo_url: https://github.com/psx-spx/psx-spx.github.io/
 
 theme:
   name: material
