@@ -692,11 +692,11 @@ Some games such as Chrono Cross will occasionally adjust these values to create 
   8-23  Not used (zero)
 ```
 Note: Interlace must be enabled to see all lines in 480-lines mode (interlace
-is causing ugly flickering, so a non-interlaced low resolution image is
-typically having better quality than a high resolution interlaced image, a
-pretty bad example are the intro screens shown by the BIOS). The Display Area
-Color Depth does NOT affect the Drawing Area (the Drawing Area is
-\<always\> 15bit).<br/>
+causes ugly flickering, so a non-interlaced low resolution image typically has
+better quality than a high resolution interlaced image, a pretty bad example
+is the intro screens shown by the BIOS). The Display Area Color Depth bit does
+NOT affect GP0 draw commands, which always draw in 15 bit. However, the
+Vertical Interlace flag DOES affect GP0 draw commands.<br/>
 When the "Reverseflag" is set, the display scrolls down 2 lines or so, and
 colored regions are getting somehow hatched/distorted, but black and white
 regions are still looking okay. Don't know what that's good for? Probably
