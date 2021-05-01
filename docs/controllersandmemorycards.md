@@ -1760,6 +1760,7 @@ A controller in the form of a stepper machine. Comes in an orange variant (TW-20
   Happy Diet (SLPS-03182)
   Happy Jogging in Hawaii (SLPS-03306)
   Tonde! Tonde! Diet Stepper Action Game (SLPS-03347)
+  Undou Busoku Kaishou! Punch de Diet (SLPS-03380)
 ```
 
 ##   Controllers - I-Mode Adaptor (Mobile Internet)
