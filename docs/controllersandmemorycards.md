@@ -15,6 +15,7 @@
 [Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
 [Controllers - Pop'n Controllers](controllersandmemorycards.md#controllers-popn-controllers)<br/>
 [Controllers - Densha de Go! / Jet de Go! Controllers](controllersandmemorycards.md#controllers-densha-de-go-jet-de-go-controllers)<br/>
+[Controllers - Stepper Controller](controllersandmemorycards.md#controllers-stepper-controller)<br/>
 [Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
 [Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers-i-mode-adaptor-mobile-internet)<br/>
 [Controllers - Additional Inputs](controllersandmemorycards.md#controllers-additional-inputs)<br/>
@@ -1750,7 +1751,14 @@ Unknown how the Hori thing works.<br/>
            '--...___ cable 1
 ```
 
+## Controllers - Stepper Controller
+A controller in the form of a stepper machine. Comes in an orange variant (TW-20001) and a blue variant (TW-20002). Was available for purchase as a standalone controller or as a bundle with Happy Jogging in Hawaii. Further details unknown.
 
+```
+  Happy Diet (SLPS-03182)
+  Happy Jogging in Hawaii (SLPS-03306)
+  Tonde! Tonde! Diet Stepper Action Game (SLPS-03347)
+```
 
 ##   Controllers - I-Mode Adaptor (Mobile Internet)
 The I-Mode Adaptor cable (SCPH-10180) allows to connect an I-mode compatible
