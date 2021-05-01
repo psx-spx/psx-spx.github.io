@@ -1839,7 +1839,6 @@ BIOS side, this is supported as "std\_in".<br/>
 ```
   SCPH-4010 VPick (guitar-pick controller) (for Quest for Fame, Stolen Song)
 ```
-SLPH-0001 (nejicon)<br/>
 BANDAI "BANC-0002" - 4 Buttons (Triangle, Circle, Cross, Square) (nothing more)<br/>
 
 #### SCPH-2000 Keyboard/Mouse adapter
