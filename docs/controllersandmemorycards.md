@@ -15,6 +15,7 @@
 [Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
 [Controllers - Pop'n Controllers](controllersandmemorycards.md#controllers-popn-controllers)<br/>
 [Controllers - Densha de Go! / Jet de Go! Controllers](controllersandmemorycards.md#controllers-densha-de-go-jet-de-go-controllers)<br/>
+[Controllers - Stepper Controller](controllersandmemorycards.md#controllers-stepper-controller)<br/>
 [Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
 [Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers-i-mode-adaptor-mobile-internet)<br/>
 [Controllers - Additional Inputs](controllersandmemorycards.md#controllers-additional-inputs)<br/>
@@ -1637,13 +1638,15 @@ of the SLPH-00100.<br/>
 
 #### PSX Fishing Controllers
 ```
-  ASCII SLPH-00100 (silver)
-  ASCII PS2-version? (silver) (similar to SLPH-00100, with new mode switch?)
-  agetec SLUS-00063 (silver) (US version of ASCII's SLPH-00100 controller)
-  Bandai BANC-0001 (dark gray/blue) (has less buttons than ASCII/agetec)
+  ASCII Tsuricon SLPH-00100 (also marked with a second serial, ASC-0514TR, on the packaging box)
+  ASCII Tsuricon 2 ASC-0521TR2 (has a mode switch with 3 settings. "1" is original Tsuricon mode, "2" is Tsuricon 2 mode. Unknown what the unnumbered mode does)
+  Sammy Tsuricon 2 SMY-0506FS (looks to be identical to the ASCII Tsuricon 2)
+  Sammy Tsuricon 2+ SMY-0511FS (unknown what the differences between this and the Tsuricon 2 are)
+  Agetec Bass Landing Fishing Controller SLUH-00063 (US version of ASCII's SLPH-00100 controller)
+  Bandai Fishing Controller BANC-0001 (dark gray/blue) (has less buttons than ASCII/agetec)
   Interact Fission (light gray/blue)(similar to ASCII/agetec, 2 extra buttons?)
   Naki (transparent blue) (looks like a clone of the ASCII/agetec controllers)
-  Hori HPS-97/HPS-98 (black/gray) (a fishing rod attached to a plastic fish)
+  Hori Fighting Rod HPS-97/HPS-98 (black/gray) (a fishing rod attached to a plastic fish)
 ```
 Of these, the ASCII/agetec controllers seem to be most popular (and most
 commonly supported). The Bandai contoller is also supported by a couple of
@@ -1750,7 +1753,15 @@ Unknown how the Hori thing works.<br/>
            '--...___ cable 1
 ```
 
+## Controllers - Stepper Controller
+A controller in the form of a stepper machine. Comes in an orange variant (TW-20001) and a blue variant (TW-20002). Was available for purchase as a standalone controller or as a bundle with Happy Jogging in Hawaii. Further details unknown.
 
+```
+  Happy Diet (SLPS-03182)
+  Happy Jogging in Hawaii (SLPS-03306)
+  Tonde! Tonde! Diet Stepper Action Game (SLPS-03347)
+  Undou Busoku Kaishou! Punch de Diet (SLPS-03380)
+```
 
 ##   Controllers - I-Mode Adaptor (Mobile Internet)
 The I-Mode Adaptor cable (SCPH-10180) allows to connect an I-mode compatible
@@ -1839,7 +1850,6 @@ BIOS side, this is supported as "std\_in".<br/>
 ```
   SCPH-4010 VPick (guitar-pick controller) (for Quest for Fame, Stolen Song)
 ```
-SLPH-0001 (nejicon)<br/>
 BANDAI "BANC-0002" - 4 Buttons (Triangle, Circle, Cross, Square) (nothing more)<br/>
 
 #### SCPH-2000 Keyboard/Mouse adapter
