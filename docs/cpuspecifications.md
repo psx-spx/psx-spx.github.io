@@ -156,11 +156,11 @@ but do not necessarily trigger exceptions if set to nonzero values.<br/>
 ##   CPU Load/Store Opcodes
 #### Load instructions
 ```
-  movbs rt,[imm+rs]  lb  rt,imm(rs)    rt=[imm+rs]  ;byte sign-extended
-  movb  rt,[imm+rs]  lbu rt,imm(rs)    rt=[imm+rs]  ;byte zero-extended
-  movhs rt,[imm+rs]  lh  rt,imm(rs)    rt=[imm+rs]  ;halfword sign-extended
-  movh  rt,[imm+rs]  lhu rt,imm(rs)    rt=[imm+rs]  ;halfword zero-extended
-  mov   rt,[imm+rs]  lw  rt,imm(rs)    rt=[imm+rs]  ;word
+  lb  rt,imm(rs)    rt=[imm+rs]  ;byte sign-extended
+  lbu rt,imm(rs)    rt=[imm+rs]  ;byte zero-extended
+  lh  rt,imm(rs)    rt=[imm+rs]  ;halfword sign-extended
+  lhu rt,imm(rs)    rt=[imm+rs]  ;halfword zero-extended
+  lw  rt,imm(rs)    rt=[imm+rs]  ;word
 ```
 Load instructions can read from the data cache (if the data is not in the
 cache, or if the memory region is uncached, then the CPU gets halted until it
@@ -176,9 +176,9 @@ next opcode would receive the NEW value).<br/>
 
 #### Store instructions
 ```
-  movb  [imm+rs],rt  sb  rt,imm(rs)    [imm+rs]=(rt AND FFh)   ;store 8bit
-  movh  [imm+rs],rt  sh  rt,imm(rs)    [imm+rs]=(rt AND FFFFh) ;store 16bit
-  mov   [imm+rs],rt  sw  rt,imm(rs)    [imm+rs]=rt             ;store 32bit
+  sb  rt,imm(rs)    [imm+rs]=(rt AND FFh)   ;store 8bit
+  sh  rt,imm(rs)    [imm+rs]=(rt AND FFFFh) ;store 16bit
+  sw  rt,imm(rs)    [imm+rs]=rt             ;store 32bit
 ```
 Store operations are passed to the write-buffer, so they can execute within a
 single clock cycle (unless the write-buffer was full, in that case the CPU gets
@@ -237,12 +237,12 @@ allowed... more PROBABLY that doesn't work?<br/>
 ##   CPU ALU Opcodes
 #### arithmetic instructions
 ```
-  addt rd,rs,rt    add   rd,rs,rt         rd=rs+rt (with overflow trap)
-  add  rd,rs,rt    addu  rd,rs,rt         rd=rs+rt
-  subt rd,rs,rt    sub   rd,rs,rt         rd=rs-rt (with overflow trap)
-  sub  rd,rs,rt    subu  rd,rs,rt         rd=rs-rt
-  addt rt,rs,imm   addi  rt,rs,imm        rt=rs+(-8000h..+7FFFh) (with ov.trap)
-  add  rt,rs,imm   addiu rt,rs,imm        rt=rs+(-8000h..+7FFFh)
+  add   rd,rs,rt         rd=rs+rt (with overflow trap)
+  addu  rd,rs,rt         rd=rs+rt
+  sub   rd,rs,rt         rd=rs-rt (with overflow trap)
+  subu  rd,rs,rt         rd=rs-rt
+  addi  rt,rs,imm        rt=rs+(-8000h..+7FFFh) (with ov.trap)
+  addiu rt,rs,imm        rt=rs+(-8000h..+7FFFh)
 ```
 The opcodes "with overflow trap" do trigger an exception (and leave rd
 unchanged) in case of overflows.<br/>
@@ -257,38 +257,38 @@ unchanged) in case of overflows.<br/>
 
 #### logical instructions
 ```
-  and  rd,rs,rt    and  rd,rs,rt         rd = rs AND rt
-  or   rd,rs,rt    or   rd,rs,rt         rd = rs OR  rt
-  xor  rd,rs,rt    xor  rd,rs,rt         rd = rs XOR rt
-  nor  rd,rs,rt    nor  rd,rs,rt         rd = FFFFFFFFh XOR (rs OR rt)
-  and  rt,rs,imm   andi rt,rs,imm        rt = rs AND (0000h..FFFFh)
-  or   rt,rs,imm   ori  rt,rs,imm        rt = rs OR  (0000h..FFFFh)
-  xor  rt,rs,imm   xori rt,rs,imm        rt = rs XOR (0000h..FFFFh)
+  and  rd,rs,rt         rd = rs AND rt
+  or   rd,rs,rt         rd = rs OR  rt
+  xor  rd,rs,rt         rd = rs XOR rt
+  nor  rd,rs,rt         rd = FFFFFFFFh XOR (rs OR rt)
+  andi rt,rs,imm        rt = rs AND (0000h..FFFFh)
+  ori  rt,rs,imm        rt = rs OR  (0000h..FFFFh)
+  xori rt,rs,imm        rt = rs XOR (0000h..FFFFh)
 ```
 
 #### shifting instructions
 ```
-  shl  rd,rt,rs    sllv rd,rt,rs          rd = rt SHL (rs AND 1Fh)
-  shr  rd,rt,rs    srlv rd,rt,rs          rd = rt SHR (rs AND 1Fh)
-  sar  rd,rt,rs    srav rd,rt,rs          rd = rt SAR (rs AND 1Fh)
-  shl  rd,rt,imm   sll  rd,rt,imm         rd = rt SHL (00h..1Fh)
-  shr  rd,rt,imm   srl  rd,rt,imm         rd = rt SHR (00h..1Fh)
-  sar  rd,rt,imm   sra  rd,rt,imm         rd = rt SAR (00h..1Fh)
-  mov  rt,i*10000h lui  rt,imm            rt = (0000h..FFFFh) SHL 16
+  sllv rd,rt,rs          rd = rt SHL (rs AND 1Fh)
+  srlv rd,rt,rs          rd = rt SHR (rs AND 1Fh)
+  srav rd,rt,rs          rd = rt SAR (rs AND 1Fh)
+  sll  rd,rt,imm         rd = rt SHL (00h..1Fh)
+  srl  rd,rt,imm         rd = rt SHR (00h..1Fh)
+  sra  rd,rt,imm         rd = rt SAR (00h..1Fh)
+  lui  rt,imm            rt = (0000h..FFFFh) SHL 16
 ```
 Unlike many other opcodes, shifts use 'rt' as second (not third) operand.<br/>
 The hardware does NOT generate exceptions on SHL overflows.<br/>
 
 #### Multiply/divide
 ```
-  smul rs,rt       mult   rs,rt           hi:lo = rs*rt (signed)
-  umul rs,rt       multu  rs,rt           hi:lo = rs*rt (unsigned)
-  sdiv rs,rt       div    rs,rt           lo = rs/rt, hi=rs mod rt (signed)
-  udiv rs,rt       divu   rs,rt           lo = rs/rt, hi=rs mod rt (unsigned)
-  mov  rd,hi       mfhi   rd              rd=hi  ;move from hi
-  mov  rd,lo       mflo   rd              rd=lo  ;move from lo
-  mov  hi,rs       mthi   rs              hi=rs  ;move to hi
-  mov  lo,rs       mtlo   rs              lo=rs  ;move to lo
+  mult   rs,rt           hi:lo = rs*rt (signed)
+  multu  rs,rt           hi:lo = rs*rt (unsigned)
+  div    rs,rt           lo = rs/rt, hi=rs mod rt (signed)
+  divu   rs,rt           lo = rs/rt, hi=rs mod rt (unsigned)
+  mfhi   rd              rd=hi  ;move from hi
+  mflo   rd              rd=lo  ;move from lo
+  mthi   rs              hi=rs  ;move to hi
+  mtlo   rs              lo=rs  ;move to lo
 ```
 The mul/div opcodes are starting the multiply/divide operation, starting takes
 only a single clock cycle, however, trying to read the result from the hi/lo
@@ -315,10 +315,10 @@ The hardware does NOT generate exceptions on divide overflows, instead, divide
 errors are returning the following values:<br/>
 ```
   Opcode  Rs              Rd       Hi/Remainder  Lo/Result
-  udiv    0..FFFFFFFFh    0   -->  Rs            FFFFFFFFh
-  sdiv    0..+7FFFFFFFh   0   -->  Rs            -1
-  sdiv    -80000000h..-1  0   -->  Rs            +1
-  sdiv    -80000000h      -1  -->  0             -80000000h
+  divu    0..FFFFFFFFh    0   -->  Rs            FFFFFFFFh
+  div     0..+7FFFFFFFh   0   -->  Rs            -1
+  div     -80000000h..-1  0   -->  Rs            +1
+  div     -80000000h      -1  -->  0             -80000000h
 ```
 For udiv, the result is more or less correct (as close to infinite as
 possible). For sdiv, the results are total garbage (about farthest away from
@@ -333,18 +333,18 @@ yet understood if/when/how that rule applies...?<br/>
 #### jumps and branches
 Note that the instruction following the branch will always be executed.<br/>
 ```
-  jmp  dest        j      dest        pc=(pc and F0000000h)+(imm26bit*4)
-  call dest        jal    dest        pc=(pc and F0000000h)+(imm26bit*4),ra=$+8
-  jmp  rs          jr     rs          pc=rs
-  call rs,ret=rd   jalr (rd,)rs(,rd)  pc=rs, rd=$+8 ;see caution
-  je   rs,rt,dest  beq    rs,rt,dest  if rs=rt  then pc=$+4+(-8000h..+7FFFh)*4
-  jne  rs,rt,dest  bne    rs,rt,dest  if rs<>rt then pc=$+4+(-8000h..+7FFFh)*4
-  js   rs,dest     bltz   rs,dest     if rs<0   then pc=$+4+(-8000h..+7FFFh)*4
-  jns  rs,dest     bgez   rs,dest     if rs>=0  then pc=$+4+(-8000h..+7FFFh)*4
-  jgtz rs,dest     bgtz   rs,dest     if rs>0   then pc=$+4+(-8000h..+7FFFh)*4
-  jlez rs,dest     blez   rs,dest     if rs<=0  then pc=$+4+(-8000h..+7FFFh)*4
-  calls  rs,dest   bltzal rs,dest     if rs<0   then pc=$+4+(..)*4, ra=$+8
-  callns rs,dest   bgezal rs,dest     if rs>=0  then pc=$+4+(..)*4, ra=$+8
+  j      dest        pc=(pc and F0000000h)+(imm26bit*4)
+  jal    dest        pc=(pc and F0000000h)+(imm26bit*4),ra=$+8
+  jr     rs          pc=rs
+  jalr (rd,)rs(,rd)  pc=rs, rd=$+8 ;see caution
+  beq    rs,rt,dest  if rs=rt  then pc=$+4+(-8000h..+7FFFh)*4
+  bne    rs,rt,dest  if rs<>rt then pc=$+4+(-8000h..+7FFFh)*4
+  bltz   rs,dest     if rs<0   then pc=$+4+(-8000h..+7FFFh)*4
+  bgez   rs,dest     if rs>=0  then pc=$+4+(-8000h..+7FFFh)*4
+  bgtz   rs,dest     if rs>0   then pc=$+4+(-8000h..+7FFFh)*4
+  blez   rs,dest     if rs<=0  then pc=$+4+(-8000h..+7FFFh)*4
+  bltzal rs,dest     if rs<0   then pc=$+4+(..)*4, ra=$+8
+  bgezal rs,dest     if rs>=0  then pc=$+4+(..)*4, ra=$+8
 ```
 
 #### JALR cautions
@@ -371,17 +371,17 @@ interprete it by software; by examing the opcode bits at [epc-4]).<br/>
 ##   CPU Coprocessor Opcodes
 #### Coprocessor Instructions (COP0..COP3)
 ```
-  mov  rt,cop#Rd(0-31)       mfc# rt,rd       ;rt = cop#datRd ;data regs
-  mov  rt,cop#Rd(32-63)      cfc# rt,rd       ;rt = cop#cntRd ;control regs
-  mov  cop#Rd(0-31),rt       mtc# rt,rd       ;cop#datRd = rt ;data regs
-  mov  cop#Rd(32-63),rt      ctc# rt,rd       ;cop#cntRd = rt ;control regs
-  mov  cop#cmd,imm25         cop# imm25       ;exec cop# command 0..1FFFFFFh
-  mov  cop#Rt(0-31),[rs+imm] lwc# rt,imm(rs)  ;cop#dat_rt = [rs+imm]  ;word
-  mov  [rs+imm],cop#Rt(0-31) swc# rt,imm(rs)  ;[rs+imm] = cop#dat_rt  ;word
-  jf   cop#flg,dest          bc#f dest        ;if cop#flg=false then pc=$+disp
-  jt   cop#flg,dest          bc#t dest        ;if cop#flg=true  then pc=$+disp
-  rfe                        rfe              ;return from exception (COP0)
-  tlb<xx>                    tlb<xx>          ;virtual memory related (COP0)
+  mfc# rt,rd       ;rt = cop#datRd ;data regs
+  cfc# rt,rd       ;rt = cop#cntRd ;control regs
+  mtc# rt,rd       ;cop#datRd = rt ;data regs
+  ctc# rt,rd       ;cop#cntRd = rt ;control regs
+  cop# imm25       ;exec cop# command 0..1FFFFFFh
+  lwc# rt,imm(rs)  ;cop#dat_rt = [rs+imm]  ;word
+  swc# rt,imm(rs)  ;[rs+imm] = cop#dat_rt  ;word
+  bc#f dest        ;if cop#flg=false then pc=$+disp
+  bc#t dest        ;if cop#flg=true  then pc=$+disp
+  rfe              ;return from exception (COP0)
+  tlb<xx>          ;virtual memory related (COP0)
 ```
 Unknown if any tlb-opcodes (tlbr,tlbwi,tlbwr,tlbp) are implemented in the psx?<br/>
 
