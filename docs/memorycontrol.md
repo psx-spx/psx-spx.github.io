@@ -42,9 +42,9 @@ For Expansion 3, the address seems to be fixed (1FA00000h).<br/>
   31    Wait               (1=wait on external device before being ready)
 ```
 When booting, all these registers are using the maximum cycle delays for both
-reads and writes. When booting, the BIOS will immediately select a faster read
-access delay, resulting in a visible speed up when booting. The effects aren't
-immediate however. The BIOS boots using the following instructions:
+reads and writes. Then, the BIOS will immediately select a faster read
+access delay, resulting in a visible speed up after the first few instructions.
+The effects aren't immediate however. The BIOS boots using the following instructions:
 
 ```mips
 bfc00000    lui        $t0, 0x0013
