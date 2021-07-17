@@ -1577,7 +1577,14 @@ Controllers used for Konami's Pop'n Music series. At least a few different versi
 Pop'n Controllers report as digital controllers (ID byte 41h), but the left, right, and down d-pad controls are not connected to any physical buttons and are always reported as pressed (in the first transferred button byte, bits 5-7 are always 0). Pop'n Music games check these bits to determine if a Pop'n Controller is connected and will change the in-game controls accordingly if so.
 
 ## Controllers - Densha de Go! / Jet de Go! Controllers
-Controllers used for Taito's Densha de Go! and Jet de Go! series. Unknown what method is being used by Densha de Go! games for detecting these controllers.
+Controllers used for Taito's Densha de Go! and Jet de Go! series.
+Unknown what method is being used by Densha de Go! and Jet de Go! games for detecting these controllers.
+
+- The workings of Densha de Go! PSX controllers have been extensively researched in the [ddgo-controller-docs](https://github.com/MarcRiera/ddgo-controller-docs) repo.
+- The Jet de Go! PSX controller comes in gray and black color.
+  It seems to work the same as an analog controller and supports vibration.
+  The steering wheel is mapped to the left stick (wheel rotation as horizontal, wheel raise/lower as vertical axis).
+  The thrust throttle seems mapped to the right stick Y-axis full range (so half throttle matches vertically centered right stick).
 
 ##   Controllers - Fishing Controllers
 The fishing rods are (next to lightguns) some of the more openly martial
@@ -1754,13 +1761,25 @@ Unknown how the Hori thing works.<br/>
 ```
 
 ## Controllers - Stepper Controller
-A controller in the form of a stepper machine. Comes in an orange variant (TW-20001) and a blue variant (TW-20002). Was available for purchase as a standalone controller or as a bundle with Happy Jogging in Hawaii. Further details unknown.
+A controller in the form of a stepper machine.
+Comes in an orange variant (TW-20001) and a blue variant (TW-20002).
+Was available for purchase as a standalone controller or as a bundle with Happy Jogging in Hawaii.
+Requires an analog controller to be connected to the stepper in order to work.
+The stepper forces the analog controller to switch to analog mode.
+With some (cheap?) third-party Playstation controllers, this might actually result in permanently activating the controller's rumble.
+The stepper overwrites the left stick X-axis values with the position of the stepper pedals:
+- Left stepper pedal fully down equals to left stick fully to left
+- Right stepper pedal fully down equals to left stick fully to right
+- Left and right stepper pedal equal height matches left stick horizontally centered
+Further details unknown.
 
 ```
   Happy Diet (SLPS-03182)
   Happy Jogging in Hawaii (SLPS-03306)
   Tonde! Tonde! Diet Stepper Action Game (SLPS-03347)
   Undou Busoku Kaishou! Punch de Diet (SLPS-03380)
+  Chasing de Diet (unreleased)
+  Happy Jogging in Paris (unreleased)
 ```
 
 ##   Controllers - I-Mode Adaptor (Mobile Internet)
