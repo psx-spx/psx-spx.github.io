@@ -52,6 +52,14 @@
 
 
 ##   CDROM Controller I/O Ports
+
+|   | 1F801800h         | 1F801801h                                                      | 1F801802h                                        | 1F801803h                                                                 |
+|---|-------------------|----------------------------------------------------------------|--------------------------------------------------|---------------------------------------------------------------------------|
+| 0 | Index/Status (RW) | Response FIFO (R) (Mirror)<br>Command Register (W)             | Data FIFO (R)<br>Parameter FIFO (W)              | Interrupt Enable Register (R)<br>Request Register (W)                     |
+| 1 | Index/Status (RW) | Response FIFO (R)<br>Sound Map Data Out (W)                    | Data FIFO (R)<br>Interrupt Enable Register (W)   | Interrupt Flag Register (RW)                                              |
+| 2 | Index/Status (RW) | Response FIFO (R) (Mirror)<br>Sound Map Coding Info (W)        | Data FIFO (R)<br>Left-CD to Left-SPU Volume (W)  | Interrupt Enable Register (R) (Mirror)<br>Left-CD to Right-SPU Volume (W) |
+| 3 | Index/Status (RW) | Response FIFO (R) (Mirror)<br>Right-CD to Right-SPU Volume (W) | Data FIFO (R)<br>Right-CD to Left-SPU Volume (W) | Interrupt Flag Register (R) (Mirror)<br>Audio Volume Apply Changes (W)    |
+
 #### 1F801800h - Index/Status Register (Bit0-1 R/W) (Bit2-7 Read Only)
 ```
   0-1 Index   Port 1F801801h-1F801803h index (0..3 = Index0..Index3)   (R/W)
