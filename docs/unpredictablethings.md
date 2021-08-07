@@ -62,6 +62,20 @@ There are at least some special cases:<br/>
   FFFE0130h-FFFE0133h  8bit (+16bit?) read works ONLY from word-aligned address
 ```
 
+#### I/O Write Datasize
+Performing a 8-bit or 16-bit write (`sb`/`sh`) will place the entirety of the GPR
+on the bus, regardless of the write size. Therefore, the data is **not** masked.
+This has an effect when performing a narrower write to a wider address, for example
+the DMA controller, but not others such as the CD-ROM controller.
+
+Emulators should therefore treat all access widths as having 32 bits of data, but
+depending on the device perform masking/splitting (see [Memory Control](memorycontrol.md)).
+
+The CD audio visualizer (aka Soundscope) in the SCPH-7xxx series of consoles is an
+example of where this behavior is required, as it issues halfword writes to the DMA
+controller addresses.
+
+
 #### Cache Problems
 The functionality of the Cache is still widely unknown. Not sure if DMA
 transfers are updating or invalidating cache. Cached Data within KSEG0 should
