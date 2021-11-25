@@ -161,13 +161,15 @@ attached to it, as well as a CLUT index.
 
 So each vertex data can be seen as the following set of words:
 ```
-Color      xxBBGGRR    - optional, only present for gouraud shading
-Vertex     YYYYXXXX    - required, two signed 16 bits values
-UV         ClutUUVV    - optional, only present for textured polygons
+Color      xxBBGGRR               - optional, only present for gouraud shading
+Vertex     YYYYXXXX               - required, two signed 16 bits values
+UV         ClutUUVV or PageUUVV   - optional, only present for textured polygons
 ```
 
-The Clut index is only relevant for the first vertex seen in the stream of data. Any
-further Clut index ought to be set to 0.
+The upper 16 bits of the first two UV words contain extra information. The first
+word holds the [Clut index](#clut-attribute-color-lookup-table-aka-palette). The second word contains [texture page information](#texpage-attribute-parameter-for-textured-polygons-commands).
+Any further clut/page bits should be set to 0.
+
 
 So for example, a solid flat blue triangle of coordinate (10, 20), (30, 40), (50, 60)
 will be drawn using the following draw call data:
@@ -185,7 +187,7 @@ Yyy1Xxx1
 ClutU1V1
 00R2G2B2
 Yyy2Xxx2
-0000U2V2
+PageU2V2
 00R3G3B3
 Yyy3Xxx3
 0000U3V3
