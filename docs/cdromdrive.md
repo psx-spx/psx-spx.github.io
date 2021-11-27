@@ -249,14 +249,28 @@ Indicates ready-to-send-new-command,<br/>
   1=Busy sending a command/parameters
 ```
 Trying to send a new command in the Busy-phase causes malfunction (the older
-command seems to get lost, the newer command executes and returns its results
-and triggers an interrupt, but, thereafter, the controller seems to hang). So,
-always wait until the Busy-bit goes off before sending a command.<br/>
+command will be dropped, the newer command executes and returns its results
+and triggers an interrupt). <br/>
 When the Busy-flag goes off, a new command can be send immediately (even if the
 response from the previous command wasn't received yet), however, the new
 command stays in the Busy-phase until the IRQ from the previous command is
 acknowledged, at that point the actual transmission of the new command starts,
 and the Busy-flag goes off (once when the transmission completes).<br/>
+
+```
+Pause -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to 1f801803h.0) -> SetMode/Pause/Stop/SetMode/SeekL/... <br/>
+ReadN/ReadS -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to 1f801803h.0) -> SetMode/SetLoc/... <br/>
+```
+Will not drop any of the two commands, thus execute sequentially.<br/>
+<br/>
+
+```
+Stop -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to 1f801803h.0) -> SetMode/Pause/...<br/>
+```
+Will drop the second response of Stop(), and then execute the next command.<br/>
+
+
+
 
 #### Misc
 Trying to do a 32bit read from 1F801800h returns the 8bit value at 1F801800h
@@ -554,7 +568,7 @@ Seek to Setloc's location in data mode (using data sector header position data,
 which works/exists only on Data tracks, not on CD-DA Audio tracks).<br/>
 After the seek, the disk stays on the seeked location forever (namely: when
 seeking sector N, it does stay at around N-8..N-0 in single speed mode, or at
-around N-5..N+2 in double speed mode).<br/>
+around N-5..N+2 in double speed mode). This command will stop any current or pending ReadN or ReadS.<br/>
 Trying to use SeekL on Audio CDs passes okay on the first response, but (after
 two seconds or so) the second response will return an error (stat+4,04h), and
 stop the drive motor... that error doesn't appear ALWAYS though... works in
@@ -565,7 +579,7 @@ Seek to Setloc's location in audio mode (using the Subchannel Q position data,
 which works on both Audio on Data disks).<br/>
 After the seek, the disk stays on the seeked location forever (namely: when
 seeking sector N, it does stay at around N-9..N-1 in single speed mode, or at
-around N-2..N in double speed mode).<br/>
+around N-2..N in double speed mode). This command will stop any current or pending ReadN or ReadS. <br/>
 Note: Some older docs claim that SeekP would recurse only "MM:SS" of the
 "MM:SS:FF" position from Setloc - that is wrong, it does seek to MM:SS:FF
 (verified on a PSone).<br/>
@@ -751,7 +765,7 @@ as second response byte, with the following values:<br/>
 ```
   ___These values appear in the FIRST response; with stat.bit0 set___
   10h - Invalid Sub_function (for command 19h), or invalid parameter value
-  20h - Wrong number of parameters
+  20h - Wrong number of parameters (most CD commands need an exact number of parameters)
   40h - Invalid command
   80h - Cannot respond yet (eg. required info was not yet read from disk yet)
            (namely, TOC not-yet-read or so)
@@ -1677,6 +1691,17 @@ depending on various details. Especially, some maintenance stuff is only
 handled approximately around 15 times per second (so there are 15 slow mainloop
 cycles per second).<br/>
 
+The order of steps that happen when sending a command to the CD controller look roughly like this:
+```
+e.g. SetMode:
+1. Command busy flag set immediately.
+2. Response FIFO is populated.
+3. Command is being processed.
+4. Command busy flag is unset and parameter fifo is cleared.
+5. Shortly after (around 1000-6000 cycles later), CDROM IRQ is fired.
+```
+
+
 #### Responses
 The PSX can deliver one INT after another. Instead of using a real queue, it's
 merely using some flags that do indicate which INT(s) need to be delivered.
@@ -1756,7 +1781,7 @@ whether the motor is on or off (and probably on various other factors like
 seeking).<br/>
 
 #### First Response
-The First Response interrupt is sent almost immediately after processing the
+The First Response interrupt is sent after processing the
 command (that is, when the mainloop sees a new command without any old
 interrupt pending). For GetStat, timings are as so:<br/>
 ```
