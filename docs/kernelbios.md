@@ -2544,7 +2544,7 @@ Charset 1 (and Garbage) is NOT included in japanese BIOSes (in the SCPH1000
 version that region contains uncompressed program code, in newer japanese
 BIOSes that regions are zerofilled)<br/>
 Charset 1 symbols are as defined in JIS-X-0212 char(2661h..2B77h), and EUC-JP
-char(8FA6E0h..8FABF7h).<br/>
+char(8FA6E1h..8FABF7h).<br/>
 Version (and Copyright) string is NOT included in SCPH1000 version (that BIOS
 includes further japanese 8x15 pix chars in that region).<br/>
 For charset 2 and 3 it may be recommended to use the B(51h)
