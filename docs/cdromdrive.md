@@ -1080,7 +1080,7 @@ CDROM controller BIOS. Known/existing values are:<br/>
   (unknown)        ;DTL-H2000 (with SPC700 instead HC05)
   94h,09h,19h,C0h  ;PSX (PU-7)               19 Sep 1994, version vC0 (a)
   94h,11h,18h,C0h  ;PSX (PU-7)               18 Nov 1994, version vC0 (b)
-  95h,05h,16h,C1h  ;PSX (LATE-PU-8)          16 May 1995, version vC1 (a)
+  95h,05h,16h,C1h  ;PSX (EARLY-PU-8)         16 May 1995, version vC1 (a)
   95h,07h,24h,C1h  ;PSX (LATE-PU-8)          24 Jul 1995, version vC1 (b)
   95h,07h,24h,D1h  ;PSX (LATE-PU-8,debug ver)24 Jul 1995, version vD1 (debug)
   96h,08h,15h,C2h  ;PSX (PU-16, Video CD)    15 Aug 1996, version vC2 (VCD)
