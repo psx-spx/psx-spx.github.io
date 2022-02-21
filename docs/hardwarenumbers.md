@@ -397,17 +397,33 @@ SLEH-00003 is SLEH-0003; unlike as shown in the above list).<br/>
 
 #### Software (CDROM Game Codes)
 ```
-  SCES-NNNNN Sony Computer Europe Software
-  SCED-NNNNN Sony Computer Europe Demo
-  SLES-NNNNN Sony Licensed Europe Software
-  SLED-NNNNN Sony Licensed Europe Demo
-  SCPS-NNNNN Sony Computer Japan Software
-  SLPS-NNNNN Sony Licensed Japan Software
-  SLPM-NNNNN Sony Licensed Japan ... ?
-  SCUS-NNNNN Sony Computer USA Software
-  SLUS-NNNNN Sony Licensed USA Software
-  PAPX-NNNNN Demo ...?
+  CPCS-00701 Dino Crisis 5th Anniversary Box Serial
+  DTL-NNNNN  Development Tool Licensed (Net Yaroze)
+  ESPM-NNNNN Sony Music Entertainment Japan (Music Video Discs)
   LSP-NNNNNN Lightspan series (non-retail educational games)
+  PAPX-NNNNN Japanese Demos/Rental Editions/Taikenban
+  PBPX-NNNNN Official Playstation Sampler Discs (USA/UK)
+  PCPX-NNNNN Japanese Otameshi Discs (Samplers)
+  PEPX-NNNNN Analog Controller Service Disc
+  PUPX-NNNNN Analog controller Service Disc
+  PSRM-017100 Syphon Filter 2 Disc 2 Preview Version
+  PSXCDCLEAN Laser Clean
+  PTPX-NNNNN Aging Disk
+  SCAJ-NNNNN Sony Computer Entertainment America ... ?
+  SCED-NNNNN Sony Computer Europe Demo
+  SCES-NNNNN Sony Computer Europe Software
+  SCPM-NNNNN Sony Computer Japan ...?
+  SCPS-NNNNN Sony Computer Japan Software
+  SCUS-NNNNN Sony Computer USA Software
+  SCZS-NNNNN Sony Computer ... Software? (Fan Books)
+  SIPS-NNNNN Sony Imports ...? (All Imports to Japan)
+  SLED-NNNNN Sony Licensed Europe Demo
+  SLES-NNNNN Sony Licensed Europe Software
+  SLKA-NNNNN Sony Licensed Korea ...? (3 Korean Releases)
+  SLPM-NNNNN Sony Licensed Japan ... ?
+  SLPS-NNNNN Sony Licensed Japan Software
+  SLUS-NNNNN Sony Licensed USA Software
+  SPUS-NNNNN Sony Playstation US ...? (Playstation Picks Disc)
 ```
 Note: Multi-disc games have more than one game code. The game code for Disc 1
 is also printed on the CD cover, and used in memory card filenames. The
