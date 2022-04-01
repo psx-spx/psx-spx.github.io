@@ -169,7 +169,7 @@ only 8pins.<br/>
 ```
   1 SIO1 In  RXD receive data    (from remote TXD)
   2 SIO2 -   VCC +3.5VDC         (supply, eg. for voltage conversion)
-  3 SIO3 In  DSR                 (from remote CTS)           _________________
+  3 SIO3 In  DSR                 (from remote DTR)           _________________
   4 SIO4 Out TXD transmit data   (to remote RXD)            |                 |
   5 SIO5 In  CTS clear to send   (from remote RTS)          | 8 7 6 5 4 3 2 1 |
   6 SIO6 Out DTR                 (to remote DSR)            |_________________|
