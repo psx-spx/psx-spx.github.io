@@ -175,16 +175,16 @@ The return value (if any) is stored in R2 register.<br/>
 
 #### A-Functions (Call 00A0h with function number in R9 Register)
 ```
-  A(00h) or B(32h) FileOpen(filename,accessmode)
-  A(01h) or B(33h) FileSeek(fd,offset,seektype)
-  A(02h) or B(34h) FileRead(fd,dst,length)
-  A(03h) or B(35h) FileWrite(fd,src,length)
-  A(04h) or B(36h) FileClose(fd)
-  A(05h) or B(37h) FileIoctl(fd,cmd,arg)
+  A(00h) or B(32h) open(filename,accessmode)
+  A(01h) or B(33h) lseek(fd,offset,seektype)
+  A(02h) or B(34h) read(fd,dst,length)
+  A(03h) or B(35h) write(fd,src,length)
+  A(04h) or B(36h) close(fd)
+  A(05h) or B(37h) ioctl(fd,cmd,arg)
   A(06h) or B(38h) exit(exitcode)
-  A(07h) or B(39h) FileGetDeviceFlag(fd)
-  A(08h) or B(3Ah) FileGetc(fd)
-  A(09h) or B(3Bh) FilePutc(char,fd)
+  A(07h) or B(39h) isatty(fd)
+  A(08h) or B(3Ah) getc(fd)
+  A(09h) or B(3Bh) putc(char,fd)
   A(0Ah) todigit(char)
   A(0Bh) atof(src)     ;Does NOT work - uses (ABSENT) cop1 !!!
   A(0Ch) strtoul(src,src_end,base)
@@ -211,7 +211,7 @@ The return value (if any) is stored in R2 register.<br/>
   A(21h) strspn(src,list)
   A(22h) strcspn(src,list)
   A(23h) strtok(src,list)  ;use strtok(0,list) in further calls
-  A(24h) strstr(str,substr) - buggy
+  A(24h) strstr(str,substr)       ;Bugged
   A(25h) toupper(char)
   A(26h) tolower(char)
   A(27h) bcopy(src,dst,len)
@@ -233,16 +233,16 @@ The return value (if any) is stored in R2 register.<br/>
   A(37h) calloc(sizx,sizy)            ;SLOW!
   A(38h) realloc(old_buf,new_siz)     ;SLOW!
   A(39h) InitHeap(addr,size)
-  A(3Ah) SystemErrorExit(exitcode)
-  A(3Bh) or B(3Ch) std_in_getchar()
-  A(3Ch) or B(3Dh) std_out_putchar(char)
-  A(3Dh) or B(3Eh) std_in_gets(dst)
-  A(3Eh) or B(3Fh) std_out_puts(src)
+  A(3Ah) _exit(exitcode)
+  A(3Bh) or B(3Ch) getchar()
+  A(3Ch) or B(3Dh) putchar(char)
+  A(3Dh) or B(3Eh) gets(dst)
+  A(3Eh) or B(3Fh) puts(src)
   A(3Fh) printf(txt,param1,param2,etc.)
   A(40h) SystemErrorUnresolvedException()
-  A(41h) LoadExeHeader(filename,headerbuf)
-  A(42h) LoadExeFile(filename,headerbuf)
-  A(43h) DoExecute(headerbuf,param1,param2)
+  A(41h) LoadTest(filename,headerbuf)
+  A(42h) Load(filename,headerbuf)
+  A(43h) Exec(headerbuf,param1,param2)
   A(44h) FlushCache()
   A(45h) init_a0_b0_c0_vectors
   A(46h) GPU_dw(Xdst,Ydst,Xsiz,Ysiz,src)
@@ -256,12 +256,12 @@ The return value (if any) is stored in R2 register.<br/>
   A(4Eh) gpu_sync()
   A(4Fh) SystemError
   A(50h) SystemError
-  A(51h) LoadAndExecute(filename,stackbase,stackoffset)
-  A(52h) SystemError ----OR---- "GetSysSp()" ?
+  A(51h) LoadExec(filename,stackbase,stackoffset)
+  A(52h) GetSysSp
   A(53h) SystemError           ;PS2: set_ioabort_handler(src)
-  A(54h) or A(71h) CdInit()
+  A(54h) or A(71h) _96_init()
   A(55h) or A(70h) _bu_init()
-  A(56h) or A(72h) CdRemove()  ;does NOT work due to SysDeqIntRP bug
+  A(56h) or A(72h) _96_remove()  ;does NOT work due to SysDeqIntRP bug
   A(57h) return 0
   A(58h) return 0
   A(59h) return 0
@@ -288,8 +288,8 @@ The return value (if any) is stored in R2 register.<br/>
   A(6Eh) dev_card_rename(fcb1,"path\name1",fcb2,"path\name2")
   A(6Fh) ?   ;card ;[r4+18h]=00000000h  ;card_clear_error(fcb) or so
   A(70h) or A(55h) _bu_init()
-  A(71h) or A(54h) CdInit()
-  A(72h) or A(56h) CdRemove()   ;does NOT work due to SysDeqIntRP bug
+  A(71h) or A(54h) _96_init()
+  A(72h) or A(56h) _96_remove()   ;does NOT work due to SysDeqIntRP bug
   A(73h) return 0
   A(74h) return 0
   A(75h) return 0
@@ -328,31 +328,31 @@ The return value (if any) is stored in R2 register.<br/>
   A(96h) AddCDROMDevice()
   A(97h) AddMemCardDevice()     ;DTL-H: SystemError
   A(98h) AddDuartTtyDevice()    ;DTL-H: AddAdconsTtyDevice ;PS2: SystemError
-  A(99h) AddDummyTtyDevice()
+  A(99h) add_nullcon_driver()
   A(9Ah) SystemError            ;DTL-H: AddMessageWindowDevice
   A(9Bh) SystemError            ;DTL-H: AddCdromSimDevice
   A(9Ch) SetConf(num_EvCB,num_TCB,stacktop)
   A(9Dh) GetConf(num_EvCB_dst,num_TCB_dst,stacktop_dst)
   A(9Eh) SetCdromIrqAutoAbort(type,flag)
-  A(9Fh) SetMemSize(megabytes)
+  A(9Fh) SetMem(megabytes)
 ```
 Below functions A(A0h..B4h) not supported on pre-retail DTL-H2000 devboard:<br/>
 ```
-  A(A0h) WarmBoot()
-  A(A1h) SystemErrorBootOrDiskFailure(type,errorcode)
+  A(A0h) _boot()
+  A(A1h) SystemError(type,errorcode)
   A(A2h) EnqueueCdIntr()  ;with prio=0 (fixed)
   A(A3h) DequeueCdIntr()  ;does NOT work due to SysDeqIntRP bug
   A(A4h) CdGetLbn(filename) ;get 1st sector number (or garbage when not found)
   A(A5h) CdReadSector(count,sector,buffer)
   A(A6h) CdGetStatus()
-  A(A7h) bu_callback_okay()
-  A(A8h) bu_callback_err_write()
-  A(A9h) bu_callback_err_busy()
-  A(AAh) bu_callback_err_eject()
+  A(A7h) bufs_cb_0()
+  A(A8h) bufs_cb_1()
+  A(A9h) bufs_cb_2()
+  A(AAh) bufs_cb_3()
   A(ABh) _card_info(port)
-  A(ACh) _card_async_load_directory(port)
-  A(ADh) set_card_auto_format(flag)
-  A(AEh) bu_callback_err_prev_write()
+  A(ACh) _card_load(port)
+  A(ADh) _card_auto(flag)
+  A(AEh) bufs_cb_4()
   A(AFh) card_write_test(port)  ;CEX-1000: jump_to_00000000h
   A(B0h) return 0               ;CEX-1000: jump_to_00000000h
   A(B1h) return 0               ;CEX-1000: jump_to_00000000h
@@ -378,18 +378,18 @@ Below functions A(A0h..B4h) not supported on pre-retail DTL-H2000 devboard:<br/>
   B(0Bh) TestEvent(event)
   B(0Ch) EnableEvent(event)
   B(0Dh) DisableEvent(event)
-  B(0Eh) OpenThread(reg_PC,reg_SP_FP,reg_GP)
-  B(0Fh) CloseThread(handle)
-  B(10h) ChangeThread(handle)
+  B(0Eh) OpenTh(reg_PC,reg_SP_FP,reg_GP)
+  B(0Fh) CloseTh(handle)
+  B(10h) ChangeTh(handle)
   B(11h) jump_to_00000000h
-  B(12h) InitPad(buf1,siz1,buf2,siz2)
-  B(13h) StartPad()
-  B(14h) StopPad()
-  B(15h) OutdatedPadInitAndStart(type,button_dest,unused,unused)
-  B(16h) OutdatedPadGetButtons()
+  B(12h) InitPAD2(buf1,siz1,buf2,siz2)
+  B(13h) StartPAD2()
+  B(14h) StopPAD2()
+  B(15h) PAD_init2(type,button_dest,unused,unused)
+  B(16h) PAD_dr()
   B(17h) ReturnFromException()
-  B(18h) SetDefaultExitFromException()
-  B(19h) SetCustomExitFromException(addr)
+  B(18h) ResetEntryInt()
+  B(19h) HookEntryInt(addr)
   B(1Ah) SystemError  ;PS2: return 0
   B(1Bh) SystemError  ;PS2: return 0
   B(1Ch) SystemError  ;PS2: return 0
@@ -414,53 +414,53 @@ Below functions A(A0h..B4h) not supported on pre-retail DTL-H2000 devboard:<br/>
   B(2Fh) jump_to_00000000h
   B(30h) jump_to_00000000h
   B(31h) jump_to_00000000h
-  B(32h) or A(00h) FileOpen(filename,accessmode)
-  B(33h) or A(01h) FileSeek(fd,offset,seektype)
-  B(34h) or A(02h) FileRead(fd,dst,length)
-  B(35h) or A(03h) FileWrite(fd,src,length)
-  B(36h) or A(04h) FileClose(fd)
-  B(37h) or A(05h) FileIoctl(fd,cmd,arg)
+  B(32h) or A(00h) open(filename,accessmode)
+  B(33h) or A(01h) lseek(fd,offset,seektype)
+  B(34h) or A(02h) read(fd,dst,length)
+  B(35h) or A(03h) write(fd,src,length)
+  B(36h) or A(04h) close(fd)
+  B(37h) or A(05h) ioctl(fd,cmd,arg)
   B(38h) or A(06h) exit(exitcode)
-  B(39h) or A(07h) FileGetDeviceFlag(fd)
-  B(3Ah) or A(08h) FileGetc(fd)
-  B(3Bh) or A(09h) FilePutc(char,fd)
-  B(3Ch) or A(3Bh) std_in_getchar()
-  B(3Dh) or A(3Ch) std_out_putchar(char)
-  B(3Eh) or A(3Dh) std_in_gets(dst)
-  B(3Fh) or A(3Eh) std_out_puts(src)
-  B(40h) chdir(name)
-  B(41h) FormatDevice(devicename)
-  B(42h) firstfile(filename,direntry)
+  B(39h) or A(07h) isatty(fd)
+  B(3Ah) or A(08h) getc(fd)
+  B(3Bh) or A(09h) putc(char,fd)
+  B(3Ch) or A(3Bh) getchar()
+  B(3Dh) or A(3Ch) putchar(char)
+  B(3Eh) or A(3Dh) gets(dst)
+  B(3Fh) or A(3Eh) puts(src)
+  B(40h) cd(name)
+  B(41h) format(devicename)
+  B(42h) firstfile2(filename,direntry)
   B(43h) nextfile(direntry)
-  B(44h) FileRename(old_filename,new_filename)
-  B(45h) FileDelete(filename)
-  B(46h) FileUndelete(filename)
-  B(47h) AddDevice(device_info)  ;subfunction for AddXxxDevice functions
-  B(48h) RemoveDevice(device_name_lowercase)
+  B(44h) rename(old_filename,new_filename)
+  B(45h) erase(filename)
+  B(46h) undelete(filename)
+  B(47h) AddDrv(device_info)  ;subfunction for AddXxxDevice functions
+  B(48h) DelDrv(device_name_lowercase)
   B(49h) PrintInstalledDevices()
 ```
 Below functions B(4Ah..5Dh) not supported on pre-retail DTL-H2000 devboard:<br/>
 ```
-  B(4Ah) InitCard(pad_enable)  ;uses/destroys k0/k1 !!!
-  B(4Bh) StartCard()
-  B(4Ch) StopCard()
+  B(4Ah) InitCARD2(pad_enable)  ;uses/destroys k0/k1 !!!
+  B(4Bh) StartCARD2()
+  B(4Ch) StopCARD2()
   B(4Dh) _card_info_subfunc(port)  ;subfunction for "_card_info"
-  B(4Eh) write_card_sector(port,sector,src)
-  B(4Fh) read_card_sector(port,sector,dst)
-  B(50h) allow_new_card()
+  B(4Eh) _card_write(port,sector,src)
+  B(4Fh) _card_read(port,sector,dst)
+  B(50h) _new_card()
   B(51h) Krom2RawAdd(shiftjis_code)
   B(52h) SystemError  ;PS2: return 0
   B(53h) Krom2Offset(shiftjis_code)
-  B(54h) GetLastError()
-  B(55h) GetLastFileError(fd)
+  B(54h) _get_errno()
+  B(55h) _get_error(fd)
   B(56h) GetC0Table
   B(57h) GetB0Table
-  B(58h) get_bu_callback_port()
+  B(58h) _card_chan()
   B(59h) testdevice(devicename)
   B(5Ah) SystemError  ;PS2: return 0
-  B(5Bh) ChangeClearPad(int)
-  B(5Ch) get_card_status(slot)
-  B(5Dh) wait_card_status(slot)
+  B(5Bh) ChangeClearPAD(int)
+  B(5Ch) _card_status(slot)
+  B(5Dh) _card_wait(slot)
   B(5Eh..FFh) N/A ;jump_to_00000000h    ;CEX-1000: B(5Eh..F6h) only
   B(100h....) N/A ;garbage              ;CEX-1000: B(F7h.....) and up
 ```
@@ -488,11 +488,11 @@ Below functions B(4Ah..5Dh) not supported on pre-retail DTL-H2000 devboard:<br/>
   C(12h) InstallDevices(ttyflag)
   C(13h) FlushStdInOutPut()
   C(14h) return 0               ;DTL-H2000: SystemError
-  C(15h) tty_cdevinput(circ,char)
-  C(16h) tty_cdevscan()
-  C(17h) tty_circgetc(circ)    ;uses r5 as garbage txt for ioabort
-  C(18h) tty_circputc(char,circ)
-  C(19h) ioabort(txt1,txt2)
+  C(15h) _cdevinput(circ,char)
+  C(16h) _cdevscan()
+  C(17h) _circgetc(circ)    ;uses r5 as garbage txt for _ioabort
+  C(18h) _circputc(char,circ)
+  C(19h) _ioabort(txt1,txt2)
   C(1Ah) set_card_find_mode(mode)  ;0=normal, 1=find deleted files
   C(1Bh) KernelRedirect(ttyflag)   ;PS2: ttyflag=1 causes SystemError
   C(1Ch) AdjustA0Table()
@@ -540,7 +540,7 @@ BREAK opcodes)... or so?<br/>
 
 
 ##   BIOS File Functions
-#### A(00h) or B(32h) - FileOpen(filename, accessmode) - Opens a file for IO
+#### A(00h) or B(32h) - open(filename, accessmode) - Opens a file for IO
 ```
   out: V0  File handle (00h..0Fh), or -1 if error.
 ```
@@ -555,13 +555,13 @@ Opens a file on the target device for io. Accessmode is set like this:<br/>
 ```
 The PSX can have a maximum of 16 files open at any time, of which, 2 handles
 are always reserved for std\_io, so only 14 handles are available for actual
-files. Some functions (chdir, testdevice, FileDelete, FileUndelete,
-FormatDevice, firstfile, FileRename) are temporarily allocating 1 filehandle
-(FileRename tries to use 2 filehandles, but, it does accidently use only 1
-handle, too). So, for example, FileDelete would fail if more than 13 file
+files. Some functions (cd, testdevice, erase, undelete,
+format, firstfile2, rename) are temporarily allocating 1 filehandle
+(rename tries to use 2 filehandles, but, it does accidently use only 1
+handle, too). So, for example, erase would fail if more than 13 file
 handles are opened by the game.<br/>
 
-#### A(01h) or B(33h) - FileSeek(fd, offset, seektype) - Move the file pointer
+#### A(01h) or B(33h) - lseek(fd, offset, seektype) - Move the file pointer
 ```
    seektype 0 = from start of file        (with positive offset)
             1 = from current file pointer (with positive/negative offset)
@@ -571,7 +571,7 @@ Moves the file pointer the number of bytes in A1, relative to the location
 specified by A2. Movement from the eof is incorrect. Also, movement beyond the
 end of the file is not checked.<br/>
 
-#### A(02h) or B(34h) - FileRead(fd, dst, length) - Read data from an open file
+#### A(02h) or B(34h) - read(fd, dst, length) - Read data from an open file
 ```
   out: V0  Number of bytes actually read, -1 if failed.
 ```
@@ -579,35 +579,35 @@ Reads the number of bytes from the specified open file. If length is not
 specified an error is returned. Read per $0080 bytes from memory card (bu:) and
 per $0800 from cdrom (cdrom:).<br/>
 
-#### A(03h) or B(35h) - FileWrite(fd, src, length) - Write data to an open file
+#### A(03h) or B(35h) - write(fd, src, length) - Write data to an open file
 ```
   out: V0  Number of bytes written.
 ```
 Writes the number of bytes to the specified open file. Write to the memory card
 per $0080 bytes. Writing to the cdrom returns 0.<br/>
 
-#### A(04h) or B(36h) - FileClose(fd) - Close an open file
+#### A(04h) or B(36h) - close(fd) - Close an open file
 Returns r2=fd (or r2=-1 if failed).<br/>
 
-#### A(08h) or B(3Ah) - FileGetc(fd) - read one byte from file
+#### A(08h) or B(3Ah) - getc(fd) - read one byte from file
 ```
   out: R2=character (sign-expanded) or FFFFFFFFh=error
 ```
-Internally redirects to "FileRead(fd,tempbuf,1)". For some strange reason, the
+Internally redirects to "read(fd,tempbuf,1)". For some strange reason, the
 returned character is sign-expanded; so, a return value of FFFFFFFFh could mean
 either character FFh, or error.<br/>
 
-#### A(09h) or B(3Bh) - FilePutc(char,fd) - write one byte to file
+#### A(09h) or B(3Bh) - putc(char,fd) - write one byte to file
 Observe that "fd" is the 2nd paramter (not the 1st paramter as usually).<br/>
 ```
   out:  R2=Number of bytes actually written, -1 if failed
 ```
-Internally redirects to "FileWrite(fd,tempbuf,1)".<br/>
+Internally redirects to "write(fd,tempbuf,1)".<br/>
 
-#### B(40h) - chdir(name) - Change the current directory on target device
+#### B(40h) - cd(name) - Change the current directory on target device
 Changes the current directory on the specified device, which should be "cdrom:"
 (memory cards don't support directories). The PSX supports only a current
-directory, but NOT a current device (ie. after chdir, the directory name may be
+directory, but NOT a current device (ie. after cd, the directory name may be
 ommited from filenames, but the device name must be still included in all
 filenames).<br/>
 ```
@@ -616,9 +616,9 @@ filenames).<br/>
 Returns 1=okay, or 0=failed.<br/>
 The function doesn't verify if the directory exists. Caution: For cdrom, the
 function does always load the path table from the disk (even if it was already
-stored in RAM, so chdir is causing useless SLOW read/seek delays).<br/>
+stored in RAM, so cd is causing useless SLOW read/seek delays).<br/>
 
-#### B(42h) - firstfile(filename,direntry) - Find first file to match the name
+#### B(42h) - firstfile2(filename,direntry) - Find first file to match the name
 Returns r2=direntry (or r2=0 if no matching files).<br/>
 Searches for the first file to match the specified filename; the filename may
 contain "?" and "\*" wildcards. "\*" means to ignore ALL following characters;
@@ -626,7 +626,7 @@ accordingly one cannot specify any further characters after the "\*" (eg.
 "DATA\*" would work, but "\*.DAT" won't work). "?" is meant to ignore a single
 character cell. Note: The "?" wildcards (but not "\*") can be used also in all
 other file functions; causing the function to use the first matching name (eg.
-FileDelete "????" would erase the first matching file, not all matching files).<br/>
+erase "????" would erase the first matching file, not all matching files).<br/>
 Start the name with the device you want to address. (ie. pcdrv:) Different
 drives can be accessed as normally by their drive names (a:, c:, huh?) if path
 is omitted after the device, the current directory will be used.<br/>
@@ -643,53 +643,53 @@ BUG: If "?" matches the ending 00h byte of a name, then any further characters
 in the search expression are ignored (eg. "FILE?.DAT" would match to
 "FILE2.DAT", but accidently also to "FILE").<br/>
 BUG: For CDROM, the BIOS includes some code that is intended to realize disk
-changes during firstfile/nextfile operations, however, that code is so bugged
+changes during firstfile2/nextfile operations, however, that code is so bugged
 that it does rather ensure that the BIOS does NOT realize new disks being
-inserted during firstfile/nextfile.<br/>
-BUG: firstfile/nextfile is internally using a FCB. On the first call to
-firstfile, the BIOS is searching a free FCB, and does apply that as "search
+inserted during firstfile2/nextfile.<br/>
+BUG: firstfile2/nextfile is internally using a FCB. On the first call to
+firstfile2, the BIOS is searching a free FCB, and does apply that as "search
 fcb", but it doesn't mark that FCB as allocated, so other file functions may
 accidently use the same FCB. Moreover, the BIOS does memorize that "search
-fcb", and, even when starting a new search via another call to firstfile, it
+fcb", and, even when starting a new search via another call to firstfile2, it
 keeps using that FCB for search (without checking if the FCB is still free). A
-possible workaround is not to have any files opened during firstfile/nextfile
+possible workaround is not to have any files opened during firstfile2/nextfile
 operations.<br/>
 
 #### B(43h) - nextfile(direntry) - Searches for the next file to match the name
 Returns r2=direntry (or r2=0 if no more matching files).<br/>
-Uses the settings of a previous firstfile/nextfile command.<br/>
+Uses the settings of a previous firstfile2/nextfile command.<br/>
 
-#### B(44h) - FileRename(old\_filename, new\_filename)
+#### B(44h) - rename(old\_filename, new\_filename)
 Returns 1=okay, or 0=failed.<br/>
 
-#### B(45h) - FileDelete(filename) - Delete a file on target device
+#### B(45h) - erase(filename) - Delete a file on target device
 Returns 1=okay, or 0=failed.<br/>
 
-#### B(46h) - FileUndelete(filename)
+#### B(46h) - undelete(filename)
 Returns 1=okay, or 0=failed.<br/>
 
-#### B(41h) - FormatDevice(devicename)
+#### B(41h) - format(devicename)
 Erases all files on the device (ie. for formatting memory cards).<br/>
 Returns 1=okay, or 0=failed.<br/>
 
-#### B(54h) - GetLastError()
-Indicates the reason of the most recent file function error (FileOpen,
-FileSeek, FileRead, FileWrite, FileClose, GetLastFileError, FileIoctl, chdir,
-testdevice, FileDelete, FileUndelete, FormatDevice, FileRename). Use
-GetLastError() ONLY if an error has occured (the error code isn't reset to zero
-by functions that are passing okay). firstfile/nextfile do NOT affect
-GetLastError(). See below list of File Error Numbers for more info.<br/>
+#### B(54h) - \_get\_errno()
+Indicates the reason of the most recent file function error (open,
+lseek, read, write, close, _get_error, ioctl, cd,
+testdevice, erase, undelete, format, rename). Use
+_get_errno() ONLY if an error has occured (the error code isn't reset to zero
+by functions that are passing okay). firstfile2/nextfile do NOT affect
+_get_errno(). See below list of File Error Numbers for more info.<br/>
 
-#### B(55h) - GetLastFileError(fd)
+#### B(55h) - \_get\_error(fd)
 Basically same as B(54h), but allowing to specify a file handle for which error
 information is to be received; accordingly it doesn't work for functions that
-do use 'hidden' internal file handles (eg. FileDelete, or unsuccessful
-FileOpen). Returns FCB[18h], or FFFFFFFFh if the handle is invalid/unused.<br/>
+do use 'hidden' internal file handles (eg. erase, or unsuccessful
+open). Returns FCB[18h], or FFFFFFFFh if the handle is invalid/unused.<br/>
 
-#### A(05h) or B(37h) FileIoctl(fd,cmd,arg)
+#### A(05h) or B(37h) - ioctl(fd,cmd,arg)
 Used only for TTY.<br/>
 
-#### A(07h) or B(39h) FileGetDeviceFlag(fd)
+#### A(07h) or B(39h) - isatty(fd)
 Returns bit1 of the file's DCB flags. That bit is set only for Duart/TTY, and
 is cleared for Dummy/TTY, Memory Card, and CDROM.<br/>
 
@@ -718,20 +718,20 @@ would do something more interesting.<br/>
 
 
 ##   BIOS File Execute and Flush Cache
-#### A(41h) - LoadExeHeader(filename, headerbuf)
+#### A(41h) - LoadTest(filename, headerbuf)
 Loads the 800h-byte exe file header to an internal sector buffer, and does then
 copy bytes [10h..4Bh] of that header to headerbuf[00h..3Bh].<br/>
 
-#### A(42h) - LoadExeFile(filename, headerbuf)
-Same as LoadExeHeader (see there for details), but additionally loads the body
+#### A(42h) - Load(filename, headerbuf)
+Same as LoadTest (see there for details), but additionally loads the body
 of the executable (using the size and destination address in the file header),
-and does call FlushCache. The exe can be then started via DoExecute (this isn't
-done automatically by LoadExeFile). Unlike "LoadAndExecute", the
-"LoadExeFile/DoExecute" combination allows to return the new exe file to return
+and does call FlushCache. The exe can be then started via Exec (this isn't
+done automatically by LoadTest). Unlike "LoadExec", the
+"LoadTest/Exec" combination allows to return the new exe file to return
 to the old exe file (instead of restarting the boot executable).<br/>
 BUG: Uses the unstable FlushCache function (see there for details).<br/>
 
-#### A(43h) - DoExecute(headerbuf, param1, param2)
+#### A(43h) - Exec(headerbuf, param1, param2)
 Can be used to start a previously loaded executable. The function saves
 R16,R28,R30,SP,RA in the reserved region of headerbuf (rather than on stack),
 more or less slowly zerofills the memfill region specified in headerbuf, reads
@@ -742,7 +742,7 @@ passed in r4,r5.<br/>
 If the executable (should) return, then R16,R28,R30,SP,RA are restored from
 headerbuf, and the function returns with r2=1.<br/>
 
-#### A(51h) - LoadAndExecute(filename, stackbase, stackoffset)
+#### A(51h) - LoadExec(filename, stackbase, stackoffset)
 This is a rather bizarre function. In short, it does load and execute the
 specified file, and thereafter, it (tries to) reload and restart to boot
 executable.<br/>
@@ -758,21 +758,21 @@ would be 32 bytes (31 characters plus EOL) (eg.
 "device:\pathname\filename.ext;1",00h).<br/>
 Part2: Enables IRQs via ExitCriticalSection, memorizes the stack base/offset
 values from the previously loaded executable (which should have been the boot
-executable, unless LoadAndExecute should have been used in nested fashion),
-does then use LoadExeFile to load the desired file, replaces the stack
-base/offset values in its headerbuf by the LoadAndExecute parameter values, and
-does then execute it via DoExecute(headerbuf,1,0).<br/>
+executable, unless LoadExec should have been used in nested fashion),
+does then use LoadTest to load the desired file, replaces the stack
+base/offset values in its headerbuf by the LoadExec parameter values, and
+does then execute it via Exec(headerbuf,1,0).<br/>
 Part3: If the exefile returns, or if it couldn't be loaded, then the boot file
 is (unsuccessfully) attempted to be reloaded: Enables IRQs via
-ExitCriticalSection, loads the boot file via LoadExeFile, replaces the stack
+ExitCriticalSection, loads the boot file via LoadTest, replaces the stack
 base/offset values in its headerbuf by the values memorized in Part2 (which
 \<should\> be the boot executable's values from SYSTEM.CNF, unless the
 nesting stuff occurred), and does then execute the boot file via
-DoExecute(headerbuf,1,0).<br/>
+Exec(headerbuf,1,0).<br/>
 Part4: If the boot file returns, or if it couldn't be loaded, then the function
 looks up in a "JMP $" endless loop (normally, returning from the boot exe
-causes SystemErrorBootOrDiskFailure("B",38Ch), however, after using
-LoadAndExecute, this functionality is replaced by the "JMP $" lockup.<br/>
+causes SystemError("B",38Ch), however, after using
+LoadExec, this functionality is replaced by the "JMP $" lockup.<br/>
 BUG: Uses the unstable FlushCache function (see there for details).<br/>
 BUG: Part3 accidently treats the first 4 characters of the exename as memory
 address (causing an invalid memory address exception on address 6F726463h, for
@@ -798,9 +798,9 @@ the specified "dst" addresses.<br/>
 Flushes the Code Cache, so opcodes are ensured to be loaded from RAM. This is
 required when loading program code via DMA (ie. from CDROM) (the cache
 controller apparently doesn't realize changes to RAM that are caused by DMA).
-The LoadExeFile and LoadAndExecute functions are automatically calling
+The LoadTest and LoadExec functions are automatically calling
 FlushCache (so FlushCache is required only when loading program code via
-"FileRead" or via "CdReadSector").<br/>
+"read" or via "CdReadSector").<br/>
 FlushCache may be also required when relocating or modifying program code by
 software (the cache controller doesn't seem to realize modifications to memory
 mirrors, eg. patching the exception handler at 80000080h seems to be work
@@ -828,7 +828,7 @@ can/should disable as many IRQs as possible, ie. everything except IRQ2/IRQ3,
 and all DMA interrupts except DMA3 (cdrom).<br/>
 
 #### Executable Memory Allocation
-LoadExeFile and LoadAndExecute are simply loading the file to the address
+LoadTest and LoadExec are simply loading the file to the address
 specified in the exe file header. There's absolutely no verification whether
 that memory is (or isn't) allocated via malloc, or if it is used by the boot
 executable, or by the kernel, or if it does contain RAM at all.<br/>
@@ -849,7 +849,7 @@ CDROMs are basically accessed via normal file functions, with device name
 ignored).<br/>
 [BIOS File Functions](kernelbios.md#bios-file-functions)<br/>
 [BIOS File Execute and Flush Cache](kernelbios.md#bios-file-execute-and-flush-cache)<br/>
-Before starting the boot executable, the BIOS automatically calls CdInit(), so
+Before starting the boot executable, the BIOS automatically calls _96_init(), so
 the game doesn't need to do any initializations before using CDROM file
 functions.<br/>
 
@@ -899,7 +899,7 @@ The function returns 0=failed, or 1=okay. Completion is indicated by events
 Caution: The command acknowledges the door-open flag, but doesn't automatically
 reload the path table (which is required if a new disk is inserted); if the
 door-open flag was set, one should call a function that does forcefully load
-the path table (like chdir).<br/>
+the path table (like cd).<br/>
 
 #### A(7Eh) - CdAsyncReadSector(count,dst,mode)
 Issues SetMode and ReadN (when mode.bit8=0), or ReadS (when mode.bit8=1)
@@ -922,13 +922,13 @@ Returns the first two response bytes from the most recent INT5 error:
 [dst1]=status, [dst2]=errorcode. The BIOS doesn't reset these values in case of
 successful completion, so the values are quite useless.<br/>
 
-#### A(54h) or A(71h) - CdInit()
-#### A(56h) or A(72h) - CdRemove()  ;does NOT work due to SysDeqIntRP bug
+#### A(54h) or A(71h) - \_96\_init()
+#### A(56h) or A(72h) - \_96\_remove()  ;does NOT work due to SysDeqIntRP bug
 #### A(90h) - CdromIoIrqFunc1()
 #### A(91h) - CdromDmaIrqFunc1()
 #### A(92h) - CdromIoIrqFunc2()
 #### A(93h) - CdromDmaIrqFunc2()
-#### A(95h) - CdInitSubFunc()  ;subfunction for CdInit()
+#### A(95h) - CdInitSubFunc()  ;subfunction for _96_init()
 #### A(9Eh) - SetCdromIrqAutoAbort(type,flag)
 #### A(A2h) - EnqueueCdIntr()  ;with prio=0 (fixed)
 #### A(A3h) - DequeueCdIntr()  ;does NOT work due to SysDeqIntRP bug
@@ -942,7 +942,7 @@ Memory Cards aka Backup Units (bu) are basically accessed via normal file
 functions, with device names "bu00:" (Slot 1) and "bu10:" (Slot 2),<br/>
 [BIOS File Functions](kernelbios.md#bios-file-functions)<br/>
 Before using the file functions for memory cards, first call
-InitCard(pad\_enable), then StartCard(), and then \_bu\_init().<br/>
+InitCARD2(pad\_enable), then StartCARD2(), and then \_bu\_init().<br/>
 
 #### File Header, Filesize, and Sector Alignment
 The first 100h..200h bytes (2..4 sectors) of the file must contain the title
@@ -985,13 +985,13 @@ of the time on inactivity) (except in nocash PSX bios, which has better
 performance), whilst asynchronous access means that the BIOS function returns
 immediately after invoking the access (which does then continue on interrupt
 level, and does return an event when finished).<br/>
-The file "FileRead" and "FileWrite" functions act asynchronous when accessmode
+The file "read" and "write" functions act asynchronous when accessmode
 bit15 is set when opening the file. Additionally, the A(ACh)
-\_card\_async\_load\_directory(port) function can be used to tell the BIOS to load
+\_card\_load(port) function can be used to tell the BIOS to load
 the directory entries and broken sector list to its internal RAM buffers (eg.
 during the games title screen, so the BIOS doesn't need to load that data once
-when the game enters its memory card menu). All other functions like FileDelete
-or FormatDevice always act synchronous. The FileOpen/findfirst/findnext
+when the game enters its memory card menu). All other functions like erase
+or format always act synchronous. The open/findfirst/findnext
 functions do normally complete immediately without accessing the card at all
 (unless the directory wasn't yet read; in that case the directory is loading in
 synchronous fashion).<br/>
@@ -1016,9 +1016,9 @@ accessing only two memory cards. Trying to use the BIOS to access up to eight
 memory cards would be very-extremly-very slow, which would be more annoying
 than useful.<br/>
 
-#### B(4Ah) - InitCard(pad\_enable)  ;uses/destroys k0/k1 !!!
-#### B(4Bh) - StartCard()
-#### B(4Ch) - StopCard()
+#### B(4Ah) - InitCARD2(pad\_enable)  ;uses/destroys k0/k1 !!!
+#### B(4Bh) - StartCARD2()
+#### B(4Ch) - StopCARD2()
 #### A(55h) or A(70h) - \_bu\_init()
 
 ```
@@ -1027,9 +1027,9 @@ than useful.<br/>
 
 #### A(ABh) - \_card\_info(port)
 #### B(4Dh) - \_card\_info\_subfunc(port)  ;subfunction for "\_card\_info"
-Can be used to check if the most recent call to write\_card\_sector has completed
+Can be used to check if the most recent call to \_card\_write has completed
 okay. Issues an incomplete dummy read command (similar to B(4Fh) -
-read\_card\_sector). The read command is aborted once when receiving the status
+\_card\_read). The read command is aborted once when receiving the status
 byte from the memory card (the actual data transfer is skipped).<br/>
 
 #### A(AFh) - card\_write\_test(port)  ;not supported by old CEX-1000 version
@@ -1037,15 +1037,15 @@ Resets the card changed flag. For some strange reason, this flag isn't
 automatically reset after reading the flag, instead, the flag is reset upon
 sector writes. To do that, this function issues a dummy write to sector 3Fh.<br/>
 
-#### B(50h) - allow\_new\_card()
+#### B(50h) - \_new\_card()
 Normally any memory card read/write functions fail if the BIOS senses the card
 change flag to be set. Calling this function tells the BIOS to ignore the card
 change flag on the next read/write operation (the function is internally used
 when loading the "MC" ID from sector 0, and when calling the card\_write\_test
 function to acknowledge the card change flag).<br/>
 
-#### B(4Eh) - write\_card\_sector(port,sector,src)
-#### B(4Fh) - read\_card\_sector(port,sector,dst)
+#### B(4Eh) - \_card\_write(port,sector,src)
+#### B(4Fh) - \_card\_read(port,sector,dst)
 Invokes asynchronous reading/writing of a single sector. The function returns
 1=okay, or 0=failed (on invalid sector numbers). The actual I/O is done on IRQ
 level, completion of the I/O command transmission can be checked, among others,
@@ -1060,8 +1060,8 @@ probably a BUG, the function also accepts sector 400h. The specified sector
 number is directly accessed (it is NOT parsed through the broken sector
 replacement list).<br/>
 
-#### B(5Ch) - get\_card\_status(slot)
-#### B(5Dh) - wait\_card\_status(slot)
+#### B(5Ch) - \_card\_status(slot)
+#### B(5Dh) - \_card\_wait(slot)
 Returns the status of the most recent I/O command, possible values are:<br/>
 ```
   01h=ready
@@ -1071,28 +1071,28 @@ Returns the status of the most recent I/O command, possible values are:<br/>
   11h=failed/timeout (eg. when no cartridge inserted)
   21h=failed/general error
 ```
-get\_card\_status returns immediately, wait\_card\_status waits until a non-busy
+\_card\_status returns immediately, \_card\_wait waits until a non-busy
 state occurs.<br/>
 
-#### A(A7h) - bu\_callback\_okay()
-#### A(A8h) - bu\_callback\_err\_write()
-#### A(A9h) - bu\_callback\_err\_busy()
-#### A(AAh) - bu\_callback\_err\_eject()
-#### A(AEh) - bu\_callback\_err\_prev\_write()
+#### A(A7h) - bufs\_cb\_0()
+#### A(A8h) - bufs\_cb\_1()
+#### A(A9h) - bufs\_cb\_2()
+#### A(AAh) - bufs\_cb\_3()
+#### A(AEh) - bufs\_cb\_4()
 These five callback functions are internally used by the BIOS, notifying other
 BIOS functions about (un-)successful completion of memory card I/O commands.<br/>
 
-#### B(58h) - get\_bu\_callback\_port()
-This is a subfunction for the five bu\_callback\_xxx functions (indicating
+#### B(58h) - \_card\_chan()
+This is a subfunction for the five bufs\_cb_\_xxx functions (indicating
 whether the callback occured for a slot1 or slot2 access).<br/>
 
-#### A(ACh) - \_card\_async\_load\_directory(port)
+#### A(ACh) - \_card\_load(port)
 Invokes asynchronous reading of the memory card directory. The function isn't
 too useful because the BIOS tends to read the directory automatically in
 various places in synchronous mode, so there isn't too much chance to replace
 the automatic synchronous reading by asynchronous reading.<br/>
 
-#### A(ADh) - set\_card\_auto\_format(flag)
+#### A(ADh) - \_card\_auto(flag)
 Can be used to enable/disable auto format (0=off, 1=on). The \_bu\_init function
 initializes auto format as disabled. If auto format is enabled, then the BIOS
 does automatically format memory cards if it has failed to read the "MC" ID
@@ -1105,9 +1105,9 @@ automatically).<br/>
 #### C(1Ah) - set\_card\_find\_mode(mode)
 #### C(1Dh) - get\_card\_find\_mode()
 Allows to get/set the card find mode (0=normal, 1=find deleted files), the mode
-setting affects only the firstfile/nextfile functions. All other file functions
-are used fixed mode settings (always mode=0 for FileOpen, FileRename,
-FileDelete, and mode=1 for FileUndelete).<br/>
+setting affects only the firstfile2/nextfile functions. All other file functions
+are used fixed mode settings (always mode=0 for open, rename,
+erase, and mode=1 for undelete).<br/>
 
 
 
@@ -1137,15 +1137,15 @@ DefaultInterruptHandlers is always installed (and cannot be removed), so it
 does randomly trigger Events. Fortunately, it does not acknowledge the IRQs
 (unless SetIrqAutoAck was used to enable that fatal behaviour).<br/>
 
-#### B(18h) - SetDefaultExitFromException()
+#### B(18h) - ResetEntryInt()
 Applies the default "Exit" structure (which consists of a pointer to
 ReturnFromException, and the Kernel's exception stacktop (minus 4, for whatever
 reason), and zeroes for the R16..R23,R28,R30 registers. Returns the address of
 that structure.<br/>
-See SetCustomExitFromException for details.<br/>
+See HookEntryInt for details.<br/>
 
-#### B(19h) - SetCustomExitFromException(addr)
-addr points to a structure (with same format as for the SaveState function):<br/>
+#### B(19h) - HookEntryInt(addr)
+addr points to a structure (with same format as for the setjmp function):<br/>
 ```
   00h 4    r31/ra,pc ;usually ptr to ReturnFromException function
   04h 4    r28/sp    ;usually exception stacktop, minus 4, for whatever reason
@@ -1158,8 +1158,8 @@ executed (after processing an IRQ, many interrupt handlers are calling
 ReturnFromException to abort further exception handling, and thus do skip the
 hook function). Once when the hook function has finished, it should execute
 ReturnFromException. The hook function is called with r2=1 (that is important
-if the hook address was recorded with SaveState, where it "returns" to the
-SaveState caller, with r2 as "return value").<br/>
+if the hook address was recorded with setjmp, where it "returns" to the
+setjmp caller, with r2 as "return value").<br/>
 
 #### Priority Chains
 The Kernel's exception handler has four priority chains, each may contain one
@@ -1199,7 +1199,7 @@ so using that priorities may cause the BIOS to be unable to remove that IRQ
 handlers. Using priority 0 and 3 should work (as long as the software takes
 care to remove only the newest elements) (but there should be no conflicts with
 the BIOS which does never remove priority 0 and 3 elements) (leaving apart that
-DequeueCdIntr and CdRemove try to remove priority 0 elements, but that
+DequeueCdIntr and _96_remove try to remove priority 0 elements, but that
 functions won't work anyways; due to the same bug).<br/>
 
 #### C(03h) - SysDeqIntRP(priority,struc)  ;bugged, use with care
@@ -1302,35 +1302,35 @@ Always returns 1 (even if the event handle is unused or invalid).<br/>
 #### B(0Dh) - DisableEvent(event) - Turns off event handling for specified event
 Always returns 1 (even if the event handle is unused or invalid).<br/>
 
-#### B(0Ah) WaitEvent(event)
+#### B(0Ah) - WaitEvent(event)
 Returns 0 if the event is disabled. Otherwise hangs in a loop until the event
 becomes ready, and returns 1 once when it is ready (and automatically switches
 the event back to busy status). Callback events (mode=1000h) do never set the
 ready flag (and thus WaitEvent would hang forever).<br/>
 The main program simply hangs during the wait, so when using multiple threads,
 it may be more recommended to create an own waitloop that checks TestEvent, and
-to call ChangeThread when the event is busy.<br/>
+to call ChangeTh when the event is busy.<br/>
 BUG: The return value is unstable (sometimes accidently returns 0=disabled if
 the event status changes from not-ready to ready shortly after the function
 call).<br/>
 
-#### B(0Bh) TestEvent(event)
+#### B(0Bh) - TestEvent(event)
 Returns 0 if the event is busy or disabled. Otherwise, when it is ready,
 returns 1 (and automatically switches the event back to busy status). Callback
 events (mode=1000h) do never set the ready flag.<br/>
 
-#### B(07h) DeliverEvent(class, spec)
+#### B(07h) - DeliverEvent(class, spec)
 This function is usually called by the kernel, it triggers all events that are
 enabled/busy, and that have the specified class and spec values. Depending on
 the mode, either the callback function is called (mode=1000h), or the event is
 marked as enabled/ready (mode=2000h).<br/>
 
-#### B(20h) UnDeliverEvent(class, spec)
+#### B(20h) - UnDeliverEvent(class, spec)
 This function is usually called by the kernel, undelivers all events that are
 enabled/ready, and that have mode=2000h, and that have the specified class and
 spec values. Undeliver means that the events are marked as enabled/busy.<br/>
 
-#### C(04h) get\_free\_EvCB\_slot()
+#### C(04h) - get\_free\_EvCB\_slot()
 A subfunction for OpenEvent.<br/>
 
 #### Event Classes
@@ -1482,7 +1482,7 @@ notifications from the BIOS).<br/>
 
 
 ##   BIOS Thread Functions
-#### B(0Eh) OpenThread(reg\_PC,reg\_SP\_FP,reg\_GP)
+#### B(0Eh) - OpenTh(reg\_PC,reg\_SP\_FP,reg\_GP)
 Searches a free TCB, marks it as used, and stores the inital program counter
 (PC), global pointer (GP aka R28), stack pointer (SP aka R29), and frame
 pointer (FP aka R30) (using the same value for SP and FP). All other registers
@@ -1490,14 +1490,14 @@ are left uninitialized (eg. may contain values from an older closed thread,
 that includes the SR register, see note).<br/>
 The return value is the new thread handle (in range FF000000h..FF000003h,
 assuming that 4 TCBs are allocated) or FFFFFFFFh if there's no free TCB. The
-function returns to the old current thread, use "ChangeThread" to switch to the
+function returns to the old current thread, use "ChangeTh" to switch to the
 new thread.<br/>
 Note: The desired max number of TCBs can be specified in the SYSTEM.CNF boot
 file (the default is "TCB = 4", one initially used for the boot executable,
 plus 3 free threads).<br/>
 
 #### BUG - Unitialized SR Register
-OpenThread does NOT initialize the SR register (cop0r12) of the new thread.
+OpenTh does NOT initialize the SR register (cop0r12) of the new thread.
 Upon powerup, the bootcode zerofills the TCB memory (so, the SR of new threads
 will be initially zero; ie. Kernel Mode, IRQ's disabled, and COP2 disabled).
 However, when closing/reopening threads, the SR register will have the value of
@@ -1506,7 +1506,7 @@ case, if the old thread should have switched to User Mode, even without access
 to KSEG0, KSEG1 memory).<br/>
 Or, ACTUALLY, the memory is NOT zerofilled on powerup... so SR is total random?<br/>
 
-#### B(0Fh) CloseThread(handle)
+#### B(0Fh) - CloseTh(handle)
 Marks the TCB for the specified thread as unused. The function can be used for
 any threads, including for the current thread.<br/>
 Closing the current thread doesn't terminate the current thread, so it may
@@ -1515,27 +1515,27 @@ execute the sequence "DisableInterrupts, CloseCurrentThread,
 ChangeOtherThread".<br/>
 The return value is always 1 (even if the handle was already closed).<br/>
 
-#### B(10h) ChangeThread(handle)
+#### B(10h) - ChangeTh(handle)
 Pauses the current thread, and activates the selected new thread (or crashes if
 the specified handle was unused or invalid).<br/>
 The return value is always 1 (stored in the R2 entry of the TCB of the old
 thread, so the return value will be received once when changing back to the old
 thread).<br/>
 Note: The BIOS doesn't automatically switch from one thread to another. So, all
-other threads remain paused until the current thread uses ChangeThread to pass
+other threads remain paused until the current thread uses ChangeTh to pass
 control to another thread.<br/>
 Each thread is having it's own CPU registers (R1..R31,HI,LO,SR,PC), the
 registers are stored in the TCB of the old thread, and restored when switching
 back to that thread. Mind that other registers (I/O Ports or GTE registers
 aren't stored automatically, so, when needed, they need to be pushed/popped by
-software before/after ChangeThread).<br/>
+software before/after ChangeTh).<br/>
 
-#### C(05h) get\_free\_TCB\_slot()
-Subfunction for OpenThread, returns the number of the first free TCB (usually
+#### C(05h) - get\_free\_TCB\_slot()
+Subfunction for OpenTh, returns the number of the first free TCB (usually
 in range 0..3) or FFFFFFFFh if there's no free TCB.<br/>
 
 #### SYS(03h) ChangeThreadSubFunction(addr) ;syscall with r4=03h, r5=addr
-Subfunction for ChangeThread, R5 contains the address of the new TCB, just like
+Subfunction for ChangeTh, R5 contains the address of the new TCB, just like
 all exceptions, the syscall exception is saving the CPU registers in the
 current TCB, but does then apply the new TCB as current TCB, and so, it does
 then enter the new thread when returning from the exception.<br/>
@@ -1558,10 +1558,10 @@ the two handlers).<br/>
 So, although Vblank IRQs are most important for games, the PSX BIOS doesn't
 actually allow to use them for purposes other than joypad access. A possible
 workaround is to examine the status byte in one of the joypad buffers (ie. the
-InitPad(buf1,22h,buf2,22h) buffers). Eg. a wait\_for\_vblank function could look
+InitPAD2(buf1,22h,buf2,22h) buffers). Eg. a wait\_for\_vblank function could look
 like so: set buf1[0]=55h, then wait until buf1[0]=00h or buf1[0]=FFh.<br/>
 
-#### B(02h) init\_timer(t,reload,flags)
+#### B(02h) - init\_timer(t,reload,flags)
 When t=0..2, resets the old timer mode by setting [1F801104h+t\*16]=0000h,
 applies the reload value by [1F801108h+t\*16]=reload, computes the new mode:<br/>
 ```
@@ -1572,18 +1572,18 @@ applies the reload value by [1F801108h+t\*16]=reload, computes the new mode:<br/
 and applies it by setting [1F801104h+t\*16]=mode, and returns 1. Does nothing
 and returns zero for t\>2.<br/>
 
-#### B(03h) get\_timer(t)
+#### B(03h) - get\_timer(t)
 Reads the current timer value: Returns halfword[1F801100h+t\*16] for t=0..2.
 Does nothing and returns zero for t\>2.<br/>
 
-#### B(04h) enable\_timer\_irq(t)
-#### B(05h) disable\_timer\_irq(t)
+#### B(04h) - enable\_timer\_irq(t)
+#### B(05h) - disable\_timer\_irq(t)
 Enables/disables timer or vblank interrupt enable bits in [1F801074h], bit4,5,6
 for t=0,1,2, or bit0 for t=3, or random/garbage bits for t\>3. The enable
 function returns 1 for t=0..2, and 0 for t=3. The disable function returns
 always 1.<br/>
 
-#### B(06h) restart\_timer(t)
+#### B(06h) - restart\_timer(t)
 Sets the current timer value to zero: Sets [1F801100h+t\*16]=0000h and returns 1
 for t=0..2. Does nothing and returns zero for t\>2.<br/>
 
@@ -1597,7 +1597,7 @@ exception). The function returns the old (previous) flag value.<br/>
 
 ##   BIOS Joypad Functions
 #### Pad Input
-Joypads should be initialized via InitPad(buf1,22h,buf2,22h), and StartPad().
+Joypads should be initialized via InitPAD2(buf1,22h,buf2,22h), and StartPAD2().
 The main program can read the pad data from the buf1/buf2 addresses (including
 Status, ID1, button states, and any kind of analogue inputs). For more info on
 ID1, Buttons and analogue inputs, see<br/>
@@ -1605,12 +1605,12 @@ ID1, Buttons and analogue inputs, see<br/>
 Note: The BIOS doesn't include any functions for sending custom data to the
 pads (such like for controlling rumble motors).<br/>
 
-#### B(12h) - InitPad(buf1, siz1, buf2, siz2)
+#### B(12h) - InitPAD2(buf1, siz1, buf2, siz2)
 Memorizes the desired buf1/buf2 addresses, zerofills the buffers by using the
 siz1/siz2 buffer size values (which should be 22h bytes each). And does some
 initialization on the PadCardIrq element (but doesn't enqueue it, that must be
-done by a following call to StartPad), and does set the "pad\_enable\_flag", that
-flag can be also set/cleared via InitCard(pad\_enable), where it selects if the
+done by a following call to StartPAD2), and does set the "pad\_enable\_flag", that
+flag can be also set/cleared via InitCARD2(pad\_enable), where it selects if the
 Pads are kept handled together with Memory Cards. buf1/buf2 are having the
 following format:<br/>
 ```
@@ -1618,43 +1618,43 @@ following format:<br/>
   01h      ID1    (eg. 41h=digital_pad, 73h=analogue_pad, 12h=mouse, etc.)
   02h..21h Data   (max 16 halfwords, depending on lower 4bit of ID1)
 ```
-Note: InitPad does initially zerofill the buffers, so, until the first IRQ is
+Note: InitPAD2 does initially zerofill the buffers, so, until the first IRQ is
 processed, the initial status is 00h=okay, with buttons=0000h (all buttons
 pressed), to fix that situation, change the two status bytes to FFh after
-calling InitPad (or alternately, reject ID1=00h).<br/>
-Once when the PadCardIrq is enqueued via StartPad, and while "pad\_enable\_flag"
+calling InitPAD2 (or alternately, reject ID1=00h).<br/>
+Once when the PadCardIrq is enqueued via StartPAD2, and while "pad\_enable\_flag"
 is set, the data for (both) Pad1 and Pad2 is read on Vblank interrupts, and
 stored in the buffers, the IRQ handler stores up to 22h bytes in the buffer
 (regardless of the siz1/siz2 values) (eg. a Multitap adaptor uses all 22h
 bytes).<br/>
 
-#### B(13h) - StartPad()
-Should be used after InitPad. Enqueues the PadCardIrq handler, and does
+#### B(13h) - StartPAD2()
+Should be used after InitPAD2. Enqueues the PadCardIrq handler, and does
 additionally initialize some flags.<br/>
 
-#### B(14h) - StopPad()
+#### B(14h) - StopPAD2()
 Dequeues the PadCardIrq handler. Note that this handler is also used for memory
 cards, so it'll "stop" cards, too.<br/>
 
-#### B(15h) - OutdatedPadInitAndStart(type, button\_dest, unused, unused)
+#### B(15h) - PAD\_init2(type, button\_dest, unused, unused)
 This is an extremely bizarre and restrictive function - don't use! The function
 fails unless type is 20000000h or 20000001h (the type value has no other
 function). The function uses "buf1/buf2" addresses that are located somewhere
 "hidden" within the BIOS variables region, the only way to read from that
-internal buffers is to use the ugly "OutdatedPadGetButtons()" function. For
+internal buffers is to use the ugly "PAD_dr()" function. For
 some strange reason it FFh-fills buf1/buf2, and does then call
-InitPad(buf1,22h,buf2,22) (which does immediately 00h-fill the previously
-FFh-filled buffers), and does then call StartPad().<br/>
+InitPAD2(buf1,22h,buf2,22) (which does immediately 00h-fill the previously
+FFh-filled buffers), and does then call StartPAD2().<br/>
 Finally, it does memorize the "button\_dest" address (see
-OutdatedPadGetButtons() for details on that value). The two unused parameters
+PAD_dr() for details on that value). The two unused parameters
 have no function, however, they are internally written back to the stack
 locations reserved for parameter 2 and 3, ie. at [SP+08h] and [SP+0Ch] on the
 caller's stack, so the function MUST be called with all four parameters
 allocated on stack. Return value is 2 (or 0 if type was disliked).<br/>
 
-#### B(16h) - OutdatedPadGetButtons()
+#### B(16h) - PAD\_dr()
 This is a very ugly function, using the internal "buf1/buf2" values from
-"OutdatedPadInitAndStart" and the "button\_dest" value that was passed to that
+"PAD_init2" and the "button\_dest" value that was passed to that
 function.<br/>
 If "button\_dest" is non-zero, then this function is automatically called by the
 PadCardIrq handler, and stores it's return value at [button\_dest] (where it may
@@ -1765,7 +1765,7 @@ Caution: The bcopy function is SLOW, and realloc does accidently copy
 "new\_size" bytes from old\_buf, so, if the old\_size was smaller than new\_size
 then it'll copy whatever garbage data - in worst case, if it exceeds the top of
 the 2MB RAM region, it may crash with a locked memory exception, although
-that'd happen only if SetMemSize(2) was used to restrict RAM to 2MBs.<br/>
+that'd happen only if SetMem(2) was used to restrict RAM to 2MBs.<br/>
 
 #### A(39h) - InitHeap(addr, size)
 Initializes the address and size of the heap - the BIOS does not automatically
@@ -1777,8 +1777,8 @@ may use it to deallocate all old memory).<br/>
 The heap is used only by malloc/realloc/calloc/free, and by the "qsort"
 function.<br/>
 
-#### B(00h) alloc\_kernel\_memory(size)
-#### B(01h) free\_kernel\_memory(buf)
+#### B(00h) - alloc\_kernel\_memory(size)
+#### B(01h) - free\_kernel\_memory(buf)
 Same as malloc/free, but, instead of the heap, manages the 8kbyte control block
 memory at A000E000h..A000FFFFh. This region is used by the kernel to allocate
 ExCBs (4x08h bytes), EvCBs (N\*1Ch bytes), TCBs (N\*0C0h bytes), and the process
@@ -1793,7 +1793,7 @@ The kernel doesn't include any allocation functions for the scratchpad (nor do
 any kernel functions use that memory area), so the executable can freely use
 the "fast" memory at 1F800000h..1F8003FFh.<br/>
 
-#### A(9Fh) - SetMemSize(megabytes)
+#### A(9Fh) - SetMem(megabytes)
 Changes the effective RAM size (2 or 8 megabytes) by manipulating port
 1F801060h, and additionally stores the size in megabytes in RAM at [00000060h].<br/>
 Note: The BIOS bootcode accidently sets the RAM value to 2MB (which is the
@@ -2085,8 +2085,8 @@ ROM Version 4.5 05/25/00 E",0) (in many bios versions, the last letter of that
 string indicates the region, but not in all versions) (the old SCPH1000 does
 not include that version string at all).<br/>
 
-#### B(56h) GetC0Table()
-#### B(57h) GetB0Table()
+#### B(56h) - GetC0Table()
+#### B(57h) - GetB0Table()
 Retrieves the address of the jump lists for B(NNh) and C(NNh) functions,
 allowing to patch entries in that lists (however, the BIOS does often jump
 directly to the function addresses, rather than indirectly via the list, so
@@ -2119,14 +2119,14 @@ the array, until it has found the desired element (or the location where it'd
 be, if it'd be in the array). Both functions return the address of the element
 (or 0 if it wasn't found).<br/>
 
-#### C(19h) - ioabort(txt1,txt2)
+#### C(19h) - \_ioabort(txt1,txt2)
 Displays the two strings on the TTY (in some cases the BIOS does accidently
 pass garbage instead of the 2nd string though). And does then execute
-ioabort\_raw(1), see there for more details.<br/>
+_ioabort\_raw(1), see there for more details.<br/>
 
-#### A(B2h) - ioabort\_raw(param)  ;not supported by old CEX-1000 version
-Executes "RestoreState(ioabortbuffer,param)". Internally used to recover from
-failed I/O operations, param should be nonzero to notify the SaveState caller
+#### A(B2h) - _ioabort\_raw(param)  ;not supported by old CEX-1000 version
+Executes "longjmp(ioabortbuffer,param)". Internally used to recover from
+failed I/O operations, param should be nonzero to notify the setjmp caller
 that the abort has occurred.<br/>
 
 #### A(13h) - setjmp(buf)
@@ -2138,11 +2138,11 @@ This is a somewhat incomplete implementation of posix's setjmp, by storing the A
   0Ch 4x8  r16..r23
   2Ch 4    r28 (gp)
 ```
-That type of buffer can be used with "ioabort", "RestoreState", and also
-"SetCustomExitFromException(addr)".<br/>
+That type of buffer can be used with "_ioabort", "longjmp", and also
+"HookEntryInt(addr)".<br/>
 The "setjmp" function returns 0 when called directly. However, it may return again -
 to the same return address, and the same stack pointer - with another return value (which should be usually
-non-zero, to indicate that the state has been restored (eg. ioabort passes 1 as
+non-zero, to indicate that the state has been restored (eg. _ioabort passes 1 as
 return value).<br/>
 Also noteworthy from what a compliant setjmp implementation should be doing
 is the absence of saving the state of cop0 and cop2, thus making this slightly
@@ -2159,16 +2159,16 @@ care that "param" is non-zero, so the callsite of setjmp can make the difference
 call and a rollback. See setjmp for further details.<br/>
 
 #### A(53h) - set\_ioabort\_handler(src)  ;PS2 only  ;PSX: SystemError
-Normally the ioabort handler is changed only internally during booting, with
-this new function, games can install their own ioabort handler. src is pointer
-to a 30h-byte "savestate" structure, which will be copied to the actual ioabort
+Normally the _ioabort handler is changed only internally during booting, with
+this new function, games can install their own _ioabort handler. src is pointer
+to a 30h-byte "savestate" structure, which will be copied to the actual _ioabort
 structure.<br/>
 
 #### A(06h) or B(38h) - exit(exitcode)
 Terminates the program and returns control to the BIOS; which does then lockup
-itself via A(3Ah) SystemErrorExit.<br/>
+itself via A(3Ah) _exit.<br/>
 
-#### A(A0h) - WarmBoot()
+#### A(A0h) - \_boot()
 Performs a warmboot (resets the kernel and reboots from CDROM). Unlike the
 normal coldboot procedure, it doesn't display the "\<S\>" and "PS" intro
 screens (and doesn't verify the "PS" logo in the ISO System Area), and, doesn't
@@ -2197,9 +2197,9 @@ These are syscalls with invalid function number in R4. For whatever reason that
 is handled by issuing DeliverEvent(F0000010h,4000h). Thereafter, the syscall
 returns to the main program (ie. it doesn't cause a SystemError).<br/>
 
-#### A(3Ah) - SystemErrorExit(exitcode)
+#### A(3Ah) - \_exit(exitcode)
 #### A(40h) - SystemErrorUnresolvedException()
-#### A(A1h) - SystemErrorBootOrDiskFailure(type,errorcode) ;type "B"=Boot,"D"=Disk
+#### A(A1h) - SystemError(type,errorcode) ;type "B"=Boot,"D"=Disk
 These are used "SystemError" functions. The functions are repeatedly jumping to
 themselves, causing the system to hang. Possibly useful for debugging software
 which may hook that functions.<br/>
@@ -2207,7 +2207,6 @@ which may hook that functions.<br/>
 #### A(4Fh,50h,52h,53h,9Ah,9Bh) B(1Ah..1Fh,21h..23h,2Ah,2Bh,52h,5Ah) C(0Bh) - N/A
 These are additional "SystemError" functions, but they are never used. The
 functions are repeatedly jumping to themselves, causing the system to hang.<br/>
-Note: A(52h) is reportedly "GetSysSp()", but that seems to be nonsense?<br/>
 
 #### BRK(1C00h) - Division by zero (commonly checked/invoked by software)
 #### BRK(1800h) - Division overflow (-80000000h/-1, sometimes checked by software)
@@ -2283,14 +2282,14 @@ Below are mainly internally used device related subfunctions.<br/>
   A(96h) AddCDROMDevice()
   A(97h) AddMemCardDevice()
   A(98h) AddDuartTtyDevice()   ;PS2: SystemError
-  A(99h) AddDummyTtyDevice()
-  B(47h) AddDevice(device_info)  ;subfunction for AddXxxDevice functions
-  B(48h) RemoveDevice(device_name_lowercase)
-  B(5Bh) ChangeClearPad(int)   ;pad AND card (ie. used also for Card)
-  C(15h) tty_cdevinput(circ,char)
-  C(16h) tty_cdevscan()
-  C(17h) tty_circgetc(circ)    ;uses r5 as garbage txt for ioabort
-  C(18h) tty_circputc(char,circ)
+  A(99h) add_nullcon_driver()
+  B(47h) AddDrv(device_info)  ;subfunction for AddXxxDevice functions
+  B(48h) DelDrv(device_name_lowercase)
+  B(5Bh) ChangeClearPAD(int)   ;pad AND card (ie. used also for Card)
+  C(15h) _cdevinput(circ,char)
+  C(16h) _cdevscan()
+  C(17h) _circgetc(circ)    ;uses r5 as garbage txt for _ioabort
+  C(18h) _circputc(char,circ)
 ```
 
 #### Device Names
@@ -2387,7 +2386,7 @@ seekmode may be from 0=Begin of file, 1=Current fpos, or 2=End of file.<br/>
        A1,A2,A3,[SP+10h..]    Argument(s)
 ```
 Prints the specified string to the TTY console. Printf does internally use
-"std\_out\_putchar" to output the separate characters (and expands char 09h and
+"putchar" to output the separate characters (and expands char 09h and
 0Ah accordingly).<br/>
 The string can contain C-style escape codes (prefixed by "%" each):<br/>
 ```
@@ -2420,7 +2419,7 @@ doesn't work at all (accidently sign-expands 16bit to 32bit, and then displays
 that signed 32bit value as giant unsigned value). Printf supports only octal,
 decimal, and hex (but not binary).<br/>
 
-#### A(3Eh) or B(3Fh) std\_out\_puts(src) - Write string to TTY
+#### A(3Eh) or B(3Fh) - puts(src) - Write string to TTY
 ```
   in: R4=address of string (terminated by 00h)
 ```
@@ -2429,11 +2428,11 @@ in a special way: If R4 points to a 00h character then nothing is output (as
 one would expect it), but, if R4 is 00000000h then "\<NULL\>" is output
 (only that six letters; without appending any CR or LF).<br/>
 
-#### A(3Dh) or B(3Eh) std\_in\_gets(dst) - Read string from TTY (keyboard input)
+#### A(3Dh) or B(3Eh) - gets(dst) - Read string from TTY (keyboard input)
 ```
   in: r4=dst (pointer to a 128-byte buffer) - out: r2=dst (same is incoming r4)
 ```
-Internally uses "std\_in\_getchar" to receive the separate characters (which are
+Internally uses "getchar" to receive the separate characters (which are
 thus masked by 7Fh). The received characters are stored in the buffer, and are
 additionally sent back as echo to the TTY via std\_out\_putc.<br/>
 The following characters are handled in a special way: 09h (TAB) is replaced by
@@ -2441,31 +2440,31 @@ a single SPC. 08h or 7FH (BS or DEL) are removing the last character from the
 buffer (unless it is empty) and send 08h,20h,08h (BS,SPC,BS) to the TTY. 0Dh or
 0Ah (CR or LF) do terminate the input (append 00h to the buffer, send 0Ah to
 the TTY, which is expanded to 0Dh,0Ah by the std\_out\_putc function, and do then
-return from the std\_in\_gets function).<br/>
+return from the gets function).<br/>
 The sequence 16h,NNh forces NNh to be stored in the buffer (even if NNh is a
 special character like 00h..1Fh or 7Fh). If the buffer is full (circa max 125
 chars, plus one extra byte for the ending 00h), or if an unknown control code
 in range of 00h..1Fh is received without the 16h prefix, then 07h (BELL) is
 sent to the TTY.<br/>
 
-#### A(3Bh) or B(3Ch) std\_in\_getchar() - Read character from TTY
+#### A(3Bh) or B(3Ch) - getchar() - Read character from TTY
 Reads one character from the TTY console, by internally redirecting to
-"FileRead(0,tempbuf,1)". The returned character is ANDed by 7Fh (so, to read a
-fully intact 8bit character, "FileRead(0,tempbuf,1)" must be used instead of
+"read(0,tempbuf,1)". The returned character is ANDed by 7Fh (so, to read a
+fully intact 8bit character, "read(0,tempbuf,1)" must be used instead of
 this function).<br/>
 
-#### A(3Ch) or B(3Dh) std\_out\_putchar(char) - Write character to TTY
+#### A(3Ch) or B(3Dh) - putchar(char) - Write character to TTY
 Writes the character to the TTY console, by internally redirecting to
-"FileWrite(1,tempbuf,1)". Char 09h (TAB) is expanded to one or more SPC
+"write(1,tempbuf,1)". Char 09h (TAB) is expanded to one or more SPC
 characters, until reaching the next tabulation boundary (every 8 characters).
 Char 0Ah (LF) is expanded to 0Dh,0Ah (CR,LF). Other special characters (which
 should be handled at the remote terminal side) are 08h (BS, backspace, move
 cursor one position to the left), and 07h (BELL, produce a short beep sound).<br/>
 
-#### C(13h) FlushStdInOutPut()
+#### C(13h) - FlushStdInOutPut()
 Closes and re-opens the std\_in (fd=0) and std\_out (fd=1) file handles.<br/>
 
-#### C(1Bh) KernelRedirect(ttyflag)  ;PS2: ttyflag=1 causes SystemError
+#### C(1Bh) - KernelRedirect(ttyflag)  ;PS2: ttyflag=1 causes SystemError
 Removes, re-mounts, and flushes the TTY device, the parameter selects whether
 to mount the real DUART-TTY device (r4=1), or a Dummy-TTY device (r4=0), the
 latter one sends any std\_out to nowhere. Values other than r4=0 or r4=1 do
@@ -2500,7 +2499,7 @@ to the debug terminal, via expansion port, see:<br/>
 Note: The nocash BIOS automatically detects the DUART hardware, and activates
 TTY if it is present.<br/>
 
-#### B(49h) PrintInstalledDevices()
+#### B(49h) - PrintInstalledDevices()
 Uses printf to display the long and short names from the DCB of the currently
 installed devices. Doesn't do anything else. There's no return value.<br/>
 
@@ -2512,14 +2511,14 @@ handles (fd=0 and fd=1) would cause such functions to work unstable.<br/>
 
 
 ##   BIOS Character Sets
-#### B(51h) Krom2RawAdd(shiftjis\_code)
+#### B(51h) - Krom2RawAdd(shiftjis\_code)
 ```
   In: r4  = 16bit Shift-JIS character code
   Out: r2 = address in BIOS ROM of the desired character (or -1 = error)
 ```
 r4 should be 8140h..84BEh (charset 2), or 889Fh..9872h (charset 3).<br/>
 
-#### B(53h) Krom2Offset(shiftjis\_code)
+#### B(53h) - Krom2Offset(shiftjis\_code)
 ```
   In: r4  = 16bit Shift-JIS character code
   Out: r2 = offset within charset (without charset base address)
@@ -2574,11 +2573,11 @@ and 6 addresses?<br/>
 #### Thread Control Blocks (TCB) (usually 4 blocks of 0C0h bytes each)
 ```
   00h 4   status        (1000h=Free TCB, 4000h=Used TCB)
-  04h 4   not used      (set to 1000h by OpenThread) (not for boot executable?)
+  04h 4   not used      (set to 1000h by OpenTh) (not for boot executable?)
   08h 80h r0..r31       (entries for r0/zero and r26/k0 are unused)
   88h 4   cop0r14/epc   (aka r26/k0 and pc when returning from exception)
   8Ch 8   hi,lo         (the mul/div registers)
-  94h 4   cop0r12/sr    (stored/restored by exception, NOT init by OpenThread)
+  94h 4   cop0r12/sr    (stored/restored by exception, NOT init by OpenTh)
   98h 4   cop0r13/cause (stored when entering exception, NOT restored on exit)
   9Ch 24h not used      (uninitialized)
 ```
@@ -2598,7 +2597,7 @@ The PSX supports only one process, and thus only one Process Control Block.<br/>
   0Ch 4  transfer length  (for dev_in_out function)
   10h 4  current file position
   14h 4  device flags (copy of DCB[04h])
-  18h 4  error  ;used by B(55h) - GetLastFileError(fd)
+  18h 4  error  ;used by B(55h) - _get_error(fd)
   1Ch 4  Pointer to DCB for the file
   20h 4  filesize
   24h 4  logical block number (start of file) (for cdrom: at least)
@@ -2620,10 +2619,10 @@ The PSX supports only one process, and thus only one Process Control Block.<br/>
   28h 4   ptr to write(fcb,src,len)
   2Ch 4   ptr to erase(fcb,"path\name")
   30h 4   ptr to undelete(fcb,"path\name")
-  34h 4   ptr to firstfile(fcb,"path\name",direntry)
+  34h 4   ptr to firstfile2(fcb,"path\name",direntry)
   38h 4   ptr to nextfile(fcb,direntry)
   3Ch 4   ptr to format(fcb)
-  40h 4   ptr to chdir(fcb,"path")                            (CDROM only)
+  40h 4   ptr to cd(fcb,"path")                            (CDROM only)
   44h 4   ptr to rename(fcb1,"path\name1",fcb2,"path\name2")
   48h 4   ptr to remove()
   4Ch 4   ptr to testdevice(fcb,"path\name")
@@ -2949,7 +2948,7 @@ they may hang endless if a Sony Mouse is newly connected; the mouse does have
 
 #### patch\_uninstall\_early\_card\_irq\_handler:
 Used to uninstall the "early\_card\_irq\_vector" (the BIOS installs that vector
-from inside of B(4Ah) InitCard(pad\_enable), and, without patches, the BIOS
+from inside of B(4Ah) InitCARD2(pad\_enable), and, without patches, the BIOS
 doesn't allow to uninstall it thereafter).<br/>
 Used in Breath of Fire III (SLES-01304) at 8017E790, and also in Ace Combat 2
 (SLUS-00404) at 801D23F4:<br/>
@@ -3185,7 +3184,7 @@ Alternately, more inefficient (with NOPs), used in Lemmings at 80036618h:<br/>
 #### patch\_no\_pad\_card\_auto\_ack:
 This patch suppresses automatic IRQ0 (vblank) acknowleding in the Pad/Card IRQ
 handler, that, even if auto-ack is enabled. Obviously, one could as well
-disable auto-ack via B(5Bh) ChangeClearPad(int), so this patch is total
+disable auto-ack via B(5Bh) ChangeClearPAD(int), so this patch is total
 nonsense. Used in Resident Evil 2 at 800919ACh:<br/>
 ```
   240A00B0 mov   r10,0B0h                      ;\
@@ -3218,7 +3217,7 @@ Alternately, same as above, but more inefficient, used in Sporting Clays at
   1540FFFC jnz   r10,@@fill_lop                ;
   00000000 +nop                                ;/
 ```
-Either way, no matter if using the patch or if using ChangeClearPad(int),
+Either way, no matter if using the patch or if using ChangeClearPAD(int),
 having auto-ack disabled allows to install a custom vblank IRQ0 handler, which
 is probably desired for most games, however, mind that the PSX BIOS doesn't
 actually support the same IRQ to be processed by two different IRQ handlers,
