@@ -8,6 +8,6 @@ Therefore, no copyright or license have been properly acquired to republish and 
 
 The readable index is available at https://github.com/psx-spx/psx-spx.github.io/blob/master/docs/index.md or https://psx-spx.consoledev.net/ for easy browsing.
 
-To discuss the contents of this document, or hang out with likely minded people on development, hacking, and reverse engineering of Sony's first console, feel free to [join the PSXDev Network Discord Server](https://discord.gg/QByKPpH).
+To discuss the contents of this document, or hang out with likely minded people on development, hacking, and reverse engineering of Sony's first console, feel free to [join the PSX.Dev Discord Server](https://discord.gg/QByKPpH).
 
 The initial conversion has been done using a custom awk script available here: https://github.com/psx-spx/psx-spx.github.io/tree/master/conversion, and the resulting files have been imported in the initial import commit. The list of revisions, corrections, and additions shall be available for historical purposes in the [github commit history](https://github.com/psx-spx/psx-spx.github.io/commits/master).
