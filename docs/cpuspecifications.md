@@ -173,6 +173,7 @@ to read from the load destination register, then it would (usually) receive the
 OLD value of that register (unless an IRQ occurs between the load and next
 opcode, in that case the load would complete during IRQ handling, and so, the
 next opcode would receive the NEW value).<br/>
+MFC2/CFC2 also have a 1-instruction delay until the target register is loaded with its new value (more info in the GTE section).<br/>
 
 #### Store instructions
 ```
