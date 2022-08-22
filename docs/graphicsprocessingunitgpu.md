@@ -142,7 +142,7 @@ be decoded using the following bitfield:
     27         1/0    4 / 3 vertices
     26         1/0    textured / untextured
     25         1/0    semi transparent / solid
-    24         1/0    texture blending
+    24         1/0    raw texture / texture blending
    23-0        rgb    first color value.
 ```
 
@@ -163,7 +163,7 @@ So each vertex data can be seen as the following set of words:
 ```
 Color      xxBBGGRR               - optional, only present for gouraud shading
 Vertex     YYYYXXXX               - required, two signed 16 bits values
-UV         ClutUUVV or PageUUVV   - optional, only present for textured polygons
+UV         ClutVVUU or PageVVUU   - optional, only present for textured polygons
 ```
 
 The upper 16 bits of the first two UV words contain extra information. The first
@@ -184,16 +184,16 @@ And a quad with gouraud shading texture-blend will have the following structure:
 ```
 2CR1G1B1
 Yyy1Xxx1
-ClutU1V1
+ClutV1U1
 00R2G2B2
 Yyy2Xxx2
-PageU2V2
+PageV2U2
 00R3G3B3
 Yyy3Xxx3
-0000U3V3
+0000V3U3
 00R4G4B4
 Yyy4Xxx4
-0000U4V4
+0000V4U4
 ```
 
 Some combination of these flags can be seen as nonsense however, but it's important
@@ -277,10 +277,10 @@ The `size` parameter can be seen as the following enum:
 
 Therefore, the whole draw call can be seen as the following sequence of words:
 ```
-Color      ccBBGGRR    - command + color; color is ignored when textured
-Vertex1    YYYYXXXX    - required, indicates the upper left corner to render
-UV         ClutUUVV    - optional, only present for textured rectangles
-Vertex2    YYYYXXXX    - optional, bottom right corner for variable sized rectangles
+Color         ccBBGGRR    - command + color; color is ignored when textured
+Vertex1       YYYYXXXX    - required, indicates the upper left corner to render
+UV            ClutVVUU    - optional, only present for textured rectangles
+Width+Height  YsizXsiz    - optional, dimensions for variable sized rectangles (max 1023x511)
 ```
 
 Unlike for Textured-Polygons, the "Texpage" must be set up separately for
