@@ -746,16 +746,16 @@ registers.<br/>
   1-23  Unknown (seems to have no effect)
 ```
 This feature seems to be intended for debugging purposes (most released games
-do contain program code for disabling textures, but do never execute it).<br/>
-GP1(09h) seems to be supported only on New GPUs. Old GPUs don't support it all,
-and there seem to be some Special/Prototype GPUs that use GP1(20h) instead of
+do contain program code for disabling textures, but never execute it).<br/>
+GP1(09h) seems to be supported only on New GPUs. Old GPUs don't support it at all,
+and there seem to be some special/prototype GPUs that use GP1(20h) instead of
 GP1(09h).<br/>
 
 #### GP1(20h) - Special/Prototype Texture Disable
 ```
   0-23  Unknown (501h=Texture Enable, 504h=Texture Disable, or so?)
 ```
-Seems to be a used only on whatever arcade/prototype GPUs. New GPUs are using
+Seems to be used only on whatever arcade/prototype GPUs. New GPUs are using
 GP1(09h) instead of GP1(20h).<br/>
 
 #### GP1(0Bh) - Unknown/Internal?

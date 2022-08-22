@@ -302,20 +302,20 @@ registers while the mul/div operation is busy will halt the CPU until the
 mul/div has completed. For multiply, the execution time depends on rs (ie.
 "small\*large" can be much faster than "large\*small").<br/>
 ```
-  __umul_execution_time_____________________________________________________
+  __multu_execution_time_____________________________________________________
   Fast  (6 cycles)   rs = 00000000h..000007FFh
   Med   (9 cycles)   rs = 00000800h..000FFFFFh
   Slow  (13 cycles)  rs = 00100000h..FFFFFFFFh
-  __smul_execution_time_____________________________________________________
+  __mult_execution_time_____________________________________________________
   Fast  (6 cycles)   rs = 00000000h..000007FFh, or rs = FFFFF800h..FFFFFFFFh
   Med   (9 cycles)   rs = 00000800h..000FFFFFh, or rs = FFF00000h..FFFFF801h
   Slow  (13 cycles)  rs = 00100000h..7FFFFFFFh, or rs = 80000000h..FFF00001h
-  __udiv/sdiv_execution_time________________________________________________
+  __divu/div_execution_time________________________________________________
   Fixed (36 cycles)  no matter of rs and rt values
 ```
-For example, when executing "umul 123h,12345678h" and "mov r1,lo", one can
+For example, when executing "multu 123h,12345678h" and "mflo r1", one can
 insert up to six (cached) ALU opcodes, or read one value from PSX Main RAM
-(which has 6 cycle access time) between the "umul" and "mov" opcodes without
+(which has 6 cycle access time) between the "multu" and "mflo" opcodes without
 additional slowdown.<br/>
 The hardware does NOT generate exceptions on divide overflows, instead, divide
 errors are returning the following values:<br/>
@@ -326,8 +326,8 @@ errors are returning the following values:<br/>
   div     -80000000h..-1  0   -->  Rs            +1
   div     -80000000h      -1  -->  0             -80000000h
 ```
-For udiv, the result is more or less correct (as close to infinite as
-possible). For sdiv, the results are total garbage (about farthest away from
+For divu, the result is more or less correct (as close to infinite as
+possible). For div, the results are total garbage (about furthest away from
 the desired result as possible).<br/>
 Note: After accessing the lo/hi registers, there seems to be a strange rule
 that one should not touch the lo/hi registers in the next 2 cycles or so... not
