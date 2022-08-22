@@ -436,8 +436,8 @@ one uncached opcode).<br/>
   beqz rx,dest         ;alias for beq rx,r0,dest
   bnez rx,dest         ;alias for bne rx,r0,dest
   b   dest             ;alias for beq r0,r0,dest (jump relative/spasm)
-  bra dest             ;alias for ...? (jump relative/gnu)
-  bal dest             ;alias for ...? (call relative/spasm)
+  bra dest             ;alias for bgez r0, r0, dest
+  bal dest             ;alias for bgezal r0, r0, dest
 ```
 
 #### Pseudo instructions (nocash/a22i)
@@ -593,11 +593,11 @@ Describes the most recently recognised exception<br/>
 #### cop0r12 - SR - System status register (R/W)
 ```
   0     IEc Current Interrupt Enable  (0=Disable, 1=Enable) ;rfe pops IUp here
-  1     KUc Current Kernal/User Mode  (0=Kernel, 1=User)    ;rfe pops KUp here
+  1     KUc Current Kernel/User Mode  (0=Kernel, 1=User)    ;rfe pops KUp here
   2     IEp Previous Interrupt Disable                      ;rfe pops IUo here
-  3     KUp Previous Kernal/User Mode                       ;rfe pops KUo here
+  3     KUp Previous Kernel/User Mode                       ;rfe pops KUo here
   4     IEo Old Interrupt Disable                       ;left unchanged by rfe
-  5     KUo Old Kernal/User Mode                        ;left unchanged by rfe
+  5     KUo Old Kernel/User Mode                        ;left unchanged by rfe
   6-7   -   Not used (zero)
   8-15  Im  8 bit interrupt mask fields. When set the corresponding
             interrupts are allowed to cause an exception.
@@ -625,7 +625,7 @@ Describes the most recently recognised exception<br/>
               (Affects only user mode, not kernel mode) (?)
               (The bit doesn't exist in PSX ?)
   26-27 -   Not used (zero)
-  28    CU0 COP0 Enable (0=Enable only in Kernal Mode, 1=Kernel and User Mode)
+  28    CU0 COP0 Enable (0=Enable only in Kernel Mode, 1=Kernel and User Mode)
   29    CU1 COP1 Enable (0=Disable, 1=Enable) (none in PSX)
   30    CU2 COP2 Enable (0=Disable, 1=Enable) (GTE in PSX)
   31    CU3 COP3 Enable (0=Disable, 1=Enable) (none in PSX)
