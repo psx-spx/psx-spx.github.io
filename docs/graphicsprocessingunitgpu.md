@@ -154,8 +154,6 @@ If doing flat rendering, no further color will be sent. If doing gouraud shading
 there will be one more color per vertex sent, and the initial color will be the
 one for vertex 0.
 
-If doing 3 or 4 vertices rendering, this will affect the total number of vertex sent.
-
 If doing textured rendering, each vertex sent will also have a U/V texture coordinate
 attached to it, as well as a CLUT index.
 
@@ -204,9 +202,9 @@ the rendering.
 
 #### Notes
 Polygons are displayed up to \<excluding\> their lower-right coordinates.<br/>
-Four-point polygons are internally processed as two Three-point polygons, the
-first consisting of Vertices 1,2,3, and the second of  Vertices 2,3,4.<br/>
-Within the Three-point polygons, the ordering of the vertices is don't care at
+Quads are internally processed as two triangles, the
+first consisting of vertices 1,2,3, and the second of vertices 2,3,4. This is an important detail, as splitting the quad into triangles affects the way colours are interpolated.<br/>
+Within the triangle, the ordering of the vertices doesn't matter on
 the GPU side (a front-back check, based on clockwise or anti-clockwise
 ordering, can be implemented at the GTE side).<br/>
 Dither enable (in Texpage command) affects ONLY polygons that do use gouraud
