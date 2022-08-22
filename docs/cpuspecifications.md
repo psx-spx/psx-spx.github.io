@@ -185,6 +185,12 @@ Store operations are passed to the write-queue, so they can execute within a
 single clock cycle (unless the write-queue was full, in that case the CPU gets
 halted until there's room in the queue). For more information on the write-queue, visit [this page](https://psx-spx.consoledev.net/memorymap/#write-queue).<br/>
 
+#### Caution - 8/16-bit writes to certain IO registers
+During an 8-bit or 16-bit store, all 32 bits of the GPR are placed on the bus.
+As such, when writing to certain 32-bit IO registers with an 8 or 16-bit store, it will behave like a 32-bit store, using the register's full value.
+The soundscope on some shells is known to rely on this, as it uses `sh` to write to certain DMA registers.
+If this is not properly emulated, the soundscope will hang, waiting for an interrupt that will never be fired.<br/>
+
 #### Load/Store Alignment
 Halfword addresses must be aligned by 2, word addresses must be aligned by 4,
 trying to access mis-aligned addresses will cause an exception. There's no
