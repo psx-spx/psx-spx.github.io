@@ -1398,7 +1398,7 @@ There are 4 semi-transparency modes in the GPU.<br/>
   * 1.0 x B +0.25 x F    ;aka B+F/4
 ```
 For textured primitives using 4-bit or 8-bit textures, bit 15 of each CLUT entry acts as a semi-transparency flag and determines whether to apply semi-transparency to the pixel or not. If the semi-transparency flag is off, the new pixel is written to VRAM as-is.<br/>
-When using additive blending, if a channel's intensity is greater than 255, it gets clamped to 255 rather than being masked. Similarly, if using subtractive blending and a channel's intensity ends up being < 0, it's clamped to 0.
+When using additive blending, if a channel's intensity is greater than 255, it gets clamped to 255 rather than being masked. Similarly, if using subtractive blending and a channel's intensity ends up being < 0, it's clamped to 0.<br/>
 
 #### Modulation (also known as Texture Blending)
 Modulation is a colour effect that can be applied to textured primitives.
@@ -1409,7 +1409,7 @@ For each pixel of the primitive it combines every colour channel of the fetched 
 Using modulation, one can either decrease (if the vertex colour channel value is < 128) or increase (if it's > 128) the intensity of each colour channel of the texel, which is helpful for implementing things such as brightness effects.<br/>
 Using a vertex colour of 0x808080 (ie all channels set to 128) is equivalent to not applying modulation to the primitive, as shown by the above formula.<br/>
 "Texture blending" is not meant to be confused with normal blending, ie an operation that merges the backbuffer colour with the incoming pixel and draws the resulting colour to the backbuffer.
-The PS1 has this capability to an extent, using semi-transparency.
+The PS1 has this capability to an extent, using semi-transparency.<br/>
 
 #### Draw to display enable
 This will enable/disable any drawing to the area that is currently displayed.
