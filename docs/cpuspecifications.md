@@ -622,13 +622,13 @@ Describes the most recently recognised exception<br/>
   25    RE  Reverse endianness   (0=Normal endianness, 1=Reverse endianness)
               Reverses the byte order in which data is stored in
               memory. (lo-hi -> hi-lo)
-              (Has affect only to User mode, not to Kernel mode) (?)
+              (Affects only user mode, not kernel mode) (?)
               (The bit doesn't exist in PSX ?)
   26-27 -   Not used (zero)
-  28    CU0 COP0 Enable (0=Enable only in Kernal Mode, 1=Kernal and User Mode)
-  29    CU1 COP1 Enable (0=Disable, 1=Enable) (none such in PSX)
+  28    CU0 COP0 Enable (0=Enable only in Kernal Mode, 1=Kernel and User Mode)
+  29    CU1 COP1 Enable (0=Disable, 1=Enable) (none in PSX)
   30    CU2 COP2 Enable (0=Disable, 1=Enable) (GTE in PSX)
-  31    CU3 COP3 Enable (0=Disable, 1=Enable) (none such in PSX)
+  31    CU3 COP3 Enable (0=Disable, 1=Enable) (none in PSX)
 ```
 
 #### cop0r14 - EPC - Return Address from Trap (R)
@@ -681,7 +681,7 @@ unchanged.<br/>
 The RFE opcode does NOT automatically jump to EPC. Instead, the exception
 handler must copy EPC into a register (usually R26 aka K0), and then jump to
 that address. Because of branch delays, that would look like so:<br/>
-```
+```x86asm
   mov  k0,epc  ;get return address
   push k0      ;save epc in memory (if you expect nested exceptions)
   ...          ;whatever (ie. process CAUSE)
