@@ -4,7 +4,7 @@ On the 20th of August 2022, Martin surprisingly released a new version of this d
 
 > I am homeless in [Hamburg](https://problemkaputt.de/homeless.htm), please help me out!
 
-The authors of this fork though that this deserves more than a footnote, hence this notice here.
+The authors of this fork thought that this deserves more than a footnote, hence this notice here.
 
 ## Home
 
