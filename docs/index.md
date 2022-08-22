@@ -1,3 +1,13 @@
+## **IMPORTANT UPDATE**
+
+On the 20th of August 2022, Martin surprisingly released a new version of this documentation. While this version will try to incorporate the changes, one important footnote that got added is the following:
+
+> I am homeless in [Hamburg](https://problemkaputt.de/homeless.htm), please help me out!
+
+The authors of this fork though that this deserves more than a footnote, hence this notice here.
+
+## Home
+
 This is a conversion/edition of Martin "nocash" Korth's Playstation specs document originally hosted at [https://problemkaputt.de/psx-spx.htm](https://problemkaputt.de/psx-spx.htm). See [https://github.com/psx-spx/psx-spx.github.io#readme](https://github.com/psx-spx/psx-spx.github.io#readme) for more details.<br />
 You can also download this website as a [single-page pdf](psx-spx.pdf).
 
