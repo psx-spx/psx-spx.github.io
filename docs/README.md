@@ -10,7 +10,7 @@ The authors of this fork thought that this deserves more than a footnote, hence 
 
 This is a conversion/edition of Martin "nocash" Korth's Playstation specs document originally hosted at https://problemkaputt.de/psx-spx.htm
 
-Martin is a difficult individual to reach (see http://problemkaputt.de/email.htm, especially the part about gmail), and so far, any attempt at contacting him about collaborating on this document failed.
+Martin is a difficult individual to reach (see https://problemkaputt.de/email.htm, especially the part about gmail), and so far, any attempt at contacting him about collaborating on this document failed.
 
 Therefore, no copyright or license have been properly acquired to republish and alter this document. However, since this repository will accept and proceed to issue corrections, amendments, and additions to the original work, the [fair use and derivative work doctrine](https://en.wikipedia.org/wiki/Derivative_work) is believed to be applicable in this case.
 
