@@ -141,7 +141,7 @@ be decoded using the following bitfield:
     28         1/0    gouraud / flat shading
     27         1/0    4 / 3 vertices
     26         1/0    textured / untextured
-    25         1/0    semi transparent / solid
+    25         1/0    semi-transparent / opaque
     24         1/0    raw texture / modulation
    23-0        rgb    first color value.
 ```
@@ -220,7 +220,7 @@ be decoded using the following bitfield:
   31-29        010    line render
     28         1/0    gouraud / flat shading
     27         1/0    polyline / single line
-    25         1/0    semi transparent / solid
+    25         1/0    semi-transparent / opaque
    23-0        rgb    first color value.
 ```
 
@@ -262,7 +262,7 @@ The Rectangle command can be decoded using the following bitfield:
   31-29        011    rectangle render
   28-27        sss    rectangle size
     26         1/0    textured / untextured
-    25         1/0    semi transparent / solid
+    25         1/0    semi-transparent / opaque
    23-0        rgb    first color value.
 ```
 
@@ -366,7 +366,7 @@ Specifies the location of the CLUT data within VRAM.<br/>
 ```
   0-3   Texture page X Base   (N*64) (ie. in 64-halfword steps)    ;GPUSTAT.0-3
   4     Texture page Y Base   (N*256) (ie. 0 or 256)               ;GPUSTAT.4
-  5-6   Semi Transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)   ;GPUSTAT.5-6
+  5-6   Semi-transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)   ;GPUSTAT.5-6
   7-8   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved);GPUSTAT.7-8
   9     Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled) ;GPUSTAT.9
   10    Drawing to display area (0=Prohibited, 1=Allowed)          ;GPUSTAT.10
@@ -797,7 +797,7 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
 ```
   0-3   Texture page X Base   (N*64)                              ;GP0(E1h).0-3
   4     Texture page Y Base   (N*256) (ie. 0 or 256)              ;GP0(E1h).4
-  5-6   Semi Transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)  ;GP0(E1h).5-6
+  5-6   Semi-transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)  ;GP0(E1h).5-6
   7-8   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved)GP0(E1h).7-8
   9     Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled);GP0(E1h).9
   10    Drawing to display area (0=Prohibited, 1=Allowed)         ;GP0(E1h).10
@@ -1087,10 +1087,10 @@ A texture is an image put on a polygon or sprite. The data of a texture can be
 stored in 3 different modes:<br/>
 ```
 <B>  16bit Texture (Direct Color)             ;(One 256x256 page = 128Kbytes)</B>
-  0-4   Red       (0..31)         ;\Color 0000h        = Fully-Transparent
-  5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-Transparent
-  10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-Transparent (*)
-  15    Semi Transparency Flag    ;/(*) or Non-Transparent for opaque commands
+  0-4   Red       (0..31)         ;\Color 0000h        = Fully-transparent
+  5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-transparent
+  10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-transparent (*)
+  15    Semi-transparency Flag    ;/(*) or Non-transparent for opaque commands
 <B>  8bit Texture (256 Color Palette)         ;(One 256x256 page = 64Kbytes)</B>
   0-7   Palette index for 1st pixel (left)
   8-15  Palette index for 2nd pixel (right)
@@ -1116,10 +1116,10 @@ CLUT modes. The pixels of those images are used as indexes to this table. The
 clut is arranged in the frame buffer as a 256x1 image for the 8bit clut mode,
 and a 16x1 image for the 4bit clut mode.<br/>
 ```
-  0-4   Red       (0..31)         ;\Color 0000h        = Fully-Transparent
-  5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-Transparent
-  10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-Transparent (*)
-  15    Semi Transparency Flag    ;/(*) or Non-Transparent for opaque commands
+  0-4   Red       (0..31)         ;\Color 0000h        = Fully-transparent
+  5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-transparent
+  10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-transparent (*)
+  15    Semi-transparency Flag    ;/(*) or Non-transparent for opaque commands
 ```
 The clut data can be arranged in the frame buffer at X multiples of 16
 (X=0,16,32,48,etc) and anywhere in the Y range of 0-511.<br/>
@@ -1310,7 +1310,7 @@ vertical blanking/retrace).<br/>
 ```
   0-23  Color for (first) Vertex                   (Not for Raw-Texture)
   24    Texture Mode      (0=Blended, 1=Raw)       (Textured-Polygon/Rect only)
-  25    Semi Transparency (0=Off, 1=On)            (All Render Types)
+  25    Semi-transparency (0=Off, 1=On)            (All Render Types)
   26    Texture Mapping   (0=Off, 1=On)            (Polygon/Rectangle only)
   27-28 Rect Size   (0=Var, 1=1x1, 2=8x8, 3=16x16) (Rectangle only)
   27    Num Vertices      (0=Triple, 1=Quad)       (Polygon only)
@@ -1383,20 +1383,22 @@ for the entire primitive. In Gouraud shading mode, a different brightness value
 can be given for each vertex of a primitive, and the brightness between these
 points is automatically interpolated.<br/>
 
-#### Semi Transparency
-When semi transparency is set for a pixel, the GPU first reads the pixel it
+#### Semi-transparency
+When semi-transparency is set for a pixel, the GPU first reads the pixel it
 wants to write to, and then calculates the color it will write from the 2
-pixels according to the semitransparency mode selected. Processing speed is
+pixels according to the semi-transparency mode selected. Processing speed is
 lower in this mode because additional reading and calculating are necessary.
-There are 4 semitransparency modes in the GPU.<br/>
+There are 4 semi-transparency modes in the GPU.<br/>
 ```
-  B=Back  (the old pixel read from the image in the frame buffer)
-  F=Front (the new halftransparent pixel)
+  B=Back  (the old pixel read from the frame buffer)
+  F=Front (the new semi-transparent pixel)
   * 0.5 x B + 0.5 x F    ;aka B/2+F/2
   * 1.0 x B + 1.0 x F    ;aka B+F
   * 1.0 x B - 1.0 x F    ;aka B-F
   * 1.0 x B +0.25 x F    ;aka B+F/4
 ```
+For textured primitives using 4-bit or 8-bit textures, bit 15 of each CLUT entry acts as a semi-transparency flag and determines whether to apply semi-transparency to the pixel or not. If the semi-transparency flag is off, the new pixel is written to VRAM as-is.<br/>
+When using additive blending, if a channel's intensity is greater than 255, it gets clamped to 255 rather than being masked. Similarly, if using subtractive blending and a channel's intensity ends up being < 0, it's clamped to 0.
 
 #### Modulation (also known as Texture Blending)
 Modulation is a colour effect that can be applied to textured primitives.
@@ -1404,7 +1406,10 @@ For each pixel of the primitive it combines every colour channel of the fetched 
 ```glsl
   finalChannel.rgb = (texel.rgb * vertexColour.rgb) / vec3(128.0)
 ```
-Using modulation, one can either decrease or increase the intensity of each colour channel of the texel, helpful for implementing things such as brightness effects.
+Using modulation, one can either decrease (if the vertex colour channel value is < 128) or increase (if it's > 128) the intensity of each colour channel of the texel, which is helpful for implementing things such as brightness effects.<br/>
+Using a vertex colour of 0x808080 (ie all channels set to 128) is equivalent to not applying modulation to the primitive, as shown by the above formula.<br/>
+"Texture blending" is not meant to be confused with normal blending, ie an operation that merges the backbuffer colour with the incoming pixel and draws the resulting colour to the backbuffer.
+The PS1 has this capability to an extent, using semi-transparency.
 
 #### Draw to display enable
 This will enable/disable any drawing to the area that is currently displayed.
