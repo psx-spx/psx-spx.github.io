@@ -1357,20 +1357,6 @@ Entering configuration mode enables the DualShock rumble method and disables the
   xx=00h Stay in Normal mode
   xx=01h Enter Configuration mode
 ```
-Caution: Additionally to activating configuration commands, entering config
-mode does also activate a Watchdog Timer which does reset the controller if
-there's been no communication for about 1 second or so. The watchdog timer
-remains active even when returning to normal mode via Exit Config command. The
-reset does disable and lock rumble motors, and switches the controller to
-Digital Mode (with LED=off, and analog inputs disabled). To prevent this, be
-sure to keep issuing joypad reads even when not needing user input (eg. while
-loading data from CDROM).<br/>
-Caution 2: A similar reset occurs when the user pushes the Analog button; this
-is causing rumble motors to be stopped and locked, and of course, the
-analog/digital state gets changed.<br/>
-Caution 3: If config commands were used, and the user does then push the analog
-button, then the 5Ah-byte gets replaced by 00h (ie. responses change from "HiZ
-id 5Ah ..." to "HiZ id 00h ...").<br/>
 
 #### Config Mode - Command 42h "B" - Read Buttons AND analog inputs
 ```
@@ -1481,10 +1467,28 @@ unknown. The command does not seem to be used by any games.<br/>
 These commands do return a bunch of 00h bytes. Purpose unknown. These commands
 do not seem to be used by any games.<br/>
 
+#### Watchdog Timer
+Caution: Additionally to activating configuration commands, entering config
+mode does also activate a Watchdog Timer which does reset the controller if
+there's been no communication for about 1 second or so. The watchdog timer
+remains active even when returning to normal mode via Exit Config command. The
+reset does disable and lock rumble motors, and switches the controller to
+Digital Mode (with LED=off, and analog inputs disabled). To prevent this, be
+sure to keep issuing joypad reads even when not needing user input (eg. while
+loading data from CDROM).<br/>
+Caution 2: A similar reset occurs when the user pushes the Analog button; this
+is causing rumble motors to be stopped and locked, and of course, the
+analog/digital state gets changed.<br/>
+Caution 3: If config commands were used, and the user does then push the analog
+button, then the 5Ah-byte gets replaced by 00h (ie. responses change from "HiZ
+id 5Ah ..." to "HiZ id 00h ...").<br/>
+Caution 4: Most emulators do not emulate this watchdog functionality
+so any homebrew with analog pad support should ideally also be tested on hardware
+to make sure it doesn't accidentally trigger the watchdog<br/>
+
 #### Note
 Rumble is a potentially annoying feature, so games that do support rumble
 should also include an option to disable it.<br/>
-
 
 
 ##   Controllers - Dance Mats
