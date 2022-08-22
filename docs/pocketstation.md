@@ -885,6 +885,7 @@ the CPU clock, or less, depending on the Timer Divider). Possible values are:<br
 Before changing CLK\_MODE, F\_WAIT1 and F\_WAIT2 should be adjusted accordingly
 (see there for details). Note that many memory regions have waitstates, the
 full CPU speed can be reached mainly with code/data in WRAM.<br/>
+For emulator authors: Note that some Pocketstation software will expect bit 4 of CLK\_MODE to go from 0 to 1 rather than just polling it until it's 1. For this reason, emulating bit 4 as always being 1 can very likely break.<br/>
 
 #### 0B000004h - CLK\_STOP - Clock stop (Sleep Mode)
 Stops the CPU until an interrupt occurs. The pocketstation doesn't have a
