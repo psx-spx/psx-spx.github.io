@@ -142,7 +142,7 @@ be decoded using the following bitfield:
     27         1/0    4 / 3 vertices
     26         1/0    textured / untextured
     25         1/0    semi transparent / solid
-    24         1/0    raw texture / texture blending
+    24         1/0    raw texture / modulation
    23-0        rgb    first color value.
 ```
 
@@ -198,7 +198,7 @@ Yyy4Xxx4
 
 Some combination of these flags can be seen as nonsense however, but it's important
 to realize that the GPU will still process them properly. For instance, specifying
-gouraud shading without texture blending will force the user to send the colors for
+gouraud shading without modulation will force the user to send the colors for
 each vertex to satisfy the GPU's state machine, without them being actually used for
 the rendering.
 
@@ -209,8 +209,8 @@ first consisting of Vertices 1,2,3, and the second of  Vertices 2,3,4.<br/>
 Within the Three-point polygons, the ordering of the vertices is don't care at
 the GPU side (a front-back check, based on clockwise or anti-clockwise
 ordering, can be implemented at the GTE side).<br/>
-Dither enable (in Texpage command) affects ONLY polygons that do use Gouraud
-Shading or Texture Blending.<br/>
+Dither enable (in Texpage command) affects ONLY polygons that do use gouraud
+shading or modulation.<br/>
 
 ##   GPU Render Line Commands
 When the upper 3 bits of the first GP0 command are set to 2 (010), then the command can
@@ -336,7 +336,7 @@ single clock cycle), or if it's (slowly) processing them pixel by pixel?<br/>
   24-31  Command (in first paramter) (don't care in further parameters)
 ```
 Caution: For untextured graphics, 8bit RGB values of FFh are brightest.
-However, for texture blending, 8bit values of 80h are brightest (values
+However, for modulation, 8bit values of 80h are brightest (values
 81h..FFh are "brighter than bright" allowing to make textures about twice as
 bright as than they were originially stored in memory; of course the results
 can't exceed the maximum brightness, ie. the 5bit values written to the
@@ -1364,9 +1364,9 @@ resulting in the final 5bit R/G/B values.<br/>
   +3  -1  +2  -2   ;/(same as above, but shifted two pixels horizontally)
 ```
 POLYGONs (triangles/quads) are dithered ONLY if they do use gouraud shading or
-texture blending.<br/>
+modulation.<br/>
 LINEs are dithered (no matter if they are mono or do use gouraud shading).<br/>
-RECTs are NOT dithered (no matter if they do use texture blending).<br/>
+RECTs are NOT dithered (no matter if they do use modulation or not).<br/>
 
 #### Shading information
 "Texture RGB values control the brightness of the individual colors ($00-$7f).
@@ -1397,6 +1397,14 @@ There are 4 semitransparency modes in the GPU.<br/>
   * 1.0 x B - 1.0 x F    ;aka B-F
   * 1.0 x B +0.25 x F    ;aka B+F/4
 ```
+
+#### Modulation (also known as Texture Blending)
+Modulation is a colour effect that can be applied to textured primitives.
+For each pixel of the primitive it combines every colour channel of the fetched texel with the corresponding channel of the interpolated vertex colour according to this formula (Assuming all channels are 8-bit).<br/> 
+```glsl
+  finalChannel.rgb = (texel.rgb * vertexColour.rgb) / vec3(128.0)
+```
+Using modulation, one can either decrease or increase the intensity of each colour channel of the texel, helpful for implementing things such as brightness effects.
 
 #### Draw to display enable
 This will enable/disable any drawing to the area that is currently displayed.
