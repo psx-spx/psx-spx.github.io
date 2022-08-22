@@ -181,10 +181,9 @@ MFC2/CFC2 also have a 1-instruction delay until the target register is loaded wi
   sh  rt,imm(rs)    [imm+rs]=(rt AND FFFFh) ;store 16bit
   sw  rt,imm(rs)    [imm+rs]=rt             ;store 32bit
 ```
-Store operations are passed to the write-buffer, so they can execute within a
-single clock cycle (unless the write-buffer was full, in that case the CPU gets
-halted until there's room in the buffer). But, the PSX doesn't have a
-writebuffer...?<br/>
+Store operations are passed to the write-queue, so they can execute within a
+single clock cycle (unless the write-queue was full, in that case the CPU gets
+halted until there's room in the queue). For more information on the write-queue, visit [this page](https://psx-spx.consoledev.net/memorymap/#write-queue).<br/>
 
 #### Load/Store Alignment
 Halfword addresses must be aligned by 2, word addresses must be aligned by 4,
