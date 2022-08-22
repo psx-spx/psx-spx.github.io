@@ -1368,13 +1368,6 @@ modulation.<br/>
 LINEs are dithered (no matter if they are mono or do use gouraud shading).<br/>
 RECTs are NOT dithered (no matter if they do use modulation or not).<br/>
 
-#### Shading information
-"Texture RGB values control the brightness of the individual colors ($00-$7f).
-A value of $80 in a color will take the former value as data." (What...?
-probably means the "double brightness" effect... or does it want to tell that
-ALL colors of 80h..FFh have only single brightness.. rather than reaching
-double brightness at FFh...?)<br/>
-
 #### Shading
 The GPU has a shading function, which will scale the color of a primitive to a
 specified brightness. There are 2 shading modes: Flat shading, and gouraud
