@@ -261,6 +261,7 @@ The Rectangle command can be decoded using the following bitfield:
   28-27        sss    rectangle size
     26         1/0    textured / untextured
     25         1/0    semi-transparent / opaque
+    24         1/0    raw texture / modulation
    23-0        rgb    first color value.
 ```
 
