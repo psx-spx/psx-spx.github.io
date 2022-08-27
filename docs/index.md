@@ -32,6 +32,7 @@ To discuss the contents of this document, or hang out with likely minded people 
 [CPU Specifications](cpuspecifications.md)<br/>
 [Kernel (BIOS)](kernelbios.md)<br/>
 [Arcade Cabinets](arcadecabinets.md)<br/>
+[Konami System 573](konamisystem573.md)<br/>
 [Cheat Devices](cheatdevices.md)<br/>
 [PSX Dev-Board Chipsets](psxdevboardchipsets.md)<br/>
 [Hardware Numbers](hardwarenumbers.md)<br/>

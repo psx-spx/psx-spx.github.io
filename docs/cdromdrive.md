@@ -2588,7 +2588,7 @@ track. It shall not used for the first track."<br/>
 ```
   000h 0Ch  Sync
   00Ch 4    Header (Minute,Second,Sector,Mode=02h)
-  010h 4    Sub-Header (File, Channel, Submode AND DFh, Codinginfo)
+  010h 4    Sub-Header (File, Channel, Submode with bit5=0, Codinginfo)
   014h 4    Copy of Sub-Header
   018h 800h Data (2048 bytes)
   818h 4    EDC (checksum accross [010h..817h])
@@ -2598,7 +2598,7 @@ track. It shall not used for the first track."<br/>
 ```
   000h 0Ch  Sync
   00Ch 4    Header (Minute,Second,Sector,Mode=02h)
-  010h 4    Sub-Header (File, Channel, Submode OR 20h, Codinginfo)
+  010h 4    Sub-Header (File, Channel, Submode with bit5=1, Codinginfo)
   014h 4    Copy of Sub-Header
   018h 914h Data (2324 bytes)
   92Ch 4    EDC (checksum accross [010h..92Bh]) (or 00000000h if no EDC)
@@ -3561,7 +3561,8 @@ via BIOS patches, nocash BIOS clone, or Expansion ROMs).<br/>
 Some games that load data from memory cards may get confused if the save data
 isn't formatted as how they expect it - with some fine tuning you can get them
 to "crash" in a manner that they do accidently execute bootcode stored on the
-memory card.<br/>
+memory card. This is how tonyhax's game exploits and FreePSXBoot's BIOS shell
+exploit work.<br/>
 Requires a tools to write to the memory card (eg. parallel port cable), and the
 memory card data customized for a specific game, and an original CDROM with
 that specific game. Once when the memory card code is booted, the Disk-Swap
