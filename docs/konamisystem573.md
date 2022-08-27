@@ -13,6 +13,7 @@ and other early Bemani (Konami's rhythm game division) games.
 - [Connectors](#connectors)
 - [Game-specific information](#game-specific-information)
 - [Misc. notes](#misc-notes)
+- [Pinouts](#pinouts)
 - [Credits, sources and links](#credits-sources-and-links)
 
 This document is currently work-in-progress. Here is a list of things that are
@@ -1215,6 +1216,109 @@ use CD-DA (i.e. pretty much all games that don't use the digital I/O board).
 | TEAC         | CD-W552E     | **Yes** | Unknown |                              |
 | Toshiba      | XM-5702B     | **Yes** | Unknown |                              |
 | Toshiba      | XM-6102B     | **Yes** | No      | Has issues with homebrew     |
+
+## Pinouts
+
+### Main I/O board connector (`CN10`)
+
+The pinout of this connector is currently unknown.
+
+### Secondary I/O board connector (`CN21`)
+
+This connector exposes the SPI bus pins normally used for controllers and
+memory cards, which go unused on the 573 as no known I/O board ever used this
+connector.
+
+| Pin | Name   | Dir | Pin | Name    | Dir |
+| --: | :----- | :-- | --: | :------ | :-- |
+|  A1 | `A8`   | W   |  B1 | `A9`    | W   |
+|  A2 | `A10`  | W   |  B2 | `A11`   | W   |
+|  A3 | `A16`  | W   |  B3 | `A17`   | W   |
+|  A4 | `A18`  | W   |  B4 | `A19`   | W   |
+|  A5 | `GND`  |     |  B5 | `?`     |     |
+|  A6 | `GND`  |     |  B6 | `?`     |     |
+|  A7 | `GND`  |     |  B7 | `GND`   |     |
+|  A8 | `GND`  |     |  B8 | `DOTCK` | W   |
+|  A9 | `GND`  |     |  B9 | `GND`   |     |
+| A10 | `GND`  |     | B10 | `/ACK`  | R   |
+| A11 | `GND`  |     | B11 | `/JOY2` | W   |
+| A12 | `GND`  |     | B12 | `/JOY1` | W   |
+| A13 | `GND`  |     | B13 | `MISO`  | R   |
+| A14 | `GND`  |     | B14 | `MOSI`  | W   |
+| A15 | `GND`  |     | B15 | `SCK`   | W   |
+
+### Security cartridge slot (`CN14`)
+
+| Pin | Name     | Dir | Notes                           | Pin | Name    | Dir | Notes                                |
+| --: | :------- | :-- | :------------------------------ | --: | :------ | :-- | :----------------------------------- |
+|   1 | `GND`    |     |                                 |  23 | `GND`   |     |                                      |
+|   2 | `GND`    |     |                                 |  24 | `GND`   |     |                                      |
+|   3 | `/DSR`   | R   | Usually shorted to ground       |  25 | `EXCLK` | W   | 7.3728 MHz clock (also goes into H8) |
+|   4 | `NC`     |     | May have been DTR at some point |  26 | `GND`   |     |                                      |
+|   5 | `TX`     | W   |                                 |  27 | `DSIG`  | W   | Goes high when 573 updates `D0-D7`   |
+|   6 | `RX`     | R   |                                 |  28 | `SDA`   | RW  | Only bidirectional pin               |
+|   7 | `/RESET` |     | System reset (from watchdog)    |  29 | `/IREQ` | R   | Sets `ISIG` when pulsed low          |
+|   8 | `GND`    |     |                                 |  30 | `/DACK` | R   | Clears `DSIG` when pulsed low        |
+|   9 | `GND`    |     |                                 |  31 | `ISIG`  | R   | Goes low when 573 reads `I0-I7`      |
+|  10 | -        |     | Key (missing pin)               |  32 | -       |     | Key (missing pin)                    |
+|  11 | `?`      |     | Not connected?                  |  33 | `I7`    | R   |                                      |
+|  12 | `?`      |     | Not connected?                  |  34 | `I6`    | R   |                                      |
+|  13 | `D7`     | W   |                                 |  35 | `I5`    | R   |                                      |
+|  14 | `D6`     | W   |                                 |  36 | `I4`    | R   |                                      |
+|  15 | `D5`     | W   |                                 |  37 | `I3`    | R   |                                      |
+|  16 | `D4`     | W   |                                 |  38 | `I2`    | R   |                                      |
+|  17 | `D3`     | W   |                                 |  39 | `I1`    | R   |                                      |
+|  18 | `D2`     | W   |                                 |  40 | `I0`    | R   |                                      |
+|  19 | `D1`     | W   |                                 |  41 | `5V`    |     |                                      |
+|  20 | `D0`     | W   |                                 |  42 | `5V`    |     |                                      |
+|  21 | `5V`     |     |                                 |  43 | `/RTS`  | W   | Shorted to `/CTS` on some cartridges |
+|  22 | `5V`     |     |                                 |  44 | `/CTS`  | R   | Shorted to `/RTS` on some cartridges |
+
+### Serial port (`CN24`, unpopulated)
+
+Only present on later revisions of the main board. It exposes the exact same
+serial port signals as pins 5, 6, 43 and 44 on the security cartridge slot.
+
+| Pin | Name   | Dir |
+| --: | :----- | :-- |
+|   1 | `RX`   | R   |
+|   2 | `TX`   | W   |
+|   3 | `GND`  |     |
+|   4 | `GND`  |     |
+|   5 | `/RTS` | W   |
+|   6 | `/CTS` | R   |
+
+### I2S digital audio output (`CN19`, unpopulated)
+
+The pinout of this connector is currently unknown.
+
+### H8/3644 microcontroller pin mapping
+
+| Pin   | H8 GPIO   | Dir | Connected to           | Usage                              |
+| ----: | :-------- | :-- | :--------------------- | :--------------------------------- |
+|    11 | `P9_0`    | R   |                        | _Unused_                           |
+|    12 | `P9_1-4`  | W   | I/O ASIC               | Status output bus                  |
+|    16 | `IRQ0`    | R   |                        | _Unused_                           |
+| 17-24 | `P6_0-7`  | W   | I/O ASIC               | 16-bit JVS output bus (low byte?)  |
+| 25-32 | `P5_0-7`  | W   | I/O ASIC               | 16-bit JVS output bus (high byte?) |
+|    34 | `P7_3`    | R   | Unknown                |                                    |
+|    35 | `P7_4`    | R   | Unknown                |                                    |
+|    36 | `P7_5`    | R   |                        | _Unused_                           |
+|    37 | `P7_6`    | R   |                        | _Unused_                           |
+|    38 | `P7_7`    | R   |                        | _Unused_                           |
+| 39-46 | `P8_0-7`  | R   | System bus (via latch) | 16-bit JVS write bus (low byte)    |
+|    47 | `P2_0`    | W   | Unknown                |                                    |
+|    48 | `P2_1/RX` | R   | RS485 transceiver      | JVS serial port receive            |
+|    49 | `P2_2/TX` | W   | RS485 transceiver      | JVS serial port transmit           |
+|    50 | `P3_2`    | R   |                        | _Unused_                           |
+|    51 | `P3_1`    | R   |                        | _Unused_                           |
+|    52 | `P3_0`    | R   |                        | _Unused_                           |
+|    53 | `P1_0`    | W   | Unknown                |                                    |
+|    54 | `P1_4`    | W   | Unknown                |                                    |
+|    55 | `P1_5`    | R   |                        | _Unused_                           |
+|    56 | `P1_6`    | R   |                        | _Unused_                           |
+|    57 | `P1_7`    | R   |                        | _Unused_                           |
+|  59-2 | `PB_7-0`  | R   | System bus (via latch) | 16-bit JVS write bus (high byte)   |
 
 ## Credits, sources and links
 
