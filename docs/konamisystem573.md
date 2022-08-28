@@ -11,6 +11,7 @@ and other early Bemani (Konami's rhythm game division) games.
 - [Security cartridges](#security-cartridges)
 - [External modules](#external-modules)
 - [Connectors](#connectors)
+- [BIOS](#bios)
 - [Game-specific information](#game-specific-information)
 - [Misc. notes](#misc-notes)
 - [Pinouts](#pinouts)
@@ -21,14 +22,10 @@ still missing:
 
 - JVS communications and the microcontroller that handles them have to be
   documented. The microcontroller's firmware has already been dumped.
-- The registers controlling the `EXT-IN` and `EXT-OUT` connectors haven't yet
-  been found.
-- PAL mode hasn't been tested on the 573. Konami games only ever used NTSC, so
-  the 573 might in fact be unable to output PAL.
 - I/O boards, *especially* the digital I/O board, need to be properly reverse
-  engineered and documented. Some games are reportedly capable of telling if
-  the analog I/O board is missing, so it must have at least one readable
-  register.
+  engineered and documented. The order of light outputs on the analog and
+  digital I/O boards might be completely wrong. The fishing controls board has
+  been fully reverse engineered but documentation for it is missing.
 - The DDR stage I/O board's communication protocol is largely unknown. More
   tests need to be done on real hardware and its CPLD shall be dumped if
   possible.
@@ -237,7 +234,7 @@ input ports in a single package.
   | ---: | :- | :----------------------------------- |
   | 0-15 | R  | JVS data output from microcontroller |
 
-- `0x1f40000c` (ASIC register 6): **JAMMA controls**
+- `0x1f40000c` (ASIC register 6): **JAMMA controls** / **External inputs**
 
   | Bits  | RW | Description                      |
   | ----: | :- | :------------------------------- |
@@ -245,13 +242,17 @@ input ports in a single package.
   |     8 | R  | Player 1 button 4 (JAMMA pin 25) |
   |     9 | R  | Player 1 button 5 (JAMMA pin 26) |
   |    10 | R  | Service button (JAMMA pin R)     |
-  |    11 | R  | Player 1 button 6 (JAMMA pin 27) |
+  |    11 | R  | Player 1 button 6                |
   | 12-15 |    | Unused?                          |
 
   **NOTE**: since buttons are active low (wired between JAMMA pins and ground),
   all bits are 0 when a button is pressed and 1 when it isn't.
 
-- `0x1f40000e` (ASIC register 7): **JAMMA controls**
+  The signals for buttons 4 and 5 are wired in parallel to both JAMMA and the
+  `EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and
+  is usually unused.
+
+- `0x1f40000e` (ASIC register 7): **JAMMA controls** / **External inputs**
 
   | Bits  | RW | Description                      |
   | ----: | :- | :------------------------------- |
@@ -259,11 +260,15 @@ input ports in a single package.
   |     8 | R  | Player 2 button 4 (JAMMA pin c)  |
   |     9 | R  | Player 2 button 5 (JAMMA pin d)  |
   |    10 |    | Unused?                          |
-  |    11 | R  | Player 2 button 6 (JAMMA pin e)  |
+  |    11 | R  | Player 2 button 6                |
   | 12-15 |    | Unused?                          |
 
   **NOTE**: since buttons are active low (wired between JAMMA pins and ground),
   all bits are 0 when a button is pressed and 1 when it isn't.
+
+  The signals for buttons 4 and 5 are wired in parallel to both JAMMA and the
+  `EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and
+  is usually unused.
 
 ### IDE registers
 
@@ -502,16 +507,16 @@ XC9536 CPLD on the main board.
   modifying the 573 and desoldering the 058232 ASIC (which also drives coin
   counters), or cutting its reset output pin.
 
-- `0x1f600000`: **External outputs?**
+- `0x1f600000`: **External outputs**
 
-  | Bits | RW | Description                        |
-  | ---: | :- | :--------------------------------- |
-  |  0-7 | RW | To `D0-D7` on `EXT-OUT` connector? |
-  | 8-15 |    | _Unused_                           |
+  | Bits | RW | Description                           |
+  | ---: | :- | :------------------------------------ |
+  |  0-7 | W  | To `OUT0-OUT7` on `EXT-OUT` connector |
+  | 8-15 |    | _Unused_                              |
 
-  This register hasn't been tested nor confirmed to exist. It is probably
-  related to the `EXT-OUT` connector, which seems to just be an 8-bit output
-  port.
+  The lower 8 bits written to this register are latched on pins `OUT0-OUT7` on
+  the external output connector (see the pinouts section). This connector is
+  used by some games to control cabinet lights without using an I/O board.
 
 - `0x1f680000`: **JVS transmit buffer**
 
@@ -989,14 +994,183 @@ _________________________________________________ [3]
 7. **"VGA" and RCA outputs**: these are also mandated by the JVS specification
    and are useful for hooking the system up for testing without needing a JAMMA
    "supergun" or similar adapter. Note that the VGA connector does not output
-   standard VGA with separate h-sync and v-sync but 240p/480i RGB with c-sync
-   only, i.e. it's closer to SCART than it is to VGA. An upscaler such as the
-   GBS8200 (which has a VGA input that supports c-sync) is required to connect
-   the 573 to anything other than a CRT TV.
+   standard VGA with separate h-sync and v-sync but 15 kHz (240p/480i) RGB with
+   c-sync only. The signal levels are also higher than allowed by the VGA
+   specification, since they are still meant to drive a JAMMA CRT monitor. An
+   upscaler such as the GBS8200 (which has a VGA input that supports 15 kHz and
+   c-sync) might be required to connect the 573 to an LCD monitor, although
+   some monitors with VGA input are known to accept 15 kHz and may work with a
+   direct connection.
 8. **Speaker outputs**: the 573 has a built-in 15W amplifier, which can be used
    for either mono output (via the speaker pins on the JAMMA connector) or for
    stereo through this 4-pin connector. Bemani cabs do not use this output,
    relying on a more powerful external amp plugged into the RCA jacks instead.
+
+## BIOS
+
+The 573's BIOS is based on a slightly modified version of Sony's standard PS1
+kernel, plus a custom shell executable that replaces the Sony one. The kernel
+identifies itself as "Konami OS by T.H." and seems to have been used across all
+Konami PS1-based arcade boards. The main difference from the PS1 kernel is that
+most CD drive APIs and the ISO9660 filesystem driver have been removed. Other
+than that there are no significant changes (e.g. controller and memory card
+drivers are still present and functional, even though the controller port was
+never used).
+
+### Revisions
+
+There seem to be at least three different versions of the BIOS:
+
+| Chip marking | MAME ROM              | SHA-1                                      | Used by                       |
+| :----------- | :-------------------- | :----------------------------------------- | :---------------------------- |
+| `700A01`     | `700a01.22g`          | `e1284add4aaddd5337bd7f4e27614460d52b5b48` | Most games                    |
+| `700A01`     | `700a01,gchgchmp.22g` | `9aab8c637dd2be84d79007e52f108abe92bf29dd` | Gachagachamp                  |
+| `700A01`     |                       |                                            | Unknown (undumped, see below) |
+| `700B01`     | `700b01.22g`          | `a2421d0a494892c0e71003c96995ce8f945064dd` | Dancing Stage EuroMIX 2       |
+
+700A01 is the most common version. The only differences between the two known
+variants of it are minor code improvements. There reportedly is a third variant
+that shipped on systems that came with the H8/3644 microcontroller unpopulated
+(presumably it would not check for it on startup), however no evidence of its
+existence has ever been found. Old versions of MAME also used to reference a
+ROM named `700_a01.22g`, but it seems to be the same as `700a01,gchgchmp.22g`.
+
+700B01, however, is an entirely different beast. It is split up into two
+separate executables, one in charge of performing the self-test and the other
+actually handling the boot sequence. The exact differences, other than the
+UI/font and some bugfixes in the tests, are currently unknown.
+
+### Boot sequence
+
+Both the 700A01 and 700B01 shells are far simpler than their PS1 counterparts.
+Once launched by the kernel, they start by configuring the bus (by writing
+`0x24173f47` to the EXP1 configuration register) and proceed to run a hardware
+self-test. The outcome of all tests is displayed on screen, with the following
+chips being listed:
+
+- `22G`: BIOS ROM (the shell and kernel are verified against a hardcoded
+  checksum)
+- `16H`, `16G`, `14H`, `14G`: main RAM (first row of chips)
+- `12H`, `12G`, `9H`, `9G`: main RAM (second row of chips)
+- `4L`, `4P`: VRAM (framebuffers are temporarily overwritten with pseudorandom
+  noise, the self-test screen is redrawn afterwards)
+- `10Q`: SPU RAM
+- `18E`: H8/3644 microcontroller
+- `CDR`: ATAPI CD drive
+
+**NOTE**: the 700A01 shell does not actually test `4P`! It only tests the first
+megabyte of VRAM and always reports `4P` as working due to a bug, which was
+fixed in 700B01. A side effect of this is that the 700A01 BIOS will run and
+pass all RAM and ROM checks in a regular PS1 emulator (as long as the emulator
+is set up for 4 or 8 MB main RAM). The ROM checksum test fails on emulators
+that patch the kernel on-the-fly to enable TTY output, such as DuckStation.
+
+If any of these checks fails the shell locks up, shows a blinking "HARDWARE
+ERROR... RESET" prompt and stops resetting the watchdog after a few seconds,
+causing the 573 to reboot. Otherwise the shell attempts to load an executable
+from four different sources, in the following order:
+
+- PCMCIA flash card in slot 2 (if inserted and DIP switch 4 is on)
+- PCMCIA flash card in slot 1 (if inserted and DIP switch 4 is on)
+- Internal flash (if DIP switch 4 is on)
+- `PSX.EXE` in the root directory of the CD
+
+Like Sony's shell, the 573 shell's ISO9660 filesystem driver does not support
+any extension, nor does it support non-8.3 file names. It also **only**
+**allocates 2 KB for the path table**, so the number of directories on the disc
+must be kept to a minimum to prevent the shell from crashing.
+
+Unlike a regular PS1, the 573 ignores `SYSTEM.CNF` completely even if present
+on the disc. Homebrew discs can take advantage of this behavior to provide
+separate PS1 and 573 executables on the same disc. All official discs use Mode
+1 sectors, unlike PS1 discs, but the 573 can also read Mode 2 Form 1 sectors
+without issues since the BIOS only requests the 2048-byte data area from the
+ATAPI drive.
+
+If DIP switch 4 is on, the shell expects to find an executable at offset `0x24`
+on either the built-in flash or one of the two flash cards, preceded by a CRC32
+of it at offset `0x20`. The CRC32 is *not* calculated on the whole executable,
+instead it is only calculated on bytes from the executable whose offsets are a
+power of 2 (i.e. on bytes 0, 1, 2, 4, 8 and so on). The CRC variant used is the
+Ethernet/"zlib" one, with polynomial `0x04c11db7`. The check is implemented in
+the shell as follows:
+
+```c
+#define EXE_CRC32 ((volatile uint32_t *) 0x1f000020)
+#define EXE_DATA  ((volatile uint8_t *)  0x1f000024)
+
+const uint32_t crc32_table[256] = { /* ... */ };
+uint32_t crc = 0xffffffff;
+
+for (size_t i = 0; i < exe_size; i <<= 1)
+    crc = (crc >> 8) ^ crc32_table[(crc & 0xff) ^ EXE_DATA[i]];
+
+if ((~crc) == *EXE_CRC32)
+    // continue booting...
+```
+
+DIP switch 4 can be turned off to force the shell to ignore any executables on
+the flash. This is used when upgrading cabinets to a new game to run the
+installer from the new CD, rather than the currently installed game from flash.
+
+### Accidental DVD support
+
+Even though neither the 573 nor its BIOS were designed with support for DVDs in
+mind, it is possible to boot from a DVD (assuming the installed drive is a DVD
+drive in the first place) thanks to the fact that the ATAPI command used by the
+BIOS to read data sectors also works on DVDs. In order for this to work, the
+DVD must be formatted as ISO9660 (not UDF) with no extensions, as if it were a
+CD, and must of course contain a `PSX.EXE` file in the root directory.
+
+This accidental capability was greatly abused by bootleg "superdiscs" (nothing
+to do with the SNES CD attachment!) that bundled multiple games on a single
+DVD and allowed the user to pick a game to install. Each game on these discs
+was patched to load its files from a subdirectory rather than the root of the
+disc, basically "namespacing" the assets. Obviously games that make use of CD
+audio can't be put on a DVD, so superdiscs were limited to games that used the
+digital I/O board for MP3 playback.
+
+Homebrew games willing to sacrifice PS1 compatibility and CD-DA support can be
+distributed on a DVD. In that case the game's disc image shall be an .iso file
+with 2048-byte sectors, rather than the typical .bin and .cue pair for PS1 or
+PS1/573 hybrid games with Mode 2 sectors.
+
+### BIOS "modchips"
+
+It is not uncommon to find "modchipped" 573 units out in the wild. These
+"modchips" (sometimes more properly called "mod boards") were bundled back in
+the day alongside bootleg game discs and are nothing more than a simple PCB
+that plugs in place of the BIOS ROM (which happens to be the only chip that
+comes socketed from the factory) on the motherboard. They were apparently
+required to "skip the anti-piracy checks in the BIOS" and allow the 573 to read
+burned discs.
+
+Of course, since the 573 BIOS does no copy protection checks whatsoever, these
+claims were misleading. The actual purpose of these boards was not to tamper
+with the BIOS, but rather to piggyback on the system bus and provide a few
+rudimentary challenge-response authentication registers as a way for bootleg
+executables to verify that they were running on a modded 573. In other words
+*the "modchips" were actually the bootleggers' implementation of a security*
+*cartridge*, meant to stop people from simply burning copies of bootleg discs
+and force them to buy the discs with their respective "modchips" from whoever
+produced them instead. Oh the irony.
+
+Although the added circuitry will not create any issues with official or
+homebrew games, most of these boards also ship with a modified version of the
+700A01 BIOS altered to load a differently named executable from the disc rather
+than `PSX.EXE`. The following names have been found so far (more might exist):
+
+- `QSY.DXD`
+- `SSW.BXF`
+- `TSV.AXG`
+
+Homebrew games should thus place multiple copies of the boot executable on the
+disc to improve compatibility with "modchipped" systems. An interesting side
+note is that, for any of these names, summing the ASCII codes of each character
+will always yield the same result. Presumably bootleggers were unable to find
+the code in charge of BIOS ROM checksum validation and and found it easier to
+just turn the string into random nonsense whose checksum collided with the
+original one...
 
 ## Game-specific information
 
@@ -1008,11 +1182,12 @@ instead expose some of the built-in ports through a handful of connectors:
 
 - **Power**: a hefty 2x4 Molex connector for powering the board, wired to the
   motherboard's power connector. 
-- **Option 1**: DE9 connector providing 8 analog inputs, wired to the
+- **Option 1**: DE9 connector providing 4 analog inputs, wired to the
   `ANALOG` connector on the motherboard. These inputs seem to go directly
   into the 573's ADC chip *with no protection whatsoever*.
-- **Option 2**: DE9 connector providing 8 digital (3.3V?) inputs, wired to the
-  `EXT-IN` connector on the motherboard.
+- **Option 2**: DE9 connector providing 6 button (digital) inputs, wired to the
+  `EXT-IN` connector on the motherboard. 4 of these inputs are also broken out
+  to the JAMMA connector (see the pinouts section for details).
 - **Reel connector** (back side): 3x3 Molex connector wired to the fishing
   controls I/O board. The cutout seems to actually be only present on systems
   that came with Fisherman's Bait.
@@ -1176,8 +1351,8 @@ guidelines:
 - **Implement an operator/settings menu.** Among other things, the menu should
   allow the user to adjust the SPU's master volume, enable or disable the 573's
   built-in amplifier (which has no physical volume controls), test cabinet
-  lights and eject the CD (as some cases block access to the drive's eject
-  button for whatever reason).
+  lights and eject the CD (as some cases hide the drive's eject button behind a
+  small hole or make it difficult to access otherwise).
 
 ### Known working replacement drives
 
@@ -1218,6 +1393,61 @@ use CD-DA (i.e. pretty much all games that don't use the digital I/O board).
 | Toshiba      | XM-6102B     | **Yes** | No      | Has issues with homebrew     |
 
 ## Pinouts
+
+### Analog input port (`ANALOG`, `CN3`)
+
+The inputs are wired directly to the 573's built-in ADC, so they can only
+accept voltages in 0-5V range. This connector is mostly useful for wiring up
+potentiometers and similar resistive analog controls.
+
+| Pin | Name  | Dir |
+| --: | :---- | :-- |
+|   1 | `5V`  |     |
+|   2 | `5V`  |     |
+|   3 | `5V`  |     |
+|   4 | `5V`  |     |
+|   5 | `CH0` | R   |
+|   6 | `GND` |     |
+|   7 | `CH1` | R   |
+|   8 | `CH2` | R   |
+|   9 | `CH3` | R   |
+|  10 | `GND` |     |
+
+### Digital output port (`EXT-OUT`, `CN4`)
+
+| Pin | Name   | Dir |
+| --: | :----- | :-- |
+|   1 | `5V`   |     |
+|   2 | `5V`   |     |
+|   3 | `OUT7` | W   |
+|   4 | `OUT6` | W   |
+|   5 | `OUT5` | W   |
+|   6 | `OUT4` | W   |
+|   7 | `OUT3` | W   |
+|   8 | `OUT2` | W   |
+|   9 | `OUT1` | W   |
+|  10 | `OUT0` | W   |
+|  11 | `GND`  |     |
+|  12 | `GND`  |     |
+
+### Digital input port (`EXT-IN`, `CN5`)
+
+Unlike `EXT-OUT`, this port is not a separate input port. It piggybacks on the
+JAMMA button inputs instead, exposing the button 4 and 5 pins for both players
+as well as a sixth button input which is not available on the JAMMA connector.
+
+| Pin | Name    | Dir | JAMMA |
+| --: | :------ | :-- | ----: |
+|   1 | `5V`    |     |       |
+|   2 | `5V`    |     |       |
+|   3 | `P1_B4` | R   |    25 |
+|   4 | `P1_B5` | R   |    26 |
+|   5 | `P1_B6` | R   |     - |
+|   6 | `GND`   |     |       |
+|   7 | `P2_B4` | R   |     c |
+|   8 | `P2_B5` | R   |     d |
+|   9 | `P2_B6` | R   |     - |
+|  10 | `GND`   |     |       |
 
 ### Main I/O board connector (`CN10`)
 
@@ -1277,16 +1507,16 @@ connector.
 ### Serial port (`CN24`, unpopulated)
 
 Only present on later revisions of the main board. It exposes the exact same
-serial port signals as pins 5, 6, 43 and 44 on the security cartridge slot.
+serial port signals as the security cartridge slot.
 
-| Pin | Name   | Dir |
-| --: | :----- | :-- |
-|   1 | `RX`   | R   |
-|   2 | `TX`   | W   |
-|   3 | `GND`  |     |
-|   4 | `GND`  |     |
-|   5 | `/RTS` | W   |
-|   6 | `/CTS` | R   |
+| Pin | Name   | Dir | Cart |
+| --: | :----- | :-- | ---: |
+|   1 | `TX`   | W   |    5 |
+|   2 | `RX`   | R   |    6 |
+|   3 | `GND`  |     |      |
+|   4 | `GND`  |     |      |
+|   5 | `/RTS` | W   |   43 |
+|   6 | `/CTS` | R   |   44 |
 
 ### I2S digital audio output (`CN19`, unpopulated)
 
