@@ -26,7 +26,7 @@ enabled, in that case it does update MADR, same does probably also happen when
 getting interrupted by a higher priority DMA channel).<br/>
 In SyncMode=1 and SyncMode=2, the hardware does update MADR (it will contain
 the start address of the currently transferred block; at transfer end, it'll
-hold the end-address in SyncMode=1, or the 00FFFFFFh end-code in SyncMode=2)<br/>
+hold the end-address in SyncMode=1, or the end marker in SyncMode=2)<br/>
 Note: Address bit0-1 are writeable, but any updated current/end addresses are
 word-aligned with bit0-1 forced to zero.<br/>
 
@@ -153,6 +153,19 @@ Not yet tested during transfer, might be remaining length and address?<br/>
 XXX: DMA2 values 01000201h (VramWrite), 01000401h (List) aren't 100% confirmed
 to be used by ALL existing games. All other values are always used as listed
 above.<br/>
+
+#### Linked List DMA
+GPU data is often transferred from RAM to GP0 using DMA2 in linked list mode. In this mode,
+the DMA controller transfers words in "nodes", with the first node starting in the address indicated by D2_MADR.<br/>
+Each node is composed of a header word (the very first word in the node) and some extra words to be DMA'd before moving on to the next node. The node header is formatted like this:<br/>
+
+```
+  0-23  Address of the next node (or end marker)
+  24-31 Number of extra words to transfer for this node
+```
+
+If the address of the next node has bit 23 set, ie if `(address & 0x800000) != 0` then the DMA controller will not move on to the next node and the DMA transfer ends. In this case that address is commonly referred to as the "end marker" for the DMA.<br/>
+Commercial and homebrew games typically use 0xffffff as the end marker, however other values such as 0x800002, 0x934567, and so on will also do the trick assuming bit 23 is set.
 
 #### DMA Transfer Rates
 ```
