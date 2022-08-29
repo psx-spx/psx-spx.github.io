@@ -222,6 +222,14 @@
   1F802066h Emu-Expansion Halt (R)
   1F802067h Emu-Expansion Turbo Mode Flags (R/W)
 ```
+#### Expansion Region 2 - PCSX-Redux Emulation Expansion
+```
+  1F802080h 4 Redux-Expansion ID "PCSX" (R)
+  1F802080h 1 Redux-Expansion Console putchar (W)
+  1F802081h 1 Redux-Expansion Debug break (W)
+  1F802082h 1 Redux-Expansion Exit code (W)
+  1F802084h 4 Redux-Expansion Notification message pointer (W)
+```
 #### Expansion Region 3 (default 1 byte, max 2 MBytes)
 ```
   1FA00000h - Not used by BIOS or any PSX games

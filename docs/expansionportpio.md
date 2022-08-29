@@ -456,8 +456,6 @@ The first write to 1F802070h is 32bit, all further writes seem to be 8bit.<br/>
 #### 1FA00000h - POST3 - External 7-segment Display (W) - PS2
 Similar to POST, but PS2 BIOS uses this address.<br/>
 
-
-
 ##   EXP2 Nocash Emulation Expansion
 #### 1F802060h Emu-Expansion ID1 "E" (R)
 #### 1F802061h Emu-Expansion ID2 "X" (R)
@@ -485,3 +483,26 @@ acknowledging the previous interrupt.<br/>
   2   Controller Turbo  (0=Normal, 1=Turbo)
   3-7 Reserved (must be zero)
 ```
+
+##   EXP2 PCSX-Redux Emulation Expansion
+PCSX-Redux contains some specific hardware registers for the purpose of testing and debugging.
+They are located past the 1F802080h address, which means that accessing them on the real
+hardware will cause an exception, unless the [1F80101Ch register](https://psx-spx.consoledev.net/memorycontrol/#1f80101ch-expansion-2-delaysize-usually-00070777h-128-bytes-8bit-bus) has been set to
+be at least twice its normal size.
+
+#### 1F802080h 4 Redux-Expansion ID "PCSX" (R)
+Identification string. Use this to query that your binary is running under PCSX-Redux.
+
+#### 1F802080h 1 Redux-Expansion Console putchar (W)
+Adds this character to the console output. This is an easier way to write to the console than using the BIOS.
+
+#### 1F802081h 1 Redux-Expansion Debug break (W)
+Causes a debug breakpoint to be triggered. PCSX-Redux will pause and the user will be alerted of a software breakpoint.
+
+#### 1F802082h 1 Redux-Expansion Exit code (W)
+Sets the exit code for the program. When in test mode, PCSX-Redux will exit with this code.
+
+#### 1F802084h 4 Redux-Expansion Notification message pointer (W)
+Displays a pop-up message to the user with the specified string.
+
+See [PCSX-Redux's documentation](https://pcsx-redux.consoledev.net/mips_api/) for more details and examples.
