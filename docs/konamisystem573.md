@@ -20,6 +20,9 @@ and other early Bemani (Konami's rhythm game division) games.
 This document is currently work-in-progress. Here is a list of things that are
 still missing:
 
+- The BIOS and games are notoriously picky about ATAPI drives. Konami's code
+  shall be disassembled and tested in order to find out where and why drive
+  initialization fails with most drives.
 - JVS communications and the microcontroller that handles them have to be
   documented. The microcontroller's firmware has already been dumped.
 - I/O boards, *especially* the digital I/O board, need to be properly reverse
@@ -128,147 +131,147 @@ The Konami 056879 ASIC, used in most of their late 90s arcade boards, is
 nothing more than a single 16-bit output port and 6 (possibly more?) 16-bit
 input ports in a single package.
 
-- `0x1f400000` (ASIC register 0): **ADC SPI, coin counters, audio**
+#### `0x1f400000` (ASIC register 0): **ADC SPI, coin counters, audio**
 
-  | Bits | RW | Description                                 |
-  | ---: | :- | :------------------------------------------ |
-  |    0 | W  | SPI MOSI to ADC                             |
-  |    1 | W  | SPI CS to ADC                               |
-  |    2 | W  | SPI SCK to ADC                              |
-  |    3 | W  | Coin counter 1 (1 = energize counter coil)  |
-  |    4 | W  | Coin counter 2 (1 = energize counter coil)  |
-  |    5 | W  | Built-in audio amplifier enable (0 = muted) |
-  |    6 | W  | External audio input enable? (0 = muted)    |
-  |    7 | W  | SPU DAC output enable (0 = muted)           |
-  |    8 | W  | Status bus clock to microcontroller         |
-  | 9-15 |    | Unused?                                     |
+| Bits | RW | Description                                 |
+| ---: | :- | :------------------------------------------ |
+|    0 | W  | SPI MOSI to ADC                             |
+|    1 | W  | SPI CS to ADC                               |
+|    2 | W  | SPI SCK to ADC                              |
+|    3 | W  | Coin counter 1 (1 = energize counter coil)  |
+|    4 | W  | Coin counter 2 (1 = energize counter coil)  |
+|    5 | W  | Built-in audio amplifier enable (0 = muted) |
+|    6 | W  | External audio input enable? (0 = muted)    |
+|    7 | W  | SPU DAC output enable (0 = muted)           |
+|    8 | W  | Status bus clock to microcontroller         |
+| 9-15 |    | Unused?                                     |
 
-  The ADC chip is an ADC0834 from TI, which uses a proprietary SPI(-like)
-  protocol. Its four inputs are wired to the `ANALOG` connector on the 573
-  motherboard. Refer to the ADC083x datasheet for details on how to bitbang the
-  protocol.
+The ADC chip is an ADC0834 from TI, which uses a proprietary SPI(-like)
+protocol. Its four inputs are wired to the `ANALOG` connector on the 573
+motherboard. Refer to the ADC083x datasheet for details on how to bitbang the
+protocol.
 
-  Mechanical coin counters are incremented by games whenever a coin is inserted
-  by setting bit 3 or 4 for a fraction of a second and then clearing them. Bit
-  5 controls whether the onboard audio amp is enabled, but does not affect the
-  RCA line level outputs (which are always enabled). Setting bit 5 has no
-  effect immediately as the amp takes about a second to turn on.
+Mechanical coin counters are incremented by games whenever a coin is inserted
+by setting bit 3 or 4 for a fraction of a second and then clearing them. Bit 5
+controls whether the onboard audio amp is enabled, but does not affect the RCA
+line level outputs (which are always enabled). Setting bit 5 has no effect
+immediately as the amp takes about a second to turn on.
 
-  The exact purpose of bit 6 is unclear. Games use it to mute audio from the CD
-  drive or digital I/O board; in particular, this bit is cleared during attract
-  mode if attract mode sounds are disabled. However, testing on real hardware
-  seems to suggest it is some sort of downmixing or attenuation control rather
-  than a proper mute.
+The exact purpose of bit 6 is unclear. Games use it to mute audio from the CD
+drive or digital I/O board; in particular, this bit is cleared during attract
+mode if attract mode sounds are disabled. However, testing on real hardware
+seems to suggest it is some sort of downmixing or attenuation control rather
+than a proper mute.
 
-  Unknown what reading from this port does.
+Unknown what reading from this port does.
 
-- `0x1f400004` (ASIC register 2): **Misc. inputs**
+#### `0x1f400004` (ASIC register 2): **Misc. inputs**
 
-  | Bits  | RW | Description                        |
-  | ----: | :- | :--------------------------------- |
-  |   0-3 | R  | DIP switch status                  |
-  |   4-7 | R  | Status bus from microcontroller    |
-  |  8-15 | RW | From `I0-I7` on security cartridge |
+| Bits  | RW | Description                        |
+| ----: | :- | :--------------------------------- |
+|   0-3 | R  | DIP switch status                  |
+|   4-7 | R  | Status bus from microcontroller    |
+|  8-15 | RW | From `I0-I7` on security cartridge |
 
-  The highest 8 bits read from this register are the state of the security
-  cartridge's pins `I0-I7`. See the security cartridge section for an
-  explanation of what each bit is wired to.
+The highest 8 bits read from this register are the state of the security
+cartridge's pins `I0-I7`. See the security cartridge section for an explanation
+of what each bit is wired to.
 
-  Bit 3 (DIP switch 4) is used by the BIOS to determine whether to boot from
-  the internal flash or CD drive. If set, the BIOS will attempt to search for
-  a valid executable on the flash before initializing the drive.
+Bit 3 (DIP switch 4) is used by the BIOS to determine whether to boot from the
+internal flash or CD drive. If set, the BIOS will attempt to search for a valid
+executable on the flash before initializing the drive.
 
-- `0x1f400006` (ASIC register 3): **Misc. inputs**
+#### `0x1f400006` (ASIC register 3): **Misc. inputs**
 
-  | Bits  | RW | Description                               |
-  | ----: | :- | :---------------------------------------- |
-  |     0 | R  | SPI MISO from ADC                         |
-  |     1 | R  | SAR status from ADC                       |
-  |     2 | R  | From `SDA` on security cartridge          |
-  |     3 | R  | JVS sense input                           |
-  |     4 | R  | JVS receive buffer status (1 = not empty) |
-  |     5 | R  | Unknown (JVS-related)                     |
-  |     6 | R  | `ISIG` status on security cartridge       |
-  |     7 | R  | `DSIG` status on security cartridge       |
-  |     8 | R  | Coin switch input 1 (inverted)            |
-  |     9 | R  | Coin switch input 2 (inverted)            |
-  |    10 | R  | PCMCIA card 1 insertion (0 = present)     |
-  |    11 | R  | PCMCIA card 2 insertion (0 = present)     |
-  |    12 | R  | Test button (built-in and JAMMA pin 15)   |
-  | 13-15 |    | Unused?                                   |
+| Bits  | RW | Description                               |
+| ----: | :- | :---------------------------------------- |
+|     0 | R  | SPI MISO from ADC                         |
+|     1 | R  | SAR status from ADC                       |
+|     2 | R  | From `SDA` on security cartridge          |
+|     3 | R  | JVS sense input                           |
+|     4 | R  | JVS receive buffer status (1 = not empty) |
+|     5 | R  | Unknown (JVS-related)                     |
+|     6 | R  | `ISIG` status on security cartridge       |
+|     7 | R  | `DSIG` status on security cartridge       |
+|     8 | R  | Coin switch input 1 (inverted)            |
+|     9 | R  | Coin switch input 2 (inverted)            |
+|    10 | R  | PCMCIA card 1 insertion (0 = present)     |
+|    11 | R  | PCMCIA card 2 insertion (0 = present)     |
+|    12 | R  | Test button (built-in and JAMMA pin 15)   |
+| 13-15 |    | Unused?                                   |
 
-  See the security cartridge section for more details about `ISIG` and  `DSIG`.
-  For bit 2 to be valid, `SDA` should be set as an input by clearing the
-  respective bit in the bank switch register.
+See the security cartridge section for more details about `ISIG` and  `DSIG`.
+For bit 2 to be valid, `SDA` should be set as an input by clearing the
+respective bit in the bank switch register.
 
-- `0x1f400008` (ASIC register 6): **JAMMA controls**
+#### `0x1f400008` (ASIC register 6): **JAMMA controls**
 
-  | Bits | RW | Description                            |
-  | ---: | :- | :------------------------------------- |
-  |    0 | R  | Player 2 joystick left (JAMMA pin X)   |
-  |    1 | R  | Player 2 joystick right (JAMMA pin Y)  |
-  |    2 | R  | Player 2 joystick up (JAMMA pin V)     |
-  |    3 | R  | Player 2 joystick down (JAMMA pin W)   |
-  |    4 | R  | Player 2 button 1 (JAMMA pin Z)        |
-  |    5 | R  | Player 2 button 2 (JAMMA pin a)        |
-  |    6 | R  | Player 2 button 3 (JAMMA pin b)        |
-  |    7 | R  | Player 2 start button (JAMMA pin U)    |
-  |    8 | R  | Player 1 joystick left (JAMMA pin 20)  |
-  |    9 | R  | Player 1 joystick right (JAMMA pin 21) |
-  |   10 | R  | Player 1 joystick up (JAMMA pin 18)    |
-  |   11 | R  | Player 1 joystick down (JAMMA pin 19)  |
-  |   12 | R  | Player 1 button 1 (JAMMA pin 22)       |
-  |   13 | R  | Player 1 button 2 (JAMMA pin 23)       |
-  |   14 | R  | Player 1 button 3 (JAMMA pin 24)       |
-  |   15 | R  | Player 1 start button (JAMMA pin 17)   |
+| Bits | RW | Description                            |
+| ---: | :- | :------------------------------------- |
+|    0 | R  | Player 2 joystick left (JAMMA pin X)   |
+|    1 | R  | Player 2 joystick right (JAMMA pin Y)  |
+|    2 | R  | Player 2 joystick up (JAMMA pin V)     |
+|    3 | R  | Player 2 joystick down (JAMMA pin W)   |
+|    4 | R  | Player 2 button 1 (JAMMA pin Z)        |
+|    5 | R  | Player 2 button 2 (JAMMA pin a)        |
+|    6 | R  | Player 2 button 3 (JAMMA pin b)        |
+|    7 | R  | Player 2 start button (JAMMA pin U)    |
+|    8 | R  | Player 1 joystick left (JAMMA pin 20)  |
+|    9 | R  | Player 1 joystick right (JAMMA pin 21) |
+|   10 | R  | Player 1 joystick up (JAMMA pin 18)    |
+|   11 | R  | Player 1 joystick down (JAMMA pin 19)  |
+|   12 | R  | Player 1 button 1 (JAMMA pin 22)       |
+|   13 | R  | Player 1 button 2 (JAMMA pin 23)       |
+|   14 | R  | Player 1 button 3 (JAMMA pin 24)       |
+|   15 | R  | Player 1 start button (JAMMA pin 17)   |
 
-  **NOTE**: since buttons are active low (wired between JAMMA pins and ground),
-  all bits are 0 when a button is pressed and 1 when it isn't.
+**NOTE**: since buttons are active low (wired between JAMMA pins and ground),
+all bits are 0 when a button is pressed and 1 when it isn't.
 
-  The BIOS and games often read from this register and discard the result as a
-  way of (inefficiently) keeping the CPU's write queue flushed.
+The BIOS and games often read from this register and discard the result as a
+way of (inefficiently) keeping the CPU's write queue flushed.
 
-- `0x1f40000a` (ASIC register 5): **JVS receive buffer**
+#### `0x1f40000a` (ASIC register 5): **JVS receive buffer**
 
-  | Bits | RW | Description                          |
-  | ---: | :- | :----------------------------------- |
-  | 0-15 | R  | JVS data output from microcontroller |
+| Bits | RW | Description                          |
+| ---: | :- | :----------------------------------- |
+| 0-15 | R  | JVS data output from microcontroller |
 
-- `0x1f40000c` (ASIC register 6): **JAMMA controls** / **External inputs**
+#### `0x1f40000c` (ASIC register 6): **JAMMA controls** / **External inputs**
 
-  | Bits  | RW | Description                      |
-  | ----: | :- | :------------------------------- |
-  |   0-7 |    | Unused?                          |
-  |     8 | R  | Player 1 button 4 (JAMMA pin 25) |
-  |     9 | R  | Player 1 button 5 (JAMMA pin 26) |
-  |    10 | R  | Service button (JAMMA pin R)     |
-  |    11 | R  | Player 1 button 6                |
-  | 12-15 |    | Unused?                          |
+| Bits  | RW | Description                      |
+| ----: | :- | :------------------------------- |
+|   0-7 |    | Unused?                          |
+|     8 | R  | Player 1 button 4 (JAMMA pin 25) |
+|     9 | R  | Player 1 button 5 (JAMMA pin 26) |
+|    10 | R  | Service button (JAMMA pin R)     |
+|    11 | R  | Player 1 button 6                |
+| 12-15 |    | Unused?                          |
 
-  **NOTE**: since buttons are active low (wired between JAMMA pins and ground),
-  all bits are 0 when a button is pressed and 1 when it isn't.
+**NOTE**: since buttons are active low (wired between JAMMA pins and ground),
+all bits are 0 when a button is pressed and 1 when it isn't.
 
-  The signals for buttons 4 and 5 are wired in parallel to both JAMMA and the
-  `EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and
-  is usually unused.
+The signals for buttons 4 and 5 are wired in parallel to both JAMMA and the
+`EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and
+is usually unused.
 
-- `0x1f40000e` (ASIC register 7): **JAMMA controls** / **External inputs**
+#### `0x1f40000e` (ASIC register 7): **JAMMA controls** / **External inputs**
 
-  | Bits  | RW | Description                      |
-  | ----: | :- | :------------------------------- |
-  |   0-7 |    | Unused?                          |
-  |     8 | R  | Player 2 button 4 (JAMMA pin c)  |
-  |     9 | R  | Player 2 button 5 (JAMMA pin d)  |
-  |    10 |    | Unused?                          |
-  |    11 | R  | Player 2 button 6                |
-  | 12-15 |    | Unused?                          |
+| Bits  | RW | Description                      |
+| ----: | :- | :------------------------------- |
+|   0-7 |    | Unused?                          |
+|     8 | R  | Player 2 button 4 (JAMMA pin c)  |
+|     9 | R  | Player 2 button 5 (JAMMA pin d)  |
+|    10 |    | Unused?                          |
+|    11 | R  | Player 2 button 6                |
+| 12-15 |    | Unused?                          |
 
-  **NOTE**: since buttons are active low (wired between JAMMA pins and ground),
-  all bits are 0 when a button is pressed and 1 when it isn't.
+**NOTE**: since buttons are active low (wired between JAMMA pins and ground),
+all bits are 0 when a button is pressed and 1 when it isn't.
 
-  The signals for buttons 4 and 5 are wired in parallel to both JAMMA and the
-  `EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and
-  is usually unused.
+The signals for buttons 4 and 5 are wired in parallel to both JAMMA and the
+`EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and
+is usually unused.
 
 ### IDE registers
 
@@ -294,25 +297,25 @@ registers differently depending on whether they are accessing the master ATAPI
 drive or the slave ATA drive. Refer to the ATA and ATAPI specifications for
 more details.
 
-- `0x1f480000` (IDE address 0, CS0): **Data transfer**
+#### `0x1f480000` (IDE address 0, CS0): **Data transfer**
 
-  Data transfers can also be performed through DMA5, see below for details.
+Data transfers can also be performed through DMA5, see below for details.
 
-- `0x1f480002` (IDE address 1, CS0): **Error** / **Features**
+#### `0x1f480002` (IDE address 1, CS0): **Error** / **Features**
 
-- `0x1f480004` (IDE address 2, CS0): **Sector count**
+#### `0x1f480004` (IDE address 2, CS0): **Sector count**
 
-- `0x1f480006` (IDE address 3, CS0): **Sector number**
+#### `0x1f480006` (IDE address 3, CS0): **Sector number**
 
-- `0x1f480008` (IDE address 4, CS0): **Cylinder number low**
+#### `0x1f480008` (IDE address 4, CS0): **Cylinder number low**
 
-- `0x1f48000a` (IDE address 5, CS0): **Cylinder number high**
+#### `0x1f48000a` (IDE address 5, CS0): **Cylinder number high**
 
-- `0x1f48000c` (IDE address 6, CS0): **Head number** / **Drive select**
+#### `0x1f48000c` (IDE address 6, CS0): **Head number** / **Drive select**
 
-- `0x1f48000e` (IDE address 7, CS0): **Status** / **Command**
+#### `0x1f48000e` (IDE address 7, CS0): **Status** / **Command**
 
-- `0x1f4c000c` (IDE address 6, CS1): **Alternate status**
+#### `0x1f4c000c` (IDE address 6, CS1): **Alternate status**
 
 ### IDE DMA and quirks
 
@@ -349,193 +352,193 @@ and bit 7 must be set after writing new values to copy them over.
 **NOTE**: in the "RWC" column, "C" means the value is updated by the clock
 logic when bit 6 in the control register is set.
 
-- `0x1f623ff0` (M48T58 address `0x1ff8`): **Calibration** / **Control**
+#### `0x1f623ff0` (M48T58 addr. `0x1ff8`): **Calibration** / **Control**
 
-  | Bits | RWC | Description                                             |
-  | ---: | :-- | :------------------------------------------------------ |
-  |  0-4 | RW  | Calibration offset (0-31), adjusts oscillator frequency |
-  |    5 | RW  | Sign bit for calibration offset                         |
-  |    6 | W   | Read trigger, write 1 to update registers from clock    |
-  |    7 | W   | Write trigger, write 1 to set clock to match registers  |
-  | 8-15 |     | _Unused_                                                |
+| Bits | RWC | Description                                             |
+| ---: | :-- | :------------------------------------------------------ |
+|  0-4 | RW  | Calibration offset (0-31), adjusts oscillator frequency |
+|    5 | RW  | Sign bit for calibration offset                         |
+|    6 | W   | Read trigger, write 1 to update registers from clock    |
+|    7 | W   | Write trigger, write 1 to set clock to match registers  |
+| 8-15 |     | _Unused_                                                |
 
-- `0x1f623ff2` (M48T58 address `0x1ff9`): **Seconds** / **Stop**
+#### `0x1f623ff2` (M48T58 addr. `0x1ff9`): **Seconds** / **Stop**
 
-  | Bits | RWC | Description                                      |
-  | ---: | :-- | :----------------------------------------------- |
-  |  0-3 | RWC | Seconds (0-9)                                    |
-  |  4-6 | RWC | Tens of seconds (0-5)                            |
-  |    7 | RW  | Stop flag, write 1 to pause clock or 0 to resume |
-  | 8-15 |     | _Unused_                                         |
+| Bits | RWC | Description                                      |
+| ---: | :-- | :----------------------------------------------- |
+|  0-3 | RWC | Seconds (0-9)                                    |
+|  4-6 | RWC | Tens of seconds (0-5)                            |
+|    7 | RW  | Stop flag, write 1 to pause clock or 0 to resume |
+| 8-15 |     | _Unused_                                         |
 
-- `0x1f623ff4` (M48T58 address `0x1ffa`): **Minutes**
+#### `0x1f623ff4` (M48T58 addr. `0x1ffa`): **Minutes**
 
-  | Bits | RWC | Description           |
-  | ---: | :-- | :-------------------- |
-  |  0-3 | RWC | Minutes (0-9)         |
-  |  4-6 | RWC | Tens of minutes (0-5) |
-  | 7-15 |     | _Unused_              |
+| Bits | RWC | Description           |
+| ---: | :-- | :-------------------- |
+|  0-3 | RWC | Minutes (0-9)         |
+|  4-6 | RWC | Tens of minutes (0-5) |
+| 7-15 |     | _Unused_              |
 
-- `0x1f623ff6` (M48T58 address `0x1ffb`): **Hours**
+#### `0x1f623ff6` (M48T58 addr. `0x1ffb`): **Hours**
 
-  | Bits | RWC | Description                     |
-  | ---: | :-- | :------------------------------ |
-  |  0-3 | RWC | Hours (0-9, or 0-3 if tens = 2) |
-  |  4-5 | RWC | Tens of hours (0-2)             |
-  | 6-15 |     | _Unused_                        |
+| Bits | RWC | Description                     |
+| ---: | :-- | :------------------------------ |
+|  0-3 | RWC | Hours (0-9, or 0-3 if tens = 2) |
+|  4-5 | RWC | Tens of hours (0-2)             |
+| 6-15 |     | _Unused_                        |
 
-  Hours are always returned in 24-hour format. Unlike other RTC chips there is
-  no way to switch to 12-hour format.
+Hours are always returned in 24-hour format. Unlike other RTC chips there is no
+way to switch to 12-hour format.
 
-- `0x1f623ff8` (M48T58 address `0x1ffc`): **Day of week** / **Century**
+#### `0x1f623ff8` (M48T58 addr. `0x1ffc`): **Day of week** / **Century**
 
-  | Bits | RWC | Description                                      |
-  | ---: | :-- | :----------------------------------------------- |
-  |  0-2 | RWC | Day of week (1-7)                                |
-  |    3 |     | _Unused_                                         |
-  |    4 | RWC | Century flag                                     |
-  |    5 | RW  | Century flag toggling enable, write 0 to disable |
-  |    6 | RW  | Enable 512 Hz clock signal output on pin 1       |
-  | 7-15 |     | _Unused_                                         |
+| Bits | RWC | Description                                      |
+| ---: | :-- | :----------------------------------------------- |
+|  0-2 | RWC | Day of week (1-7)                                |
+|    3 |     | _Unused_                                         |
+|    4 | RWC | Century flag                                     |
+|    5 | RW  | Century flag toggling enable, write 0 to disable |
+|    6 | RW  | Enable 512 Hz clock signal output on pin 1       |
+| 7-15 |     | _Unused_                                         |
 
-  The day of week register is an independent counter that is incremented at
-  midnight. There is no logic for calculating the day of week, it is the user's
-  responsibility to calculate it when changing the time. It's unclear whether
-  Konami games interpret 1 as Monday or Sunday.
+The day of week register is an independent counter that is incremented at
+midnight. There is no logic for calculating the day of week, it is the user's
+responsibility to calculate it when changing the time. It's unclear whether
+Konami games interpret 1 as Monday or Sunday.
 
-  Bit 4 is a single-bit "counter" that gets toggled on each turn of the century
-  (not something that happens that often). It can be frozen by clearing bit 5.
-  Setting bit 6 will route the internal oscillator's output to M48T58 pin 1,
-  which does not seem to be connected to anything on the 573.
+Bit 4 is a single-bit "counter" that gets toggled on each turn of the century
+(not something that happens that often). It can be frozen by clearing bit 5.
+Setting bit 6 will route the internal oscillator's output to M48T58 pin 1,
+which does not seem to be connected to anything on the 573.
 
-- `0x1f623ffa` (M48T58 address `0x1ffd`): **Day of month** / **Battery state**
+#### `0x1f623ffa` (M48T58 addr. `0x1ffd`): **Day of month** / **Battery state**
 
-  | Bits | RWC | Description                                          |
-  | ---: | :-- | :--------------------------------------------------- |
-  |  0-3 | RWC | Day of month (range depends on tens and month)       |
-  |  4-5 | RWC | Tens of day of month (range depends on month)        |
-  |    6 | R   | Low battery flag (1 = battery voltage is below 2.5V) |
-  |    7 | RW  | Battery monitoring enable (1 = enabled)              |
-  | 8-15 |     | _Unused_                                             |
+| Bits | RWC | Description                                          |
+| ---: | :-- | :--------------------------------------------------- |
+|  0-3 | RWC | Day of month (range depends on tens and month)       |
+|  4-5 | RWC | Tens of day of month (range depends on month)        |
+|    6 | R   | Low battery flag (1 = battery voltage is below 2.5V) |
+|    7 | RW  | Battery monitoring enable (1 = enabled)              |
+| 8-15 |     | _Unused_                                             |
 
-- `0x1f623ffc` (M48T58 address `0x1ffe`): **Month**
+#### `0x1f623ffc` (M48T58 addr. `0x1ffe`): **Month**
 
-  | Bits | RWC | Description                     |
-  | ---: | :-- | :------------------------------ |
-  |  0-3 | RWC | Month (1-9, or 0-2 if tens = 1) |
-  |    4 | RWC | Tens of month (0-1)             |
-  | 5-15 |     | _Unused_                        |
+| Bits | RWC | Description                     |
+| ---: | :-- | :------------------------------ |
+|  0-3 | RWC | Month (1-9, or 0-2 if tens = 1) |
+|    4 | RWC | Tens of month (0-1)             |
+| 5-15 |     | _Unused_                        |
 
-- `0x1f623ffe` (M48T58 address `0x1fff`): **Year**
+#### `0x1f623ffe` (M48T58 addr. `0x1fff`): **Year**
 
-  | Bits | RWC | Description        |
-  | ---: | :-- | :----------------- |
-  |  0-3 | RWC | Year (0-9)         |
-  |  4-7 | RWC | Tens of year (0-9) |
-  | 8-15 |     | _Unused_           |
+| Bits | RWC | Description        |
+| ---: | :-- | :----------------- |
+|  0-3 | RWC | Year (0-9)         |
+|  4-7 | RWC | Tens of year (0-9) |
+| 8-15 |     | _Unused_           |
 
-  The year counter covers a full century, going from 00 to 99. On each overflow
-  the century flag in the day of week register is toggled.
+The year counter covers a full century, going from 00 to 99. On each overflow
+the century flag in the day of week register is toggled.
 
 ### Other registers
 
 These registers are implemented almost entirely using 74-series logic and the
 XC9536 CPLD on the main board.
 
-- `0x1f500000`: **Bank switch** / **Security cartridge**
+#### `0x1f500000`: **Bank switch** / **Security cartridge**
 
-  | Bits | RW | Description                                              |
-  | ---: | :- | :------------------------------------------------------- |
-  |  0-5 | W  | Bank number (0-47, see below)                            |
-  |    6 | W  | `SDA` direction on security cartridge (0 = input/high-z) |
-  |    7 |    | Unknown (goes into CPLD)                                 |
-  | 8-15 |    | _Unused_                                                 |
+| Bits | RW | Description                                              |
+| ---: | :- | :------------------------------------------------------- |
+|  0-5 | W  | Bank number (0-47, see below)                            |
+|    6 | W  | `SDA` direction on security cartridge (0 = input/high-z) |
+|    7 |    | Unknown (goes into CPLD)                                 |
+| 8-15 |    | _Unused_                                                 |
 
-  Bit 6 controls whether `SDA` on the security cartridge is an input or an
-  output. If set, `SDA` will output the same logic level as `D0`, otherwise the
-  pin will be floating. Bits 0-5 are used to select what shall be mapped to the
-  first 4 MB of the expansion region at `0x1f000000`, according to the
-  following table:
+Bit 6 controls whether `SDA` on the security cartridge is an input or an
+output. If set, `SDA` will output the same logic level as `D0`, otherwise the
+pin will be floating. Bits 0-5 are used to select what shall be mapped to the
+first 4 MB of the expansion region at `0x1f000000`, according to the following
+table:
 
-  | Bank  | Mapped to                             |
-  | ----: | :------------------------------------ |
-  |     0 | Internal flash 1 (chips `31M`, `27M`) |
-  |     1 | Internal flash 2 (chips `31L`, `27L`) |
-  |     2 | Internal flash 3 (chips `31J`, `27J`) |
-  |     3 | Internal flash 4 (chips `31H`, `27H`) |
-  |  4-15 | _Unused_                              |
-  | 16-31 | PCMCIA card slot 1                    |
-  | 32-47 | PCMCIA card slot 2                    |
-  | 48-63 | _Unused_                              |
+| Bank  | Mapped to                             |
+| ----: | :------------------------------------ |
+|     0 | Internal flash 1 (chips `31M`, `27M`) |
+|     1 | Internal flash 2 (chips `31L`, `27L`) |
+|     2 | Internal flash 3 (chips `31J`, `27J`) |
+|     3 | Internal flash 4 (chips `31H`, `27H`) |
+|  4-15 | _Unused_                              |
+| 16-31 | PCMCIA card slot 1                    |
+| 32-47 | PCMCIA card slot 2                    |
+| 48-63 | _Unused_                              |
 
-- `0x1f520000`: **JVS reset control?**
+#### `0x1f520000`: **JVS MCU reset control?**
 
-  | Bits | RW | Description                           |
-  | ---: | :- | :------------------------------------ |
-  |  0-6 |    | _Unused_                              |
-  |    8 | W  | Reset pin output (0 = pull reset low) |
-  | 9-15 |    | _Unused_                              |
+| Bits | RW | Description                           |
+| ---: | :- | :------------------------------------ |
+|  0-6 |    | _Unused_                              |
+|    8 | W  | Reset pin output (0 = pull reset low) |
+| 9-15 |    | _Unused_                              |
 
-  This register hasn't been tested nor confirmed to exist, but it is supposed
-  to reset the JVS microcontroller.
+This register hasn't been tested nor confirmed to exist, but it is supposed to
+reset the H8/3644 microcontroller.
 
-- `0x1f560000`: **IDE reset control**
+#### `0x1f560000`: **IDE reset control**
 
-  | Bits | RW | Description                           |
-  | ---: | :- | :------------------------------------ |
-  |    0 | W  | Reset pin output (0 = pull reset low) |
-  | 1-15 |    | _Unused_                              |
+| Bits | RW | Description                           |
+| ---: | :- | :------------------------------------ |
+|    0 | W  | Reset pin output (0 = pull reset low) |
+| 1-15 |    | _Unused_                              |
 
-  Since the IDE reset pin is active-low, resetting the CD drive is done by
-  writing 0 to this register, then waiting a few milliseconds and finally
-  writing 1 again. Note that the IDE protocol also specifies a way to
-  "soft-reset" devices using the `SRST` bit in the device control register.
+Since the IDE reset pin is active-low, resetting the CD drive is done by
+writing 0 to this register, then waiting a few milliseconds and finally writing
+1 again. Note that the IDE protocol also specifies a way to "soft-reset"
+devices using the `SRST` bit in the device control register.
 
-- `0x1f5c0000`: **Watchdog clear**
+#### `0x1f5c0000`: **Watchdog clear**
 
-  | Bits | RW | Description |
-  | ---: | :- | :---------- |
-  | 0-15 |    | _Unused_    |
+| Bits | RW | Description |
+| ---: | :- | :---------- |
+| 0-15 |    | _Unused_    |
 
-  This register is a dummy write-only port that clears the watchdog timer
-  embedded in the Konami 058232 ASIC when any value is written to it. The
-  minimum rate the watchdog must be cleared at is currently unknown, but the
-  BIOS and most games seem to write to this port at least once per frame.
+This register is a dummy write-only port that clears the watchdog timer
+embedded in the Konami 058232 ASIC when any value is written to it. The minimum
+rate the watchdog must be cleared at is currently unknown, but the BIOS and
+most games seem to write to this port at least once per frame.
 
-  If the watchdog is not constantly cleared, it will generate a reset pulse and
-  reboot the 573. There is no way to disable the watchdog other than physically
-  modifying the 573 and desoldering the 058232 ASIC (which also drives coin
-  counters), or cutting its reset output pin.
+If the watchdog is not constantly cleared, it will generate a reset pulse and
+reboot the 573. There is no way to disable the watchdog other than physically
+modifying the 573 and desoldering the 058232 ASIC (which also drives coin
+counters), or cutting its reset output pin.
 
-- `0x1f600000`: **External outputs**
+#### `0x1f600000`: **External outputs**
 
-  | Bits | RW | Description                           |
-  | ---: | :- | :------------------------------------ |
-  |  0-7 | W  | To `OUT0-OUT7` on `EXT-OUT` connector |
-  | 8-15 |    | _Unused_                              |
+| Bits | RW | Description                           |
+| ---: | :- | :------------------------------------ |
+|  0-7 | W  | To `OUT0-OUT7` on `EXT-OUT` connector |
+| 8-15 |    | _Unused_                              |
 
-  The lower 8 bits written to this register are latched on pins `OUT0-OUT7` on
-  the external output connector (see the pinouts section). This connector is
-  used by some games to control cabinet lights without using an I/O board.
+The lower 8 bits written to this register are latched on pins `OUT0-OUT7` on
+the external output connector (see the pinouts section). This connector is used
+by some games to control cabinet lights without using an I/O board.
 
-- `0x1f680000`: **JVS transmit buffer**
+#### `0x1f680000`: **JVS transmit buffer**
 
-  | Bits | RW | Description                       |
-  | ---: | :- | :-------------------------------- |
-  | 0-15 | W  | JVS data input to microcontroller |
+| Bits | RW | Description                       |
+| ---: | :- | :-------------------------------- |
+| 0-15 | W  | JVS data input to microcontroller |
 
-- `0x1f6a0000`: **Security cartridge outputs**
+#### `0x1f6a0000`: **Security cartridge outputs**
 
-  | Bits | RW | Description                      |
-  | ---: | :- | :------------------------------- |
-  |  0-7 | RW | To `D0-D7` on security cartridge |
-  | 8-15 |    | _Unused_                         |
+| Bits | RW | Description                      |
+| ---: | :- | :------------------------------- |
+|  0-7 | RW | To `D0-D7` on security cartridge |
+| 8-15 |    | _Unused_                         |
 
-  The lower 8 bits written to this register go to the cartridge's pins `D0-D7`.
-  See the security cartridge section for an explanation of what each pin is
-  wired to. Bit 0 additionally controls the `SDA` pin when set to output (see
-  the bank switch register). According to MAME, reading from this register will
-  yield the last value written to it.
+The lower 8 bits written to this register go to the cartridge's pins `D0-D7`.
+See the security cartridge section for an explanation of what each pin is wired
+to. Bit 0 additionally controls the `SDA` pin when set to output (see the bank
+switch register). According to MAME, reading from this register will yield the
+last value written to it.
 
 ## I/O boards
 
@@ -559,61 +562,61 @@ This board provides up to 32 light outputs through 4 connectors. See the
 game-specific information section for details on how lights are wired up on
 each cabinet type.
 
-- `0x1f640040`: **Light control 0**
+#### `0x1f640040`: **Light control 0**
 
-  | Bits | RW | Description       |
-  | ---: | :- | :---------------- |
-  |    0 | W  | To light output 3 |
-  |    1 | W  | To light output 2 |
-  |    2 | W  | To light output 7 |
-  |    3 | W  | To light output 6 |
-  |    4 | W  | To light output 5 |
-  |    5 | W  | To light output 4 |
-  |    6 | W  | To light output 1 |
-  |    7 | W  | To light output 0 |
-  | 8-15 |    | Unused            |
+| Bits | RW | Description       |
+| ---: | :- | :---------------- |
+|    0 | W  | To light output 3 |
+|    1 | W  | To light output 2 |
+|    2 | W  | To light output 7 |
+|    3 | W  | To light output 6 |
+|    4 | W  | To light output 5 |
+|    5 | W  | To light output 4 |
+|    6 | W  | To light output 1 |
+|    7 | W  | To light output 0 |
+| 8-15 |    | Unused            |
 
-- `0x1f640044`: **Light control 1**
+#### `0x1f640044`: **Light control 1**
 
-  | Bits | RW | Description        |
-  | ---: | :- | :----------------- |
-  |    0 | W  | To light output 11 |
-  |    1 | W  | To light output 10 |
-  |    2 | W  | To light output 15 |
-  |    3 | W  | To light output 14 |
-  |    4 | W  | To light output 13 |
-  |    5 | W  | To light output 12 |
-  |    6 | W  | To light output 9  |
-  |    7 | W  | To light output 8  |
-  | 8-15 |    | Unused             |
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+|    0 | W  | To light output 11 |
+|    1 | W  | To light output 10 |
+|    2 | W  | To light output 15 |
+|    3 | W  | To light output 14 |
+|    4 | W  | To light output 13 |
+|    5 | W  | To light output 12 |
+|    6 | W  | To light output 9  |
+|    7 | W  | To light output 8  |
+| 8-15 |    | Unused             |
 
-- `0x1f640048`: **Light control 2**
+#### `0x1f640048`: **Light control 2**
 
-  | Bits | RW | Description        |
-  | ---: | :- | :----------------- |
-  |    0 | W  | To light output 19 |
-  |    1 | W  | To light output 18 |
-  |    2 | W  | To light output 23 |
-  |    3 | W  | To light output 22 |
-  |    4 | W  | To light output 21 |
-  |    5 | W  | To light output 20 |
-  |    6 | W  | To light output 17 |
-  |    7 | W  | To light output 16 |
-  | 8-15 |    | Unused             |
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+|    0 | W  | To light output 19 |
+|    1 | W  | To light output 18 |
+|    2 | W  | To light output 23 |
+|    3 | W  | To light output 22 |
+|    4 | W  | To light output 21 |
+|    5 | W  | To light output 20 |
+|    6 | W  | To light output 17 |
+|    7 | W  | To light output 16 |
+| 8-15 |    | Unused             |
 
-- `0x1f64004c`: **Light control 3**
+#### `0x1f64004c`: **Light control 3**
 
-  | Bits | RW | Description        |
-  | ---: | :- | :----------------- |
-  |    0 | W  | To light output 27 |
-  |    1 | W  | To light output 26 |
-  |    2 | W  | To light output 31 |
-  |    3 | W  | To light output 30 |
-  |    4 | W  | To light output 29 |
-  |    5 | W  | To light output 28 |
-  |    6 | W  | To light output 25 |
-  |    7 | W  | To light output 24 |
-  | 8-15 |    | Unused             |
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+|    0 | W  | To light output 27 |
+|    1 | W  | To light output 26 |
+|    2 | W  | To light output 31 |
+|    3 | W  | To light output 30 |
+|    4 | W  | To light output 29 |
+|    5 | W  | To light output 28 |
+|    6 | W  | To light output 25 |
+|    7 | W  | To light output 24 |
+| 8-15 |    | Unused             |
 
 ### Digital I/O board (`GX894-PWB(B)A`)
 
@@ -643,81 +646,81 @@ bitstream would not only skip decryption but also implement a custom set of
 registers (rather than the ones described below), sidestepping the lack of
 documentation entirely.
 
-- `0x1f6400e0`: **Light control 1** (implemented by bitstream)
+#### `0x1f6400e0`: **Light control 1** (impl. by bitstream)
 
-  | Bits | RW | Description       |
-  | ---: | :- | :---------------- |
-  | 0-11 |    | Unused?           |
-  |   12 | W  | To light output 4 |
-  |   13 | W  | To light output 7 |
-  |   14 | W  | To light output 5 |
-  |   15 | W  | To light output 6 |
+| Bits | RW | Description       |
+| ---: | :- | :---------------- |
+| 0-11 |    | Unused?           |
+|   12 | W  | To light output 4 |
+|   13 | W  | To light output 7 |
+|   14 | W  | To light output 5 |
+|   15 | W  | To light output 6 |
 
-- `0x1f6400e2`: **Light control 0** (implemented by bitstream)
+#### `0x1f6400e2`: **Light control 0** (impl. by bitstream)
 
-  | Bits | RW | Description       |
-  | ---: | :- | :---------------- |
-  | 0-11 |    | Unused?           |
-  |   12 | W  | To light output 0 |
-  |   13 | W  | To light output 3 |
-  |   14 | W  | To light output 1 |
-  |   15 | W  | To light output 2 |
+| Bits | RW | Description       |
+| ---: | :- | :---------------- |
+| 0-11 |    | Unused?           |
+|   12 | W  | To light output 0 |
+|   13 | W  | To light output 3 |
+|   14 | W  | To light output 1 |
+|   15 | W  | To light output 2 |
 
-- `0x1f6400e4`: **Light control 3** (implemented by bitstream)
+#### `0x1f6400e4`: **Light control 3** (impl. by bitstream)
 
-  | Bits | RW | Description        |
-  | ---: | :- | :----------------- |
-  | 0-11 |    | Unused?            |
-  |   12 | W  | To light output 12 |
-  |   13 | W  | To light output 15 |
-  |   14 | W  | To light output 13 |
-  |   15 | W  | To light output 14 |
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+| 0-11 |    | Unused?            |
+|   12 | W  | To light output 12 |
+|   13 | W  | To light output 15 |
+|   14 | W  | To light output 13 |
+|   15 | W  | To light output 14 |
 
-- `0x1f6400e6`: **Light control 7** (implemented by bitstream)
+#### `0x1f6400e6`: **Light control 7** (impl. by bitstream)
 
-  | Bits | RW | Description        |
-  | ---: | :- | :----------------- |
-  | 0-11 |    | Unused?            |
-  |   12 | W  | To light output 28 |
-  |   13 | W  | To light output 31 |
-  |   14 | W  | To light output 29 |
-  |   15 | W  | To light output 30 |
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+| 0-11 |    | Unused?            |
+|   12 | W  | To light output 28 |
+|   13 | W  | To light output 31 |
+|   14 | W  | To light output 29 |
+|   15 | W  | To light output 30 |
 
-- `0x1f6400f6`: **FPGA status**
+#### `0x1f6400f6`: **FPGA status**
 
-- `0x1f6400f8`: **FPGA bitstream upload**
+#### `0x1f6400f8`: **FPGA bitstream upload**
 
-- `0x1f6400fa`: **Light control 4** (implemented by bitstream)
+#### `0x1f6400fa`: **Light control 4** (impl. by bitstream)
 
-  | Bits | RW | Description        |
-  | ---: | :- | :----------------- |
-  | 0-11 |    | Unused?            |
-  |   12 | W  | To light output 16 |
-  |   13 | W  | To light output 19 |
-  |   14 | W  | To light output 17 |
-  |   15 | W  | To light output 18 |
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+| 0-11 |    | Unused?            |
+|   12 | W  | To light output 16 |
+|   13 | W  | To light output 19 |
+|   14 | W  | To light output 17 |
+|   15 | W  | To light output 18 |
 
-- `0x1f6400fc`: **Light control 5** (implemented by bitstream)
+#### `0x1f6400fc`: **Light control 5** (impl. by bitstream)
 
-  | Bits | RW | Description        |
-  | ---: | :- | :----------------- |
-  | 0-11 |    | Unused?            |
-  |   12 | W  | To light output 20 |
-  |   13 | W  | To light output 23 |
-  |   14 | W  | To light output 21 |
-  |   15 | W  | To light output 22 |
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+| 0-11 |    | Unused?            |
+|   12 | W  | To light output 20 |
+|   13 | W  | To light output 23 |
+|   14 | W  | To light output 21 |
+|   15 | W  | To light output 22 |
 
-- `0x1f6400fe`: **Light control 2** (implemented by bitstream)
+#### `0x1f6400fe`: **Light control 2** (impl. by bitstream)
 
-  | Bits | RW | Description        |
-  | ---: | :- | :----------------- |
-  | 0-11 |    | Unused?            |
-  |   12 | W  | To light output 8  |
-  |   13 | W  | To light output 11 |
-  |   14 | W  | To light output 9  |
-  |   15 | W  | To light output 10 |
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+| 0-11 |    | Unused?            |
+|   12 | W  | To light output 8  |
+|   13 | W  | To light output 11 |
+|   14 | W  | To light output 9  |
+|   15 | W  | To light output 10 |
 
-- `0x1f6400ee`: **DS2401 ID chip** (implemented by bitstream)
+#### `0x1f6400ee`: **DS2401 ID chip** (impl. by bitstream)
 
 ### Alternate analog I/O board (`GX700-PWB(K)`)
 
@@ -731,7 +734,7 @@ This board is currently undocumented.
 
 This board is currently undocumented.
 
-### Gun Mania I/O board (`GX700-PWB(K)A`)
+### Gun Mania I/O board
 
 This board is currently undocumented.
 
@@ -745,39 +748,39 @@ the serial ports is Great Bishi Bashi Champ.
 
 The MB89371 does not have a publicly available datasheet.
 
-- `0x1f640000`: **UART data**
+#### `0x1f640000`: **UART data**
 
-- `0x1f640002`: **UART control**
+#### `0x1f640002`: **UART control**
 
-- `0x1f640004`: **UART baud rate select**
+#### `0x1f640004`: **UART baud rate select**
 
-- `0x1f640006`: **UART mode**
+#### `0x1f640006`: **UART mode**
 
-- `0x1f640010`: **7-segment display**
+#### `0x1f640010`: **7-segment display**
 
-  | Bits | RW | Description                     |
-  | ---: | :- | :------------------------------ |
-  |    0 | W  | Second digit segment G (0 = on) |
-  |    1 | W  | Second digit segment F (0 = on) |
-  |    2 | W  | Second digit segment E (0 = on) |
-  |    3 | W  | Second digit segment D (0 = on) |
-  |    4 | W  | Second digit segment C (0 = on) |
-  |    5 | W  | Second digit segment B (0 = on) |
-  |    6 | W  | Second digit segment A (0 = on) |
-  |    7 |    | _Unused_                        |
-  |    8 | W  | First digit segment G (0 = on)  |
-  |    9 | W  | First digit segment F (0 = on)  |
-  |   10 | W  | First digit segment E (0 = on)  |
-  |   11 | W  | First digit segment D (0 = on)  |
-  |   12 | W  | First digit segment C (0 = on)  |
-  |   13 | W  | First digit segment B (0 = on)  |
-  |   14 | W  | First digit segment A (0 = on)  |
-  |   15 |    | _Unused_                        |
+| Bits | RW | Description                     |
+| ---: | :- | :------------------------------ |
+|    0 | W  | Second digit segment G (0 = on) |
+|    1 | W  | Second digit segment F (0 = on) |
+|    2 | W  | Second digit segment E (0 = on) |
+|    3 | W  | Second digit segment D (0 = on) |
+|    4 | W  | Second digit segment C (0 = on) |
+|    5 | W  | Second digit segment B (0 = on) |
+|    6 | W  | Second digit segment A (0 = on) |
+|    7 |    | _Unused_                        |
+|    8 | W  | First digit segment G (0 = on)  |
+|    9 | W  | First digit segment F (0 = on)  |
+|   10 | W  | First digit segment E (0 = on)  |
+|   11 | W  | First digit segment D (0 = on)  |
+|   12 | W  | First digit segment C (0 = on)  |
+|   13 | W  | First digit segment B (0 = on)  |
+|   14 | W  | First digit segment A (0 = on)  |
+|   15 |    | _Unused_                        |
 
-  The BIOS shell shows "00" on this display (but contains a function to show
-  any hexadecimal value). Kick &amp; Kick shows an animated spinner, some other
-  games show error or status codes on it. This might have been meant to be a
-  POST display to be integrated into the 573 main board at some point.
+The BIOS shell shows "00" on this display (but contains a function to show any
+hexadecimal value). Kick &amp; Kick shows an animated spinner, some other games
+show error or status codes on it. This might have been meant to be a POST
+display to be integrated into the 573 main board at some point.
 
 ## Security cartridges
 
@@ -918,6 +921,44 @@ separate from the inputs used to read the lines (`SDA_I` and `1WIRE`), with
 Details on how to bitbang SPI, I2C and 1-wire are out of the scope of this
 document, but plenty of documentation can be found online.
 
+### ZS01 protocol
+
+Konami's "ZS01" security chip, used in ZI cartridges, is a pre-programmed PIC16
+microcontroller that mostly replicates the X76F100's functionality, allowing
+the 573 to store up to 112 bytes of data protected by a 64-bit key. Unlike the
+X76F100, however, the ZS01 communicates with the 573 using encrypted packets
+and self-erases if too many attempts are made to tamper with the encryption.
+
+A ZS01 transaction can be broken down into the following steps:
+
+1. The 573 prepares a 12-byte buffer to be sent to the ZS01. The first 2 bytes
+   represent the command (read or write) and the address to read from or write
+   to, respectively. Data is always read or written in 8 byte blocks, with some
+   blocks being reserved for "special" purposes such as changing keys or
+   reading out the DS2401.
+2. If the command is a write command the next 8 bytes are populated with the
+   payload, in some cases encrypted with the ZS01's "data key" (different for
+   each game). For read commands the 573 populates them with a random 64-bit
+   nonce derived from RTC time, which will then be used by the ZS01 as a key to
+   encrypt the response. This was probably meant as a way to prevent the replay
+   attacks the X76F041 and X76F100 were vulnerable to.
+3. A (non-standard) CRC16 of the 10 bytes generated so far is calculated and
+   stored in the last 2 bytes of the buffer. All 12 bytes are then encrypted
+   using a 64-bit "command key", which seems to be identical across all ZS01
+   games.
+4. The encrypted packet is sent to the ZS01. If the CRC16 is correct after
+   decryption the ZS01 will reply with an I2C ACK, otherwise it will ignore the
+   packet and decrement its remaining attempts counter.
+5. The 573 proceeds to read 12 bytes from the ZS01 and decrypt them using the
+   nonce it generated earlier. For write commands, the nonce provided in the
+   last read command issued is reused by the ZS01.
+6. The CRC16 of the response's first 10 bytes is calculated and compared
+   against the one received in the last 2 bytes; if it matches, the response is
+   considered valid. The first byte will be zero if the command was executed
+   successfully by the ZS01. The second byte seems to be a "seed" of sorts used
+   in the encryption algorithm. The remaining 8 bytes contain the requested
+   payload for read commands.
+
 ## External modules
 
 Over the 573's lifetime Konami introduced several add-ons that extended its
@@ -1029,16 +1070,19 @@ There seem to be at least three different versions of the BIOS:
 | `700B01`     | `700b01.22g`          | `a2421d0a494892c0e71003c96995ce8f945064dd` | Dancing Stage EuroMIX 2       |
 
 700A01 is the most common version. The only differences between the two known
-variants of it are minor code improvements. There reportedly is a third variant
-that shipped on systems that came with the H8/3644 microcontroller unpopulated
-(presumably it would not check for it on startup), however no evidence of its
-existence has ever been found. Old versions of MAME also used to reference a
-ROM named `700_a01.22g`, but it seems to be the same as `700a01,gchgchmp.22g`.
+variants of it are minor code improvements in the shell, with the kernel being
+identical. There reportedly is a third variant that shipped on systems that
+came with the H8/3644 microcontroller unpopulated (presumably it would not
+check for it on startup), however no evidence of its existence has ever been
+found. Old versions of MAME also used to reference a ROM named `700_a01.22g`,
+but it seems to be the same as `700a01,gchgchmp.22g`.
 
-700B01, however, is an entirely different beast. It is split up into two
-separate executables, one in charge of performing the self-test and the other
-actually handling the boot sequence. The exact differences, other than the
-UI/font and some bugfixes in the tests, are currently unknown.
+700B01 shares the same kernel, but its shell is an entirely different beast. It
+is split up into two separate executables, one in charge of running self-tests
+and the other actually handling the boot sequence. The exact practical
+differences other than the UI/font and some bugfixes in the tests are currently
+unknown, but the 700B01 shell seems to be more advanced than the 700A01 one
+from a cursory glance at the code.
 
 ### Boot sequence
 
@@ -1096,8 +1140,8 @@ Ethernet/"zlib" one, with polynomial `0x04c11db7`. The check is implemented in
 the shell as follows:
 
 ```c
-#define EXE_CRC32 ((volatile uint32_t *) 0x1f000020)
-#define EXE_DATA  ((volatile uint8_t *)  0x1f000024)
+#define EXE_CRC32 ((const uint32_t *) 0x1f000020)
+#define EXE_DATA  ((const uint8_t *)  0x1f000024)
 
 const uint32_t crc32_table[256] = { /* ... */ };
 uint32_t crc = 0xffffffff;
@@ -1106,7 +1150,7 @@ for (size_t i = 0; i < exe_size; i <<= 1)
     crc = (crc >> 8) ^ crc32_table[(crc & 0xff) ^ EXE_DATA[i]];
 
 if ((~crc) == *EXE_CRC32)
-    // continue booting...
+    load_exe((void *) EXE_DATA);
 ```
 
 DIP switch 4 can be turned off to force the shell to ignore any executables on
