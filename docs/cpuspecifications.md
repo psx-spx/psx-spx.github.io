@@ -351,11 +351,12 @@ Note that the instruction following the branch will always be executed.<br/>
   bgez   rs,dest     if rs>=0  then pc=$+4+(-8000h..+7FFFh)*4
   bgtz   rs,dest     if rs>0   then pc=$+4+(-8000h..+7FFFh)*4
   blez   rs,dest     if rs<=0  then pc=$+4+(-8000h..+7FFFh)*4
-  bltzal rs,dest     if rs<0   then pc=$+4+(..)*4, ra=$+8
-  bgezal rs,dest     if rs>=0  then pc=$+4+(..)*4, ra=$+8
+  bltzal rs,dest     ra=$+8; if rs<0   then pc=$+4+(..)*4
+  bgezal rs,dest     ra=$+8; if rs>=0  then pc=$+4+(..)*4
 ```
 
-jr/jalr can be used to jump to an unaligned address, in which case an address error (AdEL) exception will be raised on the next instruction fetch.
+jr/jalr can be used to jump to an unaligned address, in which case an address error (AdEL) exception will be raised on the next instruction fetch.<br/>
+Additionally, bltzal/bgezal will always place the return address in $ra, whether or not the branch is taken<br/>
 
 #### JALR cautions
 Caution: The JALR source code syntax varies (IDT79R3041 specs say "jalr rs,rd",
