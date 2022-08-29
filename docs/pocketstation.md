@@ -885,6 +885,7 @@ the CPU clock, or less, depending on the Timer Divider). Possible values are:<br
 Before changing CLK\_MODE, F\_WAIT1 and F\_WAIT2 should be adjusted accordingly
 (see there for details). Note that many memory regions have waitstates, the
 full CPU speed can be reached mainly with code/data in WRAM.<br/>
+For emulator authors: Note that some Pocketstation software will expect bit 4 of CLK\_MODE to go from 0 to 1 rather than just polling it until it's 1. For this reason, emulating bit 4 as always being 1 can very likely break.<br/>
 
 #### 0B000004h - CLK\_STOP - Clock stop (Sleep Mode)
 Stops the CPU until an interrupt occurs. The pocketstation doesn't have a
@@ -1398,7 +1399,35 @@ useful for setting up a custom SWI table in FLASH or in RAM. When doing that,
 one must restore the original setting before returning control to the GUI or to
 another executable (the setting isn't automatically restored).<br/>
 
+#### SWI service routine
+The default SWI service routine is slightly finicky<br/>
+```arm
+push {r1-r12, lr} @ Backup SVC-mode registers
+mrs r12, spsr     @ Old CPSR in r12
+nop
 
+@ Check if we were previously in Thumb mode
+@ And adjust LR accordingly to fetch the SWI comment field
+tst r12, #0x20
+subeq lr, #2
+sub lr, #2
+
+@ Fetch the comment field
+ldrh r12, [lr]
+and r12, #0xFF
+
+@ Load function pointer for SWI handler and call it
+mov lr, #0xE0 ; Pointer to SWI table in LR
+ldr r11, [lr]
+add r11, r11, r12, lsl #2 @ r11 = &swi_table[comment]
+ldr r11, [r11] @ Get function pointer
+mov lr, pc     @ Set LR to return address
+bx r11         @ Call SWI handler
+
+@ Restore SVC regs, return from SWI service routine and restore SPSR into CPSR
+pop {r1-r12, pc}^
+```
+It's important that the SWI service routine use a 16-bit load to fetch the comment field, as most memory on the Pocketstation can't be safely read using `ldrb`. Any custom handler needs to do the same, otherwise it won't work on real hardware. Also, for emulator developers, be wary of the last `pop` as it abuses an ldm edge case (S bit set with r15 in rlist - restores registers properly and then does CPSR = SPSR)<br/>
 
 ##   Pocketstation BU Command Summary
 The Pocketstation supports the standard Memory Card commands (Read Sector,
@@ -2060,7 +2089,7 @@ checking for TTY messages after the actual upload):<br/>
 With that ID, and with the XBOO-hardware being used, the game will be started
 with with "TTY+" in R0 (notifying it that the XBOO hardware is present, and
 that it needs to install special transmission handlers):<br/>
-```
+```arm
  ;------------------
  .data?
  org  200h

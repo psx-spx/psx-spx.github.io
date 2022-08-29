@@ -14,7 +14,7 @@
 #### GTE Operation
 The GTE doesn't have any memory or I/O ports mapped to the CPU memory bus,
 instead, it's solely accessed via coprocessor opcodes:<br/>
-```
+```x86asm
   mov  cop0r12,rt          ;-enable/disable COP2 (GTE) via COP0 status register
   mov  cop2r0-63,rt        ;\write parameters to GTE registers
   mov  cop2r0-31,[rs+imm]  ;/
@@ -24,6 +24,11 @@ instead, it's solely accessed via coprocessor opcodes:<br/>
   jt   cop2flg,dest        ;-jump never  ;\implemented (no exception), but,
   jf   cop2flg,dest        ;-jump always ;/flag seems to be always "false"
 ```
+
+#### GTE Load Delay Slots
+Using CFC2/MCF2 has a delay of 1 instruction until the GPR is loaded with its new value.
+Certain games are sensitive to this, with the notable example of Tekken 2
+which will be filled with broken geometry on emulators which don't emulate this properly.<br/>
 GTE (memory-?) load and store instructions have a delay of 2 instructions, for
 any GTE commands or operations accessing that register. Any? That's wrong!<br/>
 GTE instructions and functions should not be used in<br/>

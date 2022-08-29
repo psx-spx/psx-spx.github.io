@@ -141,8 +141,8 @@ be decoded using the following bitfield:
     28         1/0    gouraud / flat shading
     27         1/0    4 / 3 vertices
     26         1/0    textured / untextured
-    25         1/0    semi transparent / solid
-    24         1/0    texture blending
+    25         1/0    semi-transparent / opaque
+    24         1/0    raw texture / modulation
    23-0        rgb    first color value.
 ```
 
@@ -154,8 +154,6 @@ If doing flat rendering, no further color will be sent. If doing gouraud shading
 there will be one more color per vertex sent, and the initial color will be the
 one for vertex 0.
 
-If doing 3 or 4 vertices rendering, this will affect the total number of vertex sent.
-
 If doing textured rendering, each vertex sent will also have a U/V texture coordinate
 attached to it, as well as a CLUT index.
 
@@ -163,7 +161,7 @@ So each vertex data can be seen as the following set of words:
 ```
 Color      xxBBGGRR               - optional, only present for gouraud shading
 Vertex     YYYYXXXX               - required, two signed 16 bits values
-UV         ClutUUVV or PageUUVV   - optional, only present for textured polygons
+UV         ClutVVUU or PageVVUU   - optional, only present for textured polygons
 ```
 
 The upper 16 bits of the first two UV words contain extra information. The first
@@ -184,33 +182,33 @@ And a quad with gouraud shading texture-blend will have the following structure:
 ```
 2CR1G1B1
 Yyy1Xxx1
-ClutU1V1
+ClutV1U1
 00R2G2B2
 Yyy2Xxx2
-PageU2V2
+PageV2U2
 00R3G3B3
 Yyy3Xxx3
-0000U3V3
+0000V3U3
 00R4G4B4
 Yyy4Xxx4
-0000U4V4
+0000V4U4
 ```
 
 Some combination of these flags can be seen as nonsense however, but it's important
 to realize that the GPU will still process them properly. For instance, specifying
-gouraud shading without texture blending will force the user to send the colors for
+gouraud shading without modulation will force the user to send the colors for
 each vertex to satisfy the GPU's state machine, without them being actually used for
 the rendering.
 
 #### Notes
 Polygons are displayed up to \<excluding\> their lower-right coordinates.<br/>
-Four-point polygons are internally processed as two Three-point polygons, the
-first consisting of Vertices 1,2,3, and the second of  Vertices 2,3,4.<br/>
-Within the Three-point polygons, the ordering of the vertices is don't care at
+Quads are internally processed as two triangles, the
+first consisting of vertices 1,2,3, and the second of vertices 2,3,4. This is an important detail, as splitting the quad into triangles affects the way colours are interpolated.<br/>
+Within the triangle, the ordering of the vertices doesn't matter on
 the GPU side (a front-back check, based on clockwise or anti-clockwise
 ordering, can be implemented at the GTE side).<br/>
-Dither enable (in Texpage command) affects ONLY polygons that do use Gouraud
-Shading or Texture Blending.<br/>
+Dither enable (in Texpage command) affects ONLY polygons that do use gouraud
+shading or modulation.<br/>
 
 ##   GPU Render Line Commands
 When the upper 3 bits of the first GP0 command are set to 2 (010), then the command can
@@ -220,7 +218,7 @@ be decoded using the following bitfield:
   31-29        010    line render
     28         1/0    gouraud / flat shading
     27         1/0    polyline / single line
-    25         1/0    semi transparent / solid
+    25         1/0    semi-transparent / opaque
    23-0        rgb    first color value.
 ```
 
@@ -262,7 +260,8 @@ The Rectangle command can be decoded using the following bitfield:
   31-29        011    rectangle render
   28-27        sss    rectangle size
     26         1/0    textured / untextured
-    25         1/0    semi transparent / solid
+    25         1/0    semi-transparent / opaque
+    24         1/0    raw texture / modulation
    23-0        rgb    first color value.
 ```
 
@@ -277,10 +276,10 @@ The `size` parameter can be seen as the following enum:
 
 Therefore, the whole draw call can be seen as the following sequence of words:
 ```
-Color      ccBBGGRR    - command + color; color is ignored when textured
-Vertex1    YYYYXXXX    - required, indicates the upper left corner to render
-UV         ClutUUVV    - optional, only present for textured rectangles
-Vertex2    YYYYXXXX    - optional, bottom right corner for variable sized rectangles
+Color         ccBBGGRR    - command + color; color is ignored when textured
+Vertex1       YYYYXXXX    - required, indicates the upper left corner to render
+UV            ClutVVUU    - optional, only present for textured rectangles
+Width+Height  YsizXsiz    - optional, dimensions for variable sized rectangles (max 1023x511)
 ```
 
 Unlike for Textured-Polygons, the "Texpage" must be set up separately for
@@ -336,7 +335,7 @@ single clock cycle), or if it's (slowly) processing them pixel by pixel?<br/>
   24-31  Command (in first paramter) (don't care in further parameters)
 ```
 Caution: For untextured graphics, 8bit RGB values of FFh are brightest.
-However, for texture blending, 8bit values of 80h are brightest (values
+However, for modulation, 8bit values of 80h are brightest (values
 81h..FFh are "brighter than bright" allowing to make textures about twice as
 bright as than they were originially stored in memory; of course the results
 can't exceed the maximum brightness, ie. the 5bit values written to the
@@ -366,7 +365,7 @@ Specifies the location of the CLUT data within VRAM.<br/>
 ```
   0-3   Texture page X Base   (N*64) (ie. in 64-halfword steps)    ;GPUSTAT.0-3
   4     Texture page Y Base   (N*256) (ie. 0 or 256)               ;GPUSTAT.4
-  5-6   Semi Transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)   ;GPUSTAT.5-6
+  5-6   Semi-transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)   ;GPUSTAT.5-6
   7-8   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved);GPUSTAT.7-8
   9     Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled) ;GPUSTAT.9
   10    Drawing to display area (0=Prohibited, 1=Allowed)          ;GPUSTAT.10
@@ -748,16 +747,16 @@ registers.<br/>
   1-23  Unknown (seems to have no effect)
 ```
 This feature seems to be intended for debugging purposes (most released games
-do contain program code for disabling textures, but do never execute it).<br/>
-GP1(09h) seems to be supported only on New GPUs. Old GPUs don't support it all,
-and there seem to be some Special/Prototype GPUs that use GP1(20h) instead of
+do contain program code for disabling textures, but never execute it).<br/>
+GP1(09h) seems to be supported only on New GPUs. Old GPUs don't support it at all,
+and there seem to be some special/prototype GPUs that use GP1(20h) instead of
 GP1(09h).<br/>
 
 #### GP1(20h) - Special/Prototype Texture Disable
 ```
   0-23  Unknown (501h=Texture Enable, 504h=Texture Disable, or so?)
 ```
-Seems to be a used only on whatever arcade/prototype GPUs. New GPUs are using
+Seems to be used only on whatever arcade/prototype GPUs. New GPUs are using
 GP1(09h) instead of GP1(20h).<br/>
 
 #### GP1(0Bh) - Unknown/Internal?
@@ -797,7 +796,7 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
 ```
   0-3   Texture page X Base   (N*64)                              ;GP0(E1h).0-3
   4     Texture page Y Base   (N*256) (ie. 0 or 256)              ;GP0(E1h).4
-  5-6   Semi Transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)  ;GP0(E1h).5-6
+  5-6   Semi-transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)  ;GP0(E1h).5-6
   7-8   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved)GP0(E1h).7-8
   9     Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled);GP0(E1h).9
   10    Drawing to display area (0=Prohibited, 1=Allowed)         ;GP0(E1h).10
@@ -1087,10 +1086,10 @@ A texture is an image put on a polygon or sprite. The data of a texture can be
 stored in 3 different modes:<br/>
 ```
 <B>  16bit Texture (Direct Color)             ;(One 256x256 page = 128Kbytes)</B>
-  0-4   Red       (0..31)         ;\Color 0000h        = Fully-Transparent
-  5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-Transparent
-  10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-Transparent (*)
-  15    Semi Transparency Flag    ;/(*) or Non-Transparent for opaque commands
+  0-4   Red       (0..31)         ;\Color 0000h        = Fully-transparent
+  5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-transparent
+  10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-transparent (*)
+  15    Semi-transparency Flag    ;/(*) or Non-transparent for opaque commands
 <B>  8bit Texture (256 Color Palette)         ;(One 256x256 page = 64Kbytes)</B>
   0-7   Palette index for 1st pixel (left)
   8-15  Palette index for 2nd pixel (right)
@@ -1116,10 +1115,10 @@ CLUT modes. The pixels of those images are used as indexes to this table. The
 clut is arranged in the frame buffer as a 256x1 image for the 8bit clut mode,
 and a 16x1 image for the 4bit clut mode.<br/>
 ```
-  0-4   Red       (0..31)         ;\Color 0000h        = Fully-Transparent
-  5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-Transparent
-  10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-Transparent (*)
-  15    Semi Transparency Flag    ;/(*) or Non-Transparent for opaque commands
+  0-4   Red       (0..31)         ;\Color 0000h        = Fully-transparent
+  5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-transparent
+  10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-transparent (*)
+  15    Semi-transparency Flag    ;/(*) or Non-transparent for opaque commands
 ```
 The clut data can be arranged in the frame buffer at X multiples of 16
 (X=0,16,32,48,etc) and anywhere in the Y range of 0-511.<br/>
@@ -1310,7 +1309,7 @@ vertical blanking/retrace).<br/>
 ```
   0-23  Color for (first) Vertex                   (Not for Raw-Texture)
   24    Texture Mode      (0=Blended, 1=Raw)       (Textured-Polygon/Rect only)
-  25    Semi Transparency (0=Off, 1=On)            (All Render Types)
+  25    Semi-transparency (0=Off, 1=On)            (All Render Types)
   26    Texture Mapping   (0=Off, 1=On)            (Polygon/Rectangle only)
   27-28 Rect Size   (0=Var, 1=1x1, 2=8x8, 3=16x16) (Rectangle only)
   27    Num Vertices      (0=Triple, 1=Quad)       (Polygon only)
@@ -1364,16 +1363,9 @@ resulting in the final 5bit R/G/B values.<br/>
   +3  -1  +2  -2   ;/(same as above, but shifted two pixels horizontally)
 ```
 POLYGONs (triangles/quads) are dithered ONLY if they do use gouraud shading or
-texture blending.<br/>
+modulation.<br/>
 LINEs are dithered (no matter if they are mono or do use gouraud shading).<br/>
-RECTs are NOT dithered (no matter if they do use texture blending).<br/>
-
-#### Shading information
-"Texture RGB values control the brightness of the individual colors ($00-$7f).
-A value of $80 in a color will take the former value as data." (What...?
-probably means the "double brightness" effect... or does it want to tell that
-ALL colors of 80h..FFh have only single brightness.. rather than reaching
-double brightness at FFh...?)<br/>
+RECTs are NOT dithered (no matter if they do use modulation or not).<br/>
 
 #### Shading
 The GPU has a shading function, which will scale the color of a primitive to a
@@ -1383,20 +1375,33 @@ for the entire primitive. In Gouraud shading mode, a different brightness value
 can be given for each vertex of a primitive, and the brightness between these
 points is automatically interpolated.<br/>
 
-#### Semi Transparency
-When semi transparency is set for a pixel, the GPU first reads the pixel it
+#### Semi-transparency
+When semi-transparency is set for a pixel, the GPU first reads the pixel it
 wants to write to, and then calculates the color it will write from the 2
-pixels according to the semitransparency mode selected. Processing speed is
+pixels according to the semi-transparency mode selected. Processing speed is
 lower in this mode because additional reading and calculating are necessary.
-There are 4 semitransparency modes in the GPU.<br/>
+There are 4 semi-transparency modes in the GPU.<br/>
 ```
-  B=Back  (the old pixel read from the image in the frame buffer)
-  F=Front (the new halftransparent pixel)
+  B=Back  (the old pixel read from the frame buffer)
+  F=Front (the new semi-transparent pixel)
   * 0.5 x B + 0.5 x F    ;aka B/2+F/2
   * 1.0 x B + 1.0 x F    ;aka B+F
   * 1.0 x B - 1.0 x F    ;aka B-F
   * 1.0 x B +0.25 x F    ;aka B+F/4
 ```
+For textured primitives using 4-bit or 8-bit textures, bit 15 of each CLUT entry acts as a semi-transparency flag and determines whether to apply semi-transparency to the pixel or not. If the semi-transparency flag is off, the new pixel is written to VRAM as-is.<br/>
+When using additive blending, if a channel's intensity is greater than 255, it gets clamped to 255 rather than being masked. Similarly, if using subtractive blending and a channel's intensity ends up being < 0, it's clamped to 0.<br/>
+
+#### Modulation (also known as Texture Blending)
+Modulation is a colour effect that can be applied to textured primitives.
+For each pixel of the primitive it combines every colour channel of the fetched texel with the corresponding channel of the interpolated vertex colour according to this formula (Assuming all channels are 8-bit).<br/> 
+```glsl
+  finalChannel.rgb = (texel.rgb * vertexColour.rgb) / vec3(128.0)
+```
+Using modulation, one can either decrease (if the vertex colour channel value is < 128) or increase (if it's > 128) the intensity of each colour channel of the texel, which is helpful for implementing things such as brightness effects.<br/>
+Using a vertex colour of 0x808080 (ie all channels set to 128) is equivalent to not applying modulation to the primitive, as shown by the above formula.<br/>
+"Texture blending" is not meant to be confused with normal blending, ie an operation that merges the backbuffer colour with the incoming pixel and draws the resulting colour to the backbuffer.
+The PS1 has this capability to an extent, using semi-transparency.<br/>
 
 #### Draw to display enable
 This will enable/disable any drawing to the area that is currently displayed.

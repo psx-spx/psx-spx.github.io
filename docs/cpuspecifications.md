@@ -173,6 +173,7 @@ to read from the load destination register, then it would (usually) receive the
 OLD value of that register (unless an IRQ occurs between the load and next
 opcode, in that case the load would complete during IRQ handling, and so, the
 next opcode would receive the NEW value).<br/>
+MFC2/CFC2 also have a 1-instruction delay until the target register is loaded with its new value (more info in the GTE section).<br/>
 
 #### Store instructions
 ```
@@ -180,10 +181,15 @@ next opcode would receive the NEW value).<br/>
   sh  rt,imm(rs)    [imm+rs]=(rt AND FFFFh) ;store 16bit
   sw  rt,imm(rs)    [imm+rs]=rt             ;store 32bit
 ```
-Store operations are passed to the write-buffer, so they can execute within a
-single clock cycle (unless the write-buffer was full, in that case the CPU gets
-halted until there's room in the buffer). But, the PSX doesn't have a
-writebuffer...?<br/>
+Store operations are passed to the write-queue, so they can execute within a
+single clock cycle (unless the write-queue was full, in that case the CPU gets
+halted until there's room in the queue). For more information on the write-queue, visit [this page](https://psx-spx.consoledev.net/memorymap/#write-queue).<br/>
+
+#### Caution - 8/16-bit writes to certain IO registers
+During an 8-bit or 16-bit store, all 32 bits of the GPR are placed on the bus.
+As such, when writing to certain 32-bit IO registers with an 8 or 16-bit store, it will behave like a 32-bit store, using the register's full value.
+The soundscope on some shells is known to rely on this, as it uses `sh` to write to certain DMA registers.
+If this is not properly emulated, the soundscope will hang, waiting for an interrupt that will never be fired.<br/>
 
 #### Load/Store Alignment
 Halfword addresses must be aligned by 2, word addresses must be aligned by 4,
@@ -296,20 +302,20 @@ registers while the mul/div operation is busy will halt the CPU until the
 mul/div has completed. For multiply, the execution time depends on rs (ie.
 "small\*large" can be much faster than "large\*small").<br/>
 ```
-  __umul_execution_time_____________________________________________________
+  __multu_execution_time_____________________________________________________
   Fast  (6 cycles)   rs = 00000000h..000007FFh
   Med   (9 cycles)   rs = 00000800h..000FFFFFh
   Slow  (13 cycles)  rs = 00100000h..FFFFFFFFh
-  __smul_execution_time_____________________________________________________
+  __mult_execution_time_____________________________________________________
   Fast  (6 cycles)   rs = 00000000h..000007FFh, or rs = FFFFF800h..FFFFFFFFh
   Med   (9 cycles)   rs = 00000800h..000FFFFFh, or rs = FFF00000h..FFFFF801h
   Slow  (13 cycles)  rs = 00100000h..7FFFFFFFh, or rs = 80000000h..FFF00001h
-  __udiv/sdiv_execution_time________________________________________________
+  __divu/div_execution_time________________________________________________
   Fixed (36 cycles)  no matter of rs and rt values
 ```
-For example, when executing "umul 123h,12345678h" and "mov r1,lo", one can
+For example, when executing "multu 123h,12345678h" and "mflo r1", one can
 insert up to six (cached) ALU opcodes, or read one value from PSX Main RAM
-(which has 6 cycle access time) between the "umul" and "mov" opcodes without
+(which has 6 cycle access time) between the "multu" and "mflo" opcodes without
 additional slowdown.<br/>
 The hardware does NOT generate exceptions on divide overflows, instead, divide
 errors are returning the following values:<br/>
@@ -320,8 +326,8 @@ errors are returning the following values:<br/>
   div     -80000000h..-1  0   -->  Rs            +1
   div     -80000000h      -1  -->  0             -80000000h
 ```
-For udiv, the result is more or less correct (as close to infinite as
-possible). For sdiv, the results are total garbage (about farthest away from
+For divu, the result is more or less correct (as close to infinite as
+possible). For div, the results are total garbage (about furthest away from
 the desired result as possible).<br/>
 Note: After accessing the lo/hi registers, there seems to be a strange rule
 that one should not touch the lo/hi registers in the next 2 cycles or so... not
@@ -430,8 +436,8 @@ one uncached opcode).<br/>
   beqz rx,dest         ;alias for beq rx,r0,dest
   bnez rx,dest         ;alias for bne rx,r0,dest
   b   dest             ;alias for beq r0,r0,dest (jump relative/spasm)
-  bra dest             ;alias for ...? (jump relative/gnu)
-  bal dest             ;alias for ...? (call relative/spasm)
+  bra dest             ;alias for bgez r0, r0, dest
+  bal dest             ;alias for bgezal r0, r0, dest
 ```
 
 #### Pseudo instructions (nocash/a22i)
@@ -587,11 +593,11 @@ Describes the most recently recognised exception<br/>
 #### cop0r12 - SR - System status register (R/W)
 ```
   0     IEc Current Interrupt Enable  (0=Disable, 1=Enable) ;rfe pops IUp here
-  1     KUc Current Kernal/User Mode  (0=Kernel, 1=User)    ;rfe pops KUp here
+  1     KUc Current Kernel/User Mode  (0=Kernel, 1=User)    ;rfe pops KUp here
   2     IEp Previous Interrupt Disable                      ;rfe pops IUo here
-  3     KUp Previous Kernal/User Mode                       ;rfe pops KUo here
+  3     KUp Previous Kernel/User Mode                       ;rfe pops KUo here
   4     IEo Old Interrupt Disable                       ;left unchanged by rfe
-  5     KUo Old Kernal/User Mode                        ;left unchanged by rfe
+  5     KUo Old Kernel/User Mode                        ;left unchanged by rfe
   6-7   -   Not used (zero)
   8-15  Im  8 bit interrupt mask fields. When set the corresponding
             interrupts are allowed to cause an exception.
@@ -616,13 +622,13 @@ Describes the most recently recognised exception<br/>
   25    RE  Reverse endianness   (0=Normal endianness, 1=Reverse endianness)
               Reverses the byte order in which data is stored in
               memory. (lo-hi -> hi-lo)
-              (Has affect only to User mode, not to Kernel mode) (?)
+              (Affects only user mode, not kernel mode) (?)
               (The bit doesn't exist in PSX ?)
   26-27 -   Not used (zero)
-  28    CU0 COP0 Enable (0=Enable only in Kernal Mode, 1=Kernal and User Mode)
-  29    CU1 COP1 Enable (0=Disable, 1=Enable) (none such in PSX)
+  28    CU0 COP0 Enable (0=Enable only in Kernel Mode, 1=Kernel and User Mode)
+  29    CU1 COP1 Enable (0=Disable, 1=Enable) (none in PSX)
   30    CU2 COP2 Enable (0=Disable, 1=Enable) (GTE in PSX)
-  31    CU3 COP3 Enable (0=Disable, 1=Enable) (none such in PSX)
+  31    CU3 COP3 Enable (0=Disable, 1=Enable) (none in PSX)
 ```
 
 #### cop0r14 - EPC - Return Address from Trap (R)
@@ -663,6 +669,10 @@ using the BIOS).<br/>
 Of course, the above exeption handling won't work in branch delays (where BD
 gets set to indicate that EPC was modified) (best workaround is not to use GTE
 commands in branch delays).<br/>
+Several games are known to rely on this, notably including the Crash Bandicoot trilogy, 
+Jinx and Spyro the Dragon, all of which will render broken geometry
+if running on an emulator which doesn't emulate this, 
+or if the installed interrupt service routine doesn't account for it. 
 
 #### cop0cmd=10h - RFE opcode - Prepare Return from Exception
 The RFE opcode moves some bits in cop0r12 (SR): bit2-3 are copied to bit0-1,
@@ -671,7 +681,7 @@ unchanged.<br/>
 The RFE opcode does NOT automatically jump to EPC. Instead, the exception
 handler must copy EPC into a register (usually R26 aka K0), and then jump to
 that address. Because of branch delays, that would look like so:<br/>
-```
+```x86asm
   mov  k0,epc  ;get return address
   push k0      ;save epc in memory (if you expect nested exceptions)
   ...          ;whatever (ie. process CAUSE)
