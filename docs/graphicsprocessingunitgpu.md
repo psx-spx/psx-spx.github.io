@@ -231,8 +231,9 @@ Vertex     YYYYXXXX    - required, two signed 16 bits values
 When polyline mode is active, at least two vertices must be sent to the GPU.
 The vertex list is terminated by the bits 12-15 and 28-31 equaling `0x5`, or
 `(word & 0xF000F000) == 0x50005000`. The terminator value occurs on the first
-word of the vertex (i.e. the color word if it's a gouraud shaded).
+word of the vertex (i.e. the color word if it's a gouraud shaded).<br/>
 
+If the 2 vertices in a line overlap, then the GPU will draw a 1x1 rectangle in the location of the 2 vertices using the colour of the first vertex.
 
 #### Note
 Lines are displayed up to \<including\> their lower-right coordinates (ie.
