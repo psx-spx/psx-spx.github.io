@@ -17,8 +17,8 @@ and other early Bemani (Konami's rhythm game division) games.
 - [Pinouts](#pinouts)
 - [Credits, sources and links](#credits-sources-and-links)
 
-This document is currently work-in-progress. Here is a list of things that are
-still missing:
+This document is currently work-in-progress. Here is an incomplete list of
+things that are still missing:
 
 - The BIOS and games are notoriously picky about ATAPI drives. Konami's code
   shall be disassembled and tested in order to find out where and why drive
@@ -34,8 +34,8 @@ still missing:
   possible.
 - The 700B01 BIOS contains references to the ability to boot from a FAT
   filesystem on a CF card inserted into a PCMCIA slot, which would actually be
-  impossible due to the way the slots are wired up. That definitely needs more
-  research.
+  impossible due to the way the slots are wired up. The H8/3644 check is also
+  completely different from the one performed by the 700A01 shell.
 
 ## Differences vs. PS1
 
