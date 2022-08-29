@@ -165,6 +165,8 @@ but do not necessarily trigger exceptions if set to nonzero values.<br/>
 Load instructions can read from the data cache (if the data is not in the
 cache, or if the memory region is uncached, then the CPU gets halted until it
 has read the data) (however, the PSX doesn't have a data cache).<br/>
+Load and store instructions can generate address error exceptions if the memory address is not properly aligned (To a halfword boundary for lh/lhu/sh or a word boundary for lw/sw. lwl/lwr/swl/swr can't access misaligned address as they force align the memory address).
+Additionally, accessing certain invalid memory locations will cause a bus error exception. If an exception occurs during a load instruction, the rt register is left untouched.<br/>
 
 #### Caution - Load Delay
 The loaded data is NOT available to the next opcode, ie. the target register
@@ -349,9 +351,12 @@ Note that the instruction following the branch will always be executed.<br/>
   bgez   rs,dest     if rs>=0  then pc=$+4+(-8000h..+7FFFh)*4
   bgtz   rs,dest     if rs>0   then pc=$+4+(-8000h..+7FFFh)*4
   blez   rs,dest     if rs<=0  then pc=$+4+(-8000h..+7FFFh)*4
-  bltzal rs,dest     if rs<0   then pc=$+4+(..)*4, ra=$+8
-  bgezal rs,dest     if rs>=0  then pc=$+4+(..)*4, ra=$+8
+  bltzal rs,dest     if rs<0   then pc=$+4+(..)*4; ra=$+8; 
+  bgezal rs,dest     if rs>=0  then pc=$+4+(..)*4; ra=$+8;
 ```
+
+jr/jalr can be used to jump to an unaligned address, in which case an address error (AdEL) exception will be raised on the next instruction fetch.<br/>
+Additionally, bltzal/bgezal will always place the return address in $ra, whether or not the branch is taken. Additionally, if `rs` is $ra, then the value used for the comparison is $ra's value before linking.<br/>
 
 #### JALR cautions
 Caution: The JALR source code syntax varies (IDT79R3041 specs say "jalr rs,rd",
