@@ -6,8 +6,10 @@
 ```
 This register is automatically incrementing. It is write-able (allowing to set
 it to any value). It gets forcefully reset to 0000h on any write to the Counter
-Mode register, and on counter overflow (either when exceeding FFFFh, or when
-exceeding the selected target value).<br/>
+Mode register and when reaching counter overflow condition (either when reaching FFFFh, or when
+reaching the selected target value).<br/>
+Writing a Current value larger than the Target value will not trigger the condition of Mode Bit4, but make the counter run until FFFFh and wrap around to 0000h once, before using the target value.<br/>
+<br/>
 
 #### 1F801104h+N\*10h - Timer 0..2 Counter Mode (R/W)
 ```
@@ -66,3 +68,18 @@ dotclk or hblank as clock source); the GPU clock isn't in sync with the CPU
 clock, so the timer may get changed during the CPU read cycle. As a workaround:
 repeat reading the timer until the received value is the same (or slightly
 bigger) than the previous value.<br/>
+
+#### Reset and Wrap
+When resetting the Counter by writing the Mode register, it will stay at 0000h for 2 clock cycles before counting up.<br/>
+When writing the Current value, it will stay at the written value for 2 clock cycles before counting up or checking against Target overflows.<br/>
+When wrapping around at FFFFh(Mode Bit3 not set), it will stay at 0000h for only 1 clock cycle.<br/>
+When being reset to 0000h by reaching the Target value(Mode Bit3 set), it will stay at 0000h for 2 clock cycles.<br/>
+Example behavior with Target Value of 0001h and Mode Bit3 set:
+```
+clock cycle 0 - Counter Value = 0000h
+clock cycle 1 - Counter Value = 0000h
+clock cycle 2 - Counter Value = 0001h
+clock cycle 3 - Counter Value = 0000h
+clock cycle 4 - Counter Value = 0000h
+clock cycle 5 - Counter Value = 0001h
+```
