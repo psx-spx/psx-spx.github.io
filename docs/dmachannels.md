@@ -196,10 +196,10 @@ cycles). This is making DMA much faster than CPU memory accesses (CPU DRAM
 access takes 1 opcode cycle plus 6 waitstates, ie. 7 cycles in total)<br/>
 
 #### CPU Operation during DMA
-Basically, the CPU is stopped during DMA (theoretically, the CPU could be kept
-running when accessing only cache, scratchpad and on-chip I/O ports like DMA
-registers, and during the CDROM/SPU/PIO waitstates it could even access Main
-RAM, but these situations aren't supported).<br/>
-However, the CPU operation resumes during periods when DMA gets interrupted
+CPU is running during DMA within very strict rules. It can be kept running when accessing only cache, scratchpad, COP0 and GTE.<br/>
+It can also make use of the 4 entry Write queue for both RAM and I/O registers, see:<br/>
+[Write queue](memorymap.md#Write-queue)<br/>
+Any read access from RAM or I/O registers or filling more than 4 entries into the write queue will stall the CPU until the DMA is finished.<br/>
+Additionally, the CPU operation resumes during periods when DMA gets interrupted
 (ie. after SyncMode 1 blocks, after SyncMode 2 list entries) (or in SyncMode 0
 with Chopping enabled).<br/>
