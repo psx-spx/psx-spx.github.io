@@ -27,8 +27,11 @@ getting interrupted by a higher priority DMA channel).<br/>
 In SyncMode=1 and SyncMode=2, the hardware does update MADR (it will contain
 the start address of the currently transferred block; at transfer end, it'll
 hold the end-address in SyncMode=1, or the end marker in SyncMode=2)<br/>
-Note: Address bit0-1 are writeable, but any updated current/end addresses are
+Notes: Address bit0-1 are writeable, but any updated current/end addresses are 
 word-aligned with bit0-1 forced to zero.<br/>
+On non-dev consoles(2Mbyte RAM) bits21-22 are ignored, e.g. address 1FFFFCh written instead of 7FFFFCh.<br/>
+DMA transfers to RAM are not executed when bit23 is set.<br/>
+Wraparound when counting down from 000000h to FFFFFCh, leading to words after wraparound not being written to RAM.
 
 #### 1F801084h+N\*10h - D#\_BCR - DMA Block Control (Channel 0..6) (R/W)
 For SyncMode=0 (ie. for OTC and CDROM):<br/>
