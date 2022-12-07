@@ -18,7 +18,7 @@ and other early Bemani (Konami's rhythm game division) games.
 - [Credits, sources and links](#credits-sources-and-links)
 
 This document is currently work-in-progress. Here is an incomplete list of
-things that are still missing:
+things that need more research:
 
 - The BIOS and games are notoriously picky about ATAPI drives. Konami's code
   shall be disassembled and tested in order to find out where and why drive
@@ -26,9 +26,8 @@ things that are still missing:
 - JVS communications and the microcontroller that handles them have to be
   documented. The microcontroller's firmware has already been dumped.
 - I/O boards, *especially* the digital I/O board, need to be properly reverse
-  engineered and documented. The order of light outputs on the analog and
-  digital I/O boards might be completely wrong. The fishing controls board has
-  been fully reverse engineered but documentation for it is missing.
+  engineered and documented. The fishing controls board has been fully reverse
+  engineered but documentation for it is missing.
 - The DDR stage I/O board's communication protocol is largely unknown. More
   tests need to be done on real hardware and its CPLD shall be dumped if
   possible.
@@ -183,28 +182,28 @@ executable on the flash before initializing the drive.
 
 #### `0x1f400006` (ASIC register 3): **Misc. inputs**
 
-| Bits  | RW | Description                               |
-| ----: | :- | :---------------------------------------- |
-|     0 | R  | SPI MISO from ADC                         |
-|     1 | R  | SAR status from ADC                       |
-|     2 | R  | From `SDA` on security cartridge          |
-|     3 | R  | JVS sense input                           |
-|     4 | R  | JVS receive buffer status (1 = not empty) |
-|     5 | R  | Unknown (JVS-related)                     |
-|     6 | R  | `ISIG` status on security cartridge       |
-|     7 | R  | `DSIG` status on security cartridge       |
-|     8 | R  | Coin switch input 1 (inverted)            |
-|     9 | R  | Coin switch input 2 (inverted)            |
-|    10 | R  | PCMCIA card 1 insertion (0 = present)     |
-|    11 | R  | PCMCIA card 2 insertion (0 = present)     |
-|    12 | R  | Test button (built-in and JAMMA pin 15)   |
-| 13-15 |    | Unused?                                   |
+| Bits  | RW | Description                                   |
+| ----: | :- | :-------------------------------------------- |
+|     0 | R  | SPI MISO from ADC                             |
+|     1 | R  | SAR status from ADC                           |
+|     2 | R  | From `SDA` on security cartridge              |
+|     3 | R  | JVS sense input                               |
+|     4 | R  | JVS receive buffer status (1 = not empty)     |
+|     5 | R  | Unknown (JVS-related)                         |
+|     6 | R  | `ISIG` status on security cartridge           |
+|     7 | R  | `DSIG` status on security cartridge           |
+|     8 | R  | Coin switch input 1 (0 = coin being inserted) |
+|     9 | R  | Coin switch input 2 (0 = coin being inserted) |
+|    10 | R  | PCMCIA card 1 insertion (0 = card present)    |
+|    11 | R  | PCMCIA card 2 insertion (0 = card present)    |
+|    12 | R  | Test button (built-in and JAMMA pin 15)       |
+| 13-15 |    | Unused?                                       |
 
 See the security cartridge section for more details about `ISIG` and  `DSIG`.
 For bit 2 to be valid, `SDA` should be set as an input by clearing the
 respective bit in the bank switch register.
 
-#### `0x1f400008` (ASIC register 6): **JAMMA controls**
+#### `0x1f400008` (ASIC register 4): **JAMMA controls**
 
 | Bits | RW | Description                            |
 | ---: | :- | :------------------------------------- |
@@ -322,7 +321,7 @@ Data transfers can also be performed through DMA5, see below for details.
 DMA channel 5, normally unused/reserved for the expansion port on a PS1, can be
 used to transfer data to/from the IDE bus... with some caveats. The "correct"
 way to connect an IDE drive to the PS1's DMA controller would to be to wire up
-`DMARQ` and `DMACK` from the drive directly to the respective pins on the CPU,
+`DMARQ` and `/DMACK` from the drive directly to the respective pins on the CPU,
 allowing the DMA controller to synchronize transfers to the drive's internal
 buffer seamlessly.
 
@@ -501,14 +500,14 @@ devices using the `SRST` bit in the device control register.
 | 0-15 |    | _Unused_    |
 
 This register is a dummy write-only port that clears the watchdog timer
-embedded in the Konami 058232 ASIC when any value is written to it. The minimum
-rate the watchdog must be cleared at is currently unknown, but the BIOS and
-most games seem to write to this port at least once per frame.
+embedded in the Konami 058232 power-on reset and coin counter driver chip when
+any value is written to it. The BIOS and most games seem to write to this port
+at least once per frame.
 
-If the watchdog is not constantly cleared, it will generate a reset pulse and
-reboot the 573. There is no way to disable the watchdog other than physically
-modifying the 573 and desoldering the 058232 ASIC (which also drives coin
-counters), or cutting its reset output pin.
+If the watchdog is not cleared *at least* every 350-390 ms, it will pull the
+system's reset line low for about 50 ms and reboot the 573. The watchdog can be
+disabled without affecting power-on reset by placing a jumper on `S86` (see
+pinouts).
 
 #### `0x1f600000`: **External outputs**
 
@@ -551,84 +550,91 @@ I/O boards have full access to the 16-bit system bus and are mapped to the
 Several boards are known to exist although so far most of them haven't yet
 been documented nor fully emulated in MAME.
 
+- [Analog I/O board (`GX700-PWB(F)`)](#analog-io-board-gx700-pwbf)
+- [Digital I/O board (`GX894-PWB(B)A`)](#digital-io-board-gx894-pwbba)
+- [Alternate analog I/O board (`GX700-PWB(K)`)](#alternate-analog-io-board-gx700-pwbk)
+- [Fishing controls board (`GE765-PWB(B)A`)](#fishing-controls-board-ge765-pwbba)
+- [DDR Karaoke Mix I/O board (`GX921-PWB(B)`)](#ddr-karaoke-mix-io-board-gx921-pwbb)
+- [Gun Mania I/O board (`PWB0000073070`, unconfirmed)](#gun-mania-io-board-pwb0000073070-unconfirmed)
+- [Hypothetical debugging board](#hypothetical-debugging-board)
+
 ### Analog I/O board (`GX700-PWB(F)`)
 
 The name is misleading as the board does not deal with any analog signals
-whatsoever, all it does is providing a few registers for controlling lights on
-the cabinet through high-current optocouplers. The name was given retroactively
-to differentiate it from the digital I/O board.
+whatsoever; the name was given retroactively to differentiate it from the
+digital I/O board. It provides up to 28 optoisolated open-collector outputs
+usually used to control cabinet lights, split across 4 banks:
 
-This board provides up to 32 light outputs through 4 connectors. See the
-game-specific information section for details on how lights are wired up on
-each cabinet type.
+- **Bank A** (wired to `CN33`): 8 outputs (A0-A7)
+- **Bank B** (wired to `CN34`): 8 outputs (B0-B7)
+- **Bank C** (wired to `CN35`): 8 outputs (C0-C7)
+- **Bank D** (wired to `CN36`): 4 outputs (D0-D3)
 
-#### `0x1f640040`: **Light control 0**
+See the game-specific information section for details on how lights are wired
+up on each cabinet type.
 
-| Bits | RW | Description       |
-| ---: | :- | :---------------- |
-|    0 | W  | To light output 3 |
-|    1 | W  | To light output 2 |
-|    2 | W  | To light output 7 |
-|    3 | W  | To light output 6 |
-|    4 | W  | To light output 5 |
-|    5 | W  | To light output 4 |
-|    6 | W  | To light output 1 |
-|    7 | W  | To light output 0 |
-| 8-15 |    | Unused            |
+#### `0x1f640080`: **Bank A**
 
-#### `0x1f640044`: **Light control 1**
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+|    0 | W  | Output A1 (0 = grounded) |
+|    1 | W  | Output A3 (0 = grounded) |
+|    2 | W  | Output A5 (0 = grounded) |
+|    3 | W  | Output A7 (0 = grounded) |
+|    4 | W  | Output A6 (0 = grounded) |
+|    5 | W  | Output A4 (0 = grounded) |
+|    6 | W  | Output A2 (0 = grounded) |
+|    7 | W  | Output A0 (0 = grounded) |
+| 8-15 |    | _Unused_                 |
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-|    0 | W  | To light output 11 |
-|    1 | W  | To light output 10 |
-|    2 | W  | To light output 15 |
-|    3 | W  | To light output 14 |
-|    4 | W  | To light output 13 |
-|    5 | W  | To light output 12 |
-|    6 | W  | To light output 9  |
-|    7 | W  | To light output 8  |
-| 8-15 |    | Unused             |
+#### `0x1f640088`: **Bank B**
 
-#### `0x1f640048`: **Light control 2**
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+|    0 | W  | Output B1 (0 = grounded) |
+|    1 | W  | Output B3 (0 = grounded) |
+|    2 | W  | Output B5 (0 = grounded) |
+|    3 | W  | Output B7 (0 = grounded) |
+|    4 | W  | Output B6 (0 = grounded) |
+|    5 | W  | Output B4 (0 = grounded) |
+|    6 | W  | Output B2 (0 = grounded) |
+|    7 | W  | Output B0 (0 = grounded) |
+| 8-15 |    | _Unused_                 |
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-|    0 | W  | To light output 19 |
-|    1 | W  | To light output 18 |
-|    2 | W  | To light output 23 |
-|    3 | W  | To light output 22 |
-|    4 | W  | To light output 21 |
-|    5 | W  | To light output 20 |
-|    6 | W  | To light output 17 |
-|    7 | W  | To light output 16 |
-| 8-15 |    | Unused             |
+#### `0x1f640090`: **Bank C**
 
-#### `0x1f64004c`: **Light control 3**
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+|    0 | W  | Output C1 (0 = grounded) |
+|    1 | W  | Output C3 (0 = grounded) |
+|    2 | W  | Output C5 (0 = grounded) |
+|    3 | W  | Output C7 (0 = grounded) |
+|    4 | W  | Output C6 (0 = grounded) |
+|    5 | W  | Output C4 (0 = grounded) |
+|    6 | W  | Output C2 (0 = grounded) |
+|    7 | W  | Output C0 (0 = grounded) |
+| 8-15 |    | _Unused_                 |
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-|    0 | W  | To light output 27 |
-|    1 | W  | To light output 26 |
-|    2 | W  | To light output 31 |
-|    3 | W  | To light output 30 |
-|    4 | W  | To light output 29 |
-|    5 | W  | To light output 28 |
-|    6 | W  | To light output 25 |
-|    7 | W  | To light output 24 |
-| 8-15 |    | Unused             |
+#### `0x1f640098`: **Bank D**
+
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+|    0 | W  | Output D3 (0 = grounded) |
+|    1 | W  | Output D2 (0 = grounded) |
+|    2 | W  | Output D1 (0 = grounded) |
+|    3 | W  | Output D0 (0 = grounded) |
+| 4-15 |    | _Unused_                 |
 
 ### Digital I/O board (`GX894-PWB(B)A`)
 
-This board was used for pretty much all Bemani games besides earlier ones which
-used CD audio and the analog I/O board. In addition to the usual light control
-circuitry, this board features an FPGA and an MPEG decoder ASIC to play
-encrypted MP3 files. The FPGA has 24 MB of dedicated RAM onto which the files
-are preloaded on startup, then decrypted on the fly and fed to the decoder. The
-board also features two RCA jacks for communication with other cabinets and a
-64-bit unique serial number, copied to the security cartridge during
-installation in order to prevent operators from installing the same game on
-multiple systems.
+This board was used by pretty much all Bemani games, besides earlier ones which
+used CD audio and the analog I/O board. In addition to light control outputs,
+this board features an FPGA and an MPEG decoder ASIC to play encrypted MP3
+files. The FPGA has 24 MB of dedicated RAM into which the files are preloaded
+on startup, then decrypted on the fly and fed to the decoder. The board also
+features two RCA jacks for communication with other cabinets and a 64-bit
+unique serial number, copied to the security cartridge during installation in
+order to prevent operators from installing the same game on multiple systems.
 
 **NOTE**: the vast majority of the registers provided by this board (including
 light control) are handled by its FPGA, which requires a configuration
@@ -646,79 +652,128 @@ bitstream would not only skip decryption but also implement a custom set of
 registers (rather than the ones described below), sidestepping the lack of
 documentation entirely.
 
-#### `0x1f6400e0`: **Light control 1** (impl. by bitstream)
+#### `0x1f640080`: **Magic number** (impl. by bitstream)
 
-| Bits | RW | Description       |
-| ---: | :- | :---------------- |
-| 0-11 |    | Unused?           |
-|   12 | W  | To light output 4 |
-|   13 | W  | To light output 7 |
-|   14 | W  | To light output 5 |
-|   15 | W  | To light output 6 |
+| Bits | RW | Description             |
+| ---: | :- | :---------------------- |
+| 0-15 | R  | Magic number (`0x1234`) |
 
-#### `0x1f6400e2`: **Light control 0** (impl. by bitstream)
+This register is read by Konami's digital I/O driver to make sure the bitstream
+was properly loaded into the FPGA.
 
-| Bits | RW | Description       |
-| ---: | :- | :---------------- |
-| 0-11 |    | Unused?           |
-|   12 | W  | To light output 0 |
-|   13 | W  | To light output 3 |
-|   14 | W  | To light output 1 |
-|   15 | W  | To light output 2 |
+#### `0x1f6400e0`: **Bank A** (impl. by bitstream)
 
-#### `0x1f6400e4`: **Light control 3** (impl. by bitstream)
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+| 0-11 |    | _Unused_                 |
+|   12 | W  | Output A4 (0 = grounded) |
+|   13 | W  | Output A5 (0 = grounded) |
+|   14 | W  | Output A6 (0 = grounded) |
+|   15 | W  | Output A7 (0 = grounded) |
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-| 0-11 |    | Unused?            |
-|   12 | W  | To light output 12 |
-|   13 | W  | To light output 15 |
-|   14 | W  | To light output 13 |
-|   15 | W  | To light output 14 |
+#### `0x1f6400e2`: **Bank A** (impl. by bitstream)
 
-#### `0x1f6400e6`: **Light control 7** (impl. by bitstream)
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+| 0-11 |    | _Unused_                 |
+|   12 | W  | Output A0 (0 = grounded) |
+|   13 | W  | Output A1 (0 = grounded) |
+|   14 | W  | Output A2 (0 = grounded) |
+|   15 | W  | Output A3 (0 = grounded) |
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-| 0-11 |    | Unused?            |
-|   12 | W  | To light output 28 |
-|   13 | W  | To light output 31 |
-|   14 | W  | To light output 29 |
-|   15 | W  | To light output 30 |
+#### `0x1f6400e4`: **Bank B** (impl. by bitstream)
+
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+| 0-11 |    | _Unused_                 |
+|   12 | W  | Output B4 (0 = grounded) |
+|   13 | W  | Output B5 (0 = grounded) |
+|   14 | W  | Output B6 (0 = grounded) |
+|   15 | W  | Output B7 (0 = grounded) |
+
+#### `0x1f6400e6`: **Bank D** (impl. by bitstream)
+
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+| 0-11 |    | _Unused_                 |
+|   12 | W  | Output D0 (0 = grounded) |
+|   13 | W  | Output D1 (0 = grounded) |
+|   14 | W  | Output D2 (0 = grounded) |
+|   15 | W  | Output D3 (0 = grounded) |
+
+#### `0x1f6400f8`: **FPGA unknown input**
+
+| Bits | RW | Description                |
+| ---: | :- | :------------------------- |
+| 0-14 |    | _Unused_                   |
+|   15 | W  | Unknown (FPGA `/PROGRAM`?) |
+
+Used during bitstream upload, seems to be some kind of reset signal. It might
+*not* be the `/PROGRAM` input (see the XCS40XL datasheet) as it is also toggled
+after the bitstream is loaded.
 
 #### `0x1f6400f6`: **FPGA status**
 
+| Bits | RW | Description             |
+| ---: | :- | :---------------------- |
+| 0-11 |    | _Unused_                |
+|   12 | RW | Unknown (FPGA `/INIT`?) |
+|   13 | RW | Unknown (FPGA `DONE`?)  |
+|   14 | R  | Unknown (FPGA `/HDC`?)  |
+|   15 | R  | Unknown (FPGA `LDC`?)   |
+
+Used during bitstream upload. The digital I/O driver skips uploading the
+bitstream if bit 14 is cleared and bit 15 is set. Bits 12 and 13 seem to be
+open-collector and thus writable; the driver pulses them low after resetting
+the FPGA. The code also attempts to write 0 to bit 14, which is not
+open-collector according to the XCS40XL datasheet, but that may just be a bug.
+
 #### `0x1f6400f8`: **FPGA bitstream upload**
 
-#### `0x1f6400fa`: **Light control 4** (impl. by bitstream)
+| Bits | RW | Description             |
+| ---: | :- | :---------------------- |
+| 0-14 |    | _Unused_                |
+|   15 | W  | Bit to send to the FPGA |
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-| 0-11 |    | Unused?            |
-|   12 | W  | To light output 16 |
-|   13 | W  | To light output 19 |
-|   14 | W  | To light output 17 |
-|   15 | W  | To light output 18 |
+Bits written to this register are sent to the FPGA's configuration interface
+(`DIN` and `CCLK` pins, see the XCS40XL datasheet). There is no separate bit to
+control the `CCLK` pin as clocking is handled automatically. The FPGA is wired
+to boot in "slave serial" mode and wait for a bitstream to be loaded by the 573
+through this port.
 
-#### `0x1f6400fc`: **Light control 5** (impl. by bitstream)
+All known games load the bitstream from a file on the internal flash (usually
+named `data/fpga/fpga_mp3.bin`), then bitbang its contents to this port LSB
+first and monitor the FPGA status register.
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-| 0-11 |    | Unused?            |
-|   12 | W  | To light output 20 |
-|   13 | W  | To light output 23 |
-|   14 | W  | To light output 21 |
-|   15 | W  | To light output 22 |
+#### `0x1f6400fa`: **Bank C** (impl. by bitstream)
 
-#### `0x1f6400fe`: **Light control 2** (impl. by bitstream)
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+| 0-11 |    | _Unused_                 |
+|   12 | W  | Output C0 (0 = grounded) |
+|   13 | W  | Output C1 (0 = grounded) |
+|   14 | W  | Output C2 (0 = grounded) |
+|   15 | W  | Output C3 (0 = grounded) |
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-| 0-11 |    | Unused?            |
-|   12 | W  | To light output 8  |
-|   13 | W  | To light output 11 |
-|   14 | W  | To light output 9  |
-|   15 | W  | To light output 10 |
+#### `0x1f6400fc`: **Bank C** (impl. by bitstream)
+
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+| 0-11 |    | _Unused_                 |
+|   12 | W  | Output C4 (0 = grounded) |
+|   13 | W  | Output C5 (0 = grounded) |
+|   14 | W  | Output C6 (0 = grounded) |
+|   15 | W  | Output C7 (0 = grounded) |
+
+#### `0x1f6400fe`: **Bank B** (impl. by bitstream)
+
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+| 0-11 |    | _Unused_                 |
+|   12 | W  | Output B0 (0 = grounded) |
+|   13 | W  | Output B1 (0 = grounded) |
+|   14 | W  | Output B2 (0 = grounded) |
+|   15 | W  | Output B3 (0 = grounded) |
 
 #### `0x1f6400ee`: **DS2401 ID chip** (impl. by bitstream)
 
@@ -734,7 +789,7 @@ This board is currently undocumented.
 
 This board is currently undocumented.
 
-### Gun Mania I/O board
+### Gun Mania I/O board (`PWB0000073070`, unconfirmed)
 
 This board is currently undocumented.
 
@@ -828,8 +883,6 @@ to the ADC0834 on the main board except with 8 channels instead of 4. The ADC's
 inputs are broken out to a connector on the cartridge. Hyper Bishi Bashi Champ
 and Salary Man Champ cartridges contain some 74 logic to control cabinet lights
 and are fed 12V through a separate cable on the JAMMA harness.
-
-#### Different game/install cartridges
 
 Some games used an XI cartridge for running the installer and a ZI cartridge
 for the actual game; MAME calls these games "XZI". MAME also declares some
@@ -963,39 +1016,92 @@ A ZS01 transaction can be broken down into the following steps:
 
 Over the 573's lifetime Konami introduced several add-ons that extended its
 functionality. Unlike the I/O boards, these were external to the 573 unit and
-usually optional, although some later games started to require them in order to
-boot. Not much is currently known about any of these.
+not always mandatory. Not much is currently known about any of these.
 
-- **PS1 controller/memory card adapter**: sits between the 573 and any panel
-  mounted memory card (and sometimes controller) ports. It has an internal
-  Toshiba TMPR3904 CPU that handles communication with the cards and connects
-  to the 573 via the JVS bus.
-- **e-Amusement network unit** (used by later GFDM games): connects to the 573
-  through PCMCIA, using a cable that ends in a dummy card. Once again it has
-  its own processor - a Toshiba TMPR3927 running at 133 MHz with 8 MB of RAM,
-  far more powerful than the 573 itself - as well as an internal 2.5-inch IDE
-  drive and a PCI Ethernet chip. It seems to run a proprietary kernel provided
-  by Toshiba known as UDEOS.
-- **Multi-session unit** (used by some Bemani games): it has yet another
-  TMPR3927, an FPGA and 4 (!) MPEG decoder chips. It comes with 3 or 4
-  daughterboards installed, each of which hosts a stereo I2S DAC and has RCA
-  jacks for audio input and output. The box also has its own CD drive and power
-  supply. Its purpose is to enable "session mode", which allows for the same
-  song to be played on multiple games at the same time, with the box playing
-  the backing track and routing audio between the cabinets. It connects to each
-  cabinet's 573 using RS-232, through the "network" port on the security
-  cartridge.
-- **Master calendar**: this was a JVS device used by Konami to program security
-  cartridges at the factory. All games that use a security cartridge search the
-  JVS bus on startup and enter a "factory test" mode if a device identifying as
-  a master calendar is connected. The game will then proceed to initialize the
-  cartridge after an authentication handshake with the master calendar. Even
-  though nothing is known about the actual hardware Konami used, this device
-  has been successfully replicated using an Arduino (see the links section).
+### Relay board (`GN845-PWB(A)`)
+
+A relatively simple lamp driver board, controlled by the optoisolated outputs
+from the analog or digital I/O board. Commonly mounted in a metal box alongside
+audio amplifier boards in most cabinets.
+
+### DDR stage I/O board (`GN845-PWB(B)`)
+
+Sits between the 573 and the sensors in each stage's arrow panels in Dance
+Dance Revolution cabinets. It is based on a Xilinx XC9536 CPLD and allows the
+573 to check the status of a specific pressure sensor (each panel has 4
+sensors, one along each edge), in addition to ensuring DDR games can only be
+played with an actual stage rather than just a joystick or buttons wired up to
+the 573's JAMMA connector. Konami kept using the same board long after the 573
+was discontinued, with the last game to use it being DDR X/X2 (PC based).
+
+Each stage's board communicates with the 573 over 6 wires, of which 4 are the
+up/down/left/right signals going to the JAMMA connector and 2 are light outputs
+from the I/O board being misused as data and clock lines (see above). The board
+initially asserts the right and up signals and waits for the 573 to issue an
+initialization command by bitbanging it over the light outputs. Received bits
+are acknowledged by the board by echoing them on the right signal and toggling
+the up signal.
+
+Once initialization is done the board goes into passthrough mode, asserting the
+up/down/left/right signals whenever any of the respective arrow panels' sensors
+are pressed. The 573 can issue another command to retrieve the status of each
+sensor separately, which is then sent by the board in serialized form over the
+right and up signals. DDR games only use this command to display sensor status
+in the operator menu, no commands are sent to the board during actual gameplay.
+
+The initialization protocol is currently unknown. The protocol used after
+initialization is partially known (see links) but needs to be verified and
+documented properly.
+
+### PS1 controller and memory card adapter ("White I/O", `GE885-PWB(A)`)
+
+A ridiculously overengineered JVS board providing support for accessing PS1
+controllers and memory cards plugged into ports on the front of the cabinet.
+This device is more or less self-contained as it contains a Toshiba TMPR3904
+CPU, 512 KB of RAM and a boot ROM; however, the ROM is only a small bootloader
+and the actual firmware is downloaded from the 573 into RAM. There are also
+connectors for security dongles.
+
+Memory card support became common in later Bemani games, allowing players to
+save their scores and play custom charts. GuitarFreaks is the only game known
+to support external controllers through this board.
+
+### e-Amusement network unit (`PWB0000100991`)
+
+Provides online connectivity to some Bemani games. It connects to the 573 via
+PCMCIA, using a cable that ends in a dummy card. The board has a Toshiba
+TMPR3927 CPU running at 133 MHz with 8 MB of RAM (far more powerful than the
+573 itself!) as well as an internal 2.5-inch IDE drive and a PCI Ethernet chip.
+Appears to run a proprietary kernel provided by Toshiba known as UDEOS.
+
+### Multisession unit (`GXA25-PWB(A)`)
+
+Probably the most overengineered piece of hardware Konami ever made: a fairly
+large box containing yet another TMPR3927 CPU, an FPGA and 4 MPEG decoders. It
+comes with 3 or 4 daughterboards installed, each of which hosts a stereo DAC
+and has RCA jacks for audio input and output. The box also has its own CD drive
+and power supply.
+
+Its purpose is to enable "session mode" in later Bemani games, which allows for
+the same song to be played on multiple games at the same time, with the box
+playing the backing track and routing audio between the cabinets. It connects
+to each cabinet's 573 using RS-232, through the "network" port on the security
+cartridge.
+
+### Master calendar
+
+A JVS device used by Konami to program security cartridges at the factory. All
+games that use a security cartridge search the JVS bus on startup and enter a
+"factory test" mode if a device identifying as a master calendar is connected.
+The game will then proceed to initialize the cartridge (and in some cases RTC
+RAM) after an authentication handshake with the master calendar.
+
+Even though nothing is known about the actual hardware Konami used, this device
+has been successfully replicated using an Arduino (see the links section).
 
 ## Connectors
 
-This is (a good approximation of) what the front panel of a 573 looks like:
+The front panel of a 573 looks approximately like this:
 
 ```
 _________________________________________________ [3]
@@ -1010,7 +1116,7 @@ _________________________________________________ [3]
 1. **ATAPI CD drive**: a standard 5.25-inch unit held in place by a bracket
    mounted to the upper half of the case. Gray case variants usually came with
    a removable plate covering the drive cutout, while black/blue models have a
-   front panel that blocks access to the eject button for whatever reason.
+   front panel that hides the eject button behind a small hole.
 2. **Sub-panels**: the gray variant of the case has a cutout for a plate to
    hold additional I/O connectors here. Different games have different plates,
    see the game-specific information section for details on which connectors
@@ -1020,18 +1126,17 @@ _________________________________________________ [3]
    right side and locked in place by plastic tabs. Hotplugging cartridges while
    the system is powered on will result in *permanent* damage to the cartridge,
    the 573 or both due to ESD (this has been proven to happen).
-4. **JAMMA**: this is a standard PCB edge connector used in arcade systems,
-   carrying 5V and 12V power rails, analog RGB video, a mono speaker output
-   (wired to the left channel of the built-in amp, see below) and button and
-   coin inputs. The 573 doesn't use the negative 5V rail.
+4. **JAMMA**: a standard PCB edge connector used in arcade systems, carrying 5V
+   and 12V power rails, analog RGB video, a mono speaker output (wired to the
+   left channel of the built-in amp, see below) and button and coin inputs. The
+   573 doesn't use the negative 5V rail provided by some JAMMA power supplies.
 5. **DIP switches**: a set of four DIP switches for quick game configuration.
    The first three are used by some games (and can be freely used by homebrew)
    while the last one is reserved by the BIOS and used to select whether to
    boot from the CD or from the internal flash.
-6. **JVS "USB" port**: as already mentioned this is not an actual USB port but
-   rather a serial bus which can be used to connect peripherals and external
-   I/O boards. As the underlying protocol is RS-485, multiple devices can be
-   daisy chained.
+6. **JVS "USB" port**: this is not an actual USB port, but rather a serial bus
+   which can be used to connect peripherals and external I/O boards. As the
+   underlying protocol is RS-485, multiple devices can be daisy chained.
 7. **"VGA" and RCA outputs**: these are also mandated by the JVS specification
    and are useful for hooking the system up for testing without needing a JAMMA
    "supergun" or similar adapter. Note that the VGA connector does not output
@@ -1057,6 +1162,10 @@ most CD drive APIs and the ISO9660 filesystem driver have been removed. Other
 than that there are no significant changes (e.g. controller and memory card
 drivers are still present and functional, even though the controller port was
 never used).
+
+Contrary to popular belief, **the BIOS is NOT involved in copy protection**.
+All security cartridge checks are implemented by the games themselves rather
+than by the shell.
 
 ### Revisions
 
@@ -1146,7 +1255,8 @@ the shell as follows:
 const uint32_t crc32_table[256] = { /* ... */ };
 uint32_t crc = 0xffffffff;
 
-for (size_t i = 0; i < exe_size; i <<= 1)
+crc = (crc >> 8) ^ crc32_table[(crc & 0xff) ^ EXE_DATA[0]];
+for (size_t i = 1; i < exe_size; i <<= 1)
     crc = (crc >> 8) ^ crc32_table[(crc & 0xff) ^ EXE_DATA[i]];
 
 if ((~crc) == *EXE_CRC32)
@@ -1212,9 +1322,9 @@ Homebrew games should thus place multiple copies of the boot executable on the
 disc to improve compatibility with "modchipped" systems. An interesting side
 note is that, for any of these names, summing the ASCII codes of each character
 will always yield the same result. Presumably bootleggers were unable to find
-the code in charge of BIOS ROM checksum validation and and found it easier to
-just turn the string into random nonsense whose checksum collided with the
-original one...
+the code in charge of BIOS ROM checksum validation and found it easier to just
+turn the string into random nonsense whose checksum collided with the original
+one...
 
 ## Game-specific information
 
@@ -1225,7 +1335,7 @@ non-Bemani games that do not require I/O boards, have no sub-panel cutouts and
 instead expose some of the built-in ports through a handful of connectors:
 
 - **Power**: a hefty 2x4 Molex connector for powering the board, wired to the
-  motherboard's power connector. 
+  motherboard's power connector.
 - **Option 1**: DE9 connector providing 4 analog inputs, wired to the
   `ANALOG` connector on the motherboard. These inputs seem to go directly
   into the 573's ADC chip *with no protection whatsoever*.
@@ -1258,66 +1368,66 @@ wired up to the analog or digital I/O board as follows:
 
 | Output | Connected to                |
 | -----: | :-------------------------- |
-|      0 | Player 1 up arrow           |
-|      1 | Player 1 left arrow         |
-|      2 | Player 1 right arrow        |
-|      3 | Player 1 down arrow         |
-|      4 | Data to player 1 stage I/O  |
-|    5-6 | _Unused_                    |
-|      7 | Clock to player 1 stage I/O |
-|      8 | Player 2 up arrow           |
-|      9 | Player 2 left arrow         |
-|     10 | Player 2 right arrow        |
-|     11 | Player 2 down arrow         |
-|     12 | Data to player 2 stage I/O  |
-|  13-14 | _Unused_                    |
-|     15 | Clock to player 2 stage I/O |
-|     16 | _Unused_                    |
-|     17 | Player 1 buttons            |
-|     18 | Player 2 buttons            |
-|     19 | _Unused_                    |
-|     20 | Bottom right marquee light  |
-|     21 | Bottom left marquee light   |
-|     22 | Top left marquee light      |
-|     23 | Top right marquee light     |
-|  24-27 | _Unused_                    |
-|     28 | Speaker neon (digital I/O)  |
-|     29 | _Unused_                    |
-|     30 | Speaker neon (analog I/O)   |
-|     31 | _Unused_                    |
+|     A0 | Player 1 up arrow           |
+|     A1 | Player 1 down arrow         |
+|     A2 | Player 1 left arrow         |
+|     A3 | Player 1 right arrow        |
+|     A4 | Data to player 1 stage I/O  |
+|     A5 | Clock to player 1 stage I/O |
+|  A6-A7 | _Unused_                    |
+|     B0 | Player 2 up arrow           |
+|     B1 | Player 2 down arrow         |
+|     B2 | Player 2 left arrow         |
+|     B3 | Player 2 right arrow        |
+|     B4 | Data to player 2 stage I/O  |
+|     B5 | Clock to player 2 stage I/O |
+|  B6-B7 | _Unused_                    |
+|  C0-C1 | _Unused_                    |
+|     C2 | Player 1 buttons            |
+|     C3 | Player 2 buttons            |
+|     C4 | Bottom right marquee light  |
+|     C5 | Top right marquee light     |
+|     C6 | Bottom left marquee light   |
+|     C7 | Top left marquee light      |
+|     D0 | Speaker neon                |
+|  D1-D3 | _Unused_                    |
 
-Light outputs 4, 7, 12 and 15 do not actually control any lamps, but are used
-to communicate with each stage's I/O board. See below for details.
+Light outputs A4, A5, B4 and B5 do not actually control any lamps, but are used
+to communicate with each stage's I/O board. See the external modules section
+for more details.
 
-### DDR stage I/O board
+### DDR Solo input and light mapping
 
-In Dance Dance Revolution cabinets, the sensors in each stage's arrow panels
-are not connected directly to the 573 but go through a board commonly known as
-the "stage I/O". This board, based on a Xilinx XC9536 CPLD, has two purposes:
-allowing the 573 to check the status of a specific pressure sensor (each panel
-has 4 sensors, one along each edge) and ensuring DDR games can only be played
-with an actual stage, rather than just a joystick or buttons wired up to the
-573's JAMMA connector. Konami kept using the same board long after the 573 was
-discontinued, with the last game to use it being DDR X/X2.
+Dance Dance Revolution Solo cabinets, unlike 2-player cabinets, do not use a
+stage I/O board to multiplex the sensors as each arrow panel only has 2 sensors
+(rather than 4). Each sensor is instead wired directly to the JAMMA connector,
+making use of most of the available inputs.
 
-Each stage's board communicates with the 573 over 6 wires, of which 4 are the
-up/down/left/right signals going to the JAMMA connector and 2 are light outputs
-from the I/O board being misused as data and clock lines (see above). The board
-initially asserts the right and up signals and waits for the 573 to issue an
-initialization command by bitbanging it over the light outputs. Received bits
-are acknowledged by the board by echoing them on the right signal and toggling
-the up signal.
+| JAMMA input       | Connected to        |
+| :---------------- | :------------------ |
+| Player 1 left     | Left sensor A       |
+| Player 1 right    | Right sensor A      |
+| Player 1 up       | Up sensor A         |
+| Player 1 down     | Down sensor A       |
+| Player 1 button 1 | Up-left sensor B    |
+| Player 1 button 2 | Left sensor B       |
+| Player 1 button 3 | Down sensor B       |
+| Player 1 button 4 | _Unused_            |
+| Player 1 button 5 | Left button         |
+| Player 1 start    | Start button        |
+| Player 2 left     | Up-left sensor A    |
+| Player 2 right    | Up-right sensor A   |
+| Player 2 up       | _Unused_            |
+| Player 2 down     | _Unused_            |
+| Player 2 button 1 | Up sensor B         |
+| Player 2 button 2 | Right sensor B      |
+| Player 2 button 3 | Up-right sensor B   |
+| Player 2 button 4 | _Unused_            |
+| Player 2 button 5 | Right button        |
+| Player 2 start    | _Unused_ (shorted?) |
 
-Once initialization is done the board goes into passthrough mode, asserting the
-up/down/left/right signals whenever any of the respective arrow panels' sensors
-are pressed. The 573 can issue another command to retrieve the status of each
-sensor separately, which is then sent by the board in serialized form over the
-right and up signals. DDR games only use this command to display sensor status
-in the operator menu, no commands are sent to the board during actual gameplay.
-
-The initialization protocol is currently unknown. The protocol used after
-initialization is partially known (see links) but needs to be verified and
-documented properly.
+The light mapping is currently unknown. Solo cabinets have less lights compared
+to their 2-player counterparts (e.g. arrow panel lamps are missing).
 
 ### DrumMania light mapping
 
@@ -1326,38 +1436,41 @@ lights wired up to the I/O board as follows:
 
 | Output | Connected to  |
 | -----: | :------------ |
-|   0-15 | _Unused_      |
-|     16 | Hi-hat        |
-|     17 | High tom      |
-|     18 | Low tom       |
-|     19 | Snare         |
-|     20 | Cymbal        |
-|     21 | Start button  |
-|     22 | Select button |
-|  23-26 | _Unused_      |
-|     27 | Bottom neon   |
-|  28-29 | _Unused_      |
-|     30 | Spotlight     |
-|     31 | Top neon      |
+|  A0-A7 | _Unused_      |
+|  B0-B7 | _Unused_      |
+|     C0 | Hi-hat        |
+|     C1 | Snare         |
+|     C2 | High tom      |
+|     C3 | Low tom       |
+|     C4 | Cymbal        |
+|     C5 | _Unused_      |
+|     C6 | Start button  |
+|     C7 | Select button |
+|     D0 | Spotlight     |
+|     D1 | Top neon      |
+|     D2 | _Unused_      |
+|     D3 | Bottom neon   |
 
 The wiring was changed in 2nd Mix and later cabinets, which use the following
 mapping instead:
 
 | Output | Connected to  |
 | -----: | :------------ |
-|      0 | Hi-hat        |
-|      1 | High tom      |
-|      2 | Low tom       |
-|      3 | Snare         |
-|    4-7 | _Unused_      |
-|      8 | Spotlight     |
-|      9 | Top neon      |
-|     10 | _Unused_      |
-|     11 | Bottom neon   |
-|     12 | Cymbal        |
-|     13 | Start button  |
-|     14 | Select button |
-|  15-31 | _Unused_      |
+|     A0 | Hi-hat        |
+|     A1 | Snare         |
+|     A2 | High tom      |
+|     A3 | Low tom       |
+|  A4-A7 | _Unused_      |
+|     B0 | Spotlight     |
+|     B1 | Bottom neon   |
+|     B2 | Top neon      |
+|     B3 | _Unused_      |
+|     B4 | Cymbal        |
+|     B5 | _Unused_      |
+|     B6 | Start button  |
+|     B7 | Select button |
+|  C0-C7 | _Unused_      |
+|  D0-D3 | _Unused_      |
 
 ## Misc. notes
 
@@ -1398,6 +1511,18 @@ guidelines:
   lights and eject the CD (as some cases hide the drive's eject button behind a
   small hole or make it difficult to access otherwise).
 
+### Missing support for PAL mode
+
+The 573 only supports 60 Hz mode (i.e. "NTSC", even though the video DAC has no
+composite or S-video output so no color modulation is involved). Attempting to
+switch the GPU into 50 Hz PAL mode using the `GP1(0x08)` command will result in
+a crash, as only the NTSC clock input pin is wired up.
+
+Support for 50 Hz can be added back by shorting pins 192 and 196 on the GPU
+(which will give "PAL-on-NTSC" timings) or by connecting pin 192 to an external
+oscillator tuned to generate a PAL clock. See the timings section of the GPU
+page for more details.
+
 ### Known working replacement drives
 
 This is an incomplete list of drives that are known to work (or to be
@@ -1410,12 +1535,16 @@ use CD-DA (i.e. pretty much all games that don't use the digital I/O board).
 | :----------- | :----------- | :------ | :------ | :--------------------------- |
 | ASUSTeK      | DVD-E616P3   | **Yes** | Unknown |                              |
 | Compaq       | 179137-701   | **Yes** | **Yes** |                              |
+| Compaq       | CRN-8241B    | **Yes** | **Yes** | Laptop drive                 |
 | Creative     | CD4832E      | **Yes** | No      |                              |
 | Hitachi      | CDR-7930     | **Yes** | No      |                              |
+| LG           | GCE-8160B    | **Yes** | Unknown |                              |
 | LG           | GCR-8523B    | **Yes** | Unknown |                              |
 | LG           | GDR-8163B    | **Yes** | **Yes** |                              |
 | LG           | GDR-8164B    | **Yes** | **Yes** |                              |
+| LG           | GH22LP20     | **Yes** | Unknown |                              |
 | LG           | GH22NP20     | **Yes** | Unknown |                              |
+| LG           | GSA-4165B    | No      |         |                              |
 | Lite-On      | LH-18A1H     | **Yes** | **Yes** |                              |
 | Lite-On      | LTD-163      | **Yes** | Unknown |                              |
 | Lite-On      | LTD-165H     | **Yes** | Unknown |                              |
@@ -1429,12 +1558,21 @@ use CD-DA (i.e. pretty much all games that don't use the digital I/O board).
 | NEC          | CDR-1900A    | **Yes** | Unknown |                              |
 | NEC          | ND-2510A     | No      |         |                              |
 | Panasonic    | CR-594C      | **Yes** | Unknown |                              |
+| Panasonic    | UJDA770      | **Yes** | Unknown | Laptop drive                 |
 | Sony         | DRU-510A     | **Yes** | Unknown |                              |
 | Sony         | DRU-810A     | **Yes** | Unknown |                              |
+| TDK          | AI-241040B   | **Yes** | Unknown |                              |
 | TDK          | AI-481648B   | **Yes** | Unknown |                              |
 | TEAC         | CD-W552E     | **Yes** | Unknown |                              |
 | Toshiba      | XM-5702B     | **Yes** | Unknown |                              |
 | Toshiba      | XM-6102B     | **Yes** | No      | Has issues with homebrew     |
+| Toshiba      | XM-7002B     | **Yes** | Unknown | Stock drive, laptop drive    |
+
+**NOTE**: Konami shipped some units with a Toshiba XM-7002B laptop drive and a
+passive adapter board (`GX874-PWB(B)`) to break out the drive's signals to a
+regular 40-pin IDE connector, possibly due to newer full size drives at the
+time being incompatible with the ATAPI driver. Laptop drives seem to have been
+first used by Konami in the multisession unit.
 
 ## Pinouts
 
@@ -1495,13 +1633,58 @@ as well as a sixth button input which is not available on the JAMMA connector.
 
 ### Main I/O board connector (`CN10`)
 
-The pinout of this connector is currently unknown.
+Used by all known I/O boards. Some signals seem to be duplicated across more
+than one pin for whatever reason. Note that the address and data bus are 3.3V,
+while all other signals are 5V as they go through the CPLD.
+
+| Pin | Name     | Dir | Pin | Name     | Dir |
+| --: | :------- | :-- | --: | :------- | :-- |
+|  A1 | `5V`     |     |  B1 | `5V`     |     |
+|  A2 | `5V`     |     |  B2 | `5V`     |     |
+|  A3 | `5V`     |     |  B3 | `5V`     |     |
+|  A4 | `5V`     |     |  B4 | `5V`     |     |
+|  A5 | `5V`     |     |  B5 | `5V`     |     |
+|  A6 | `/RD`    | W   |  B6 | `/WR0`   | W   |
+|  A7 | `/WR1`   | W   |  B7 | `GND`    |     |
+|  A8 | `GND`    |     |  B8 | `SYSCLK` | W   |
+|  A9 | `GND`    |     |  B9 | `GND`    |     |
+| A10 | `/RESET` | W   | B10 | `/RESET` | W   |
+| A11 | `GND`    |     | B11 | `GND`    |     |
+| A12 | `/EXP1`  | W   | B12 | `DMARQ5` | R   |
+| A13 | `GND`    |     | B13 | `GND`    |     |
+| A14 | `DMARQ5` | R   | B14 | `/EXP1`  | W   |
+| A15 | `/EXP2`  | W   | B15 | `NC`     |     |
+| A16 | `/IRQ10` | R   | B16 | `/IRQ10` | R   |
+| A17 | `A22`    | W   | B17 | `A23`    | W   |
+| A18 | `A20`    | W   | B18 | `A21`    | W   |
+| A19 | `A14`    | W   | B19 | `A15`    | W   |
+| A20 | `A12`    | W   | B20 | `A13`    | W   |
+| A21 | `A6`     | W   | B21 | `A7`     | W   |
+| A22 | `A4`     | W   | B22 | `A5`     | W   |
+| A23 | `A2`     | W   | B23 | `A3`     | W   |
+| A24 | `A0`     | W   | B24 | `A1`     | W   |
+| A25 | `D14`    | RW  | B25 | `D15`    | RW  |
+| A26 | `D12`    | RW  | B26 | `D13`    | RW  |
+| A27 | `D10`    | RW  | B27 | `D11`    | RW  |
+| A28 | `D8`     | RW  | B28 | `D9`     | RW  |
+| A29 | `D6`     | RW  | B29 | `D7`     | RW  |
+| A30 | `D4`     | RW  | B30 | `D5`     | RW  |
+| A31 | `D2`     | RW  | B31 | `D3`     | RW  |
+| A32 | `D0`     | RW  | B32 | `D1`     | RW  |
+| A33 | `GND`    |     | B33 | `GND`    |     |
+| A34 | `GND`    |     | B34 | `GND`    |     |
+| A35 | `GND`    |     | B35 | `GND`    |     |
+| A36 | `3.3V`   |     | B36 | `3.3V`   |     |
+| A37 | `3.3V`   |     | B37 | `3.3V`   |     |
+| A38 | `3.3V`   |     | B38 | `3.3V`   |     |
+| A39 | `3.3V`   |     | B39 | `3.3V`   |     |
+| A40 | `3.3V`   |     | B40 | `3.3V`   |     |
 
 ### Secondary I/O board connector (`CN21`)
 
-This connector exposes the SPI bus pins normally used for controllers and
-memory cards, which go unused on the 573 as no known I/O board ever used this
-connector.
+This connector exposes the address lines not wired to `CN10` as well as the SPI
+bus pins normally used for controllers and memory cards, which go unused on the
+573 as no known I/O board ever used this connector. All signals are 3.3V.
 
 | Pin | Name   | Dir | Pin | Name    | Dir |
 | --: | :----- | :-- | --: | :------ | :-- |
@@ -1523,30 +1706,32 @@ connector.
 
 ### Security cartridge slot (`CN14`)
 
-| Pin | Name     | Dir | Notes                           | Pin | Name    | Dir | Notes                                |
-| --: | :------- | :-- | :------------------------------ | --: | :------ | :-- | :----------------------------------- |
-|   1 | `GND`    |     |                                 |  23 | `GND`   |     |                                      |
-|   2 | `GND`    |     |                                 |  24 | `GND`   |     |                                      |
-|   3 | `/DSR`   | R   | Usually shorted to ground       |  25 | `EXCLK` | W   | 7.3728 MHz clock (also goes into H8) |
-|   4 | `NC`     |     | May have been DTR at some point |  26 | `GND`   |     |                                      |
-|   5 | `TX`     | W   |                                 |  27 | `DSIG`  | W   | Goes high when 573 updates `D0-D7`   |
-|   6 | `RX`     | R   |                                 |  28 | `SDA`   | RW  | Only bidirectional pin               |
-|   7 | `/RESET` |     | System reset (from watchdog)    |  29 | `/IREQ` | R   | Sets `ISIG` when pulsed low          |
-|   8 | `GND`    |     |                                 |  30 | `/DACK` | R   | Clears `DSIG` when pulsed low        |
-|   9 | `GND`    |     |                                 |  31 | `ISIG`  | R   | Goes low when 573 reads `I0-I7`      |
-|  10 | -        |     | Key (missing pin)               |  32 | -       |     | Key (missing pin)                    |
-|  11 | `?`      |     | Not connected?                  |  33 | `I7`    | R   |                                      |
-|  12 | `?`      |     | Not connected?                  |  34 | `I6`    | R   |                                      |
-|  13 | `D7`     | W   |                                 |  35 | `I5`    | R   |                                      |
-|  14 | `D6`     | W   |                                 |  36 | `I4`    | R   |                                      |
-|  15 | `D5`     | W   |                                 |  37 | `I3`    | R   |                                      |
-|  16 | `D4`     | W   |                                 |  38 | `I2`    | R   |                                      |
-|  17 | `D3`     | W   |                                 |  39 | `I1`    | R   |                                      |
-|  18 | `D2`     | W   |                                 |  40 | `I0`    | R   |                                      |
-|  19 | `D1`     | W   |                                 |  41 | `5V`    |     |                                      |
-|  20 | `D0`     | W   |                                 |  42 | `5V`    |     |                                      |
-|  21 | `5V`     |     |                                 |  43 | `/RTS`  | W   | Shorted to `/CTS` on some cartridges |
-|  22 | `5V`     |     |                                 |  44 | `/CTS`  | R   | Shorted to `/RTS` on some cartridges |
+All signals are 5V as they go through level shifters.
+
+| Pin | Name     | Dir | Notes                           | Pin | Name    | Dir | Notes                                 |
+| --: | :------- | :-- | :------------------------------ | --: | :------ | :-- | :------------------------------------ |
+|   1 | `GND`    |     |                                 |  23 | `GND`   |     |                                       |
+|   2 | `GND`    |     |                                 |  24 | `GND`   |     |                                       |
+|   3 | `/DSR`   | R   | Usually shorted to ground       |  25 | `EXCLK` | W   | 7.3728 MHz clock (also goes into H8)  |
+|   4 | `NC`     |     | May have been DTR at some point |  26 | `GND`   |     |                                       |
+|   5 | `TX`     | W   |                                 |  27 | `DSIG`  | W   | Goes high when 573 updates `D0-D7`    |
+|   6 | `RX`     | R   |                                 |  28 | `SDA`   | RW  | Can be tristated and read as an input |
+|   7 | `/RESET` | RW  | System reset (from watchdog)    |  29 | `/IREQ` | R   | Sets `ISIG` when pulsed low           |
+|   8 | `GND`    |     |                                 |  30 | `/DACK` | R   | Clears `DSIG` when pulsed low         |
+|   9 | `GND`    |     |                                 |  31 | `ISIG`  | W   | Goes low when 573 reads `I0-I7`       |
+|  10 | -        |     | Key (missing pin)               |  32 | -       |     | Key (missing pin)                     |
+|  11 | `?`      |     | Not connected?                  |  33 | `I7`    | R   |                                       |
+|  12 | `?`      |     | Not connected?                  |  34 | `I6`    | R   |                                       |
+|  13 | `D7`     | W   |                                 |  35 | `I5`    | R   |                                       |
+|  14 | `D6`     | W   |                                 |  36 | `I4`    | R   |                                       |
+|  15 | `D5`     | W   |                                 |  37 | `I3`    | R   |                                       |
+|  16 | `D4`     | W   |                                 |  38 | `I2`    | R   |                                       |
+|  17 | `D3`     | W   |                                 |  39 | `I1`    | R   |                                       |
+|  18 | `D2`     | W   |                                 |  40 | `I0`    | R   |                                       |
+|  19 | `D1`     | W   |                                 |  41 | `5V`    |     |                                       |
+|  20 | `D0`     | W   |                                 |  42 | `5V`    |     |                                       |
+|  21 | `5V`     |     |                                 |  43 | `/RTS`  | W   | Shorted to `/CTS` on some cartridges  |
+|  22 | `5V`     |     |                                 |  44 | `/CTS`  | R   | Shorted to `/RTS` on some cartridges  |
 
 ### Serial port (`CN24`, unpopulated)
 
@@ -1564,7 +1749,41 @@ serial port signals as the security cartridge slot.
 
 ### I2S digital audio output (`CN19`, unpopulated)
 
-The pinout of this connector is currently unknown.
+Pin 4 outputs a 16.9344 MHz master clock (system clock divided by 2, or
+sampling rate multiplied by 384).
+
+| Pin | Name    | Dir |
+| --: | :------ | :-- |
+|   1 | `BCLK`  | W   |
+|   2 | `SDOUT` | W   |
+|   3 | `GND`   |     |
+|   4 | `MCLK`  | W   |
+|   5 | `LRCK`  | W   |
+
+### Watchdog check header (`CN22`, unpopulated)
+
+This header exposes the watchdog's clear input (pulsed whenever the CPU writes
+to the watchdog clear register) as well as the reset output. Injecting pulses
+to forcefully clear the watchdog should work, although it's much easier to
+simply disable the watchdog by placing a jumper on `S86`.
+
+| Pin | Name     | Dir |
+| --: | :------- | :-- |
+|   1 | `WDCLR`  | RW  |
+|   2 | `/RESET` | RW  |
+|   3 | `5V`     |     |
+|   4 | `GND`    |     |
+
+### Watchdog configuration jumper (`S86`, unpopulated)
+
+Shorting pin 1 and 2 will disable the watchdog while keeping power-on reset
+functional. Pin 3 is an active-high reset output, unused on the 573.
+
+| Pin | Name    | Dir |
+| --: | :------ | :-- |
+|   1 | `WDEN`  | R   |
+|   2 | `GND`   |     |
+|   3 | `RESET` | W   |
 
 ### H8/3644 microcontroller pin mapping
 
@@ -1620,13 +1839,13 @@ following sources:
 - ATAPI specification (revision 2.6, January 1996)
 - M48T58, ADC0834, X76F041 and X76F100 datasheets
 - [DDR stage I/O protocol notes](https://github.com/nchowning/open-io/blob/master/NOTES.txt)
-- [List of working ATAPI drives](https://gamerepair.info/hardware/1_system_573)
+- [Original (incomplete) list of working ATAPI drives](https://gamerepair.info/hardware/1_system_573)
 - ["The Almost Definitive Guide to Session Mode Linking"](https://www2.gvsu.edu/brittedg/SessionGuide.pdf)
 - [Japanese page about drummania](https://callusnext.com/pcbs/system573_dm.html)
   (has network adapter and multisession unit pictures)
 - [Light output for Salary Man Champ](http://solid-orange.com/1569) and
   [Hyper Bishi Bashi Champ](http://solid-orange.com/1581)
-- [system573\_tool](https://github.com/onikutaro/system573_tool) (possibly the
+- [system573\_tool](https://github.com/mrdion/system573_tool) (possibly the
   first ever homebrew app for the 573)
 - [Arduino-based master calendar clone](https://www.arcade-projects.com/threads/konami-system-573-master-calendar.2646/#post-34907)
 - [Z-I-v forum post with security cartridge info](https://zenius-i-vanisher.com/v5.2/viewthread.php?threadid=2825)

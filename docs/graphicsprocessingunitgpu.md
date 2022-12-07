@@ -365,13 +365,12 @@ Specifies the location of the CLUT data within VRAM.<br/>
 #### GP0(E1h) - Draw Mode setting (aka "Texpage")
 ```
   0-3   Texture page X Base   (N*64) (ie. in 64-halfword steps)    ;GPUSTAT.0-3
-  4     Texture page Y Base   (N*256) (ie. 0 or 256)               ;GPUSTAT.4
+  4     Texture page Y Base 1 (N*256) (ie. 0, 256, 512 or 768)     ;GPUSTAT.4
   5-6   Semi-transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)   ;GPUSTAT.5-6
   7-8   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved);GPUSTAT.7-8
   9     Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled) ;GPUSTAT.9
   10    Drawing to display area (0=Prohibited, 1=Allowed)          ;GPUSTAT.10
-  11    Texture Disable (0=Normal, 1=Disable if GP1(09h).Bit0=1)   ;GPUSTAT.15
-          (Above might be chipselect for (absent) second VRAM chip?)
+  11    Texture page Y Base 2 (N*512) (only for 2MB VRAM)          ;GPUSTAT.15
   12    Textured Rectangle X-Flip   (BIOS does set this bit on power-up...?)
   13    Textured Rectangle Y-Flip   (BIOS does set it equal to GPUSTAT.13...?)
   14-23 Not used (should be 0)
@@ -382,6 +381,10 @@ Untextured-Polygons (for Textured-Polygons, the data is specified in form of
 the Texpage attribute; except that, Bit9-10 can be changed only via GP0(E1h),
 not via the Texpage attribute).<br/>
 Texture page colors setting 3 (reserved) is same as setting 2 (15bit).<br/>
+Bits 4 and 11 are the LSB and MSB of the 2bit texture page Y coordinate.
+Normally only bit4 is used as retail consoles only have 1MB VRAM. Setting bit11
+(Y>=512) on a retail console with a New GPU will result in textures
+disappearing. Bit11 is ignored by Old GPUs that do not support 2MB VRAM.<br/>
 Note: GP0(00h) seems to be often inserted between Texpage and Rectangle
 commands, maybe it acts as a NOP, which may be required between that commands,
 for timing reasons...?<br/>
@@ -796,7 +799,7 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
 #### 1F801814h - GPUSTAT - GPU Status Register (R)
 ```
   0-3   Texture page X Base   (N*64)                              ;GP0(E1h).0-3
-  4     Texture page Y Base   (N*256) (ie. 0 or 256)              ;GP0(E1h).4
+  4     Texture page Y Base 1 (N*256) (ie. 0, 256, 512 or 768)    ;GP0(E1h).4
   5-6   Semi-transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)  ;GP0(E1h).5-6
   7-8   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved)GP0(E1h).7-8
   9     Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled);GP0(E1h).9
@@ -805,7 +808,7 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
   12    Draw Pixels           (0=Always, 1=Not to Masked areas)   ;GP0(E6h).1
   13    Interlace Field       (or, always 1 when GP1(08h).5=0)
   14    "Reverseflag"         (0=Normal, 1=Distorted)             ;GP1(08h).7
-  15    Texture Disable       (0=Normal, 1=Disable Textures)      ;GP0(E1h).11
+  15    Texture page Y Base 2 (N*512) (only for 2MB VRAM)         ;GP0(E1h).11
   16    Horizontal Resolution 2     (0=256/320/512/640, 1=368)    ;GP1(08h).6
   17-18 Horizontal Resolution 1     (0=256, 1=320, 2=512, 3=640)  ;GP1(08h).0-1
   19    Vertical Resolution         (0=240, 1=480, when Bit22=1)  ;GP1(08h).2
@@ -865,6 +868,7 @@ transfers, especially in the FIFO State mode.<br/>
   GP1(10h:index8)               mirror of index0        00000000h zero
   GP1(10h:index9..F)            mirror of index1..7     N/A
   GP1(20h)                      whatever? used for detecting old gpu
+  GP0(E1h).bit11                N/A                     bit1 of texpage Y base
   GP0(E1h).bit12/13             without x/y-flip        with x/y-flip
   GP0(03h)                      N/A (no stored in fifo) unknown/unused command
   Shaded Textures               ((color/8)*texel)/2     (color*texel)/16
@@ -902,13 +906,13 @@ The X/Y-flipping feature may be used by arcade games (provided that the arcade
 board is fitted with New GPUs). The flipping feature does also work on retail
 consoles with New GPUs, but PSX games should never use that feature (for
 maintaining compatiblity with older PSX consoles).<br/>
-2Mbyte Video RAM is used on some arcade boards. Whilst PSX retail consoles are
-always containing only 1MByte RAM, so the feature cannot be used even if the
-console contains a New GPU. There's one special case: Some PSone consoles are
-actually fitted with 2MB chips (maybe because smaller chips haven't been in
-production anymore), but the chips are wired so that only half of the memory is
-accessible (the extra memory could be theoretically unlocked with some minimal
-hardware modification).<br/>
+2Mbyte Video RAM (arranged as a 1024x1024 buffer, rather than 1024x512) is used
+on some arcade boards. PSX retail consoles are always containing only 1MByte
+RAM, so the feature cannot be used even if the console contains a New GPU.
+There's one special case: Some PSone consoles are actually fitted with 2MB
+chips (maybe because smaller chips haven't been in production anymore), but the
+chips are wired so that only half of the memory is accessible (the extra memory
+could be theoretically unlocked with some minimal hardware modification).<br/>
 
 #### GPU Detection (and optional texture disable)
 Below is slightly customized GPU Detection function taken from Perfect Assassin
