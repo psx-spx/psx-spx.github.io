@@ -61,27 +61,26 @@ External Audio can be input (from the Expansion Port?), and the CDROM drive can
 be commanded to playback normal Audio CDs (via Play command), or XA-ADPCM
 sectors (via Read command), and to pass that data to the SPU.<br/>
 
-#### Unstable and Delayed I/O
-The SPU occassionally seems to "miss" I/O writes (not sure if that can be fixed
-by any Memory Control settings?), a stable workaround is too write all values
-twice (except of course, Fifo writes). The SPU seems to process written values
-at 44100Hz rate (so it may take 1/44100 seconds (300h clock cycles) until it
-has actually realized the new value).<br/>
-
 #### Mono/Stereo Audio Output
 The standard PSX Audio cables have separate Left/Right signals, that is good
 for stereo TVs, but, when using a normal mono TV, only one of the two audio
 signals (Left or Right) can be connected. PSX programs should thus offer an
 option to disable stereo effects, and to output an equal volume to both cables.<br/>
 
+#### Unstable and Delayed I/O
+The SPU occasionally seems to "miss" 32bit I/O writes (not sure if that can be
+fixed by any Memory Control settings?), a stable workaround is to split each
+32bit write into two 16bit writes. The SPU seems to process written values at
+44100Hz rate (so it may take 1/44100 seconds (300h clock cycles) until it has
+actually realized the new value).<br/>
+
 #### SPU Bus-Width
-The SPU is connected to a 16bit databus. 8bit/16bit/32bit reads and 16bit/32bit
-writes are implemented. However, 8bit writes are NOT implemented: 8bit writes
-to ODD addresses are simply ignored (without causing any exceptions), 8bit
-writes to EVEN addresses are executed as 16bit writes (eg. "movp r1,12345678h,
-movb [spu\_port],r1" will write 5678h instead of 78h).<br/>
-
-
+The SPU is connected to a 16bit databus. 8bit/16bit/32bit reads and 16bit
+writes are implemented; 32bit writes are also supported but seem to be
+particularly unstable (see above). However, 8bit writes are NOT implemented:
+8bit writes to ODD addresses are simply ignored (without causing any
+exceptions), 8bit writes to EVEN addresses are executed as 16bit writes (e.g.
+`li v0, 12345678h; sb v0, spu\_port` will write 5678h instead of 78h).<br/>
 
 ##   SPU ADPCM Samples
 The SPU supports only ADPCM compressed samples (uncompressed samples seem to be
