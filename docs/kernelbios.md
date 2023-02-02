@@ -2550,8 +2550,14 @@ For charset 2 and 3 it may be recommended to use the B(51h)
 Krom2RawAdd(shiftjis\_code) to obtain the character addresses. Not sure if that
 BIOS function (or another BIOS function) allows to retrieve charset 1, 4, 5,
 and 6 addresses?<br/>
-
-
+Charset 4 is halfwidth, single-byte Shift JIS codes 21h through 7Eh. This
+matches ASCII except code 5Ch which is the halfwidth yen sign (¥) and 7Eh which
+is overline (‾).<br/>
+Charset 5 contains overhead/combining tilde, backslash (\\), broken bar (¦),
+Shift JIS codes A1h through A5h and B0h, DEh, and DFh, left double quotation
+mark (“), left single quotation mark (‘), and tilde (~).<br/>
+Charset 6 is Shift JIS codes 82A5h through 82ACh, but in halfwidth, and the
+last one is cut off.
 
 ##   BIOS Control Blocks
 #### Exception Control Blocks (ExCB) (4 blocks of 8 bytes each)
