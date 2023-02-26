@@ -136,10 +136,10 @@ where the allocated 20h bytes have the following purpose:<br/>
   0100nn |0|1000|00000 | <--immediate16bit--> | BCnF target ;jump if false
   0100nn |0|1000|00001 | <--immediate16bit--> | BCnT target ;jump if true
   0100nn |1| <--------immediate25bit--------> | COPn imm25
-  010000 |1|0000| N/A  | N/A  | N/A  | 000001 | COP0 01h  ;=TLBR
-  010000 |1|0000| N/A  | N/A  | N/A  | 000010 | COP0 02h  ;=TLBWI
-  010000 |1|0000| N/A  | N/A  | N/A  | 000110 | COP0 06h  ;=TLBWR
-  010000 |1|0000| N/A  | N/A  | N/A  | 001000 | COP0 08h  ;=TLBP
+  010000 |1|0000| N/A  | N/A  | N/A  | 000001 | COP0 01h  ;=TLBR, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 000010 | COP0 02h  ;=TLBWI, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 000110 | COP0 06h  ;=TLBWR, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 001000 | COP0 08h  ;=TLBP, unused on PS1
   010000 |1|0000| N/A  | N/A  | N/A  | 010000 | COP0 10h  ;=RFE
   1100nn | rs   | rt   | <--immediate16bit--> | LWCn rt_dat,[rs+imm]
   1110nn | rs   | rt   | <--immediate16bit--> | SWCn rt_dat,[rs+imm]
@@ -392,9 +392,9 @@ interprete it by software; by examing the opcode bits at [epc-4]).<br/>
   bc#f dest        ;if cop#flg=false then pc=$+disp
   bc#t dest        ;if cop#flg=true  then pc=$+disp
   rfe              ;return from exception (COP0)
-  tlb<xx>          ;virtual memory related (COP0)
+  tlb<xx>          ;virtual memory related (COP0), unused in the PS1
 ```
-Unknown if any tlb-opcodes (tlbr,tlbwi,tlbwr,tlbp) are implemented in the psx?<br/>
+Unknown if any tlb-opcodes (tlbr,tlbwi,tlbwr,tlbp) are implemented in the psx hardware?<br/>
 
 #### Caution - Load Delay
 When reading from a coprocessor register, the next opcode cannot use the
@@ -480,12 +480,6 @@ Below are pseudo instructions combined of two or more 32bit opcodes...<br/>
   push rlist           ;alias for sub sp,n*4 -- mov [sp+(1..n)*4],r1..rn
   pop  rlist           ;alias for mov r1..rn,[sp+(1..n)*4] -- add sp,n*4
   pop  pc,rlist        ;alias for pop ra,rlist -- jmp ra
-```
-
-#### Possible more Pseudos...
-```
-  call x0000000h ;call y0000000h (could be half-working for mem mirrors?)
-  setae,setge    ;--> setb,setlt with swapped operands
 ```
 
 #### Directives (nocash)
