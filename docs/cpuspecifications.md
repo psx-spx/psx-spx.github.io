@@ -20,8 +20,8 @@
 All registers are 32bit wide.<br/>
 ```
   Name       Alias    Common Usage
-  (R0)       zero     Constant (always 0) (this one isn't a real register)
-  R1         at       Assembler temporary (destroyed by some pseudo opcodes!)
+  R0         zero     Constant (always 0)
+  R1         at       Assembler temporary (destroyed by some assembler pseudoinstructions!)
   R2-R3      v0-v1    Subroutine return values, may be changed by subroutines
   R4-R7      a0-a3    Subroutine arguments, may be changed by subroutines
   R8-R15     t0-t7    Temporaries, may be changed by subroutines
@@ -136,10 +136,10 @@ where the allocated 20h bytes have the following purpose:<br/>
   0100nn |0|1000|00000 | <--immediate16bit--> | BCnF target ;jump if false
   0100nn |0|1000|00001 | <--immediate16bit--> | BCnT target ;jump if true
   0100nn |1| <--------immediate25bit--------> | COPn imm25
-  010000 |1|0000| N/A  | N/A  | N/A  | 000001 | COP0 01h  ;=TLBR
-  010000 |1|0000| N/A  | N/A  | N/A  | 000010 | COP0 02h  ;=TLBWI
-  010000 |1|0000| N/A  | N/A  | N/A  | 000110 | COP0 06h  ;=TLBWR
-  010000 |1|0000| N/A  | N/A  | N/A  | 001000 | COP0 08h  ;=TLBP
+  010000 |1|0000| N/A  | N/A  | N/A  | 000001 | COP0 01h  ;=TLBR, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 000010 | COP0 02h  ;=TLBWI, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 000110 | COP0 06h  ;=TLBWR, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 001000 | COP0 08h  ;=TLBP, unused on PS1
   010000 |1|0000| N/A  | N/A  | N/A  | 010000 | COP0 10h  ;=RFE
   1100nn | rs   | rt   | <--immediate16bit--> | LWCn rt_dat,[rs+imm]
   1110nn | rs   | rt   | <--immediate16bit--> | SWCn rt_dat,[rs+imm]
@@ -257,10 +257,10 @@ unchanged) in case of overflows.<br/>
 
 #### comparison instructions
 ```
-  setlt slt   rd,rs,rt  if rs<rt then rd=1 else rd=0 (signed)
-  setb  sltu  rd,rs,rt  if rs<rt then rd=1 else rd=0 (unsigned)
-  setlt slti  rt,rs,imm if rs<(-8000h..+7FFFh)  then rt=1 else rt=0 (signed)
-  setb  sltiu rt,rs,imm if rs<(FFFF8000h..7FFFh) then rt=1 else rt=0(unsigned)
+  slt   rd,rs,rt  if rs<rt (signed comparison) then rd=1 else rd=0
+  sltu  rd,rs,rt  if rs<rt (unsigned comparison) then rd=1 else rd=0
+  slti  rt,rs,imm if rs<(sign-extended immediate in range [-8000h..+7FFFh], signed comparison) then rt=1 else rt=0
+  sltiu rt,rs,imm if rs<(sign-extended immediate in range [0..7FFFh] U [FFFF8000h..FFFFFFFFh], unsigned comparison) then rt=1 else rt=0
 ```
 
 #### logical instructions
@@ -392,9 +392,9 @@ interprete it by software; by examing the opcode bits at [epc-4]).<br/>
   bc#f dest        ;if cop#flg=false then pc=$+disp
   bc#t dest        ;if cop#flg=true  then pc=$+disp
   rfe              ;return from exception (COP0)
-  tlb<xx>          ;virtual memory related (COP0)
+  tlb<xx>          ;virtual memory related (COP0), unused in the PS1
 ```
-Unknown if any tlb-opcodes (tlbr,tlbwi,tlbwr,tlbp) are implemented in the psx?<br/>
+Unknown if any tlb-opcodes (tlbr,tlbwi,tlbwr,tlbp) are implemented in the psx hardware?<br/>
 
 #### Caution - Load Delay
 When reading from a coprocessor register, the next opcode cannot use the
@@ -445,13 +445,12 @@ one uncached opcode).<br/>
   bal dest             ;alias for bgezal r0, r0, dest
 ```
 
-#### Pseudo instructions (nocash/a22i)
+#### Pseudo instructions (nocash/a22i, not present on most other assemblers)
 ```
   mov  rx,NNNN0000h    ;alias for lui  rx,NNNNh
   mov  rx,0000NNNNh    ;alias for or   rx,r0,NNNNh  ;max +FFFFh
   mov  rx,-imm15       ;alias for add  rx,r0,-NNNNh ;min -8000h
   mov  rx,ry           ;alias for or   rx,ry,0  (or "addiu")
-  nop                  ;alias for shl  r0,r0,0
   jrel dest            ;alias for blez R0,dest   ;relative jump
   crel dest            ;alias for callns R0,dest ;relative call
   jz   rx,dest         ;alias for je   rx,R0,dest
@@ -480,12 +479,6 @@ Below are pseudo instructions combined of two or more 32bit opcodes...<br/>
   push rlist           ;alias for sub sp,n*4 -- mov [sp+(1..n)*4],r1..rn
   pop  rlist           ;alias for mov r1..rn,[sp+(1..n)*4] -- add sp,n*4
   pop  pc,rlist        ;alias for pop ra,rlist -- jmp ra
-```
-
-#### Possible more Pseudos...
-```
-  call x0000000h ;call y0000000h (could be half-working for mem mirrors?)
-  setae,setge    ;--> setb,setlt with swapped operands
 ```
 
 #### Directives (nocash)
