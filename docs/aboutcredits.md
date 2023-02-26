@@ -13,6 +13,8 @@ PSX.\* by Joshua Walker (additional details in various distorted file formats)<b
 LIBMIRAGE by Rok; info/source code for various cdrom-image formats<br/>
 psxdev.ru; cdrom sub-cpu decapping<br/>
 
+All the contributors to the [psx-spx.github.io](https://github.com/psx-spx/psx-spx.github.io/) repo who've helped update, correct and expand this information.
+
 #### PSXSPX homepage
 http://problemkaputt.de/psx.htm       no$psx emulator/debugger<br/>
 http://problemkaputt.de/psx-spx.htm   psx specs in html formal<br/>
