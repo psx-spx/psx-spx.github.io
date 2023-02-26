@@ -20,8 +20,8 @@
 All registers are 32bit wide.<br/>
 ```
   Name       Alias    Common Usage
-  (R0)       zero     Constant (always 0) (this one isn't a real register)
-  R1         at       Assembler temporary (destroyed by some pseudo opcodes!)
+  R0         zero     Constant (always 0)
+  R1         at       Assembler temporary (destroyed by some assembler pseudoinstructions!)
   R2-R3      v0-v1    Subroutine return values, may be changed by subroutines
   R4-R7      a0-a3    Subroutine arguments, may be changed by subroutines
   R8-R15     t0-t7    Temporaries, may be changed by subroutines
@@ -445,13 +445,12 @@ one uncached opcode).<br/>
   bal dest             ;alias for bgezal r0, r0, dest
 ```
 
-#### Pseudo instructions (nocash/a22i)
+#### Pseudo instructions (nocash/a22i, not present on most other assemblers)
 ```
   mov  rx,NNNN0000h    ;alias for lui  rx,NNNNh
   mov  rx,0000NNNNh    ;alias for or   rx,r0,NNNNh  ;max +FFFFh
   mov  rx,-imm15       ;alias for add  rx,r0,-NNNNh ;min -8000h
   mov  rx,ry           ;alias for or   rx,ry,0  (or "addiu")
-  nop                  ;alias for shl  r0,r0,0
   jrel dest            ;alias for blez R0,dest   ;relative jump
   crel dest            ;alias for callns R0,dest ;relative call
   jz   rx,dest         ;alias for je   rx,R0,dest
