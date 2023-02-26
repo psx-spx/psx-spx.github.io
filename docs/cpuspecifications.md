@@ -257,10 +257,10 @@ unchanged) in case of overflows.<br/>
 
 #### comparison instructions
 ```
-  setlt slt   rd,rs,rt  if rs<rt then rd=1 else rd=0 (signed)
-  setb  sltu  rd,rs,rt  if rs<rt then rd=1 else rd=0 (unsigned)
-  setlt slti  rt,rs,imm if rs<(-8000h..+7FFFh)  then rt=1 else rt=0 (signed)
-  setb  sltiu rt,rs,imm if rs<(FFFF8000h..7FFFh) then rt=1 else rt=0(unsigned)
+  slt   rd,rs,rt  if rs<rt (signed comparison) then rd=1 else rd=0
+  sltu  rd,rs,rt  if rs<rt (unsigned comparison) then rd=1 else rd=0
+  slti  rt,rs,imm if rs<(sign-extended immediate in range [-8000h..+7FFFh], signed comparison) then rt=1 else rt=0
+  sltiu rt,rs,imm if rs<(sign-extended immediate in range [0..7FFFh] U [FFFF8000h..FFFFFFFFh], unsigned comparison) then rt=1 else rt=0
 ```
 
 #### logical instructions
