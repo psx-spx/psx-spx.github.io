@@ -633,8 +633,7 @@ Describes the most recently recognised exception<br/>
 ```
   0-31  Return Address from Exception
 ```
-This address is the instruction at which the exception took place, unless BD is
-set in CAUSE, then the instruction was at EPC+4.<br/>
+This register points to the address at which an exception occured, unless BD is set, in which case EPC is set to the address of the exception - 4.<br/>
 Interrupts should always return to EPC+0, no matter of the BD flag. That way,
 if BD=1, the branch gets executed again, that's required because EPC stores
 only the current program counter, but not additionally the branch destination
