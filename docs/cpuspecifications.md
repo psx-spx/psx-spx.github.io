@@ -540,7 +540,7 @@ assembler?<br/>
   cop0r10     - N/A
   cop0r11     - BPCM - Execute breakpoint mask (R/W)
   cop0r12     - SR - System status register (R/W)
-  cop0r13     - CAUSE - (R)  Describes the most recently recognised exception
+  cop0r13     - CAUSE - Describes the most recently recognised exception (R)
   cop0r14     - EPC - Return Address from Trap (R)
   cop0r15     - PRID - Processor ID (R)
   cop0r16-r31 - Garbage
