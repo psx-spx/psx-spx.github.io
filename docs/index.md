@@ -25,7 +25,7 @@ To discuss the contents of this document, or hang out with likely minded people 
 [CDROM Drive](cdromdrive.md)<br/>
 [Controllers and Memory Cards](controllersandmemorycards.md)<br/>
 [Pocketstation](pocketstation.md)<br/>
-[Serial Port (SIO)](serialportsio.md)<br/>
+[Serial Interfaces (SIO)](serialinterfacessio.md)<br/>
 [Expansion Port (PIO)](expansionportpio.md)<br/>
 [Memory Control](memorycontrol.md)<br/>
 [Unpredictable Things](unpredictablethings.md)<br/>

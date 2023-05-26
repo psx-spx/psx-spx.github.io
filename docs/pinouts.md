@@ -32,27 +32,36 @@
 
 ##   Pinouts - Controller Ports and Memory-Card Ports
 #### Controller Ports and Memory-Card Ports
-```
-  1 In  JOYDAT Data from joypad/card (data in)    _______________________
-  2 Out JOYCMD Data to joypad/card (command out) |       |       |       |
-  3 -   +7.5V  +7.5VDC supply (eg. for Rumble)   | 9 7 6 | 5 4 3 |  2 1  | CARD
-  4 -   GND    Ground                            |_______|_______|_______|
-  5 -   +3.5V  +3.5VDC supply (normal supply)     _______________________
-  6 Out /JOYn  Select joypad/card in Slot 1/2    |       |       |       |
-  7 Out JOYCLK Data Shift Clock                  | 9 8 7 | 6 5 4 | 3 2 1 | PAD
-  8 In  /IRQ10 IRQ10 (Joy only, not mem card)     \______|_______|______/
-  9 In  /ACK   IRQ7 Acknowledge (each eight CLKs)
-  Shield       Ground (Joypad only, not memory card)
-```
 ![Controller pinout](controller-pinout.jpg)
 
-/JOYn are two separate signals (/JOY1 for left card/pad, /JOY2 for right
-card/pad) (whether it is an card or pad access depends on the first CMD bit).
-All other signals are exactly the same on all four connectors (except that pin8
-and shield are missing on the card slots).<br/>
+```
+                   _______________________
+Memory card slot: | 9 7 6 | 5 4 3 |  2 1  |
+                  |_=_=_=_|_=_=_=_|__=_=__|
+                   _______________________
+                  | 9 8 7 | 6 5 4 | 3 2 1 |
+Controller port:  | * * * | * * * | * * * |
+                  '\______|_______|______/'
+```
 
-#### Pin8 (/IRQ10)
-Most or all controllers leave pin8 unused, the pin can be used as lightpen
+| Pin | Dir | Name         | SIO0 pin | Description                    |
+| --: | :-- | :----------- | :------- | :----------------------------- |
+|   1 | In  | `DAT`/`MISO` | `RX`     | Serial data from device        |
+|   2 | Out | `CMD`/`MOSI` | `TX`     | Serial data to device          |
+|   3 |     | `+7.5V`      |          | Supply for rumble motors       |
+|   4 |     | `GND`        |          | Ground                         |
+|   5 |     | `+3.5V`      |          | Supply for main logic          |
+|   6 | Out | `/CSn`       | `DTRn`   | Port select                    |
+|   7 | Out | `SCK`        | `SCK`    | Serial data clock              |
+|   8 | In  | `/IRQ`       | `/IRQ10` | Lightgun IRQ (controller only) |
+|   9 | In  | `/ACK`       | `DSR`    | Data acknowledge IRQ           |
+
+/CSn are two separate signals (/CS1 for controller/memory card port 1, /CS2 for
+port 2). All other signals are exactly the same on all four connectors (with the
+memory card slots lacking the /IRQ pin and shield).<br/>
+
+#### /IRQ pin
+Most or all controllers leave pin 8 unused, the pin can be used as lightpen
 input (not sure if the CPU is automatically latching a timer somewhere?), if
 there's no auto-latched timer, then the interrupt would be required to be
 handled as soon as possible; ie. don't disable interrupts, and don't "halt" the
@@ -100,16 +109,16 @@ actually outputting 400 lines, with each line repeated twice).<br/>
 #### Parallel Port (PIO) (Expansion Port) (CN103)
 This port exists only on older PSX boards (not on newer PSX boards, and not on
 PSone boards).<br/>
-The parallel port is used by Gameshark, Game Enhancer II, and Gold Finger cheat
-devices (not used by the Code Breaker CDROM cheat software).<br/>
+The parallel port is used by various third-party unlicensed cheat cartridges and
+VCD player addons, as well as by the PSIO optical drive emulator (see below).<br/>
 ```
              ________
             |        |                            Console Rear View
       GND ==| 1   35 |== GND                 .-------------------------.
    /RESET  =| 2   36 |=  DACK5               |1  2  3  ... ... 32 33 34|
     DREQ5  =| 3   37 |=  /IRQ10              |35 36 37 ... ... 66 67 68|
-    /EXP?  =| 4   38 |=  /WR1? (CPU99)       |__.-------------------.__|
-  NC?GND?  =| 5   39 |=  GND?NC?
+     /CS0  =| 4   38 |=  /WR1                |__.-------------------.__|
+(SBEN)GND  =| 5   39 |=  GND(CS2)
        D0  =| 6   40 |=  D1
        D2  =| 7   41 |=  D3
        D4  =| 8   42 |=  D5
@@ -120,10 +129,10 @@ devices (not used by the Code Breaker CDROM cheat software).<br/>
       D14  =|13   47 |=  D15
        A0  =|14   48 |=  A1
        A2  =|15   49 |=  A3
-  NC?GND?  =|16   50 |=  GND?NC?
+      GND  =|16   50 |=  GND
     +3.5V ==|17   51 |== +3.5V
     +7.5V ==|18   52 |== +7.5V
-     GND?  =|19   53 |=  GND?NC?
+      GND  =|19   53 |=  GND
        A4  =|20   54 |=  A5
        A6  =|21   55 |=  A7
        A8  =|22   56 |=  A9
@@ -135,17 +144,21 @@ devices (not used by the Code Breaker CDROM cheat software).<br/>
       A20  =|28   62 |=  A21
       A22  =|29   63 |=  A23
       /RD  =|30   64 |=  /WR0
-    NC!X?  =|31   65 |=  X?NC!
-   SYSCK?  =|32   66 |=  LRCK (44.1kHz)
-    SCLK?  =|33   67 |=  SDATA?
+(/IRQ2)NC  =|31   65 |=  NC(/CS5)
+    SYSCK  =|32   66 |=  LRCK
+     BCLK  =|33   67 |=  SDIN
       GND ==|34   68 |== GND
             |________|
 ```
-Lots of pins are still unknown?<br/>
-```
-  EDIT: see http://cgfm2.emuviews.com/new/psx-pio.png
-  apparently, many of the "unknown" pins are just GROUND, is that possible?
-```
+On a stock console, pin 5 is ground and pins 31 and 65 are not connected. These
+pins are repurposed by the PSIO's switch board to allow the PSIO to emulate the
+CD-ROM drive; when pin 5 (SBEN) is high, the switch board disconnects the CPU's
+/CS5 and /IRQ2 pins from the CD drive and routes them to pins 65 and 31
+respectively, allowing the PSIO to take over. Pin 39 can also be repurposed in a
+similar way to allow /CS2 and thus the internal BIOS ROM to be overridden.<br/>
+For more details see:<br/>
+[pcsx-redux - PIO port](https://github.com/grumpycoders/pcsx-redux/wiki/PIO-port)<br/>
+[pcsx-redux - Switch Board](https://github.com/grumpycoders/pcsx-redux/wiki/Switch-Board)<br/>
 
 #### Internal Power Supply (PSX)
 The PSX contains an internal power supply, however, like the PSone, it's only
@@ -468,57 +481,45 @@ versions, plus US/JP/PAL-region variants, plus region-free debug variants).<br/>
 ##   Pinouts - CPU Pinouts
 #### CPU Pinouts (IC103)
 ```
-  1-3.5V  27-GND   53-3.5V  79-3.5V   105-3.5V 131-3.5V   157-3.5V   183-3.5V
-  2-3.5V  28-DQ12  54-3.5V  80-/JOY1  106-3.5V 132-A5     158-3.5V   184-GD19
-  3-67/NC 29-DQ11 55-A11:A8 81-JOYCLK 107-D0   133-A6     159-HBLANK 185-GD20
-  4-67MHz 30-DQ10 56-A10:NC 82-/IRQ7  108-D1   134-A7     160-DOTCLK 186-GD21
-  5-DQ31  31-DQ9   57-A9    83-JOYCMD 109-D2   135-A8     161-GD0    187-GD22
-  6-DQ30  32-DQ8   58-A8:NC 84-JOYDAT 110-D3   136-A9     162-GD1    188-GD23
-  7-DQ29  33-DQ7   59-A7    85-DACK5  111-D4   137-A10    163-GD2    189-GD24
-  8-DQ28  34-DQ6   60-A6    86-DREQ5  112-D5   138-A11    164-GD3    190-GD25
-  9-DQ27  35-DQ5   61-A5    87-DMA4   113-D6   139-A12    165-GD4    191-GD26
-  10-DQ26 36-DQ4   62-A4    88-/SPUW  114-D7   140-A13    166-GD5    192-GD27
-  11-DQ25 37-DQ3   63-A3    89-/IRQ10 115-D8   141-A14    167-GD6    193-GD28
-  12-DQ24 38-3.5V  64-A2    90-/IRQ9  116-D9   142-A15    168-GD7    194-GD29
-  13-DQ23 39-GND   65-GND   91-GND    117-GND  143-GND    169-GD8    195-GND
-  14-3.5V 40-DQ2   66-3.5V  92-3.5V   118-3.5V 144-3.5V   170-GND    196-3.5V
-  15-GND  41-DQ1   67-A1    93-GND    119-D10  145-A16    171-3.5V   197-GD30
-  16-DQ22 42-DQ0   68-A0    94-/IRQ2  120-D11  146-A17    172-GD9    198-GD31
-  17-DQ21 43-/W    69-3.5V  95-/CD    121-D12  147-A18    173-GD10   199-VBLANK
-  18-DQ20 44-/RAS1 70-RTS   96-/SPU   122-D13  148-A19    174-GD11   200-GPU12
-  19-DQ19 45-/RAS  71-CTS   97-/BIOS  123-D14  149-A20    175-GD12   201-33MHzG
-  20-DQ18 46-/CAS3 72-DTR   98-/EXP   124-D15  150-A21    176-GD13   202-GPU5
-  21-DQ17 47-/CAS2 73-DSR   99- CPU99 125-A0   151-A22    177-GD14   203-/GWR
-  22-DQ16 48-/CAS1 74-TxD   100-/WR   126-A1   152-A23    178-GD15   204-/GRD
-  23-DQ15 49-/CAS0 75-RxD   101-/RD   127-A2   153-GPU.A2 179-GD16   205-/GPU
-  24-DQ14 50-3.5V  76-/RES  102-/IRQ1 128-A3   154-33MHzS 180-GD17   206-67MHzG
-  25-DQ13 51-GND   77-/JOY2 103-GND   129-A4   155-GND    181-GD18   207-GND
-  26-3.5V 52-GND   78-GND   104-GND   130-GND  156-GND    182-GND    208-GND
+   1-3.5V   27-GND       53-3.5V       79-3.5V       105-3.5V 131-3.5V   157-3.5V   183-3.5V
+   2-3.5V   28-DQ12      54-3.5V       80-SIO0.DTR1  106-3.5V 132-A5     158-3.5V   184-GD19
+   3-XO(NC) 29-DQ11      55-A11(A8)    81-SIO0.SCK   107-D0   133-A6     159-HBLANK 185-GD20
+   4-XI     30-DQ10      56-A10(NC)    82-SIO0.DSR   108-D1   134-A7     160-DOTCLK 186-GD21
+   5-DQ31   31-DQ9       57-A9         83-SIO0.TX    109-D2   135-A8     161-GD0    187-GD22
+   6-DQ30   32-DQ8       58-A8(NC)     84-SIO0.RX    110-D3   136-A9     162-GD1    188-GD23
+   7-DQ29   33-DQ7       59-A7         85-DACK5(PIO) 111-D4   137-A10    163-GD2    189-GD24
+   8-DQ28   34-DQ6       60-A6         86-DREQ5(PIO) 112-D5   138-A11    164-GD3    190-GD25
+   9-DQ27   35-DQ5       61-A5         87-DACK4(SPU) 113-D6   139-A12    165-GD4    191-GD26
+  10-DQ26   36-DQ4       62-A4         88-DREQ4(SPU) 114-D7   140-A13    166-GD5    192-GD27
+  11-DQ25   37-DQ3       63-A3         89-/IRQ10     115-D8   141-A14    167-GD6    193-GD28
+  12-DQ24   38-3.5V      64-A2         90-/IRQ9(SPU) 116-D9   142-A15    168-GD7    194-GD29
+  13-DQ23   39-GND       65-GND        91-GND        117-GND  143-GND    169-GD8    195-GND
+  14-3.5V   40-DQ2       66-3.5V       92-3.5V       118-3.5V 144-3.5V   170-GND    196-3.5V
+  15-GND    41-DQ1       67-A1         93-TEST(GND)  119-D10  145-A16    171-3.5V   197-GD30
+  16-DQ22   42-DQ0       68-A0         94-/IRQ2      120-D11  146-A17    172-GD9    198-GD31
+  17-DQ21   43-/WE       69-3.5V       95-/CS5(CD)   121-D12  147-A18    173-GD10   199-/IRQ0(VBLANK)
+  18-DQ20   44-/RAS1(NC) 70-SIO1.RTS   96-/CS4(SPU)  122-D13  148-A19    174-GD11   200-DREQ2(GPU)
+  19-DQ19   45-/RAS0     71-SIO1.CTS   97-/CS2(BIOS) 123-D14  149-A20    175-GD12   201-SYSCK0
+  20-DQ18   46-/CAS3     72-SIO1.DTR   98-/CS0(PIO)  124-D15  150-A21    176-GD13   202-DACK2(GPU)
+  21-DQ17   47-/CAS2     73-SIO1.DSR   99-/WR1       125-A0   151-A22    177-GD14   203-/GPUWR
+  22-DQ16   48-/CAS1     74-SIO1.TX   100-/WR0       126-A1   152-A23    178-GD15   204-/GPURD
+  23-DQ15   49-/CAS0     75-SIO1.RX   101-/RD        127-A2   153-GPU.A2 179-GD16   205-/CS7(GPU)
+  24-DQ14   50-3.5V      76-/RESET    102-/IRQ1(GPU) 128-A3   154-SYSCK1 180-GD17   206-DSYSCK0
+  25-DQ13   51-GND       77-SIO0.DTR2 103-GND        129-A4   155-GND    181-GD18   207-GND
+  26-3.5V   52-GND       78-GND       104-GND        130-GND  156-GND    182-GND    208-GND
 ```
 Pin5-68 = Main RAM bus. Pin 95-152 = System bus. Pin 102,153,159-206 = Video
 bus.<br/>
-```
-  85=DACK5  93=GND=/CSHTST  199=/INT0   44=/RAS1:NC
-  86=DREQ5  99=/SWR1=NC     200=DREQ2   45=/RAS0
-  87=DACK4  100=/SWR0       201=SYSCLK0
-  88=DREQ4  154=SYSCLK1     202=DACK2
-```
 
 #### CPU Pinout Notes
-Pin 3,4: 67MHz is Pin3/old or Pin4/new (with Pin3=NC/new or Pin4=GND/old)<br/>
-Pin 43,45..49,100,101,125(A0!),201,203..206 are connected via 22 ohm.<br/>
-Pin 77,80,81,83 are connected via 470 ohm.<br/>
-Pin 82,84,89 are connected via 47 ohm.<br/>
-Pin 95,96,97 are connected via 100 ohm.<br/>
-Pin 44: goes LOW for a short time once every N us (guessed: maybe /REFRESH ?)<br/>
-Pin 4: 67MHz (from IC204.pin5)<br/>
-Pin 87/88: SPU-DMA related (/SPUW also permanent LOW for Manual SPU-RAM Write)<br/>
-Pin 154: 33MHzS (via 22ohm and FB102 to SPU) (and TESTPOINT near MainRAM pin70)<br/>
-Pin 160: DOTCLK (via 22ohm), and IC502.Pin41 (without 22ohm)<br/>
-Pin 56,58 are maybe additional address lines for the addressable 8MB RAM.<br/>
-The System Bus address lines are latched outputs (containing the most recently
-used /BIOS /EXP /SPU /CD address) (not affected by Main RAM and GPU
-addressing).<br/>
+A8, A10 and /RAS1 are only used on systems with 4 or 8 MB RAM.<br/>
+SYSCK0 (33 MHz), DSYSCK0 (67 MHz) and SYSCK1 (33 MHz) are clock outputs derived
+from the clock input on XI. XO is unused as the clock crystal is not connected
+directly to the CPU.<br/>
+/WR1 (upper byte write strobe for 8-bit writes through a 16-bit bus) is only
+connected to the expansion port and goes otherwise unused.<br/>
+The System Bus address lines are latched outputs and are not affected by Main
+RAM and GPU addressing.<br/>
 
 
 
@@ -534,24 +535,24 @@ bus for GPU read/write access, and one for the RGB video output).<br/>
 ```
   1-VCC     21-GND  41-D16  61-D2     81-D12'a  101-GND     121-D7'b 141-GND
   2-GND     22-D31  42-D15  62-D1     82-D11'a  102-DT/OE'b 122-D6'b 142-53MHz
-  3-/GPU    23-D30  43-VCC  63-D0     83-D10'a  103-DT/OE'a 123-D5'b 143-VCC
+  3-/GPUCS  23-D30  43-VCC  63-D0     83-D10'a  103-DT/OE'a 123-D5'b 143-VCC
   4-GPU.A2  24-D29  44-GND  64-GND    84-D9'a   104-/RAS    124-D4'b 144-GND
-  5-/GRD    25-D28  45-D14  65-VCC    85-D8'a   105-/WE'a   125-D3'b 145-FSC
-  6-/GWR    26-D27  46-D13  66-A8'a   86-VCC    106-/WE'b   126-D2'b 146-VCC
+  5-/GPURD  25-D28  45-D14  65-VCC    85-D8'a   105-/WE'a   125-D3'b 145-FSC
+  6-/GPUWR  26-D27  46-D13  66-A8'a   86-VCC    106-/WE'b   126-D2'b 146-VCC
   7-DACK2   27-D26  47-D12  67-A7'a   87-GND    107-/SE     127-D1'b 147-GND
-  8-/RES    28-VCC  48-D11  68-A6'a   88-D7'a   108-SC      128-D0'b 148-DOTCLK
+  8-/RESET  28-VCC  48-D11  68-A6'a   88-D7'a   108-SC      128-D0'b 148-DOTCLK
   9-VCC     29-GND  49-D10  69-A5'a   89-D6'a   109-VCC     129-VCC  149-VCC
   10-GND    30-D25  50-GND  70-GND    90-D5'a   110-GND     130-GND  150-GND
-  11-33MHzG 31-D24  51-VCC  71-A4'a   91-D4'a   111-D15'b   131-A8'b 151-MEMCK1
+  11-SYSCK0 31-D24  51-VCC  71-A4'a   91-D4'a   111-D15'b   131-A8'b 151-MEMCK1
   12-VCC    32-D23  52-D9   72-A3'a   92-D3'a   112-D14'b   132-A7'b 152-MEMCK2
   13-GND    33-D22  53-D8   73-A2'a   93-D2'a   113-D13'b   133-A6'b 153-BLANK
   14-DREQ2  34-D21  54-D7   74-A1'a   94-D1'a   114-D12'b   134-A5'b 154-/24BPP
-  15-/IRQ1  35-D20  55-D6   75-A0'a   95-D0'a   115-D11'b   135-A4'b 155-/SYNC
+  15-/IRQ1  35-D20  55-D6   75-A0'a   95-D0'a   115-D11'b   135-A4'b 155-/CSYNC
   16-HBLANK 36-VCC  56-D5   76-GND    96-VCC    116-D10'b   136-A3'b 156-/HSYNC
   17-VBLANK 37-GND  57-D4   77-VCC    97-DSF    117-D9'b    137-A2'b 157-/VSYNC
   18-high?  38-D19  58-D3   78-D15'a  98-/CAS'b 118-D8'b    138-A1'b 158-VCC
   19-high?  39-D18  59-GND  79-D14'a  99-/CAS'a 119-VCC     139-A0'b 159-GND
-  20-VCC    40-D17  60-VCC  80-D13'a  100-VCC   120-GND     140-VCC  160-67MHzG
+  20-VCC    40-D17  60-VCC  80-D13'a  100-VCC   120-GND     140-VCC  160-DSYSCK0
 ```
 Pin 1-63,148,160 = CPU Bus, Pin 66-139 = VRAM Bus (two chips, A and B), Pin
 142-155 = Misc (CXA and RGB chips), Pin 18-19,156-157 = Test points.<br/>
@@ -632,47 +633,48 @@ New 206-pin GPU is used LATE-PU-8 boards and up.<br/>
 
 #### GPU Pinouts (IC203)
 ```
-  1-/GPU    27-GD28  53-GD10   79-D29  105-GND  131-CLK   157-/PAL   183-R3
-  2-GPU.A2  28-GD27  54-GD9    80-3.5V 106-3.5V 132-GND   158-/VSYNC 184-GND
-  3-/GRD    29-3.5V  55-GD8    81-GND  107-D17  133-3.5V  159-/HSYNC 185-3.5V
-  4-/GWR    30-GND   56-GD7    82-D28  108-D16  134-CLK   160-B0     186-R4
-  5-CPU202  31-GD26  57-GD6    83-D27  109-D7   135-GND   161-B1     187-R5
-  6-/RES    32-GD25  58-GD5    84-D26  110-D6   136-3.5V  162-B2     188-R6
-  7-3.5V    33-GD24  59-GD4    85-D25  111-D5   137-(A10) 163-B3     189-R7
-  8-GND     34-GD23  60-GND    86-D24  112-D4   138-A9/AP 164-GND    190-GND
-  9-33MHzG  35-GD22  61-3.5V   87-3.5V 113-GND  139-A7    165-3.5V   191-3.5V
-  10-3.5V   36-GD21  62-GD3    88-GND  114-3.5V 140-A6    166-B4     192-53MHzP
-  11-GND    37-3.5V  63-GD2    89-D15  115-D3   141-3.5V  167-B5     193-3.5V
-  12-CPU200 38-GND   64-GD1    90-D14  116-D0   142-GND   168-B6     194-GND
-  13-/IRQ1  39-GD20  65-GD0    91-D13  117-D1   143-A5    169-B7     195-3.5V
-  14-HBLANK 40-GD19  66-GND    92-D12  118-D2   144-A4    170-G0     196-53MHzN
-  15-GND    41-GD18  67-3.5V   93-D11  119-GND  145-A3    171-G1     197-3.5V
-  16-3.5V   42-GD17  68-(high) 94-D10  120-3.5V 146-GND   172-G2     198-GND
-  17-VBLANK 43-3.5V  69-(high) 95-D9   121-NC   147-3.5V  173-G3     199-DOTCLK
-  18-(pull) 44-GND   70-(high) 96-GND  122-/CS  148-A2    174-GND    200-GND
-  19-(low)  45-GD16  71-3.5V   97-3.5V 123-DSF  149-A1    175-3.5V   201-3.5V
-  20-GND    46-GD15  72-3.5V   98-D8   124-/RAS 150-A0    176-G4     202-BLANK
-  21-(low)  47-GD14  73-3.5V   99-D18  125-/CAS 151-3.5V  177-G5     203-(low)
-  22-3.5V   48-GD13  74-3.5V   100-D19 126-/WE  152-GND   178-G6     204-GND
-  23-3.5V   49-GD12  75-3.5V   101-D20 127-DQM1 153-FSC   179-G7     205-3.5V
-  24-GD31   50-GD11  76-GND    102-D21 128-DQM0 154-3.5V  180-R0     206-67MHzG
-  25-GD30   51-3.5V  77-D31    103-D22 129-GND  155-GND   181-R1     207-GND
-  26-GD29   52-GND   78-D30    104-D23 130-3.5V 156-/SYNC 182-R2     208-3.5V
+  1-/GPUCS  27-GD28  53-GD10       79-D29  105-GND  131-CLKOUT 157-/PAL       183-R3
+  2-GPU.A2  28-GD27  54-GD9        80-3.5V 106-3.5V 132-GND    158-/VSYNC(NC) 184-GND
+  3-/GPURD  29-3.5V  55-GD8        81-GND  107-D17  133-3.5V   159-/HSYNC(NC) 185-3.5V
+  4-/GPUWR  30-GND   56-GD7        82-D28  108-D16  134-CLKIN  160-B0         186-R4
+  5-DACK2   31-GD26  57-GD6        83-D27  109-D7   135-GND    161-B1         187-R5
+  6-/RESET  32-GD25  58-GD5        84-D26  110-D6   136-3.5V   162-B2         188-R6
+  7-3.5V    33-GD24  59-GD4        85-D25  111-D5   137-A9     163-B3         189-R7
+  8-GND     34-GD23  60-GND        86-D24  112-D4   138-A8     164-GND        190-GND
+  9-SYSCK0  35-GD22  61-3.5V       87-3.5V 113-GND  139-A7     165-3.5V       191-3.5V
+  10-3.5V   36-GD21  62-GD3        88-GND  114-3.5V 140-A6     166-B4         192-VCKPAL
+  11-GND    37-3.5V  63-GD2        89-D15  115-D3   141-3.5V   167-B5         193-3.5V
+  12-DREQ2  38-GND   64-GD1        90-D14  116-D0   142-GND    168-B6         194-GND
+  13-/IRQ1  39-GD20  65-GD0        91-D13  117-D1   143-A5     169-B7         195-3.5V
+  14-HBLANK 40-GD19  66-GND        92-D12  118-D2   144-A4     170-G0         196-VCKNTSC
+  15-GND    41-GD18  67-3.5V       93-D11  119-GND  145-A3     171-G1         197-3.5V
+  16-3.5V   42-GD17  68-PCKSL2(NC) 94-D10  120-3.5V 146-GND    172-G2         198-GND
+  17-VBLANK 43-3.5V  69-PCKSL1(NC) 95-D9   121-/CS1 147-3.5V   173-G3         199-DOTCLK
+  18-HVHLD  44-GND   70-PCKSL0(NC) 96-GND  122-/CS0 148-A2     174-GND        200-GND
+  19-GND    45-GD16  71-3.5V       97-3.5V 123-DSF  149-A1     175-3.5V       201-3.5V
+  20-GND    46-GD15  72-3.5V       98-D8   124-/RAS 150-A0     176-G4         202-BLANK(NC)
+  21-NC     47-GD14  73-3.5V       99-D18  125-/CAS 151-3.5V   177-G5         203-ODE2(NC)
+  22-3.5V   48-GD13  74-3.5V       100-D19 126-/WE  152-GND    178-G6         204-GND
+  23-3.5V   49-GD12  75-3.5V       101-D20 127-DQM1 153-FSC    179-G7         205-3.5V
+  24-GD31   50-GD11  76-GND        102-D21 128-DQM0 154-3.5V   180-R0         206-DSYSCK0
+  25-GD30   51-3.5V  77-D31        103-D22 129-GND  155-GND    181-R1         207-GND
+  26-GD29   52-GND   78-D30        104-D23 130-3.5V 156-/CSYNC 182-R2         208-3.5V
 ```
 Pin 77..150 = Video RAM Bus. Pin 156..189 = Video Out Bus. Other = CPU Bus. Pin
 153: Sub Carrier (NC on newer boards whick pick color clock from IC204).<br/>
 
 #### GPU Pinout Notes
-Pin 1,3,4,9,122..128,199,206 are connected via 22 ohm.<br/>
-Pin 18 has a 4K7 ohm pullup to 3.5V<br/>
-Pin 77..118 data lines (DQ0..DQ31) are connected via 82 ohm.<br/>
-Pin 192/196: via 220 ohm to IC204.pin1 (53MHz)<br/>
-At RAM Side: CKE via 4K7 to 3.5V, and, A8 is GROUNDED!<br/>
+/CS1 is only used on arcade boards with 2 MB VRAM (two 1 MB chips).<br/>
+HVHLD has a 4K7 ohm pullup to 3.5V.<br/>
+CLKIN and CLKOUT are tied together and wired to the DAC's clock input. CLKIN
+could possibly be an external clock input for genlocking purposes.<br/>
+On earlier motherboards and on most arcade boards only VCKPAL or VCKNTSC is
+wired up, depending on the console's region. On later boards both are tied
+together and connected to a programmable clock generator, which is then
+preprogrammed to generate the appropriate frequency.<br/>
+/VSYNC and /HSYNC are only connected to test points.<br/>
+/CSYNC = (/VSYNC AND /HSYNC). BLANK = (VBLANK OR HBLANK).<br/>
 DQM0 is wired to both DQM0 and DQM2, DQM1 is wired to both DQM1 and DQM3.<br/>
-CLK is wired to both GPU pin 131 and 134.<br/>
-RGBnn = IC502 pin nn<br/>
-/VSYNC, /HSYNC, (and BLANK?) are test points (not connected to any components).<br/>
-/SYNC = (/VSYNC AND /HSYNC). BLANK = (VBLANK OR HBLANK).<br/>
 
 #### IC202 44pin "Philips TDA8771H" Digital to Analog RGB (older boards only)
 Region Japan+Europe: TDA8771AN<br/>
@@ -692,7 +694,7 @@ via 48pin IC502.<br/>
 #### IC502 48pin "SONY CXA2106R-T4" - 24bit RGB video D/A converter
 ```
   1-(cap) 7-Comp.  13-/PAL   19-R4     25-G7     31-G1     37-B3     43-NC
-  2-GND   8-Chro.  14-/SYNC  20-5.0V   26-G6     32-G0     38-B2     44-(cap)
+  2-GND   8-Chro.  14-C/SYNC 20-5.0V   26-G6     32-G0     38-B2     44-(cap)
   3-Red   9-5.0V   15-4.4MHz 21-R3     27-G5     33-B7     39-B1     45-GND
   4-Green 10-YTRAP 16-R7     22-R2     28-G4     34-B6     40-B0     46-(cap)
   5-Blue  11-NC    17-R6     23-R1     29-G3     35-B5     41-DOTCLK 47-5.0V

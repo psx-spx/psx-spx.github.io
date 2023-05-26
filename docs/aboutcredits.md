@@ -27,7 +27,7 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 
 
 ##   Index
-<A HREF="#contents">Contents</A><br/>
+[Contents](index.md)<br/>
 [Memory Map](memorymap.md)<br/>
 [I/O Map](iomap.md)<br/>
 [Graphics Processing Unit (GPU)](graphicsprocessingunitgpu.md)<br/>
@@ -198,7 +198,7 @@ http://problemkaputt.de/email.htm (spam-shielded)<br/>
 [Pocketstation File Header/Icons](pocketstation.md#pocketstation-file-headericons)<br/>
 [Pocketstation File Images](pocketstation.md#pocketstation-file-images)<br/>
 [Pocketstation XBOO Cable](pocketstation.md#pocketstation-xboo-cable)<br/>
-[Serial Port (SIO)](serialportsio.md)<br/>
+[Serial Interfaces (SIO)](serialinterfacessio.md)<br/>
 [Expansion Port (PIO)](expansionportpio.md)<br/>
 [EXP1 Expansion ROM Header](expansionportpio.md#exp1-expansion-rom-header)<br/>
 [EXP2 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#exp2-dual-serial-port-for-tty-debug-terminal)<br/>
