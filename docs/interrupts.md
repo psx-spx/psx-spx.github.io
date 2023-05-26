@@ -61,10 +61,7 @@ two software interrupt bits, cop0r13.bit8-9, which do exist in the PSX, too,
 these bits are read/write-able latches which can be set/cleared manually to
 request/acknowledge exceptions by software.<br/>
 
-#### Halt Function (Wait for Interrupt)
-The PSX doesn't have a HALT opcode, so, even if the program is merely waiting
-for an interrupt to occur, the CPU is always running at full speed, which is
-resulting in high power consumption, and, in case of emulators, high CPU
-emulation load. To save energy, and to make emulation smoother on slower
-computers, I've added a Halt function for use in emulators:<br/>
-[EXP2 Nocash Emulation Expansion](expansionportpio.md#exp2-nocash-emulation-expansion)<br/>
+#### PS2 IOP interrupts
+The PS2's IOP has the same interrupt controller as the PS1 but with more
+channels. For more details, see:<br/>
+[ps2tek - IOP Interrupts](https://psi-rockin.github.io/ps2tek/#iopint)<br/>
