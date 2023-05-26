@@ -45,6 +45,7 @@ nav:
     - 'dmachannels.md'
     - 'timers.md'
     - 'cdromdrive.md'
+    - 'cdromfileformats.md'
     - 'controllersandmemorycards.md'
     - 'pocketstation.md'
     - 'serialinterfacessio.md'

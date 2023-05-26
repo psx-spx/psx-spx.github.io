@@ -20,12 +20,13 @@
 [CDROM Disk Format](cdromdrive.md#cdrom-disk-format)<br/>
 [CDROM Subchannels](cdromdrive.md#cdrom-subchannels)<br/>
 [CDROM Sector Encoding](cdromdrive.md#cdrom-sector-encoding)<br/>
+[CDROM Scrambling](cdromdrive.md#cdrom-scrambling)<br/>
 [CDROM XA Subheader, File, Channel, Interleave](cdromdrive.md#cdrom-xa-subheader-file-channel-interleave)<br/>
 [CDROM XA Audio ADPCM Compression](cdromdrive.md#cdrom-xa-audio-adpcm-compression)<br/>
 [CDROM ISO Volume Descriptors](cdromdrive.md#cdrom-iso-volume-descriptors)<br/>
 [CDROM ISO File and Directory Descriptors](cdromdrive.md#cdrom-iso-file-and-directory-descriptors)<br/>
 [CDROM ISO Misc](cdromdrive.md#cdrom-iso-misc)<br/>
-[CDROM File Formats](cdromdrive.md#cdrom-file-formats)<br/>
+[CDROM File Formats](cdromfileformats.md)<br/>
 [CDROM Video CDs (VCD)](cdromvideocdsvcd.md)<br/>
 
 #### Playstation CDROM Protection
@@ -34,17 +35,6 @@
 [CDROM Protection - Modchips](cdromdrive.md#cdrom-protection-modchips)<br/>
 [CDROM Protection - Chipless Modchips](cdromdrive.md#cdrom-protection-chipless-modchips)<br/>
 [CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection-libcrypt)<br/>
-
-#### General CDROM Disk Images
-[CDROM Disk Images CCD/IMG/SUB (CloneCD)](cdromdrive.md#cdrom-disk-images-ccdimgsub-clonecd)<br/>
-[CDROM Disk Images CDI (DiscJuggler)](cdromdrive.md#cdrom-disk-images-cdi-discjuggler)<br/>
-[CDROM Disk Images CUE/BIN/CDT (Cdrwin)](cdromdrive.md#cdrom-disk-images-cuebincdt-cdrwin)<br/>
-[CDROM Disk Images MDS/MDF (Alcohol 120%)](cdromdrive.md#cdrom-disk-images-mdsmdf-alcohol-120)<br/>
-[CDROM Disk Images NRG (Nero)](cdromdrive.md#cdrom-disk-images-nrg-nero)<br/>
-[CDROM Disk Image/Containers CDZ](cdromdrive.md#cdrom-disk-imagecontainers-cdz)<br/>
-[CDROM Disk Image/Containers ECM](cdromdrive.md#cdrom-disk-imagecontainers-ecm)<br/>
-[CDROM Subchannel Images](cdromdrive.md#cdrom-subchannel-images)<br/>
-[CDROM Disk Images Other Formats](cdromdrive.md#cdrom-disk-images-other-formats)<br/>
 
 #### Playstation CDROM Coprocessor
 [CDROM Internal Info on PSX CDROM Controller](cdrominternalinfoonpsxcdromcontroller.md)<br/>
@@ -181,6 +171,30 @@ and the second INT5, then INT3 is delivered first, and INT5 is not delivered
 until INT3 is acknowledged (ie. the response interrupts are NOT ORed together
 to produce INT7 or so). The upper bits however can be ORed with the lower bits
 (ie. Command Start INT10h and 1st Response INT3 would give INT13h).<br/>
+#### Caution - Unstable IRQ Flag polling
+IRQ flag changes aren't synced with the MIPS CPU clock. If more than one bit
+gets set (and the CPU is reading at the same time) then the CPU does
+occassionally see only one of the newly bits:<br/>
+```
+  0 ----------> 3   ;99.9%  normal case INT3's
+  0 ----------> 5   ;99%    normal case INT5's
+  0 ---> 1 ---> 3   ;0.1%   glitch: occurs about once per thousands of INT3's
+  0 ---> 4 ---> 5   ;1%     glitch: occurs about once per hundreds of INT5's
+```
+As workaround, do something like:<br/>
+```
+ @@polling_lop:
+  irq_flags = [1F801803h] AND 07h       ;<-- 1st read (may be still unstable)
+  if irq_flags = 00h then goto @@polling_lop
+  irq_flags = [1F801803h] AND 07h       ;<-- 2nd read (should be stable now)
+  handle irq_flags and acknowledge them
+```
+The problem applies only when manually polling the IRQ flags (an actual IRQ
+handler will get triggered when the flags get nonzero, and the flags will have
+stabilized once when the IRQ handler is reading them) (except, a combination of
+IRQ10h followed by IRQ3 can also have unstable LSBs within the IRQ handler).<br/>
+The problem occurs only on older consoles (like LATE-PU-8), not on newer
+consoles (like PSone).<br/>
 
 #### 1F801802h.Index2 - Audio Volume for Left-CD-Out to Left-SPU-Input (W)
 #### 1F801803h.Index2 - Audio Volume for Left-CD-Out to Right-SPU-Input (W)
@@ -249,8 +263,9 @@ Indicates ready-to-send-new-command,<br/>
   1=Busy sending a command/parameters
 ```
 Trying to send a new command in the Busy-phase causes malfunction (the older
-command will be dropped, the newer command executes and returns its results
-and triggers an interrupt). <br/>
+command seems to get lost, the newer command executes and returns its results
+and triggers an interrupt, but, thereafter, the controller seems to hang). So,
+always wait until the Busy-bit goes off before sending a command.<br/>
 When the Busy-flag goes off, a new command can be send immediately (even if the
 response from the previous command wasn't received yet), however, the new
 command stays in the Busy-phase until the IRQ from the previous command is
@@ -315,6 +330,7 @@ CDROM).<br/>
   CDROM/HOST: enable ADPCM (Port 1F801803h.Index3.Bit0=0)  ;probably needed?
   ... set dummy addr/len with DISHXFRC=1 ?  <-- NOT required !
   ... set SMEN ... and dummy BFWR?    <-- BOTH bits required ?
+  ... maybe SMADPCLR (1F801803h.Index1.bit5) does clear SoundMap ADPCM buf?
   transfer 900h bytes (same format as ADPCM sectors) (Port 1F801801h.Index1)
   Note: Before sending a byte, one should wait for DRQs (1F801801h.Bit6=1)
   Note: ADPCM output doesn't start until the last (900h'th) byte is transferred
@@ -324,8 +340,8 @@ exe file (without needing a cdrom with ADPCM sectors). And, Sound Map supports
 both 4bit and 8bit compression (the SPU supports only 4bit).<br/>
 Caution: If ADPCM wasn't playing, and one sends one 900h-byte block, then it
 will get stored in one of three 900h-byte slots in SRAM, and one would expect
-that that slot to be played when the ADPCM output starts - however, actually,
-the hardware will more or less randomly play one of the three slots; not
+that slot to be played when the ADPCM output starts - however, actually, the
+hardware will more or less randomly play one of the three slots; not
 necessarily the slot that was updated most recently.<br/>
 
 
@@ -362,7 +378,7 @@ necessarily the slot that was updated most recently.<br/>
   19h Test         sub_function    depends on sub_function (see below)
   1Ah GetID      E -               INT3(stat), INT2/5(stat,flg,typ,atip,"SCEx")
   1Bh ReadS      E?-               INT3(stat), INT1(stat), datablock
-  1Ch Reset        -               INT3(stat), Delay
+  1Ch Reset        -               INT3(stat), Delay            ;-not DTL-H2000
   1Dh GetQ       E adr,point       INT3(stat), INT2(10bytesSubQ,peak_lo) ;\not
   1Eh ReadTOC      -               INT3(late-stat), INT2(stat)           ;/vC0
   1Fh VideoCD      sub,a,b,c,d,e   INT3(stat,a,b,c,d,e)   ;<-- SCPH-5903 only
@@ -381,6 +397,8 @@ necessarily the slot that was updated most recently.<br/>
 E = Error 80h appears on some commands (02h..09h, 0Bh..0Dh, 10h..16h, 1Ah,
 1Bh?, and 1Dh) when the disk is missing, or when the drive unit is disconnected
 from the mainboard.<br/>
+Some commands (04h,05h,10h,11h,1Dh) do also trigger Error 80h when the disk is
+stopped.<br/>
 
 #### sub\_function numbers (for command 19h)
 Test commands are invoked with command number 19h, followed by a sub\_function
@@ -433,6 +451,7 @@ number as first parameter byte. The Kernel seems to be using only sub\_function
   75h ***  -         INT3(lo,hi,lo,hi);Decoder Get Host Xfer Info Remain/Addr
   76h ***  a,b,c,d   INT3(stat)       ;Decoder Prepare Transfer to/from SRAM
   77h..FFh -         INT5(11h,10h)    ;N/A
+  80h..8Fh a,b       ?                ;seem to do something on PS2
 ```
 \* sub\_functions 06h..08h, 30h..31h, and 4xh are supported only in vC0 and vC1.<br/>
 \*\* sub\_function 51h is supported only in BIOS version vC2 and up.<br/>
@@ -482,10 +501,13 @@ Bit4 causes INT1 to return status.Bit3=set (IdError). Purpose of Bit4 is
 unknown?<br/>
 
 #### Init - Command 0Ah --\> INT3(stat) --\> INT2(stat)
-Multiple effects at once. Sets mode=00h (or not ALL bits cleared?), activates
-drive motor, Standby, abort all commands.<br/>
+Multiple effects at once. Sets mode=20h, activates drive motor, Standby, abort
+all commands.<br/>
 
 #### Reset - Command 1Ch,(...) --\> INT3(stat) --\> Delay(1/8 seconds)
+```
+  Caution: Not supported on DTL-H2000 (v01)
+```
 Resets the drive controller, reportedly, same as opening and closing the drive
 door. The command executes no matter if/how many parameters are used (tested
 with 0..7 params). INT3 indicates that the command was started, but there's no
@@ -604,7 +626,10 @@ When issued during play-spin-up, play is aborted.<br/>
 after seek error --\> disk stops spinning at 2nd response, then restarts
 spinning for 1 second or so, then stops spinning forever... and following
 gettn/gettd/getid/getlocl/getlocp fail with error 80h...<br/>
-The command does automatically read the TOC of the new session.<br/>
+The command does automatically read the TOC of the new session. BUG: Older CD
+Firmwares (16 May 1995 and older) don't clear the old TOC when loading Session
+1, in that case SetSession(1) may update some (not all) TOC entries; ending up
+with a mixup of old and new TOC entries.<br/>
 There seems to be no way to determine the current sessions number (via Getparam
 or so), and more important, no way to determine if the disk is a multi-session
 disk or not... except by trial... which would stop the drive motor on seek
@@ -765,7 +790,7 @@ as second response byte, with the following values:<br/>
 ```
   ___These values appear in the FIRST response; with stat.bit0 set___
   10h - Invalid Sub_function (for command 19h), or invalid parameter value
-  20h - Wrong number of parameters (most CD commands need an exact number of parameters)
+  20h - Wrong number of parameters
   40h - Invalid command
   80h - Cannot respond yet (eg. required info was not yet read from disk yet)
            (namely, TOC not-yet-read or so)
@@ -1080,7 +1105,8 @@ CDROM controller BIOS. Known/existing values are:<br/>
   (unknown)        ;DTL-H2000 (with SPC700 instead HC05)
   94h,09h,19h,C0h  ;PSX (PU-7)               19 Sep 1994, version vC0 (a)
   94h,11h,18h,C0h  ;PSX (PU-7)               18 Nov 1994, version vC0 (b)
-  95h,05h,16h,C1h  ;PSX (EARLY-PU-8)         16 May 1995, version vC1 (a)
+  94h,11h,28h,01h  ;PSX (DTL-H2000)          28 Nov 1994, version v01 (debug)
+  95h,05h,16h,C1h  ;PSX (LATE-PU-8)          16 May 1995, version vC1 (a)
   95h,07h,24h,C1h  ;PSX (LATE-PU-8)          24 Jul 1995, version vC1 (b)
   95h,07h,24h,D1h  ;PSX (LATE-PU-8,debug ver)24 Jul 1995, version vD1 (debug)
   96h,08h,15h,C2h  ;PSX (PU-16, Video CD)    15 Aug 1996, version vC2 (VCD)
@@ -1088,15 +1114,20 @@ CDROM controller BIOS. Known/existing values are:<br/>
   96h,09h,12h,C2h  ;PSX (PU-18) (japan)      12 Sep 1996, version vC2 (a.jap)
   97h,01h,10h,C2h  ;PSX (PU-18) (us/eur)     10 Jan 1997, version vC2 (a)
   97h,08h,14h,C2h  ;PSX (PU-20)              14 Aug 1997, version vC2 (b)
-  98h,06h,10h,C3h  ;PSX (PU-22)              10 Jul 1998, version vC3 (a)
+  98h,06h,10h,C3h  ;PSX (PU-22)              10 Jun 1998, version vC3 (a)
   99h,02h,01h,C3h  ;PSX/PSone (PU-23, PM-41) 01 Feb 1999, version vC3 (b)
   A1h,03h,06h,C3h  ;PSone/late (PM-41(2))    06 Jun 2001, version vC3 (c)
   (unknown)        ;PS2,   xx xxx xxxx, late PS2 models...?
 ```
 
 #### 19h,21h --\> INT3(flags)
-Returns the current status of the POS0 and DOOR switches. Bit0=HeadIsAtPos0,
-Bit1=DoorIsOpen, Bit2-7=AlwaysZero.<br/>
+Returns the current status of the POS0 and DOOR switches.<br/>
+```
+  Bit0   = HeadIsAtPos0 (0=No, 1=Pos0)
+  Bit1   = DoorIsOpen   (0=No, 1=Open)
+  Bit2   = EjectButtonOrOutSwOrSo? (DTL-H2000 only) (always 0 on retail)
+  Bit3-7 = AlwaysZero
+```
 
 #### 19h,22h --\> INT3("for Europe")
 ```
@@ -1487,6 +1518,21 @@ Other/invalid addresses are:<br/>
   400h..FFFFh - Mirrors of 000h..3FFh   ;/mirroring by software
 ```
 
+#### DTL-H2000 Memory Map
+This version allows to read the whole 64Kbyte memory space (withou mirroring
+everything to first 300h bytes). I/O Ports and Variables are at different
+locations:<br/>
+```
+  000h..0DFh   RAM Part 1 (C0h bytes)
+  0E0h..0FFh   I/O Area
+  100h..1DFh   RAM Part 2 (C0h bytes)
+  1E0h..1FFh   I/O Area
+  200h..2DFh   RAM Part 3 (100h bytes)
+  2E0h..7FFFh  Unknown
+  8000h-BFFFh  Unknown  (lower 16K of 32K EPROM) (or unused?)
+  C000h-FFFFh  Firmware (upper 16K of 32K EPROM)
+```
+
 #### Writing to RAM
 There is no command for writing to RAM. Except that, one can write to the
 command/parameter buffer at 1E0h and up. Normally, the longest known command
@@ -1714,7 +1760,7 @@ received sectors, and it can hold up to eight sectors in the 32K SRAM. However,
 the SUB-CPU BIOS merely sets a sector-delivery-needed flag (instead of
 memorizing which/how many sectors need to be delivered, and, accordingly, the
 PSX can use only three of the available eight SRAM slots: One for currently
-pending INT1, one for undelivered INT1, and one for currently/incompletly
+pending INT1, one for undelivered INT1, and one for currently/incompletely
 received sector).<br/>
 
 #### First Response (INT3) (or INT5 if failed)
@@ -1781,7 +1827,7 @@ whether the motor is on or off (and probably on various other factors like
 seeking).<br/>
 
 #### First Response
-The First Response interrupt is sent after processing the
+The First Response interrupt is sent almost immediately after processing the
 command (that is, when the mainloop sees a new command without any old
 interrupt pending). For GetStat, timings are as so:<br/>
 ```
@@ -1860,28 +1906,6 @@ The bottom line is that one should process INT1's as soon as possible (ie.
 before the cdrom controller receives and skips further sectors). Otherwise
 sectors would be lost without notice (there appear to be absolutely no overrun
 status flags, nor overrun error interrupts).<br/>
-
-#### Update:
-This is confirmed, as found in the SCEA_BBS.pdf bulletin board archive:
-```
-12/29/95 10:24 AM
-Re(4): CD buffer
-Thomas Boyd
-CD
-Dan Burnash
-OK. This is the story of the CD ROM subsystem sector buffer:
-The CD-ROM subsystem sector buffer is currently 32K. It is located in the CD-ROM subsystem.
-It uses a sort-of tripple buffering system to read sectors in and make one (and ONLY one) sector
-available to the user.
-Common questions that spring to mind and their answers:
-Q: 32K - (2352 bytes/sector)*(3 buffered sectors) = lots of leftover RAM! Can I use it? A: No. It is
-not accessible by anything but the CD-ROM subsystem.
-Q: How dissappointing. As consolation, can I be told what the extra memory is used for? A: The
-memory was going to be used for sound mapping, but (1) the system would be too slow, and
-(2) sound mapping is already done by the SPU. The current implementation of this memory is ...
-nothing. It is vestigal and will be cut out in future manufacturing cost reduction designs.
-Tom
-```
 
 #### Sector Buffer Test Cases
 ```
@@ -2335,7 +2359,7 @@ ADR=1 is required to exist in at least 9 out of 10 consecutive data sectors.<br/
   8    Reserved (00h)
   24   Absolute MSF address
 ```
-ADR=1 should exist in 3 consecutive lead-out sectors (and may be then followed
+ADR=1 should exist in 3 consecutive lead-out sectors (and may then be followed
 by ADR=5 on multisession disks).<br/>
 
 #### Subchannel Q with ADR=2 -- Catalogue number of the disc (UPC/EAN barcode)
@@ -2525,7 +2549,7 @@ set). If there's still room in the 12-byte data region, then first characters
 for the next Text string (for the next track) are appended after the 00h byte
 (if there's no further track, then the remaining bytes should be padded with
 00h).<br/>
-The "Blocksize" (ID1=8Fh) consists three packs with 24h bytes of data (first
+The "Blocksize" (ID1=8Fh) consists of three packs with 24h bytes of data (first
 0Ch bytes stored with ID2=00h, next 0Ch bytes with ID2=01h, and last 0Ch bytes
 with ID2=02h):<br/>
 ```
@@ -2571,37 +2595,37 @@ track. It shall not used for the first track."<br/>
 ```
 #### Mode0 (Empty)
 ```
-  000h 0Ch  Sync
+  000h 0Ch  Sync   (00h,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,00h)
   00Ch 4    Header (Minute,Second,Sector,Mode=00h)
   010h 920h Zerofilled
 ```
 #### Mode1 (Original CDROM)
 ```
-  000h 0Ch  Sync
+  000h 0Ch  Sync   (00h,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,00h)
   00Ch 4    Header (Minute,Second,Sector,Mode=01h)
   010h 800h Data (2048 bytes)
-  810h 4    EDC (checksum accross [000h..80Fh])
+  810h 4    EDC (checksum across [000h..80Fh])
   814h 8    Zerofilled
   81Ch 114h ECC (error correction codes)
 ```
 #### Mode2/Form1 (CD-XA)
 ```
-  000h 0Ch  Sync
+  000h 0Ch  Sync   (00h,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,00h)
   00Ch 4    Header (Minute,Second,Sector,Mode=02h)
-  010h 4    Sub-Header (File, Channel, Submode with bit5=0, Codinginfo)
+  010h 4    Sub-Header (File, Channel, Submode AND DFh, Codinginfo)
   014h 4    Copy of Sub-Header
   018h 800h Data (2048 bytes)
-  818h 4    EDC (checksum accross [010h..817h])
+  818h 4    EDC (checksum across [010h..817h])
   81Ch 114h ECC (error correction codes)
 ```
 #### Mode2/Form2 (CD-XA)
 ```
-  000h 0Ch  Sync
+  000h 0Ch  Sync   (00h,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,00h)
   00Ch 4    Header (Minute,Second,Sector,Mode=02h)
-  010h 4    Sub-Header (File, Channel, Submode with bit5=1, Codinginfo)
+  010h 4    Sub-Header (File, Channel, Submode OR 20h, Codinginfo)
   014h 4    Copy of Sub-Header
   018h 914h Data (2324 bytes)
-  92Ch 4    EDC (checksum accross [010h..92Bh]) (or 00000000h if no EDC)
+  92Ch 4    EDC (checksum across [010h..92Bh]) (or 00000000h if no EDC)
 ```
 
 #### encode\_sector
@@ -2687,6 +2711,43 @@ calc\_q\_parity(sector) = calc\_parity(sector,43\*4,26,0,2\*44,2\*43)<br/>
 
 
 
+##   CDROM Scrambling
+#### Scrambling
+Scambling does XOR the data sectors with random values (done to avoid regular
+patterns). The scrambling is applied to Data sector bytes[00Ch..92Fh] (not to
+CD-DA audio sectors, and not to the leading 12-byte Sync mark in Data sectors).<br/>
+The (de-)scrambling is done automatically by the CDROM controller, so disc
+images should usually contain unscrambled data (there are some exceptions such
+like CD-i discs that have audio and data sectors mixed inside of the same
+track; which may confuse the CDROM controller about whether or not to apply
+scrambling to which sectors; so one may need to manually XOR the faulty sectors
+in the disc image).<br/>
+The scrambling pattern is derived from a 15bit polynomial counter (much like a
+noise generator in sound chips). The data bits are XORed with the counters low
+bit, and the counters lower 2bit are XORed with each other, and shifted in to
+the counters upper bit. To compute 8 bits and once, and store them in a
+924h-byte table:<br/>
+```
+  poly=0001h  ;init 15bit polynomial counter
+  for i=0 to 924h-1
+    scramble_table[i]=poly AND FFh
+    poly=(((poly XOR poly/2) AND 0FFh)*80h) XOR (poly/100h)
+  next i
+```
+The resulting table content should be:<br/>
+```
+  01h,80h,00h,60h,00h,28h,00h,1Eh,80h,08h,60h,06h,A8h,02h,FEh,81h,
+  80h,60h,60h,28h,28h,1Eh,9Eh,88h,68h,66h,AEh,AAh,FCh,7Fh,01h,E0h,
+  etc.
+```
+After scrambling, the data is reportedly "shuffled and byte-swapped". Unknown
+what shuffling means. And unknown what/where/why byte-swapping is done (it does
+reportedly swap each two bytes in the whole(?) 930h-byte (data-?) sector; which
+might date back to different conventions for disc images to contain "16bit
+audio samples" in big- or little-endian format).<br/>
+
+
+
 ##   CDROM XA Subheader, File, Channel, Interleave
 The Sub-Header for normal data sectors is usually 00h,00h,08h,00h (some PSX
 sectors have 09h instead 08h, indicating the end of "something" or so?<br/>
@@ -2701,6 +2762,8 @@ sectors have 09h instead 08h, indicating the end of "something" or so?<br/>
   0-4 Channel Number (00h..1Fh) (for Audio/Video Interleave, see below)
   5-7 Should be always zero
 ```
+Whilst not officially allowed, PSX Ace Combat 3 Electrosphere does use
+Channel=FFh for unused gaps in interleaved streaming sectors.<br/>
 
 #### 3rd Subheader byte - Submode (SM)
 ```
@@ -2772,6 +2835,15 @@ drive speed everytime when switching between Data to ADPCM modes).<br/>
 Note: The file/channel numbers can be somehow selected with the Setfilter
 command. No idea if the controller is automatically switching to the next
 channel or so when reaching the end of the file?<br/>
+
+#### Unused sectors in Interleave
+There are different ways to mark unused sectors in interleaved streams. Ace
+Combat 3 uses Channel=FFh=Invalid. Tron Bonne uses Submode=00h=Nothing
+(notably, that game has a 74Mbyte XA file that leaves about 75% unused).<br/>
+```
+  Subheader bytes: 01h,FFh,64h,01h   ;Ace Combat 3 Electrosphere
+  Subheader bytes: 01h,00h,00h,00h   ;Misadventures of Tron Bonne (XA\*.XA)
+```
 
 #### Real Time Streaming
 With the above Interleave, files can be played continously at real time - that,
@@ -2985,7 +3057,7 @@ applying a zig-zag filter (with only around 21-points) to the 37800Hz output,
 and then doing 44100Hz interpolation (2-point linear or 4-point gaussian or
 whatever) in a second step.<br/>
 That two-step theory would also match well for 18900Hz resampling (which has
-lower-pitch zigzag, and gets spread accross about fifty 44100Hz samples).<br/>
+lower-pitch zigzag, and gets spread across about fifty 44100Hz samples).<br/>
 
 #### XA-ADPCM Emphasis
 With XA-Emphasis enabled in Sub-header, output will appear as so:<br/>
@@ -3063,14 +3135,14 @@ The Playstation Logo in sectors 5..11 contains data like so,<br/>
   0020h ..   ...
   3278h 588h FF-filled (remaining bytes on sector 11)
 ```
-the Logo contains a header, polygons, vertices and normals for the "PS" logo
-(which is displayed when booting from CDROM). Some BIOS versions are comparing
-these 3278h bytes against an identical copy in ROM, and refuse to boot if the
-data isn't 1:1 the same:<br/>
-- US/ASIA BIOS always accepts changed logos.<br/>
-- PAL BIOS accepts changed logos up to v3.0E (and refuses in v4.0E and up).<br/>
-- JP BIOS never accepts changed logos (and/or changed license strings?).<br/>
-Note: PAL BIOS with "region-patch-modchip" does behave same as US/ASIA BIOS.<br/>
+the Logo contains a .TMD header, polygons, vertices and normals for the "PS"
+logo (which is displayed when booting from CDROM). Some BIOS versions are
+comparing these 3278h bytes against an identical copy in ROM, and refuse to
+boot if the data isn't 1:1 the same:<br/>
+- NTSC US/ASIA BIOS always accepts changed logos.<br/>
+- PAL  EU BIOS accepts changed logos up to v3.0E (and refuses in v4.0E and up).<br/>
+- NTSC JP BIOS never accepts changed logos (and/or changed license strings?).<br/>
+Note: A region-patch-modchip causes PAL BIOS to behave same as US/ASIA BIOS.<br/>
 
 #### Volume Descriptors (Sector 16 and up)
 Playstation disks usually have only two Volume Descriptors,<br/>
@@ -3148,6 +3220,8 @@ Playstation disks usually have only two Volume Descriptors,<br/>
   058h 32   Escape Sequences       (32 bytes)
   078h ..   Same as for Primary Volume Descriptor (see there)
 ```
+In practice, this is used for Joliet:<br/>
+[CDROM Extension Joliet](cdromdrive.md#cdrom-extension-joliet)<br/>
 
 #### Volume Partition Descriptor (none such on PSX disks)
 ```
@@ -3178,7 +3252,7 @@ LEN\_SU=00h (due to the 34-byte limit).<br/>
 
 #### Format of a Directory Record
 ```
-  00h 1      Length of Directory Record (LEN_DR) (33+LEN_FI+pad+LEN_SU)
+  00h 1      Length of Directory Record (LEN_DR) (33+LEN_FI+pad+LEN_SU) (0=Pad)
   01h 1      Extended Attribute Record Length (usually 00h)
   02h 8      Data Logical Block Number (2x32bit)
   0Ah 8      Data Size in Bytes        (2x32bit)
@@ -3216,7 +3290,8 @@ used in the PSX), LEN\_SU is 14 bytes:<br/>
                15  IS_DIRECTORY    (0=File or CD-DA, 1=Directory Record)
              Commonly used Attributes are:
                0D55h=Normal Binary File (with 800h-byte sectors)
-               2555h=Unknown            (wipeout .AV files) (MODE1 ??)
+               1555h=Uncommon           (fade to black .DPS and .XA files)
+               2555h=Uncommon           (wipeout .AV files) (MODE1 ??)
                4555h=CD-DA Audio Track  (wipeout .SWP files, alone .WAV file)
                3D55h=Streaming File     (ADPCM and/or MDEC or so)
                8D55h=Directory Record   (parent-, current-, or sub-directory)
@@ -3224,7 +3299,20 @@ used in the PSX), LEN\_SU is 14 bytes:<br/>
   08h 1      File Number   (Must match Subheader's File Number)
   09h 5      Reserved      (00h-filled)
 ```
-The names are alphabetically sorted, no matter if the names refer to files or
+Directory sectors do usually have zeropadding at the end of each sector:<br/>
+```
+  - Directory sizes are always rounded up to N*800h-bytes.
+  - Directory entries should not cross 800h-byte sector boundaries.
+  There may be further directory entries on the next sector after the padding.
+  To deal with that, skip 00h-bytes until finding a nonzero LEN_DR value (or
+  slightly faster, upon a 00h-byte, directly jump to next sector instead of
+  doing a slow byte-by-byte skip).
+  Note: Padding between sectors does rarely happen on PSX discs because the
+  PSX kernel supports max 800h bytes per directory (one exception is PSX Hot
+  Shots Golf 2, which has an ISO directory with more than 800h bytes; it does
+  use a lookup file instead of actually parsing the while ISO directory).
+```
+Names are alphabetically sorted, no matter if the names refer to files or
 directories (ie. SUBDIR would be inserted between STRFILE.EXT and SYSFILE.EXT).
 The first two entries (with non-ascii names 00h and 01h) are referring to
 current and parent directory.<br/>
@@ -3386,110 +3474,103 @@ member of the group specified by the Group Identification field". The separate
 
 
 
-##   CDROM File Formats
-#### FILENAME.EXT
-The BIOS seems to support only (max) 8-letter filenames with 3-letter
-extension, typically all uppercase, eg. "FILENAME.EXT". Eventually, once when
-the executable has started, some programs might install drivers for long
-filenames(?)<br/>
-
-#### SYSTEM.CNF
-Contains boot info in ASCII/TXT format, similar to the CONFIG.SYS or
-AUTOEXEC.BAT files for MSDOS. A typical SYSTEM.CNF would look like so:<br/>
+##   CDROM Extension Joliet
+#### Typical Joliet Disc Header
+The discs contains two separate filesystems, the ISO one for backwards
+compatibilty, and the Joliet one with longer filenames and Unicode characters.<br/>
 ```
-  BOOT = cdrom:\abcd_123.45;1 arg ;boot exe (drive:\path\name.ext;version)
-  TCB = 4                         ;HEX (=4 decimal)   ;max number of threads
-  EVENT = 10                      ;HEX (=16 decimal)  ;max number of events
-  STACK = 801FFF00                ;HEX (=memtop-256)
+  Sector 16 - Primary Volume Descriptor (with 8bit uppercase ASCII ISO names)
+  Sector 17 - Secondary Volume Descriptor (with 16bit Unicode Joliet names)
+  Sector 18 - Volume Descriptor Set Terminator
+  Sector .. - Path Tables and Directory Records (for ISO)
+  Sector .. - Path Tables and Directory Records (for Joliet)
+  Sector .. - File Data Sectors (shared for ISO and Joliet)
 ```
-The first line specifies the executable to load, from the "cdrom:" drive, "\"
-root directory, filename "abcd\_123.45" (case-insensitive, the real name in the
-disk directory would be uppercase, ie. "ABCD\_123.45"), and, finally ";1" is the
-file's version number (a rather strange ISO-filesystem specific feature) (the
-version number should be usually/always 1). Additionally, "arg" may contain an
-optional 128-byte command line argument string, which is copied to address
-00000180h, where it may be interpreted by the executable (most or all games
-don't use that feature).<br/>
-Each line in the file should be terminated by 0Dh,0Ah characters... not sure if
-it's also working with only 0Dh, or only 0Ah...?<br/>
+There is no way to determine which ISO name belongs to which Joliet name
+(except, filenames do usually point to the same file data sectors, but that
+doesn't work for empty files, and doesn't work for folder names).<br/>
+The ISO names can be max 31 chars (or shorter for compatibility with DOS short
+names: Nero does truncate them to max 14 chars "FILENAME.EXT;1", all uppercase,
+with underscores instead of spaces, and somehow assigning names like
+"FILENAMx.EXT;1" in case of duplicated short names).<br/>
 
-A note on the "ABCD\_123.45" file:<br/>
-This is a normal executable (exactly as for the .EXE files, described below),
-however, the filename/extension is taken from the game code (the "ABCD-12345"
-text that is printed on the CD cover), but, with the minus replaced by an
-underscore, and due to the 8-letter filename limit, the last two characters are
-stored in the extension region.<br/>
-That "XXXX\_NNN.NN" naming convention seems to apply for all official licensed
-PSX games, not sure if it's possible to specify something like "FILENAME.EXE"
-as boot-file.<br/>
-
-#### XXXX\_NNN.NN (Boot-Executable) (filename specified in SYSTEM.CNF)
-#### FILENAME.EXE (General-Purpose Executable)
-PSX executables are having an 800h-byte header, followed by the code/data.<br/>
+#### Secondary Volume Descriptor (aka Supplementary Volume Descriptor)
+This is using the same format as ISO Primary Volume Descriptor (but with some
+changed entries).<br/>
+[CDROM ISO Volume Descriptors](cdromdrive.md#cdrom-iso-volume-descriptors)<br/>
+Changed entries are:<br/>
 ```
-  000h-007h ASCII ID "PS-X EXE"
-  008h-00Fh Zerofilled
-  010h      Initial PC                   (usually 80010000h, or higher)
-  014h      Initial GP/R28               (usually 0)
-  018h      Destination Address in RAM   (usually 80010000h, or higher)
-  01Ch      Filesize (must be N*800h)    (excluding 800h-byte header)
-  020h      Data section Start Address   (usually 0)
-  024h      Data Section Size in bytes   (usually 0)
-  028h      BSS section Start Address    (usually 0) (when below Size=None)
-  02Ch      BSS section Size in bytes    (usually 0) (0=None)
-  030h      Initial SP/R29 & FP/R30 Base (usually 801FFFF0h) (or 0=None)
-  034h      Initial SP/R29 & FP/R30 Offs (usually 0, added to above Base)
-  038h-04Bh Reserved for A(43h) Function (should be zerofilled in exefile)
-  04Ch-xxxh ASCII marker
-             "Sony Computer Entertainment Inc. for Japan area"
-             "Sony Computer Entertainment Inc. for Europe area"
-             "Sony Computer Entertainment Inc. for North America area"
-             (or often zerofilled in some homebrew files)
-             (the BIOS doesn't verify this string, and boots fine without it)
-  xxxh-7FFh Zerofilled
-  800h...   Code/Data                  (loaded to entry[018h] and up)
+  000h 1     Volume Descriptor Type (02h=Supplementary instead of 01h=Primary)
+  007h 1     Volume Flags           (whatever, instead of Reserved)
+  008h 2x32  Identifier Strings     (16-char Unicode instead 32-char ASCII)
+  058h 32    Escape Sequences       (see below, instead of Reserved)
+  08Ch 4x4   Path Tables            (point to new tables with Unicode chars)
+  09Ch 34    Root Directory Record  (point to root with Unicode chars)
+  0BEh 4x128 Identifier Strings     (64-char Unicode instead 128-char ASCII)
+  2BEh 3x37  Filename Strings       (18-char Unicode instead 37-char ASCII)
 ```
-The code/data is simply loaded to the specified destination address, ie. unlike
-as in MSDOS .EXE files, there is no relocation info in the header.<br/>
-Note: In bootfiles, SP is usually 801FFFF0h (ie. not 801FFF00h as in
-system.cnf). When SP is 0, the unmodified caller's stack is used. In most cases
-(except when manually calling DoExecute), the stack values in the exeheader
-seem to be ignored though (eg. replaced by the SYSTEM.CNF value).<br/>
-The memfill region is zerofilled by a "relative" fast word-by-word fill (so
-address and size must be multiples of 4) (despite of the word-by-word filling,
-still it's SLOW because the memfill executes in uncached slow ROM).<br/>
-The reserved region at [038h-04Bh] is internally used by the BIOS to memorize
-the caller's RA,SP,R30,R28,R16 registers (for some bizarre reason, this
-information is saved in the exe header, rather than on the caller's stack).<br/>
-Additionally to the initial PC,R28,SP,R30 values that are contained in the
-header, two parameter values are passed to the executable (in R4 and R5
-registers) (however, usually these values are simply R4=1 and R5=0).<br/>
-Like normal functions, the executable can return control to the caller by
-jumping to the incoming RA address (provided that it hasn't destroyed the stack
-or other important memory locations, and that it has pushed/popped all
-registers) (returning works only for non-boot executables; if the boot
-executable returns to the BIOS, then the BIOS will simply lockup itself by
-calling the "SystemErrorBootOrDiskFailure" function.<br/>
+The Escape Sequences entry contains three ASCII chars (plus 29-byte
+zeropadding), indicating the ISO 2022 Unicode charset:<br/>
+```
+  %/@   UCS-2 Level 1
+  %/C   UCS-2 Level 2
+  %/E   UCS-2 Level 3
+```
 
-The PSX uses the standard CDROM ISO9660 filesystem without any encryption (ie.
-you can put an original PSX CDROM into a DOS/Windows computer, and view the
-content of the files in text or hex editors without problems).<br/>
+#### Directory Records and Path Tables
+This is using the standard ISO format (but with 16bit Unicode characters
+instead of 8bit ASCII chars).<br/>
+[CDROM ISO File and Directory Descriptors](cdromdrive.md#cdrom-iso-file-and-directory-descriptors)<br/>
 
-#### PSX.EXE
-Some games do not have a SYSTEM.CNF file, in which case the kernel will
-fallback on loading a file named PSX.EXE.
+#### File and Directory Name Characters
+All characters are stored in 16bit Big Endian format. The LEN\_FI filename entry
+contains the length in bytes (ie. numchars\*2). Charaters 0000h/0001h are
+current/parent directory. Characters 0020h and up can be used for
+file/directory names, except six reserved characters: \*/:;?\<br/>
+All names must be sorted by their character numbers, padded with zero (without
+attempting to merge uppercase, lowercase, or umlauts to nearby locations).<br/>
+
+#### File and Directory Name Length
+```
+  max 64 chars according to original Joliet specs from 1995
+  max 110 chars (on standard CDROMs, with LEN_SU=0)
+  max 103 chars (on CD-XA discs, with LEN_SU=14)
+```
+Joliet Filenames include ISO-style version suffices (usually ";1", so the
+actual filename lengths are two chars less than shown above).<br/>
+The original 64-char limit was perhaps intended to leave space for future
+extensions in the LEN\_SU region. The 64-char limit can cause problems with
+verbose names (eg. "Interprete - Title (version).mp3"). Microsoft later changed
+the limit to up to 110 chars.<br/>
+The 110/103-char limit is caused by the 8bit "LEN\_DR=(33+LEN\_FI+pad+LEN\_SU)"
+entry in the Directory Records.<br/>
+Joliet allows to exceed the 8-level ISO directory nesting limit, however, it
+doesn't allow to exceed the 240-byte (120-Unicode-char) limit in ISO 9660
+section 6.8.2.1 for the total "path\filename" lengths.<br/>
+
+#### Official Specs
+Joliet Specification, CD-ROM Recording Spec ISO 9660:1988, Extensions for
+Unicode Version 1; May 22, 1995, Copyright 1995, Microsoft Corporation<br/>
+```
+  http://littlesvr.ca/isomaster/resources/JolietSpecification.html
+```
+
 
 
 ##   CDROM Protection - SCEx Strings
 #### SCEx String
 The heart of the PSX copy-protection is the four-letter "SCEx" string, encoded
-in the wobble signal of original PSX disks, which cannot reproduced by normal
-CD writers. The last letter varies depending on the region, "SCEI" for Japan,
-"SCEA" for America (and all other NTSC countries except Japan), "SCEE" for
-Europe (and all other PAL countries like Australia). If the string is missing
-(or if it doesn't match up for the local region) then the PSX refuses to boot.
-The verification is done by the Firmware inside of the CDROM Controller (not by
-the PSX BIOS, so there's no way to bypass it by patching the BIOS ROM chip).<br/>
+in the wobble signal of original PSX disks, which cannot be reproduced by
+normal CD writers. The last letter varies depending on the region:<br/>
+```
+  "SCEI" for Japan
+  "SCEA" for America (and all other NTSC countries except Japan)
+  "SCEE" for Europe (and all other PAL countries like Australia)
+```
+If the string is missing (or if it doesn't match up for the local region) then
+the PSX refuses to boot. The verification is done by the Firmware inside of the
+CDROM Controller (not by the PSX BIOS, so there's no way to bypass it by
+patching the BIOS ROM chip).<br/>
 
 #### Wobble Groove and Absolute Time in Pregroove (ATIP) on CD-R's
 A "blank" CDR contains a pre-formatted spiral on it. The number of windings in
@@ -3603,6 +3684,7 @@ The Old Crow mod chip source code works like so:<br/>
     wait 4 ms           ;4ms per bit = 250 bits per second
     return
 ```
+That is, 62 bits per transfer at 250bps = circa 4 transfers per second.<br/>
 
 #### Connection for the data/gate/sync signals:
 For older PSX boards (data/gate):<br/>
@@ -3862,1018 +3944,6 @@ The 16bit key (and some other related counters/variables) aren't stored in RAM,
 but rather in COP0 debug registers (which are mis-used as general-purpose
 storage in this case), for example, the 16bit key is stored in LSBs of the
 "cop0r3" register.<br/>
-
-
-
-##   CDROM Disk Images CCD/IMG/SUB (CloneCD)
-#### File.IMG - 2352 (930h) bytes per sector
-Contains the sector data, recorded at 930h bytes per sector. Unknown if other
-sizes are also used/supported (like 800h bytes/sector, or even images with
-mixed sizes of 800h and 930h for different tracks).<br/>
-
-#### File.SUB - 96 (60h) bytes per sector (subchannel P..W with 96 bits each)
-Contains subchannel data, recorded at 60h bytes per sector.<br/>
-```
-  00h..0Bh 12 Subchannel P (Pause-bits, usually all set, or all cleared)
-  0Ch..17h 12 Subchannel Q (ADR/Control, custom info, CRC-16-CCITT)
-  18h..5Fh .. Subchannel R..W (usually zero) (can be used for CD-TEXT)
-```
-Optionally, the .SUB file can be omitted (it's needed only for discs with
-non-standard subchannel data, such like copy-protected games).<br/>
-
-#### File.CCD - Lead-in info in text format
-Contains Lead-in info in ASCII text format. Lines should be terminated by
-0Dh,0Ah. The overall CCD filestructure is:<br/>
-```
-  [CloneCD]     ;File ID and version
-  [Disc]        ;Overall Disc info
-  [CDText]      ;CD-TEXT (included only if present)
-  [Session N]   ;Session(s) (numbered 1 and up)
-  [Entry N]     ;Lead-in entries (numbered 0..."TocEntries-1")
-  [TRACK N]     ;Track info (numbered 1 and up)
-```
-Read on below for details on the separate sections.<br/>
-
-#### [CloneCD]
-```
-  Version=3             ;-version (usually 3) (rarely 2)
-```
-
-#### [Disc]
-```
-  TocEntries=4          ;-number of [Entry N] fields (lead-in info blocks)
-  Sessions=1            ;-number of sessions (usually 1)
-  DataTracksScrambled=0 ;-unknown purpose (usually 0)
-  CDTextLength=0        ;-total size of 18-byte CD-TEXT chunks (usually 0)
-  CATALOG=NNNNNNNNNNNNN ;-13-digit EAN-13 barcode (included only if present)
-```
-
-#### [CDText]
-```
-  Entries=N       ;number of following entries (CDTextLength/18) (not /16)
-  Entry 0=80 00 NN NN NN NN NN NN NN NN NN NN NN NN NN NN   ;entry 0
-  Entry 1=80 NN NN NN NN NN NN NN NN NN NN NN NN NN NN NN   ;entry 1
-  ...
-  Entry XX=8f NN NN NN NN NN NN NN NN NN NN NN NN NN NN NN  ;entry N-1
-  Note: Each entry contains 16 bytes (ie. "18-byte CD-TEXT" with CRC excluded)
-  "NN NN NN.." consists of 2-digit lowercase HEX numbers (without leading "0x")
-```
-
-#### [Session 1]
-```
-  PreGapMode=2          ;-unknown purpose (usually 1 or 2)
-  PreGapSubC=1          ;-unknown purpose (usually 0 or 1)
-```
-
-#### [Entry 0]
-[Entry 0..2] are usually containing Point A0h..A2h info. [Entry 3..N] are
-usually TOC info for Track 1 and up.<br/>
-```
-  Session=1             ;-session number that this entry belongs to (usually 1)
-  Point=0xa0            ;-point (0..63h=Track, non-BCD!) (A0h..XXh=specials) Q2
-  ADR=0x01              ;-lower 4bit of ADR/Control (usually 1)           Q0.lo
-  Control=0x04          ;-upper 4bit of ADR/Control (eg. 0=audio, 4=data) Q0.hi
-  TrackNo=0             ;-usually/always 0 (as [Entry N]'s are in Lead-in)   Q1
-  AMin=0                ;\current MSF address                                Q3
-  ASec=0                ; (dummy zero values) (actual content                Q4
-  AFrame=0              ; would be current lead-in position)                 Q5
-  ALBA=-150             ;/ALBA=((AMin*60+ASec)*75+AFrame)-PreGapSize
-  Zero=0                ;-probably reserved byte from Q channel              Q6
-  PMin=1                ;\referenced MSF address (non-BCD!), for certain     Q7
-  PSec=32               ; Point's, PMin may contain a Track number, and PSec Q8
-  PFrame=0              ; the disc type value (that without non-BCD-glitch)  Q9
-  PLBA=6750             ;/PLBA=((PMin*60+PSec)*75+PFrame)-PreGapSize
-```
-
-#### [TRACK 1]             ;-track number (non-BCD) (1..99)
-```
-  MODE=2                ;-mode (0=Audio, 1=Mode1, 2=Mode2)
-  ISRC=XXXXXNNNNNNN     ;-12-letter/digit ISRC code (included only if present)
-  INDEX 0=N             ;-1st sector with index 0, missing EVEN if any?
-  INDEX 1=N             ;-1st sector with index 1, usually same as track's PLBA
-  INDEX 2=N             ;-1st sector with index 2, if any
-  etc.
-```
-
-#### Missing Sectors & Sector Size
-The .CCD file doesn't define the "PreGapSize" (the number of missing sectors at
-begin of first track). It seems to be simply constant " PreGapSize=150". Unless
-one is supposed to calculate it as
-"PreGapSize=((PMin\*60+PSec)\*75+PFrame)-PLBA".<br/>
-The SectorSize seems to be also constant, "SectorSize=930h".<br/>
-
-#### Non-BCD Caution
-All Min/Sec/Frame/Track/Index values are expressed in non-BCD, ie. they must be
-converted to BCD to get the correct values (as how they are stored on real
-CDs). Exceptions are cases where those bytes have other meanings: For example,
-"PSec=32" does normally mean BcdSecond=32h, but for Point A0h it would mean
-DiscType=20h=CD-ROM-XA).<br/>
-The Point value is also special, it is expressed in hex (0xNN), but nonetheless
-it is non-BCD, ie. Point 1..99 are specified as 0x01..0x63, whilst, Point
-A0h..FFh are specified as such (ie. as 0xA0..0xFF).<br/>
-
-#### Versions
-Version=1 doesn't seem to exist (or it is very rare). Version=2 is quite rare,
-and it seems to lack the [TRACK N] entries (meaning that there is no MODE and
-INDEX information, except that the INDEX 1 location can be assumed to be same
-as PLBA). Version=3 is most common, this version includes [TRACK N] entries,
-but often only with INDEX=1 (and up, if more indices), but without INDEX 0 (on
-Track 1 it's probably missing due to pregap, on further Tracks it's missing
-without reason) (so, only ways to reproduce INDEX=0 would be to guess it being
-located 2 seconds before INDEX=1, or, to use the information from the separate
-.SUB file, if that file is present; note: presence of index 0 is absolutely
-required for some games like PSX Tomb Raider 2).<br/>
-
-#### Entry & Points & Sessions
-The [Entry N] fields are usually containing Point A0h,A1h,A2h, followed by
-Point 1..N (for N tracks). For multiple sessions: The session is terminated by
-Point B0h,C0h. The next session does then contain Point A0h,A1h,A2h, and Point
-N+1..X (for further tracks). The INDEX values in the [TRACK N] entries are
-originated at the begin of the corresponding session, whilst PLBA values in
-[Entry N] entries are always originated at the begin of the disk.<br/>
-
-
-
-##   CDROM Disk Images CDI (DiscJuggler)
-#### Overall Format
-```
-  Sector Data (sector 00:00:00 and up)          ;-body
-  Number of Sessions (1 byte)     <--- located at "Filesize-Footersize"
-  Session Block for 1st session (15 bytes)      ;\
-  nnn-byte info for 1st track                   ; 1st session
-  nnn-byte info for 2nd track (if any)          ;
-  etc.                                          ;/
-  Session Block for 2nd session (15 bytes)      ;\
-  nnn-byte info for 1st track                   ; 2nd session (if any)
-  nnn-byte info for 2nd track (if any)          ;
-  etc.                                          ;/
-  etc.                                          ;-further sessions (if any)
-  Session Block for no-more-sessions (15 bytes) ;-end marker
-  nnn-byte Disc Info Block                      ;-general disc info
-  Entrypoint (4 bytes)            <--- located at "Filesize-4"
-```
-
-#### Sector Data
-Contains Sector Data for sector 00:00:00 and up (ie. all sectors are stored in
-the file, there are no missing "pregap" sectors).<br/>
-Sector Size can be 800h..990h bytes/sector (sector size may vary per track).<br/>
-
-#### Number of Sessions (1 byte)
-```
-  00h   1   Number of Sessions (usually 1)
-```
-
-#### Session Block (15-bytes)
-```
-  00h   1   Unknown (00h)
-  01h   1   Number of Tracks in session (01h..63h) (or 00h=No More Sessions)
-  02h   7   Unknown (00h-filled)
-  09h   1   Unknown (01h)
-  0Ah   3   Unknown (00h-filled)
-  0Dh   2   Unknown (FFh,FFh)
-```
-
-#### Track/Disc Header (30h+F bytes) (used in Track Blocks and Disc Info Block)
-```
-  00h   12  Unknown (FFh,FFh,00h,00h,01h,00h,00h,00h,FFh,FFh,FFh,FFh)
-  0Ch   3   Unknown (DAh,0Ah,D5h or 64h,05h,2Ah) (random/id/chksum?)
-  0Fh   1   Total Number of Tracks on Disc (00h..63h) (non-BCD)
-  10h   1   Length of below Path/Filename (F)
-  11h   (F) Full Path/Filename (eg. "C:\folder\file.cdi")
-  11h+F 11  Unknown (00h-filled)
-  1Ch+F 1   Unknown (02h)
-  1Dh+F 10  Unknown (00h-filled)
-  27h+F 1   Unknown (80h)
-  28h+F 4   Unknown (00057E40h) (=360000 decimal) (disc capacity 80 minutes?)
-  2Ch+F 2   Unknown (00h,00h)
-  2Eh+F 2   Medium Type (0098h=CD-ROM, 0038h=DVD-ROM)
-```
-
-#### Track Block (E4h+F+I+T bytes)
-```
-  00h     30h+F Track/Disc Header (see above)
-  30h+F   02h   Number of Indices (usually 0002h) (I=Num*4)
-  32h+F   (I)   32bit Lengths (per index) (eg. 00000096h,00007044h)
-  32h+FI  04h   Number of CD-Text blocks (usually 0) (T=Num*18+VariableLen's)
-  36h+FI  (T)   CD-Text (if any) (see "mirage_parser_cdi_parse_cdtext")
-  36h+FIT 02h   Unknown (00h,00h)
-  38h+FIT 01h   Track Mode (0=Audio, 1=Mode1, 2=Mode2/Mixed)
-  39h+FIT 07h   Unknown (00h,00h,00h,00h,00h,00h,00h)
-  40h+FIT 04h   Session Number (starting at 0) (usually 00h)
-  44h+FIT 04h   Track Number   (non-BCD, starting at 0) (00h..62h)
-  48h+FIT 04h   Track Start Address (eg. 00000000h)
-  4Ch+FIT 04h   Track Length        (eg. 000070DAh)
-  50h+FIT 0Ch   Unknown (00h-filled)
-  5Ch+FIT 04h   Unknown (00000000h or 00000001h)
-  60h+FIT 04h   read_mode (0..4)
-                  0: Mode1,        800h, 2048
-                  1: Mode2,        920h, 2336
-                  2: Audio,        930h, 2352
-                  3: Raw+PQ,       940h, 2352+16 non-interleaved (P=only 1bit)
-                  4: Raw+PQRSTUVW, 990h, 2352+96 interleaved
-  64h+FIT 4     Control (Upper 4bit of ADR/Control, eg. 00000004h=Data)
-  68h+FIT 1     Unknown (00h)
-  69h+FIT 4     Track Length        (eg. 000070DAh) (same as above)
-  6Dh+FIT 4     Unknown (00h,00h,00h,00h)
-  71h+FIT 12    ISRC Code 12-letter/digit (ASCII?) string (00h-filled if none)
-  7Dh+FIT 4     ISRC Valid Flag (0=None, Other?=Yes?)
-  81h+FIT 1     Unknown (00h)
-  82h+FIT 8     Unknown (FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh)
-  8Ah+FIT 4     Unknown (00000001h)
-  8Eh+FIT 4     Unknown (00000080h)
-  92h+FIT 4     Unknown (00000002h)     (guess: maybe audio num channels??)
-  96h+FIT 4     Unknown (00000010h)      (guess: maybe audio bits/sample??)
-  9Ah+FIT 4     Unknown (0000AC44h) (44100 decimal, ie. audio sample rate?)
-  9Eh+FIT 2Ah   Unknown (00h-filled)
-  C8h+FIT 4     Unknown (FFh,FFh,FFh,FFh)
-  CCh+FIT 12    Unknown (00h-filled)
-  D8h+FIT 1       session_type  ONLY if last track of a session (else 0)
-                   (0=Audio/CD-DA, 1=Mode1/CD-ROM, 2=Mode2/CD-XA)
-  D9h+FIT 5     Unknown (00h-filled)
-  DEh+FIT 1     Not Last Track of Session Flag (0=Last Track, 1=Not Last)
-  DFh+FIT 1     Unknown (00h)
-  E0h+FIT 4        address for last track of a session? (otherwise 00,00,FF,FF)
-```
-
-#### Disc Info Block (5Fh+F+V+T bytes)
-```
-  00h     30h+F Track/Disc Header (see above)
-  30h+F   4     Disc Size (total number of sectors)
-  34h+F   1     Volume ID Length (V) ;\from Primary Volume Descriptor[28h..47h]
-  35h+F   (V)   Volume ID String     ;/(ISO Data discs) (unknown for Audio)
-  35h+FV  1     Unknown (00h)
-  36h+FV  4     Unknown (01h,00h,00h,00h)
-  3Ah+FV  4     Unknown (01h,00h,00h,00h)
-  3Eh+FV  13    EAN-13 Code 13-digit (ASCII?) string (00h-filled if none)
-  4Bh+FV  4     EAN-13 Valid Flag (0=None, Other?=Yes?)
-  4Fh+FV  4     CD-Text Length in bytes (T=Num*1)
-  53h+FV  (T)   CD-Text (for Lead-in) (probably 18-byte units?)
-  53h+FVT 8     Unknown (00h-filled)
-  5Bh+FVT 4     Unknown (06h,00h,00h,80h)
-```
-
-#### Entrypoint (4 bytes) (located at "Filesize-4")
-```
-  00h     4     Footer Size in bytes
-```
-
-
-
-##   CDROM Disk Images CUE/BIN/CDT (Cdrwin)
-#### .CUE/.BIN (CDRWIN)
-CDRWIN stores disk images in two separate files. The .BIN file contains the raw
-disk image, starting at sector 00:02:00, with 930h bytes per sector, but
-without any TOC or subchannel information. The .CUE file contains additional
-information about the separate track(s) on the disk, in ASCII format, for
-example:<br/>
-```
- FILE "PATH\FILENAME.BIN" BINARY
-   TRACK 01 MODE2/2352
-     INDEX 01 00:00:00           ;real address = 00:02:00  (+2 seconds)
-   TRACK 02 AUDIO
-     PREGAP 00:02:00             ;two missing seconds      (NOT stored in .BIN)
-     INDEX 01 08:09:29           ;real address = 08:13:29  (+2 seconds +pregap)
-   TRACK 03 AUDIO
-     INDEX 00 14:00:29           ;real address = 14:04:29  (+2 seconds +pregap)
-     INDEX 01 14:02:29           ;real address = 14:06:29  (+2 seconds +pregap)
-   TRACK 04 AUDIO
-     INDEX 00 18:30:20           ;real address = 18:34:20  (+2 seconds +pregap)
-     INDEX 01 18:32:20           ;real address = 18:36:20  (+2 seconds +pregap)
-```
-The .BIN file does not contain ALL sectors, as said above, the first 2 seconds
-are not stored in the .BIN file. Moreover, there may be missing sectors
-somewhere in the middle of the file (indicated as PREGAP in the .CUE file;
-PREGAPs are usually found between Data and Audio Tracks).<br/>
-The MM:SS:FF values in the .CUE file are logical addresses in the .BIN file,
-rather than physical addresses on real CDROMs. To convert the .CUE values back
-to real addresses, add 2 seconds to all MM:SS:FF addresses (to compensate the
-missing first 2 seconds), and, if the .CUE contains a PREGAP, then the pregap
-value must be additionally added to all following MM:SS:FF addresses.<br/>
-The end address of the last track is not stored in the .CUE, instead, it can be
-only calculated by converting the .BIN filesize to MM:SS:FF format and adding 2
-seconds (plus any PREGAP values) to it.<br/>
-
-#### FILE \<filename\> BINARY|MOTOTOLA..or..MOTOROLA?|AIFF|WAVE|MP3
-```
-  (must appear before any other commands, except CATALOG)
-  (uh, may also appear before further tracks)
-```
-
-#### FLAGS DCP 4CH PRE SCMS
-
-#### INDEX NN MM:SS:FF
-
-#### TRACK NN datatype
-```
-  AUDIO          ;930h  ;bytes 000h..92Fh
-  CDG            ;?     ;?
-  MODE1/2048     ;800h  ;bytes 010h..80Fh
-  MODE1/2352     ;930h  ;bytes 000h..92Fh
-  MODE2/2336     ;920h  ;bytes 010h..92Fh
-  MODE2/2352     ;930h  ;bytes 000h..92Fh
-  CDI/2336       ;920h  ;?
-  CDI/2352       ;930h  ;bytes 000h..92Fh
-```
-
-#### PREGAP MM:SS:FF
-#### POSTGAP MM:SS:FF
-Duration of silence at the begin (PREGAP) or end (POSTGAP) of a track. Even if
-it isn't specified, the first track will always have a 2-second pregap.<br/>
-The gaps are NOT stored in the BIN file.<br/>
-
-#### REM comment
-Allows to insert comments/remarks (which are usually ignored). Some third-party
-tools are mis-using REM to define additional information.<br/>
-
-#### CATALOG 1234567890123
-#### ISRC ABCDE1234567
-```
-  (ISRC must be after TRACK, and before INDEX)
-```
-
-#### PERFORMER "The Band"
-#### SONGWRITER "The Writer"
-#### TITLE "The Title"
-These entries allow to define basic CD-Text info directly in the .CUE file.<br/>
-Some third-party utilites allow to define additional CD-Text info via REM
-lines, eg. "REM GENRE Rock".<br/>
-Alternately, more complex CD-Text data can be stored in a separate .CDT file.<br/>
-
-#### CDTEXTFILE "C:\LONG FILENAME.CDT"
-Specifies an optional file which may contain CD-TEXT. The .CDT file consists of
-raw 18-byte CD-TEXT fragments (which may include any type of information,
-including exotic one's like a "Message" from the producer). For whatever
-reason, there's a 00h-byte appended at the end of the file. Alternately to the
-.CDT file, the less exotic types of CD-TEXT can be defined by PERFORMER, TITLE,
-and SONGWRITER commands in the .CUE file.<br/>
-
-#### Missing
-Unknown if newer CUE/BIN versions do also support subchannel data.<br/>
-
-
-
-##   CDROM Disk Images MDS/MDF (Alcohol 120%)
-#### File.MDF - Contains sector data (optionally with sub-channel data)
-Contains the sector data, recorded at 800h..930h bytes per sector, optionally
-followed by 60h bytes subchannel data (appended at the end of each sector). The
-stuff seems to be start on 00:02:00 (ie. the first 150 sectors are missing; at
-least it is like so when "Session Start Sector" is -150).<br/>
-The subchannel data (if present) consists of 8 subchannels, stored in 96 bytes
-(each byte containing one bit per subchannel).<br/>
-```
-  Bit7..0 = Subchannel P..W (in that order, eg. Bit6=Subchannel Q)
-```
-The 96 bits (per subchannel) can be translated to bytes, as so:<br/>
-```
-  1st..8th bit  = Bit7..Bit0 of 1st byte (in that order, ie. MSB/Bit7 first)
-  9st..16th bit = Bit7..Bit0 of 2nd byte ("")
-  17th..        = etc.
-```
-
-#### File.MDS - Contains disc/lead-in info (in binary format)
-An MDS file's structure consists of the following stuff ...<br/>
-```
-  Header              (58h bytes)
-  Session block(s)    (usually one 18h byte entry)
-  Data blocks         (N*50h bytes)
-  Index blocks        (usually N*8 bytes)
-  Filename blocks(s)  (usually one 10h byte entry)
-  Filename string(s)  (usually one 6 byte string)
-```
-
-#### Header (58h bytes)
-```
-  00h 16  File ID ("MEDIA DESCRIPTOR")
-  10h 2   Unknown (01h,03h or 01h,04h or 01h,05h) (Fileformat version?)
-  12h 2   Media Type (0=CD-ROM, 1=CD-R, 2=CD-RW, 10h=DVD-ROM, 12h=DCD-R)
-  14h 2   Number of sessions (usually 1)
-  16h 4   Unknown (02h,00h,00h,00h)
-  1Ah 2   Zero (for DVD: Length of BCA data)
-  1Ch 8   Zero
-  24h 4   Zero (for DVD: Offset to BCA data)
-  28h 18h Zero
-  40h 4   Zero (for DVD: Offset to Disc Structures)   (from begin of .MDS file)
-  44h 0Ch Zero
-  50h 4   Offset to First Session-Block (usually 58h) (from begin of .MDS file)
-  54h 4   Zero (for DVD?: Offset to DPM data blocks)  (from begin of .MDS file)
-```
-
-#### Session-Blocks (18h bytes)
-```
-  00h 4   Session Start Sector (starting at FFFFFF6Ah=-150 in first session)
-  04h 4   Session End Sector     (XXX plus 150 ?)
-  08h 2   Session number (starting at 1) (non-BCD)
-  0Ah 1   Number of Data Blocks with any Point value (Total Data Blocks)
-  0Bh 1   Number of Data Blocks with Point>=A0h      (Special Lead-In info)
-  0Ch 2   First Track Number in Session (01h..63h, non-BCD!)
-  0Eh 2   Last Track Number in Session  (01h..63h, non-BCD!)
-  10h 4   Zero
-  14h 4   Offset to First Data-Block (usually 70h) (from begin of .MDS file)
-```
-
-#### Data-Blocks (50h bytes)
-Block 0..2 are usually containing Point A0h..A2h info. Block 3..N are usually
-TOC info for Track 1 and up.<br/>
-```
-  00h 1   Track mode (see below for details)
-  01h 1   Number of subchannels in .MDF file (0=None, 8=Sector has +60h bytes)
-  02h 1   ADR/Control (but with upper/lower 4bit swapped, ie. MSBs=ADR!)    Q0
-  03h 1   TrackNo (usually/always 00h; as this info is in Lead-in area)     Q1
-  04h 1   Point (Track 01h..63h, non-BCD!) (or A0h and up=Lead-in info)     Q2
-  05h 4   Zero (probably dummy MSF and reserved byte from Q channel)   Q3..Q6?
-  09h 1   Minute (Non-BCD!) (if track >= 0xA0 -> info about track ###)      Q7
-                            (if track = 0xA2 -> min. @ lead-out)
-  0Ah 1   Second (Non-BCD!) (if track = 0xA2 -> sec. @ lead-out)            Q8
-  0Bh 1   Frame  (Non-BCD!) (if track = 0xA2 -> frame @ lead-out)           Q9
-```
-For Point\>=A0h, below 44h bytes at [0Ch..4Fh] are zero-filled<br/>
-```
-  0Ch 4   Offset to Index-block for this track    (from begin of .MDS file)
-  10h 2   Sector size (800h..930h) (or 860h..990h if with subchannels)
-  12h 1   Unknown (02h) (maybe number of indices?)
-  13h 11h Zero
-  24h 4   Track start sector, PLBA (00000000h=00:02:00)
-  28h 8   Track start offset                      (from begin of .MDF file)
-  30h 4   Number of Filenames for this track (usually 1)
-  34h 4   Offset to Filename Block for this track (from begin of .MDS file)
-  38h 18h Zero
-```
-Trackmode:<br/>
-```
-  (upper 4bit seem to be meaningless?)
-  00h=None (used for entries with Point=A0h..FF)
-  A9h=AUDIO       ;sector size = 2352    930h  ;bytes 000h..92Fh
-  AAh=MODE1       ;sector size = 2048    800h  ;bytes 010h..80Fh
-  ABh=MODE2       ;sector size = 2336    920h  ;bytes 010h..92Fh
-  ACh=MODE2_FORM1 ;sector size = 2048    800h  ;bytes 018h..817h (incomplete!)
-  ADh=MODE2_FORM2 ;sector size = 2324+0? 914h  ;bytes 018h..91Bh (incomplete!)
-  ADh=MODE2_FORM2 ;sector size = 2324+4? 918h  ;bytes ??..?? (contains what?)
-  ECh=MODE2       ;sector size = 2448    990h  ;(930h+60h) (with subchannels)
-```
-
-#### Index Blocks (usually 8 bytes per track)
-```
-  00h 4  Number of sectors with Index 0 (usually 96h or zero)
-  04h 4  Number of sectors with Index 1 (usually size of main-track area)
-```
-Index blocks are usually 8 bytes in size (two indices per track). Maybe this
-block is/was intended to allow to contain more indices (although the Alcohol
-120% does always store only 2 indices, even when recording a CD with more than
-2 indices per track).<br/>
-The MDS file does usually contain Index blocks for \<all\> Data Blocks (ie.
-including unused dummy Index Blocks for Data Blocks with Point\>=A0h).<br/>
-
-#### Filename Blocks (10h bytes)
-```
-  00h 4  Offset to Filename (from begin of .MDS file)
-  04h 1  Filename format (0=8bit, 1=16bit characters)
-  05h 11 Zero
-```
-Normally all tracks are sharing the same filename block (although theoretically
-the tracks could use separate filename blocks; with different filenames).<br/>
-
-#### Filename Strings (usually 6 bytes)
-```
-  00h 6  Filename, terminated by zero (usually "*.mdf",00h)
-```
-Contains the filename of the of the sector data (usually "\*.mdf", indicating to
-use the same name as for the .mds file, but with .mdf extension).<br/>
-
-#### Missing
-Unknown if/how this format supports EAN-13, ISRC, CD-TEXT.<br/>
-Unknown if Track/Point/Index are BCD or non-BCD.<br/>
-
-
-
-##   CDROM Disk Images NRG (Nero)
-#### .NRG (NERO)
-Nero is probably the most bloated and most popular CD recording software. The
-first part of the file contains the disk image, starting at sector 00:00:00,
-with 800h..930h bytes per sector. Additional chunk-based information is
-appended at the end of the file, usually consisting of only four chunks:
-CUES,DAOI,END!,NERO (in that order).<br/>
-
-#### Chunk Entrypoint (in last 8/12 bytes of file)
-```
-  4   File ID "NERO"/"NER5"
-  4/8 Fileoffset of first chunk
-```
-
-#### Cue Sheet (summary of the Table of Contents, TOC)
-```
-  4   Chunk ID "CUES"/"CUEX"
-  4   Chunk size (bytes)
-```
-below EIGHT bytes repeated for each track/index,<br/>
-of which, first FOUR bytes are same for both CUES and CUEX,<br/>
-```
-  1   ADR/Control from TOC (usually LSBs=ADR=1=fixed, MSBs=Control=Variable)
-  1   Track  (BCD) (00h=Lead-in, 01h..99h=Track N, AAh=Lead-out)
-  1   Index  (BCD) (usually 00h=pregap, 01h=actual track)
-  1   Zero
-```
-next FOUR bytes for CUES,<br/>
-```
-  1   Zero
-  1   Minute (BCD) ;starting at 00:00:00 = 2 seconds before ISO vol. descr.
-  1   Second (BCD)
-  1   Sector (BCD)
-```
-or, next FOUR four bytes for CUEX,<br/>
-```
-  4   Logical Sector Number (HEX) ;starting at FFFFFF6Ah (=00:00:00)
-```
-Caution: Above may contain two position 00:00:00 entries: one nonsense entry
-for Track 00 (lead-in), followed by a reasonable entry for Track 01, Index 00.<br/>
-
-#### Disc at Once Information
-```
-  4   Chunk ID "DAOI"/"DAOX"
-  4   Chunk size (bytes)
-  4   Garbage (usually same as above Chunk size)
-  13  EAN-13 Catalog Number (13-digit ASCII) (or 00h-filled if none/unknown)
-  1   Zero
-  1   Disk type (00h=Mode1 or Audio, 20h=XA/Mode2) (and probably 10h=CD-I?)
-  1   Unknown (01h)
-  1   First track (Non-BCD) (01h..63h)
-  1   Last track  (Non-BCD) (01h..63h)
-```
-below repeated for each track,<br/>
-```
-  12  ISRC in ASCII (eg. "USXYZ9912345") (or 00h-filled if none/unknown)
-  2   Sector size (usually 800h, 920h, or 930h) (see Mode entry for more info)
-  1   Mode:
-        0=Mode1/800h ;raw mode1 data (excluding sync+header+edc+errorinfo)
-        3=Mode2/920h ;almost full sector (exluding first 16 bytes; sync+header)
-        6=Mode2/930h ;full sector (including first 16 bytes; sync+header)
-        7=Audio/930h ;full sector (plain audio data)
-      Mode values from wikipedia:
-        00h for data                                     Mode1/800h
-        02h
-        03h for Mode 2 Form 1 data   eh? FORM1???        Mode2/920h
-        05h for raw data                                 Mode1?/930h
-        06h for raw Mode 2/form 1 data                   Mode2/930h
-        07h for audio                                    Audio/930h
-        0Fh for raw data with sub-channel                Mode1?/930h+WHAT?
-        10h for audio with sub-channel                   Audio/930h+WHAT?
-        11h for raw Mode 2/form 1 data with sub-channel  Mode2/WHAT?+WHAT?
-       Note: Some newer files do actually use different sector sizes for each
-       track (eg. 920h for the data track, and 930h for any following audio
-       tracks), older files were using the same sector size for all tracks
-       (eg. if the disk contained 930-byte Audio tracks, then Data tracks
-       were stored at the same size, rather than at 800h or 920h bytes).
-  3   Unknown (always 00h,00h,01h)
-  4/8 Fileoffset 1 (Start of Track's Pregap) (with Index=00h)
-  4/8 Fileoffset 2 (Start of actual Track) (with Index=01h and up)
-  4/8 Fileoffset 3 (End of Track+1) (aka begin of next track's pregap)
-```
-
-#### End of chain
-```
-  4   Chunk ID "END!"
-  4   Chunk size (always zero)
-```
-
-#### Track Information (contained only in Track at Once images)
-```
-  4     Chunk ID "TINF"/"ETNF"/"ETN2"
-  4     Chunk size (bytes)
-```
-below repeated for each track,<br/>
-```
-  4/4/8 Track fileoffset        ;\32bit in TINF/ETNF chunks,
-  4/4/8 Track length (bytes)    ;/64bit in ETN2 chunks
-  4     Mode (should be same as in DAO chunks, see there) (implies sector size)
-  0/4/4 Start lba on disc       ;\only in ETNF/ETN2 chunks,
-  0/4/4 Unknown?                ;/not in TINF chunks
-```
-
-#### Unknown 1 (contained only in Track at Once images)
-```
-  4   Chunk ID "RELO"
-  4   Chunk size (bytes)
-  4   Zero
-```
-
-#### Unknown 2 (contained only in Track at Once images)
-```
-  4   Chunk ID "TOCT"
-  4   Chunk size (bytes)
-  1   Disk type (00h=Mode1 or Audio, 20h=XA/Mode2) (and probably 10h=CD-I?)
-  1   Zero (00h)
-```
-
-#### Session Info (begin of a session) (contained only in multi-session images)
-```
-  4   Chunk ID "SINF"
-  4   Chunk size (bytes)
-  4   Number of tracks in session
-```
-
-#### CD-Text (contained only in whatever images)
-```
-  4   Chunk ID None/"CDTX"
-  4   Chunk size (bytes) (must be a multiple of 18 bytes)
-```
-below repeated for each fragment,<br/>
-```
-  18  Raw 18-byte CD-text data fragments
-```
-
-#### Media Type? (contained only in whatever images)
-```
-  4   Chunk ID "MTYP"
-  4   Chunk size (bytes)
-  4   Unknown? (00000001h for CDROM) (maybe other value for DVD)
-```
-
-#### Notes
-Newer/older .NRG files may contain 32bit/64bit values (and use "OLD"/"NEW"
-chunk names) (as indicated by the "/" slashes).<br/>
-CAUTION: All 16bit/32bit/64bit values are in big endian byte-order.<br/>
-
-#### Missing
-Unknown if newer NRG versions do also support subchannel data.<br/>
-
-
-
-##   CDROM Disk Image/Containers CDZ
-.CDZ is a compressed disk image container format (developed by pSX Author, and
-used only by the pSX emulator). The disk is split into 64kbyte blocks, which
-allows fast random access (without needing to decompress all preceeding
-sectors).<br/>
-However, the compression ratio is surprisingly bad (despite of being
-specifically designed for cdrom compression, the format doesn't remove
-redundant sector headers, error correction information, and EDC checksums).<br/>
-
-#### .CDZ File Structure
-```
-  FileID ("CDZ",00h for cdztool v0/v1, or "CDZ",01h for cdztool v2 and up)
-  One or two Chunk(s)
-```
-
-#### .CDZ Chunk Format
-Chunk Header in v0 (unreleased prototype):<br/>
-```
-  4    32bit Decompressed Size (of all blocks) (must be other than "ZLIB")
-```
-Chunk Header in v1 (first released version):<br/>
-```
-  4    ZLIB ID ("ZLIB")
-  8    64bit Decompressed Size (of all blocks)
-```
-Chunk Header in v2 and up (later versions):<br/>
-```
-  4    Chunk ID (eg. "CUE",00h)
-  8    Chunk Size in bytes (starting at "ZLIB" up to including Footer, if any)
-  4    ZLIB ID ("ZLIB")
-  8    64bit Decompressed Size (of all blocks)
-```
-Chunk Body (same in all versions):<br/>
-```
-  4    Number of Blocks (N)
-  4    Block 1 Compressed Size (CS.1)
-  4    Block 1 Decompressed Size (always 00010000h, except last block)
-  CS.1 Block 1 Compressed ZLIB Data (starting with 78h,9Ch)
-  ...  ...                                     ;\
-  4    Block N Compressed Size (CS.N)          ; further block(s)
-  4    Block N Decompressed Size               ; (if any)
-  CS.N Block N Compressed ZLIB Data            ;/
-```
-Chunk Footer in v0 (when above header didn't have the "ZLIB" ID):<br/>
-```
-  4*N       Directory Entries for N blocks     ;-this ONLY for BIN chunk
-```
-Chunk Footer in v1 and up:<br/>
-```
-  BPD*(N-1) Directory Entries for N-1 blocks   ;\this ONLY for BIN chunk
-  1         Bytes per Directory Entry (BPD)    ;/(not for CUE/CCD/MDS)
-```
-The "Compressed ZLIB Data" parts contain Deflate'd data (starting with 2-byte
-ZLIB header, and ending with 4-byte ZLIB/ADLER checksum), for details see:<br/>
-[Inflate - Core Functions](cdromvideocdsvcd.md#inflate-core-functions)<br/>
-[Inflate - Initialization & Tree Creation](cdromvideocdsvcd.md#inflate-initialization--tree-creation)<br/>
-[Inflate - Headers and Checksums](cdromvideocdsvcd.md#inflate-headers-and-checksums)<br/>
-
-#### .CDZ Chunks / Content
-The chunk(s) have following content:<br/>
-```
-  noname+noname       --> .CUE+.BIN (cdztool v1 and below)
-  "BIN",0             --> .ISO      (cdztool v2? and up)
-  "CUE",0+"BIN",0     --> .CUE+.BIN (cdztool v2 and up)
-  "CCD",0+"BIN",0     --> .CCD+.IMG (cdztool v2 and up)
-  "CCD",0+"BIN",01h   --> .CCD+.IMG+.SUB (930h sectors, plus 60h subchannels)
-  "MDS",0+"BIN",0     --> .MDS+.MDF (cdztool v5 only)
-```
-Note: cdztool doesn't actually recognize files with .ISO extension (however,
-one can rename them to .BIN, and then compress them as CUE-less .BIN file).<br/>
-
-#### Cdztool.exe Versions
-```
-  cdztool.exe v0, unrelased prototype
-  cdztool.exe v1, 22 May 2005, CRC32=620dbb08, 102400 bytes, pSX v1.0-5
-  cdztool.exe v2, 02 Jul 2006, CRC32=bcb29c1e, 110592 bytes, pSX v1.6
-  cdztool.exe v3, 22 Jul 2006, CRC32=4062ba82, 110592 bytes, pSX v1.7
-  cdztool.exe v4, 13 Aug 2006, CRC32=7388dd3d, 118784 bytes, pSX v1.8-11
-  cdztool.exe v5, 22 Jul 2007, CRC32=f25c1659, 155648 bytes, pSX v1.12-13
-```
-Note: v0 wasn't ever released (it's only noteworthy because later versions do
-have backwards compatibility for decompressing old v0 files). v1 didn't work
-with all operating systems (on Win98 it just says "Error: Couldn't create
-\<output\>" no matter what one is doing, however, v1 does work on later
-windows versions like WinXP or so?).<br/>
-
-
-
-##   CDROM Disk Image/Containers ECM
-ECM (Error Code Modeler by Neill Corlett) is a utility that removes
-unneccessary ECC error correction and EDC error detection values from
-CDROM-images. This is making the images a bit smaller, but the real size
-reduction isn't gained until subsequently compressing the images via tools like
-ZIP. Accordingly, these files are extremly uncomfortable to use: One most first
-UNZIP them, and then UNECM them.<br/>
-
-#### .EXT.ECM - Double extension
-ECM can be applied to various CDROM-image formats (like .BIN, .CDI, .IMG, .ISO,
-.MDF, .NRG), as indicated by the double-extension. Most commonly it's applied
-to .BIN files (hence using extension .BIN.ECM).<br/>
-
-#### Example / File Structure
-```
-  45 43 4D 00                                      ;FileID "ECM",00h
-  3C                                               ;Type 0, Len=10h (aka 0Fh+1)
-  00 FF FF FF FF FF FF FF FF FF FF 00 00 02 00 02  ;16 data bytes
-  02                                               ;Type 2, Len=1 (aka 00h+1)
-  00 00 08 00 00 00 00 00 00 00 00 ..... 00 00 00  ;804h data bytes
-  3C                                               ;Type 0, Len=10h (aka 0Fh+1)
-  00 FF FF FF FF FF FF FF FF FF FF 00 00 02 01 02  ;16 data bytes
-  02                                               ;Type 2, Len=1 (aka 00h+1)
-  00 00 08 00 00 00 00 00 00 00 00 ..... 00 00 00  ;804h data bytes
-  ...
-  FC FF FF FF 3F                                   ;End Code (Len=FFFFFFFFh+1)
-  NN NN NN NN                                      ;EDC (on decompressed data)
-```
-
-#### Type/Length Byte(s)
-Type/Length is encoded in 1..5 byte(s), with "More=1" indicating that further
-length byte(s) follow:<br/>
-```
-  1st Byte: Bit7=More, Bit6-2=LengthBit4-0, Bit1-0=Type(0..3)
-  2nd Byte: Bit7=More, Bit6-0=LengthBit5-11
-  3rd Byte: Bit7=More, Bit6-0=LengthBit12-18
-  4th Byte: Bit7=More, Bit6-0=LengthBit19-25
-  5th Byte: Bit7-6=Reserved/Zero, Bit5-0=LengthBit26-31
-```
-Length=FFFFFFFFh=End Indicator<br/>
-The actual decompression LEN is: "LEN=Length+1"<br/>
-
-#### ECM Decompression
-Below is repeated LEN times (with LEN being the Length value plus 1):<br/>
-```
-  Type 0: load 1 byte, save 1 byte
-  Type 1: load 803h bytes [0Ch..0Eh,10h..80Fh], save 930h bytes [0..92Fh]
-  Type 2: load 804h bytes [14h..817h], save 920h bytes [10h..92Fh]
-  Type 3: load 918h bytes [14h..91Bh], save 920h bytes [10h..92Fh]
-```
-Type 1-3 are reconstructing the missing bytes before saving. Type 2-3 are
-saving only 920h bytes, so (if the original image contained full 930h byte
-sectors) the missing 10h bytes must be inserted via Type 0. Type 0 can be also
-used for copying whole sectors as-is (eg. Audio sectors, or Data sectors with
-invalid Sync/Header/ECC/EDC values). And, Type 0 can be used to store
-non-sector data (such like the chunks at the end of .NRG or .CDI files).<br/>
-
-#### Central Mistakes
-There's a lot of wrong with the ECM format. The two central problems are that
-it doesn't support data-compression (and needs external compression tools like
-zip/rar), and, that it doesn't contain a sector look-up table (meaning that
-random access isn't possible unless when scanning the whole file until reaching
-the desired sector).<br/>
-
-#### Worst-case Scenario
-As if ECM as such wouldn't be uncomfortable enough, you may expect typical ECM
-users to get more things messed up. For example:<br/>
-```
-  A RAR file containing a 7Z file containing a ECM file containing a BIN file.
-  The BIN containing only Track 1, other tracks stored in APE files.
-  And, of course, the whole mess without including the required CUE file.
-```
-
-
-
-##   CDROM Subchannel Images
-#### SBI (redump.org)
-SBI Files start with a 4-byte FileID:<br/>
-```
-  4 bytes FileID ("SBI",00h)
-```
-The followed by entries as so:<br/>
-```
-  3 bytes real absolute MM:SS:FF address where the sub q data was bad
-  1 byte Format: the format can be 1, 2 or 3:
-  Format 1: complete 10 bytes sub q data            (Q0..Q9)
-  Format 2: 3 bytes wrong relative MM:SS:FF address (Q3..Q5)
-  Format 3: 3 bytes wrong absolute MM:SS:FF address (Q7..Q9)
-```
-Note: The PSX libcrypt protection relies on bad checksums (Q10..Q11), which
-will cause the PSX cdrom controller to ignore Q0..Q9 (and to keep returning
-position data from most recent sector with intact checksum).<br/>
-Ironically, the SBI format cannot store the required Q10..Q11 checksum. The
-trick for using SBI files with libcrypted PSX discs is to ignore the useless
-Q0..Q9 data, and to assume that all sectors in the SBI file have wrong Q10..Q11
-checksums.<br/>
-
-#### M3S (Subchannel Q Data for Minute 3) (ePSXe)
-M3S files are containing Subchannel Q data for all sectors on Minute=03 (the
-region where PSX libcrypt data is located) (there is no support for storing the
-(unused) libcrypt backup copy on Minute=09). The .M3S filesize is 72000 bytes
-(60 seconds \* 75 sectors \* 16 bytes). The 16 bytes per sector are:<br/>
-```
-  Q0..Q9   Subchannel Q data (normally position data)
-  Q10..Q11 Subchannel Q checksum
-  Q12..Q15 Dummy/garbage/padding (usually 00000000h or FFFFFFFFh)
-```
-Unfortunately, there are at least 3 variants of the format:<br/>
-```
-  1. With CRC (Q0..Q11 intact) (and Q12..Q15 randomly 00000000h or FFFFFFFFh)
-  2. Without CRC (only Q0..Q9 intact, but Q10..Q15 zerofilled)
-  3. Without anything (only Q0 intact, but Q1..Q15 zerofilled)
-```
-The third variant is definetly corrupt (and one should ignore such zerofilled
-entries). The second variant is corrupt, too (but one might attempt to repair
-them by guessing the missing checksum: if it contains normal position values
-assume correct crc, if it contains uncommon values assume a libcrypted sector
-with bad crc).<br/>
-The M3S format is intended for libcrypted PSX games, but, people seem to have
-also recorded (corrupted) M3S files for unprotected PSX games (in so far, more
-than often, the M3S files might cause problems, instead of solving them).<br/>
-Note: The odd 16-byte format with 4-byte padding does somehow resemble the "P
-and Q Sub-Channel" format 'defined' in MMC-drafts; if the .M3S format was based
-on the MMC stuff: then the 16th byte might contain a Subchannel P "pause" flag
-in bit7.<br/>
-
-#### CDROM Images with Subchannel Data
-Most CDROM-Image formats can (optionally) contain subchannel recordings. The
-downsides are: Storing all 8 subchannels for a full CDROM takes up about
-20MBytes. And, some entries may contain 'wrong' data (read errors caused by
-scratches cannot be automatically repaired since subchannels do not contain
-error correction info).<br/>
-If present, the subchannel data is usually appended at the end of each sector
-in the main binary file (one exception is CloneCD, which stores it in a
-separate .SUB file instead of in the .IMG file).<br/>
-```
-  CCD/IMG/SUB (CloneCD)  P-W  60h-bytes Non-interleaved (in separate .SUB file)
-  CDI (DiscJuggler)      P-Q  10h-bytes Non-interleaved (in .CDI file)
-  ""                     P-W  60h-bytes Interleaved (in .CDI file)
-  CUE/BIN/CDT (Cdrwin)        N/A
-  ISO (single-track)          N/A
-  MDS/MDF (Alcohol 120%) P-W  60h-bytes Interleaved (in .MDF file)
-  NRG (Nero)             P-W  60h-bytes Interleaved (in .NRG file)
-```
-Interleaved Subchannel format (eg. Alcohol .MDF files):<br/>
-```
-  00h-07h   80 C0 80 80 80 80 80 C0   ;P=FFh, Q=41h=ADR/Control, R..W=00h
-  08h-0Fh   80 80 80 80 80 80 80 C0   ;P=FFh, Q=01h=Track,       R..W=00h
-  10h-17h   80 80 80 80 80 80 80 C0   ;P=FFh, Q=01h=Index,       R..W=00h
-  18h-1Fh   80 80 80 80 80 80 80 80   ;P=FFh, Q=00h=RelMinute,   R..W=00h
-  20h-27h   80 80 80 80 80 80 80 80   ;P=FFh, Q=00h=RelSecond,   R..W=00h
-  28h-2Fh   80 80 80 80 80 80 80 80   ;P=FFh, Q=00h=RelSector,   R..W=00h
-  30h-37h   80 80 80 80 80 80 80 80   ;P=FFh, Q=00h=Reserved,    R..W=00h
-  38h-3Fh   80 80 80 80 80 80 80 80   ;P=FFh, Q=00h=AbsMinute,   R..W=00h
-  40h-47h   80 80 80 80 80 80 C0 80   ;P=FFh, Q=02h=AbsSecond,   R..W=00h
-  48h-4Fh   80 80 80 80 80 80 80 80   ;P=FFh, Q=00h=AbsSector,   R..W=00h
-  50h-57h   80 80 C0 80 C0 80 80 80   ;P=FFh, Q=28h=ChecksumMsb, R..W=00h
-  58h-5Fh   80 80 C0 C0 80 80 C0 80   ;P=FFh, Q=32h=ChecksumLsb, R..W=00h
-```
-Non-Interleaved Subchannel format (eg. CloneCD .SUB files):<br/>
-```
-  00h-0Bh   FF FF FF FF FF FF FF FF FF FF FF FF  ;Subchannel P (Pause)
-  0Ch-17h   41 01 01 00 00 00 00 00 02 00 28 32  ;Subchannel Q (Position)
-  18h-23h   00 00 00 00 00 00 00 00 00 00 00 00  ;Subchannel R
-  24h-2Fh   00 00 00 00 00 00 00 00 00 00 00 00  ;Subchannel S
-  30h-3Bh   00 00 00 00 00 00 00 00 00 00 00 00  ;Subchannel T
-  3Ch-47h   00 00 00 00 00 00 00 00 00 00 00 00  ;Subchannel U
-  48h-53h   00 00 00 00 00 00 00 00 00 00 00 00  ;Subchannel V
-  54h-5Fh   00 00 00 00 00 00 00 00 00 00 00 00  ;Subchannel W
-```
-Non-Interleaved P-Q 10h-byte Subchannel format:<br/>
-```
-  This is probably based on MMC protocol, which would be as crude as this:
-  The 96 pause bits are summarized in 1 bit. Pause/Checksum are optional.
-  00h-09h   41 01 01 00 00 00 00 00 02 00        ;Subchannel Q (Position)
-  0Ah-0Bh   28 32    ;<-- OPTIONAL, can be zero! ;Subchannel Q (Checksum)
-  0Ch-0Eh   00 00 00                             ;Unused padding (zero)
-  0F        80       ;<-- OPTIONAL, can be zero! ;Subchannel P (Bit7=Pause)
-```
-
-
-
-##   CDROM Disk Images Other Formats
-#### .ISO - A raw ISO9660 image (can contain a single data track only)
-Contains raw sectors without any sub-channel information (and thus it's
-restricted to the ISO filesystem region only, and cannot contain extras like
-additional audio tracks or additional sessions). The image should start at
-00:02:00 (although I wouldn't be surprised if some \<might\> start at
-00:00:00 or so). Obviously, all sectors must have the same size, either 800h or
-930h bytes (if the image contains only Mode1 or Mode2/Form1 sectors then 800h
-bytes would usually enough; if it contains one or more Mode2/Form2 sectors then
-all sectors should be 930h bytes).<br/>
-Handling .ISO files does thus require to detect the image's sector size, and to
-search the sector that contains the first ISO Volume Descriptor. In case of
-800h byte sectors it may be additionally required to detect if it is a Mode1 or
-Mode2/Form1 image; for PSX images (and any CD-XA images) it'd be Mode2.<br/>
-
-#### .CHD
-Something used by MAME/MESS. Originally intended for compressed ROM-images, but
-does also support compressed CDROM-images. Fileformat and compression ratio are
-unknown. Also unknown if it allows random-access.<br/>
-Some info can be found in MAME source code (looking at the source code for the
-CHDMAN tool might be a good starting point... although the actual file
-structure might be hidden in other source files).<br/>
-
-#### .C2D
-Something. Can contain compressed or uncompressed CDROM-images. Fileformat and
-compression ratio are unknown. Also unknown if it allows random-access.<br/>
-Some info on (uncompressed) .C2D files can be found in libmirage source code.<br/>
-
-#### .ISZ
-This is reportedly a "zipped" .ISO file, using some unknown compression format
-(unrelated to pkzip .zip file format).<br/>
-
-#### .MDX
-Reportedly a compressed MDS/MDF file, supported by Daemon Tools. Fileformat and
-compression ratio are unknown. Also unknown if it allows random-access.<br/>
-
-#### .CU2/.BIN
-Custom format used by PSIO (an SD-card based CDROM-drive emulator connected to
-PSX expansion port). The .CU2 file is somewhat intended to be smaller and
-easier to parse than normal .CUE files, the drawback is that it's kinda
-non-standard, and doesn't support INDEX and ADSR information. A sample .CUE
-file looks as so:<br/>
-```
-  ntracks 3
-  size      39:33:17
-  data1     00:02:00
-  track02   31:36:46
-  track03   36:03:17
-  ;(insert 2 blanks lines here, and insert 1 leading space in next line)
-  trk end 39:37:17
-```
-All track numbers and MM:SS:FF values are decimal. The ASCII strings should be
-as shown above, but they are simple ignored by the PSIO firmware (eg. using
-"popcorn666" instead of "size" or "track02" should also work). The first track
-should be marked "data1", but PSIO ignores that string, too (it does always
-treat track 1 as data, and track 2-99 as audio; thus not supporting PSX games
-with multiple data tracks). The "trk end" value should be equal to the "size"
-value plus 4 seconds (purpose is unknown, PSIO does just ignore the "trk end"
-value).<br/>
-CU2 creation seems to require CDROM images in "CUE/BIN redump.org format" (with
-separate BIN files for each track), the CUE is then converted to a CU3 file
-(which is used only temporarily), until the whole stuff is finally converted to
-a CU2 file (and with all tracks in a single BIN file). Tools like RD2PSIO (aka
-redump2psio) or PSIO's own SYSCON.ZIP might help on doing some of those steps
-automatically.<br/>
-Alongsides, PSIO uses a "multidisc.lst" file... for games that require more
-than one CDROM disc?<br/>
-
-#### CD Image File Format (Xe - Multi System Emulator)
-This is a rather crude file format, used only by the Xe Emulator. The files are
-meant to be generated by a utility called CDR (CD Image Ripper), which, in
-practice merely displays an "Unable to read TOC." error message.<br/>
-The overall file structure is, according to "Xe User's Manual":<br/>
-```
-  header: 200h bytes header (see below)
-  data:   990h bytes per sector (2352 Main, 96 Sub), 00:00:00->Lead Out
-```
-The header "definition" from the "Xe User's Manual" is as unclear as this:<br/>
-```
-  000h   00
-  001h   00
-  002h   First Track
-  003h   Last Track
-  004h   Track 1 (ADR << 4) | CTRL              ;\
-  005h   Track 1 Start Minutes                  ; Track 1
-  006h   Track 1 Start Seconds                  ;
-  007h   Track 1 Start Frames                   ;/
-  ...     ...                                   ;-Probably Further Tracks (?)
-  n+0    Last Track Start Minutes               ;\
-  n+1    Last Track Start Seconds               ; Last Track
-  n+2    Last Track Start Frames                ;
-  n+3    Last Track (ADR << 4) | CTRL           ;/
-  n+4    Lead-Out Track Start Minutes           ;\
-  n+5    Lead-Out Track Start Seconds           ; Lead-Out
-  n+6    Lead-Out Track Start Frames            ;
-  n+7    Lead-Out Track (ADR << 4) | CTRL       ;/
-  ...    00
-  1FFh   00
-```
-Unknown if MM:SS:FF values and/or First+Last Track numbers are BCD or non-BCD.<br/>
-Unknown if Last track is separately defined even if there is only ONE track.<br/>
-Unknown if Track 2 and up include ADR/Control (and if yes: where?).<br/>
-Unknown if ADR/Control is really meant to be \<before\> MM:SS:FF on Track
-1.<br/>
-Unknown if ADR/Control is really meant to be \<after\> MM:SS:FF on
-Last+Lead-Out.<br/>
-Unknown if this format does have a file extension (if yes: which?).<br/>
-Unknown if subchannel data is meant to be interleaved or not.<br/>
-The format supports only around max 62 tracks (in case each track is 4 bytes).<br/>
-There is no support for "special" features like multi-sessions, cd-text.<br/>
+In particuar, the encryption is used for some of the BIGFILE.DAT folder
+headers:<br/>
+[CDROM File Archive BIGFILE.DAT (Soul Reaver)](cdromfileformats.md#cdrom-file-archive-bigfiledat-soul-reaver)<br/>
