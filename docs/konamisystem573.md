@@ -28,6 +28,9 @@ things that need more research:
 - I/O boards, *especially* the digital I/O board, need to be properly reverse
   engineered and documented. The fishing controls board has been fully reverse
   engineered but documentation for it is missing.
+- The digital I/O board's networking protocol seems to be based on ARCnet, with
+  some kind of network interface implemented in hardware in the FPGA. Not much
+  else is currently known.
 - The DDR stage I/O board's communication protocol is largely unknown. More
   tests need to be done on real hardware and its CPLD shall be dumped if
   possible.
@@ -196,7 +199,7 @@ executable on the flash before initializing the drive.
 |     9 | R  | Coin switch input 2 (0 = coin being inserted) |
 |    10 | R  | PCMCIA card 1 insertion (0 = card present)    |
 |    11 | R  | PCMCIA card 2 insertion (0 = card present)    |
-|    12 | R  | Test button (built-in and JAMMA pin 15)       |
+|    12 | R  | Service button (JAMMA pin R, 0 = pressed)     |
 | 13-15 |    | Unused?                                       |
 
 See the security cartridge section for more details about `ISIG` and  `DSIG`.
@@ -238,14 +241,14 @@ way of (inefficiently) keeping the CPU's write queue flushed.
 
 #### `0x1f40000c` (ASIC register 6): **JAMMA controls** / **External inputs**
 
-| Bits  | RW | Description                      |
-| ----: | :- | :------------------------------- |
-|   0-7 |    | Unused?                          |
-|     8 | R  | Player 1 button 4 (JAMMA pin 25) |
-|     9 | R  | Player 1 button 5 (JAMMA pin 26) |
-|    10 | R  | Service button (JAMMA pin R)     |
-|    11 | R  | Player 1 button 6                |
-| 12-15 |    | Unused?                          |
+| Bits  | RW | Description                             |
+| ----: | :- | :-------------------------------------- |
+|   0-7 |    | Unused?                                 |
+|     8 | R  | Player 1 button 4 (JAMMA pin 25)        |
+|     9 | R  | Player 1 button 5 (JAMMA pin 26)        |
+|    10 | R  | Test button (built-in and JAMMA pin 15) |
+|    11 | R  | Player 1 button 6                       |
+| 12-15 |    | Unused?                                 |
 
 **NOTE**: since buttons are active low (wired between JAMMA pins and ground),
 all bits are 0 when a button is pressed and 1 when it isn't.
@@ -632,25 +635,29 @@ used CD audio and the analog I/O board. In addition to light control outputs,
 this board features an FPGA and an MPEG decoder ASIC to play encrypted MP3
 files. The FPGA has 24 MB of dedicated RAM into which the files are preloaded
 on startup, then decrypted on the fly and fed to the decoder. The board also
-features two RCA jacks for communication with other cabinets and a 64-bit
-unique serial number, copied to the security cartridge during installation in
-order to prevent operators from installing the same game on multiple systems.
+features an ARCnet PHY and two RCA jacks for communication with other cabinets
+and a 64-bit unique serial number, copied to the security cartridge during
+installation in order to prevent operators from installing the same game on
+multiple systems.
 
-**NOTE**: the vast majority of the registers provided by this board (including
-light control) are handled by its FPGA, which requires a configuration
-bitstream to be uploaded to it through the appropriate register in order to
-work. There are two known versions of Konami's bitstream, with the only
-difference being the decryption algorithm. All games that use the digital I/O
-board upload the bitstream to the FPGA on startup before accessing any other
-register.
+The vast majority of the registers provided by this board (including some but
+not all light outputs) are handled by its FPGA, which requires a configuration
+bitstream to be uploaded to it in order to work. Registers in the
+`0x1f6400f0-0x1f6400ff` region are handled by a CPLD and are functional even if
+no bitstream is loaded. There are three known versions of Konami's bitstream:
 
-A homebrew game would have to do the same, however distributing Konami's
-bitstream would be problematic from a copyright standpoint. **The digital I/O**
-**board is thus currently unusable by homebrew**. This might change in the
-future if a custom FPGA bitstream is ever going to be developed; the custom
-bitstream would not only skip decryption but also implement a custom set of
-registers (rather than the ones described below), sidestepping the lack of
-documentation entirely.
+| SHA-1                                      | First used by                        |
+| :----------------------------------------- | :----------------------------------- |
+| `32d455a25eb26fe4e4b577cb0f0e3bebd0f82959` | Dance Dance Revolution Solo Bass Mix |
+| `a53b8906de95c34b6e3f053bd7488c888bc904b6` | Dance Dance Revolution 3rdMIX        |
+| `450b12627b7eacd3ea3f8b0b7a16589a13010c41` | Mambo a Go-Go                        |
+
+Distributing these bitstreams would be problematic from a copyright standpoint,
+thus **most of the digital I/O board's functionality is currently unusable by**
+**homebrew software**. This might change in the future if a custom FPGA
+bitstream is ever going to be developed; the custom bitstream would not only
+skip decryption but also implement a custom set of registers (rather than the
+ones described below), sidestepping the lack of documentation entirely.
 
 #### `0x1f640080`: **Magic number** (impl. by bitstream)
 
@@ -701,32 +708,57 @@ was properly loaded into the FPGA.
 |   14 | W  | Output D2 (0 = grounded) |
 |   15 | W  | Output D3 (0 = grounded) |
 
-#### `0x1f6400f8`: **FPGA unknown input**
+#### `0x1f6400ee`: **DS2401 ID chip** (impl. by bitstream)
 
-| Bits | RW | Description                |
-| ---: | :- | :------------------------- |
-| 0-14 |    | _Unused_                   |
-|   15 | W  | Unknown (FPGA `/PROGRAM`?) |
+#### `0x1f6400f0`: **Unknown**
 
-Used during bitstream upload, seems to be some kind of reset signal. It might
-*not* be the `/PROGRAM` input (see the XCS40XL datasheet) as it is also toggled
-after the bitstream is loaded.
+Konami's code does not use this CPLD register.
 
-#### `0x1f6400f6`: **FPGA status**
+#### `0x1f6400f2`: **Unknown**
 
-| Bits | RW | Description             |
-| ---: | :- | :---------------------- |
-| 0-11 |    | _Unused_                |
-|   12 | RW | Unknown (FPGA `/INIT`?) |
-|   13 | RW | Unknown (FPGA `DONE`?)  |
-|   14 | R  | Unknown (FPGA `/HDC`?)  |
-|   15 | R  | Unknown (FPGA `LDC`?)   |
+Konami's code does not use this CPLD register.
 
-Used during bitstream upload. The digital I/O driver skips uploading the
-bitstream if bit 14 is cleared and bit 15 is set. Bits 12 and 13 seem to be
-open-collector and thus writable; the driver pulses them low after resetting
-the FPGA. The code also attempts to write 0 to bit 14, which is not
-open-collector according to the XCS40XL datasheet, but that may just be a bug.
+#### `0x1f6400f4`: **Unknown (reset?)**
+
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+| 0-14 |    | _Unused_           |
+|   15 | W  | Unknown (0 = low?) |
+
+Probably controls the MAS3507D's reset pin. Bit 15 is cleared before uploading
+the bitstream (and set again once the FPGA is initialized...?).
+
+#### `0x1f6400f6`: **FPGA status and control**
+
+When read:
+
+| Bits | RW | Description       |
+| ---: | :- | :---------------- |
+| 0-11 |    | _Unused_          |
+|   12 | R  | `/INIT` from FPGA |
+|   13 | R  | `DONE` from FPGA  |
+|   14 | R  | `/HDC` from FPGA  |
+|   15 | R  | `LDC` from FPGA   |
+
+**NOTE**: all registers in the `0x1f6400f0-0x1f6400ff` region seem to return
+the same bits as this register when read, possibly due to incomplete address
+decoding in the CPLD. Konami's code only ever reads from this register and
+treats all other CPLD registers as write-only.
+
+When written:
+
+| Bits | RW | Description        |
+| ---: | :- | :----------------- |
+| 0-11 |    | _Unused_           |
+|   12 | W  | Unknown 1          |
+|   13 | W  | Unknown 2          |
+|   14 | W  | Unknown 3          |
+|   15 | W  | Unused? (always 1) |
+
+This register is only written to 3 times when resetting the FPGA prior to
+loading the bitstream. The values written are `0x8000` first, then `0xc000` and
+finally `0xf000`. One of these bits probably controls the FPGA's `/PROGRAM`
+input.
 
 #### `0x1f6400f8`: **FPGA bitstream upload**
 
@@ -743,9 +775,10 @@ through this port.
 
 All known games load the bitstream from a file on the internal flash (usually
 named `data/fpga/fpga_mp3.bin`), then bitbang its contents to this port LSB
-first and monitor the FPGA status register.
+first and monitor the FPGA status register. The bitstream is always 330696 bits
+(41337 bytes) long as per the XCS40XL datasheet.
 
-#### `0x1f6400fa`: **Bank C** (impl. by bitstream)
+#### `0x1f6400fa`: **Bank C**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -755,7 +788,7 @@ first and monitor the FPGA status register.
 |   14 | W  | Output C2 (0 = grounded) |
 |   15 | W  | Output C3 (0 = grounded) |
 
-#### `0x1f6400fc`: **Bank C** (impl. by bitstream)
+#### `0x1f6400fc`: **Bank C**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -765,7 +798,7 @@ first and monitor the FPGA status register.
 |   14 | W  | Output C6 (0 = grounded) |
 |   15 | W  | Output C7 (0 = grounded) |
 
-#### `0x1f6400fe`: **Bank B** (impl. by bitstream)
+#### `0x1f6400fe`: **Bank B**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -774,8 +807,6 @@ first and monitor the FPGA status register.
 |   13 | W  | Output B1 (0 = grounded) |
 |   14 | W  | Output B2 (0 = grounded) |
 |   15 | W  | Output B3 (0 = grounded) |
-
-#### `0x1f6400ee`: **DS2401 ID chip** (impl. by bitstream)
 
 ### Alternate analog I/O board (`GX700-PWB(K)`)
 
@@ -858,16 +889,18 @@ and no actual X76F100-based cartridge was ever found in the wild.
 
 The following cartridges are currently known to exist:
 
-| Name (on PCB)   | Type | Used by           | Additional I/O connectors            | Additional hardware                                   |
-| :-------------- | :--- | :---------------- | :----------------------------------- | :---------------------------------------------------- |
-| `GX700-PWB(D)`  | X    | Analog I/O games  |                                      | _Unpopulated (T)QFP footprint_                        |
-| `GX894-PWB(D)`  | XI?  | Unknown           |                                      | _Unpopulated SOIC footprints_                         |
-| `GX700-PWB(J)`  | XI   | PunchMania        | Analog in (12-pin), unknown (10-pin) | SPI ADC chip for analog inputs                        |
-| `GX883-PWB(D)`  | XI   | Digital I/O games | Network (5-pin), amp box (6-pin)     | RS-232 transceiver powered by isolated DC-DC module   |
-| `GE949-PWB(D)A` | ZI   | Digital I/O games | Network (5-pin), amp box (6-pin)     | RS-232 transceiver powered by isolated DC-DC module   |
-| `GE949-PWB(D)B` | ZI   | Digital I/O games | Unpopulated 5-pin, 6-pin             | _Same as above but only security chips are populated_ |
-| `PWB0000068819` | X    | Hyper BB Champ    | 12V input (4-pin), lights (16-pin)   | Latch controlled light outputs                        |
-| `PWB0000088954` | XI   | Salary Man Champ  | 12V input (4-pin), lights (16-pin)   | Shift register controlled light outputs               |
+| Name (on PCB)   | Type | Used by                     | Additional I/O connectors                     | Additional hardware                                   |
+| :-------------- | :--- | :-------------------------- | :-------------------------------------------- | :---------------------------------------------------- |
+| `GX700-PWB(D)`  | X    | Most early games/installers |                                               | _Unpopulated (T)QFP footprint_                        |
+| `GX896-PWB(A)A` | X    | Early DrumMania             | Network (5-pin), amp box (6-pin)              | RS-232 transceiver powered by isolated DC-DC module   |
+| `GX894-PWB(D)`  | XI?  | Unknown                     |                                               | _Unpopulated SOIC footprints_                         |
+| `GX700-PWB(J)`  | XI   | PunchMania                  | Analog inputs (12-pin), unknown (10-pin)      | SPI ADC chip for analog inputs                        |
+| `GX883-PWB(D)`  | XI   | Early digital I/O games     | Network (5-pin), amp box (6-pin)              | RS-232 transceiver powered by isolated DC-DC module   |
+| `GE949-PWB(D)A` | ZI   | Late digital I/O games      | Network (5-pin), amp box (6-pin)              | RS-232 transceiver powered by isolated DC-DC module   |
+| `GE949-PWB(D)B` | ZI   | Late digital I/O games      | _Same as above but unpopulated_               | _Same as above but only security chips are populated_ |
+| `PWB0000068819` | X    | Hyper BB Champ (2-player)   | 12V (4-pin), lights (16-pin)                  | Latch controlled light outputs                        |
+| Unknown         | X    | Hyper BB Champ (3-player)   | 12V (4-pin), lights (16-pin), unknown (5-pin) | Latch controlled light outputs                        |
+| `PWB0000088954` | XI   | Salary Man Champ            | 12V (4-pin), lights (16-pin)                  | Shift register controlled light outputs               |
 
 The main security chip in all types other than ZI is actually just a simple
 password-protected I2C EEPROM whose datasheet is readily available. ZI
@@ -1317,6 +1350,8 @@ than `PSX.EXE`. The following names have been found so far (more might exist):
 - `QSY.DXD`
 - `SSW.BXF`
 - `TSV.AXG`
+- `GSE.NXX`
+- `NSE.GXX`
 
 Homebrew games should thus place multiple copies of the boot executable on the
 disc to improve compatibility with "modchipped" systems. An interesting side
@@ -1531,42 +1566,41 @@ that CD-DA support is problematic due to the way Konami's code reads the disc's
 table of contents. Thus, very few drives are confirmed to work with games that
 use CD-DA (i.e. pretty much all games that don't use the digital I/O board).
 
-| Manufacturer | Model        | BIOS    | CD-DA   | Notes                        |
-| :----------- | :----------- | :------ | :------ | :--------------------------- |
-| ASUSTeK      | DVD-E616P3   | **Yes** | Unknown |                              |
-| Compaq       | 179137-701   | **Yes** | **Yes** |                              |
-| Compaq       | CRN-8241B    | **Yes** | **Yes** | Laptop drive                 |
-| Creative     | CD4832E      | **Yes** | No      |                              |
-| Hitachi      | CDR-7930     | **Yes** | No      |                              |
-| LG           | GCE-8160B    | **Yes** | Unknown |                              |
-| LG           | GCR-8523B    | **Yes** | Unknown |                              |
-| LG           | GDR-8163B    | **Yes** | **Yes** |                              |
-| LG           | GDR-8164B    | **Yes** | **Yes** |                              |
-| LG           | GH22LP20     | **Yes** | Unknown |                              |
-| LG           | GH22NP20     | **Yes** | Unknown |                              |
-| LG           | GSA-4165B    | No      |         |                              |
-| Lite-On      | LH-18A1H     | **Yes** | **Yes** |                              |
-| Lite-On      | LTD-163      | **Yes** | Unknown |                              |
-| Lite-On      | LTD-165H     | **Yes** | Unknown |                              |
-| Lite-On      | LTR-40125S   | **Yes** | Unknown |                              |
-| Lite-On      | XJ-HD166S    | **Yes** | Unknown |                              |
-| Matsushita   | CR-583       | **Yes** | **Yes** | Stock drive                  |
-| Matsushita   | CR-587       | **Yes** | **Yes** | Stock drive, can't read CD-R |
-| Matsushita   | CR-589B      | **Yes** | **Yes** | Stock drive                  |
-| Matsushita   | SR8589B      | **Yes** | Unknown |                              |
-| Mitsumi      | CRMC-FX4830T | **Yes** | Unknown |                              |
-| NEC          | CDR-1900A    | **Yes** | Unknown |                              |
-| NEC          | ND-2510A     | No      |         |                              |
-| Panasonic    | CR-594C      | **Yes** | Unknown |                              |
-| Panasonic    | UJDA770      | **Yes** | Unknown | Laptop drive                 |
-| Sony         | DRU-510A     | **Yes** | Unknown |                              |
-| Sony         | DRU-810A     | **Yes** | Unknown |                              |
-| TDK          | AI-241040B   | **Yes** | Unknown |                              |
-| TDK          | AI-481648B   | **Yes** | Unknown |                              |
-| TEAC         | CD-W552E     | **Yes** | Unknown |                              |
-| Toshiba      | XM-5702B     | **Yes** | Unknown |                              |
-| Toshiba      | XM-6102B     | **Yes** | No      | Has issues with homebrew     |
-| Toshiba      | XM-7002B     | **Yes** | Unknown | Stock drive, laptop drive    |
+| Manufacturer | Model          | Type | BIOS    | CD-DA   | Notes                        |
+| :----------- | :------------- | :--- | :------ | :------ | :--------------------------- |
+| ASUSTeK      | DVD-E616P3     | DVD  | **Yes** | Unknown |                              |
+| Compaq       | CRN-8241B      | CD   | **Yes** | **Yes** | Laptop drive                 |
+| Creative     | CD4832E        | CD   | **Yes** | No      |                              |
+| Hitachi      | CDR-7930       | CD   | **Yes** | No      |                              |
+| LG           | GCE-8160B      | CD   | **Yes** | No      |                              |
+| LG           | GCR-8523B      | CD   | **Yes** | Unknown |                              |
+| LG           | GDR-8163B      | DVD  | **Yes** | **Yes** |                              |
+| LG           | GDR-8164B      | DVD  | **Yes** | **Yes** |                              |
+| LG           | GH22LP20       | DVD  | **Yes** | Unknown |                              |
+| LG           | GH22NP20       | DVD  | **Yes** | Unknown |                              |
+| LG           | GSA-4165B      | DVD  | No      |         |                              |
+| Lite-On      | LH-18A1H       | DVD  | **Yes** | **Yes** |                              |
+| Lite-On      | LTD-163        | DVD  | **Yes** | Unknown |                              |
+| Lite-On      | LTD-165H       | DVD  | **Yes** | Unknown |                              |
+| Lite-On      | LTR-40125S     | CD   | **Yes** | Unknown |                              |
+| Lite-On      | XJ-HD166S      | DVD  | **Yes** | Unknown |                              |
+| Matsushita   | CR-583         | CD   | **Yes** | **Yes** | Stock drive                  |
+| Matsushita   | CR-587         | CD   | **Yes** | **Yes** | Stock drive, can't read CD-R |
+| Matsushita   | CR-589B        | CD   | **Yes** | **Yes** | Stock drive                  |
+| Matsushita   | SR8589B        | DVD  | **Yes** | Unknown |                              |
+| Mitsumi      | CRMC-FX4830T   | CD   | **Yes** | Unknown |                              |
+| NEC          | CDR-1900A      | CD   | **Yes** | Unknown |                              |
+| NEC          | ND-2510A       | DVD  | No      |         |                              |
+| Panasonic    | CR-594C        | CD   | **Yes** | Unknown |                              |
+| Panasonic    | UJDA770        | CD?  | **Yes** | Unknown | Laptop drive                 |
+| Sony         | DRU-510A       | DVD  | **Yes** | Unknown |                              |
+| Sony         | DRU-810A       | DVD  | **Yes** | Unknown |                              |
+| TDK          | AI-CDRW241040B | CD   | **Yes** | Unknown |                              |
+| TDK          | AI-481648B     | CD   | **Yes** | Unknown |                              |
+| TEAC         | CD-W552E       | CD   | **Yes** | Unknown |                              |
+| Toshiba      | XM-5702B       | CD   | **Yes** | Unknown |                              |
+| Toshiba      | XM-6102B       | CD   | **Yes** | No      | Has issues with homebrew     |
+| Toshiba      | XM-7002B       | CD   | **Yes** | Unknown | Stock drive, laptop drive    |
 
 **NOTE**: Konami shipped some units with a Toshiba XM-7002B laptop drive and a
 passive adapter board (`GX874-PWB(B)`) to break out the drive's signals to a
