@@ -372,6 +372,7 @@ Note: The PM-41(2) board has on-chip RAM in the SPU (no external memory chip)<br
   IC102 - 40pin - "SONY ..."          ;seen on PU-7 & early-PU-8 board (40pin!)
   IC102 - 44pin - "SONY M538032E-02"  ;seen on PU-16 (video CD, 1Mbyte BIOS)
   IC102 - 32pin - "SONY M534031C-25"  ;seen on later-PU-8 board
+  IC102 - 32pin - "SONY 2022"         ;seen on PU-8 (1-658-467-23)
   IC102 - 32pin - "SONY 2030"         ;seen on PU-18 board
   IC102 - 32pin - "SONY M534031E-47"  ;seen on PM-41 board and PM-41(2)
   IC102 - 32pin - "SONY M27V401D-41"  ;seen on PM-41 board, too
