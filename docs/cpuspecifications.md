@@ -322,7 +322,7 @@ additional slowdown.<br/>
 The hardware does NOT generate exceptions on divide overflows, instead, divide
 errors are returning the following values:<br/>
 ```
-  Opcode  Rs              Rd       Hi/Remainder  Lo/Result
+  Opcode  Rs              Rt       Hi/Remainder  Lo/Result
   divu    0..FFFFFFFFh    0   -->  Rs            FFFFFFFFh
   div     0..+7FFFFFFFh   0   -->  Rs            -1
   div     -80000000h..-1  0   -->  Rs            +1
