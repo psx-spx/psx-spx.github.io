@@ -20,8 +20,8 @@ addresses should be used. When not recursing that rules, some more or less
   1F8010F0h-1F8010F7h   DMA.DPCR/DICR   (w32)   (w32)   OK
   1F8010F8h-1F8010FFh   DMA.unknown     IGNORE  IGNORE  IGNORE
   1F801100h-1F80110Bh   Timer 0         (w32)   (w32)   OK
-  1F801110h-1F80110Bh   Timer 1         (w32)   (w32)   OK
-  1F801120h-1F80110Bh   Timer 2         (w32)   (w32)   OK
+  1F801110h-1F80111Bh   Timer 1         (w32)   (w32)   OK
+  1F801120h-1F80112Bh   Timer 2         (w32)   (w32)   OK
   1F801800h-1F801803h   CDROM           OK      ?       ?
   1F801810h-1F801813h   GPU.GP0         ?       ?       OK
   1F801814h-1F801817h   GPU.GP1         ?       ?       OK
