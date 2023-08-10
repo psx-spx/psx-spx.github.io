@@ -26,7 +26,7 @@ instead, it's solely accessed via coprocessor opcodes:<br/>
 ```
 
 #### GTE Load Delay Slots
-Using CFC2/MCF2 has a delay of 1 instruction until the GPR is loaded with its new value.
+Using CFC2/MFC2 has a delay of 1 instruction until the GPR is loaded with its new value.
 Certain games are sensitive to this, with the notable example of Tekken 2
 which will be filled with broken geometry on emulators which don't emulate this properly.<br/>
 GTE (memory-?) load and store instructions have a delay of 2 instructions, for
