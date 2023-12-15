@@ -318,7 +318,7 @@ FFFF8900h (negative 16bit).<br/>
   0xh  -          N/A
   06h  NCLIP  8   Normal clipping
   0xh  -          N/A
-  0Ch  OP(sf) 6   Outer product of 2 vectors
+  0Ch  OP(sf) 6   Cross product of 2 vectors
   0xh  -          N/A
   10h  DPCS   8   Depth Cueing single
   11h  INTPL  8   Interpolation of a vector and far color vector
@@ -379,7 +379,7 @@ sorted by their fake numbers gives a more or less well arranged list:<br/>
   14h  NCLIP  8   Normal clipping
   15h  AVSZ3  5   Average of three Z values
   16h  AVSZ4  6   Average of four Z values
-  17h  OP(sf) 6   Outer product of 2 vectors
+  17h  OP(sf) 6   Cross product of 2 vectors
   18h  -          N/A
   19h  GPF(sf)5   General purpose interpolation
   1Ah  GPL(sf)5   General purpose interpolation with base
@@ -493,7 +493,7 @@ matrix (with elements -60h, +60h, IR0, RT13, RT13, RT13, RT22, RT22, RT22).<br/>
 Calculates the square of a vector. The result is, of course, always positive,
 so the "lm" flag for negative saturation has no effect.<br/>
 
-#### COP2 170000Ch+sf\*80000h - 6 Cycles - OP(sf,lm) - Outer product of 2 vectors
+#### COP2 170000Ch+sf\*80000h - 6 Cycles - OP(sf,lm) - Cross product of 2 vectors
 ```
   [MAC1,MAC2,MAC3] = [IR3*D2-IR2*D3, IR1*D3-IR3*D1, IR2*D1-IR1*D2] SAR (sf*12)
   [IR1,IR2,IR3]    = [MAC1,MAC2,MAC3]                        ;copy result
@@ -501,6 +501,9 @@ so the "lm" flag for negative saturation has no effect.<br/>
 Calculates the cross product of two signed 16bit vectors. Note: D1,D2,D3 are
 meant to be the RT11,RT22,RT33 elements of the RT matrix "misused" as vector.
 lm should be usually zero.<br/>
+The official Sony documentation refers to this opcode as the Outer Product,
+but this is likely the result of a bad translation from Japanese: "外積 - gaiseki"
+can be translated to "cross product", "vector product", or "outer product".<br/>
 
 #### LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones
 The LZCS/LZCR registers offer a Count-Leading-Zeroes/Leading-Ones function.<br/>
