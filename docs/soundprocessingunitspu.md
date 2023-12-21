@@ -846,7 +846,17 @@ The speed of sound is circa 340 meters per second (in dry air, at room
 temperature). For example, a voice that travels to a wall at 17 meters
 distance, and back to its origin, should have a delay of 0.1 seconds.<br/>
 
+#### Reverb Buffer Resampling
+Input and output to/from the reverb unit is resampled using a 39-tap FIR filter
+with the following coefficients. <br/>
 
+```
+ -0001h,  0000h,  0002h,  0000h, -000Ah,  0000h,  0023h,  0000h,
+ -0067h,  0000h,  010Ah,  0000h, -0268h,  0000h,  0534h,  0000h,
+ -0B90h,  0000h,  2806h,  4000h,  2806h,  0000h, -0B90h,  0000h,
+  0534h,  0000h, -0268h,  0000h,  010Ah,  0000h, -0067h,  0000h,
+  0023h,  0000h, -000Ah,  0000h,  0002h,  0000h, -0001h,
+```
 
 ##   SPU Reverb Examples
 #### Reverb Examples
