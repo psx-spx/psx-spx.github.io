@@ -38,6 +38,8 @@ Aside from the above, the Expansion regions can be used for whatever purpose,
 however, mind that the BIOS is reading from the ROM header region, and is
 writing to the POST register (so 1F000000h-1F0000FFh and 1F802041h should be
 used only if the hardware isn't disturbed by those accesses).<br/>
+Most arcade boards have their custom I/O registers (and sometimes game ROMs)
+mapped into the EXP1 and/or EXP2 regions.<br/>
 
 #### Missing Expansion Port
 The expansion port is installed only on older PSX boards, newer PSX boards and
@@ -336,7 +338,7 @@ hardware...?<br/>
 The BIOS seems to use only one of the two channels; for the std\_io functions:<br/>
 [BIOS TTY Console (std_io)](kernelbios.md#bios-tty-console-stdio)<br/>
 Aside from the external DUART, the PSX additionally contains an internal UART,<br/>
-[Serial Port (SIO)](serialportsio.md)<br/>
+[Serial Interfaces (SIO)](serialinterfacessio.md)<br/>
 The DTL-H2000 devboard uses a non-serial "ATCONS" channel for TTY stuff,<br/>
 [EXP2 DTL-H2000 I/O Ports](expansionportpio.md#exp2-dtl-h2000-io-ports)<br/>
 

@@ -27,11 +27,11 @@ getting interrupted by a higher priority DMA channel).<br/>
 In SyncMode=1 and SyncMode=2, the hardware does update MADR (it will contain
 the start address of the currently transferred block; at transfer end, it'll
 hold the end-address in SyncMode=1, or the end marker in SyncMode=2)<br/>
-Notes: Address bit0-1 are writeable, but any updated current/end addresses are 
-word-aligned with bit0-1 forced to zero.<br/>
-On non-dev consoles(2Mbyte RAM) bits21-22 are ignored, e.g. address 1FFFFCh written instead of 7FFFFCh.<br/>
-DMA transfers to RAM are not executed when bit23 is set.<br/>
-Wraparound when counting down from 000000h to FFFFFCh, leading to words after wraparound not being written to RAM.
+Notes: Address bits 0-1 are writeable, but any updated current/end addresses are
+word-aligned with bits 0-1 forced to zero.<br/>
+The address counter wraps around when counting down from 000000h to FFFFFCh,
+leading to words after wraparound not being written to RAM (as FFFFFCh is past
+the default 8 MB main RAM region).<br/>
 
 #### 1F801084h+N\*10h - D#\_BCR - DMA Block Control (Channel 0..6) (R/W)
 For SyncMode=0 (ie. for OTC and CDROM):<br/>
@@ -58,36 +58,40 @@ transfer).<br/>
 
 #### 1F801088h+N\*10h - D#\_CHCR - DMA Channel Control (Channel 0..6) (R/W)
 ```
-  0       Transfer Direction    (0=To Main RAM, 1=From Main RAM)
-  1       Memory Address Step   (0=Forward;+4, 1=Backward;-4)
-  2-7     Not used              (always zero)
-  8       Chopping Enable       (0=Normal, 1=Chopping; run CPU during DMA gaps)
-  9-10    SyncMode, Transfer Synchronisation/Mode (0-3):
-            0  Start immediately and transfer all at once (used for CDROM, OTC)
-            1  Sync blocks to DMA requests   (used for MDEC, SPU, and GPU-data)
-            2  Linked-List mode              (used for GPU-command-lists)
-            3  Reserved                      (not used)
-  11-15   Not used              (always zero)
-  16-18   Chopping DMA Window Size (1 SHL N words)
-  19      Not used              (always zero)
-  20-22   Chopping CPU Window Size (1 SHL N clks)
-  23      Not used              (always zero)
-  24      Start/Busy            (0=Stopped/Completed, 1=Start/Enable/Busy)
-  25-27   Not used              (always zero)
-  28      Start/Trigger         (0=Normal, 1=Manual Start; use for SyncMode=0)
-  29      Unknown (R/W) Pause?  (0=No, 1=Pause?)     (For SyncMode=0 only?)
-  30      Unknown (R/W)
-  31      Not used              (always zero)
+  0     Transfer direction (0=device to RAM, 1=RAM to device)
+  1     MADR increment per step (0=+4, 1=-4)
+  2-7   Unused
+  8     When 1:
+        -Burst mode: enable "chopping" (cycle stealing by CPU)
+        -Slice mode: Causes DMA to hang
+        -Linked-list mode: Transfer header before data?
+  9-10  Transfer mode (SyncMode)
+        0=Burst (transfer data all at once after DREQ is first asserted)
+        1=Slice (split data into blocks, transfer next block whenever DREQ is asserted)
+        2=Linked-list mode
+        3=Reserved
+  11-15 Unused
+  16-18 Chopping DMA window size (1 << N words)
+  19    Unused
+  20-22 Chopping CPU window size (1 << N cycles)
+  23    Unused
+  24    Start transfer (0=stopped/completed, 1=start/busy)
+  25-27 Unused
+  28    Force transfer start without waiting for DREQ
+  29    In forced-burst mode, pauses transfer while set.
+        In other modes, stops bit 28 from being cleared after a slice is transferred.
+        No effect when transfer was caused by a DREQ.
+  30    Perform bus snooping (allows DMA to read from -nonexistent- cache?)
+  31    Unused
 ```
-The Start/Trigger bit is automatically cleared upon BEGIN of the transfer, this
-bit needs to be set only in SyncMode=0 (setting it in other SyncModes would
-force the first block to be transferred instantly without DRQ, which isn't
-desired).<br/>
-The Start/Busy bit is automatically cleared upon COMPLETION of the transfer,
-this bit must be always set for all SyncModes when starting a transfer.<br/>
+Bit 28 is automatically cleared upon BEGIN of the transfer, this bit needs to be
+set only in SyncMode=0 (setting it in other SyncModes would force the first
+block to be transferred instantly without DREQ, which isn't desired).<br/>
+Bit 24 is automatically cleared upon COMPLETION of the transfer, this bit must
+be always set for all SyncModes when starting a transfer.<br/>
 For DMA6/OTC there are some restrictions, D6\_CHCR has only three
-read/write-able bits: Bit24,28,30. All other bits are read-only: Bit1 is always
-1 (step=backward), and the other bits are always 0.<br/>
+read/write-able bits: 24,28,30. All other bits are read-only: bit 1 is always
+1 (increment=-4), and the other bits are always 0.<br/>
 
 #### 1F8010F0h - DPCR - DMA Control Register (R/W)
 ```
@@ -105,32 +109,36 @@ read/write-able bits: Bit24,28,30. All other bits are read-only: Bit1 is always
   23    DMA5, PIO     Master Enable (0=Disable, 1=Enable)
   24-26 DMA6, OTC     Priority      (0..7; 0=Highest, 7=Lowest)
   27    DMA6, OTC     Master Enable (0=Disable, 1=Enable)
-  28-30 Unknown, Priority Offset or so? (R/W)
-  31    Unknown, no effect? (R/W)
+  28-30 CPU memory access priority  (0..7; 0=Highest, 7=Lowest)
+  31    No effect, should be CPU memory access enable (R/W)
 ```
 Initial value on reset is 07654321h. If two or more channels have the same
 priority setting, then the priority is determined by the channel number
-(DMA0=Lowest, DMA6=Highest).<br/>
+(DMA0=Lowest, DMA6=Highest, CPU=higher than DMA6?).<br/>
 
 #### 1F8010F4h - DICR - DMA Interrupt Register (R/W)
 ```
-  0-5   Unknown  (read/write-able)
-  6-14  Not used (always zero)
-  15    Force IRQ (sets bit31)            (0=None, 1=Force Bit31=1)
-  16-22 IRQ Enable for DMA0..DMA6         (0=None, 1=Enable)
-  23    IRQ Master Enable for DMA0..DMA6  (0=None, 1=Enable)
-  24-30 IRQ Flags for DMA0..DMA6          (0=None, 1=IRQ)    (Write 1 to reset)
-  31    IRQ Master Flag                   (0=None, 1=IRQ)    (Read only)
+  0-6   Controls channel 0-6 completion interrupts in bits 24-30.
+        When 0, an interrupt only occurs when the entire transfer completes.
+        When 1, interrupts can occur for every slice and linked-list transfer.
+        No effect if the interrupt is masked by bits 16-22.
+  7-14  Unused
+  15    Bus error flag. Raised when transferring to/from an address outside of RAM. Forces bit 31. (R/W)
+  16-22 Channel 0-6 interrupt mask. If enabled, channels cause interrupts as per bits 0-6.
+  23    Master channel interrupt enable.
+  24-30 Channel 0-6 interrupt flags. (R, write 1 to reset)
+  31    Master interrupt flag (R)
 ```
-IRQ flags in Bit(24+n) are set upon DMAn completion - but caution - they are
-set ONLY if enabled in Bit(16+n).<br/>
-Bit31 is a simple readonly flag that follows the following rules:<br/>
+IRQ flags in bit (24+n) are set upon DMAn completion - but caution - they are
+set ONLY if enabled in bit (16+n) (unlike interrupt flags in I_STAT, which are
+always set regardless of whether the respective IRQ is masked).<br/>
+Bit 31 is a simple readonly flag that follows the following rules:<br/>
 ```
   IF b15=1 OR (b23=1 AND (b16-22 AND b24-30)>0) THEN b31=1 ELSE b31=0
 ```
-Upon 0-to-1 transition of Bit31, the IRQ3 flag (in Port 1F801070h) gets set.<br/>
-Bit24-30 are acknowledged (reset to zero) when writing a "1" to that bits (and,
-additionally, IRQ3 must be acknowledged via Port 1F801070h).<br/>
+Upon 0-to-1 transition of Bit 31, the IRQ3 flag in I\_STAT gets set.<br/>
+Bits 24-30 are acknowledged (reset to zero) when writing a "1" to that bits (and
+additionally, IRQ3 must be acknowledged via I\_STAT).<br/>
 
 #### 1F8010F8h (usually 7FFAC68Bh? or 0BFAC688h)
 ```
@@ -150,7 +158,7 @@ Not yet tested during transfer, might be remaining length and address?<br/>
   DMA2 GPU      01000200h (VramRead), 01000201h (VramWrite), 01000401h (List)
   DMA3 CDROM    11000000h (normal), 11400100h (chopped, rarely used)
   DMA4 SPU      01000201h (write), 01000200h (read, rarely used)
-  DMA5 PIO      N/A       (not used by any known games)
+  DMA5 PIO      11150100h (System 573 ATAPI read), ? (System 573 ATAPI write)
   DMA6 OTC      11000002h (always)
 ```
 XXX: DMA2 values 01000201h (VramWrite), 01000401h (List) aren't 100% confirmed
@@ -158,17 +166,23 @@ to be used by ALL existing games. All other values are always used as listed
 above.<br/>
 
 #### Linked List DMA
-GPU data is often transferred from RAM to GP0 using DMA2 in linked list mode. In this mode,
-the DMA controller transfers words in "nodes", with the first node starting in the address indicated by D2_MADR.<br/>
-Each node is composed of a header word (the very first word in the node) and some extra words to be DMA'd before moving on to the next node. The node header is formatted like this:<br/>
+GPU commands are usually sent from RAM to GP0 using DMA2 in linked list mode. In
+this mode, the DMA controller transfers words in "nodes", with the first node
+starting in the address indicated by D2_MADR.<br/>
+Each node is composed of a header word (the very first word in the node) and
+some extra words to be DMA'd before moving on to the next node. The node header
+is formatted like this:<br/>
 
 ```
   0-23  Address of the next node (or end marker)
   24-31 Number of extra words to transfer for this node
 ```
 
-If the address of the next node has bit 23 set, ie if `(address & 0x800000) != 0` then the DMA controller will not move on to the next node and the DMA transfer ends. In this case that address is commonly referred to as the "end marker" for the DMA.<br/>
-Commercial and homebrew games typically use 0xffffff as the end marker, however other values such as 0x800002, 0x934567, and so on will also do the trick assuming bit 23 is set.
+The transfer is stopped once an end marker is reached. On some (earlier?) CPU
+revisions any address with bit 23 set will be interpreted as an end marker,
+while on other revisions all bits must be set (i.e. the address must be FFFFFF).
+This change was probably necessary as later CPU versions added support for up to
+16 MB RAM addressing, which made addresses in the 800000-FFFFFC range valid.<br/>
 
 #### DMA Transfer Rates
 ```
@@ -187,7 +201,7 @@ GPU vram read/write time is unknown (may vary on horizontal screen resolution).<
 CDROM BIOS default is 24 clks, for some reason most games change it to 40 clks.<br/>
 SPU transfer is unknown (may have some extra delays).<br/>
 XXX is SPU really only 4 clks (theoretically SPU access should be slower)?<br/>
-PIO isn't used by any games (and if used: could be configured to other rates)<br/>
+PIO is only used on some arcade systems (and configured with different timings).<br/>
 OTC is just writing to RAM without extra overload.<br/>
 CDROM/SPU/PIO timings can be configured via Memory Control registers.<br/>
 
@@ -206,3 +220,8 @@ Any read access from RAM or I/O registers or filling more than 4 entries into th
 Additionally, the CPU operation resumes during periods when DMA gets interrupted
 (ie. after SyncMode 1 blocks, after SyncMode 2 list entries) (or in SyncMode 0
 with Chopping enabled).<br/>
+
+#### PS2 IOP DMA
+The PS2's IOP has an extended DMA unit with more channels, new control registers
+and an additional chain mode (SyncMode=3). For more details, see:<br/>
+[ps2tek - IOP DMA](https://psi-rockin.github.io/ps2tek/#iopdma)<br/>

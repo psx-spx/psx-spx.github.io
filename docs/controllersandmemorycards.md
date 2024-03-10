@@ -1,7 +1,6 @@
 #   Controllers and Memory Cards
 #### Controllers/Memory Cards
-[Controller and Memory Card I/O Ports](controllersandmemorycards.md#controller-and-memory-card-io-ports)<br/>
-[Controller and Memory Card Misc](controllersandmemorycards.md#controller-and-memory-card-misc)<br/>
+[Controller and Memory Card Overview](controllersandmemorycards.md#controller-and-memory-card-overview)<br/>
 [Controller and Memory Card Signals](controllersandmemorycards.md#controller-and-memory-card-signals)<br/>
 [Controller and Memory Card Multitap Adaptor](controllersandmemorycards.md#controller-and-memory-card-multitap-adaptor)<br/>
 
@@ -11,12 +10,14 @@
 [Controllers - Mouse](controllersandmemorycards.md#controllers-mouse)<br/>
 [Controllers - Racing Controllers](controllersandmemorycards.md#controllers-racing-controllers)<br/>
 [Controllers - Lightguns](controllersandmemorycards.md#controllers-lightguns)<br/>
-[Controllers - Rumble Configuration](controllersandmemorycards.md#controllers-rumble-configuration)<br/>
+[Controllers - Configuration Commands](controllersandmemorycards.md#controllers-configuration-commands)<br/>
+[Controllers - Vibration/Rumble Control](controllersandmemorycards.md#controllers-vibrationrumble-control)<br/>
+[Controllers - Analog Buttons (Dualshock2)](controllersandmemorycards.md#controllers-analog-buttons-dualshock2)<br/>
 [Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
 [Controllers - Pop'n Controllers](controllersandmemorycards.md#controllers-popn-controllers)<br/>
 [Controllers - Densha de Go! / Jet de Go! Controllers](controllersandmemorycards.md#controllers-densha-de-go-jet-de-go-controllers)<br/>
-[Controllers - Stepper Controller](controllersandmemorycards.md#controllers-stepper-controller)<br/>
 [Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
+[Controllers - PS2 DVD Remote](controllersandmemorycards.md#controllers-ps2-dvd-remote)<br/>
 [Controllers - I-Mode Adaptor (Mobile Internet)](controllersandmemorycards.md#controllers-i-mode-adaptor-mobile-internet)<br/>
 [Controllers - Additional Inputs](controllersandmemorycards.md#controllers-additional-inputs)<br/>
 [Controllers - Misc](controllersandmemorycards.md#controllers-misc)<br/>
@@ -35,139 +36,53 @@
 
 
 
-##   Controller and Memory Card I/O Ports
-#### 1F801040h JOY\_TX\_DATA (W)
-```
-  0-7   Data to be sent
-  8-31  Not used
-```
-Writing to this register starts the transfer (if, or as soon as TXEN=1 and
-JOY\_STAT.2=Ready), the written value is sent to the controller or memory card,
-and, simultaneously, a byte is received (and stored in RX FIFO if JOY\_CTRL.1 or
-JOY\_CTRL.2 is set).<br/>
-The "TXEN=1" condition is a bit more complex: Writing to SIO\_TX\_DATA latches
-the current TXEN value, and the transfer DOES start if the current TXEN value
-OR the latched TXEN value is set (ie. if TXEN gets cleared after writing to
-SIO\_TX\_DATA, then the transfer may STILL start if the old latched TXEN value
-was set).<br/>
+##   Controller and Memory Card Overview
+Controllers and memory cards connect to the console using a serial protocol and
+are accessed through SIO0 registers:<br/>
+[Serial Interfaces (SIO)](serialinterfacessio.md)<br/>
+The protocol used is similar to standard SPI, with no start/stop bytes and no
+parity (even though SIO0 has support for it). Unlike typical SPI, only one byte
+is transferred at a time and a separate wire (/ACK) is used by the device to
+signal the PS1 that it is ready to exchange the next byte. For more details see:<br/>
+[Controller and Memory Card Signals](controllersandmemorycards.md#controller-and-memory-card-signals)<br/>
 
-#### 1F801040h JOY\_RX\_DATA (R)
-```
-  0-7   Received Data      (1st RX FIFO entry) (oldest entry)
-  8-15  Preview            (2nd RX FIFO entry)
-  16-23 Preview            (3rd RX FIFO entry)
-  24-31 Preview            (4th RX FIFO entry) (5th..8th cannot be previewed)
-```
-A data byte can be read when JOY\_STAT.1=1. Data should be read only via 8bit
-memory access (the 16bit/32bit "preview" feature is rather unusable, and
-usually there shouldn't be more than 1 byte in the FIFO anyways).<br/>
+#### Device addressing
+Each controller port and its respective memory card slot are wired in parallel,
+and the /CSn signals select both the controller and the memory card when
+asserted. This selection is narrowed down through a simple addressing scheme,
+where the first byte sent by the console after asserting /CSn is the address of
+the device that shall reply. All devices must keep the DAT line idle before
+receiving this byte. Once the address is sent, the device that was addressed
+shall pull /ACK low to signal its presence and start exchanging bytes.<br/>
+The following addresses are known to be used:<br/>
 
-#### 1F801044h JOY\_STAT (R)
-```
-  0     TX Ready Flag 1   (1=Ready/Started)
-  1     RX FIFO Not Empty (0=Empty, 1=Not Empty)
-  2     TX Ready Flag 2   (1=Ready/Finished)
-  3     RX Parity Error   (0=No, 1=Error; Wrong Parity, when enabled)  (sticky)
-  4     Unknown (zero)    (unlike SIO, this isn't RX FIFO Overrun flag)
-  5     Unknown (zero)    (for SIO this would be RX Bad Stop Bit)
-  6     Unknown (zero)    (for SIO this would be RX Input Level AFTER Stop bit)
-  7     /ACK Input Level  (0=High, 1=Low)
-  8     Unknown (zero)    (for SIO this would be CTS Input Level)
-  9     Interrupt Request (0=None, 1=IRQ7) (See JOY_CTRL.Bit4,10-12)   (sticky)
-  10    Unknown (always zero)
-  11-31 Baudrate Timer    (21bit timer, decrementing at 33MHz)
-```
+| Device                               | Address |
+| :----------------------------------- | ------: |
+| Standard controller                  |   `01h` |
+| Yaroze Access Card                   |   `21h` |
+| PS2 multitap (incompatible with PS1) |   `21h` |
+| PS2 DVD remote receiver              |   `61h` |
+| Memory card                          |   `81h` |
 
-#### 1F801048h JOY\_MODE (R/W) (usually 000Dh, ie. 8bit, no parity, MUL1)
-```
-  0-1   Baudrate Reload Factor (1=MUL1, 2=MUL16, 3=MUL64) (or 0=MUL1, too)
-  2-3   Character Length       (0=5bits, 1=6bits, 2=7bits, 3=8bits)
-  4     Parity Enable          (0=No, 1=Enable)
-  5     Parity Type            (0=Even, 1=Odd) (seems to be vice-versa...?)
-  6-7   Unknown (always zero)
-  8     CLK Output Polarity    (0=Normal:High=Idle, 1=Inverse:Low=Idle)
-  9-15  Unknown (always zero)
-```
-
-#### 1F80104Ah JOY\_CTRL (R/W) (usually 1003h,3003h,0000h)
-```
-  0     TX Enable (TXEN)  (0=Disable, 1=Enable)
-  1     /JOYn Output      (0=High, 1=Low/Select) (/JOYn as defined in Bit13)
-  2     RX Enable (RXEN)  (0=Normal, when /JOYn=Low, 1=Force Enable Once)
-  3     Unknown? (read/write-able) (for SIO, this would be TX Output Level)
-  4     Acknowledge       (0=No change, 1=Reset JOY_STAT.Bits 3,9)          (W)
-  5     Unknown? (read/write-able) (for SIO, this would be RTS Output Level)
-  6     Reset             (0=No change, 1=Reset most JOY_registers to zero) (W)
-  7     Not used             (always zero) (unlike SIO, no matter of FACTOR)
-  8-9   RX Interrupt Mode    (0..3 = IRQ when RX FIFO contains 1,2,4,8 bytes)
-  10    TX Interrupt Enable  (0=Disable, 1=Enable) ;when JOY_STAT.0-or-2 ;Ready
-  11    RX Interrupt Enable  (0=Disable, 1=Enable) ;when N bytes in RX FIFO
-  12    ACK Interrupt Enable (0=Disable, 1=Enable) ;when JOY_STAT.7  ;/ACK=LOW
-  13    Desired Slot Number  (0=/JOY1, 1=/JOY2) (set to LOW when Bit1=1)
-  14-15 Not used             (always zero)
-```
-Caution: After slot selection (via Bits 1,13), one should issue a delay before
-sending the the first data byte: Digital Joypads may work without delay,
-Dualshock and Mouse require at least some small delay, and older Analog Joypads
-require a huge delay (around 500 clock cycles for SCPH-1150), official kernel
-waits more than 2000 cycles (which is much more than needed).<br/>
-
-#### 1F80104Eh JOY\_BAUD (R/W) (usually 0088h, ie. circa 250kHz, when Factor=MUL1)
-```
-  0-15  Baudrate Reload value for decrementing Baudrate Timer
-```
-Timer reload occurs when writing to this register, and, automatically when the
-Baudrate Timer reaches zero. Upon reload, the 16bit Reload value is multiplied
-by the Baudrate Factor (see 1F801048h.Bit0-1), divided by 2, and then copied to
-the 21bit Baudrate Timer (1F801044h.Bit11-31). The 21bit timer decreases at
-33MHz, and, it ellapses twice per bit (once for CLK=LOW and once for CLK=HIGH).<br/>
-```
-  BitsPerSecond = (44100Hz*300h) / MIN(((Reload*Factor) AND NOT 1),1)
-```
-The default BAUD value is 0088h (equivalent to 44h cpu cycles), and default
-factor is MUL1, so CLK pulses are 44h cpu cycles LOW, and 44h cpu cycles HIGH,
-giving it a transfer rate of circa 250kHz per bit (33MHz divided by 88h
-cycles).<br/>
-Note: The Baudrate Timer is always running; even if there's no transfer in
-progress.<br/>
-
-#### /IRQ7 (/ACK) Controller and Memory Card - Byte Received Interrupt
+#### DSR (/ACK) Controller and Memory Card - Byte Received Interrupt
 Gets set after receiving a data byte - that only if an /ACK has been received
 from the peripheral (ie. there will be no IRQ if the peripheral fails to send
 an /ACK, or if there's no peripheral connected at all).<br/>
 ```
-  Actually, /IRQ7 means "more-data-request",
+  Actually, DSR means "more-data-request",
   accordingly, it does NOT get triggered after receiving the LAST byte.
 ```
 I\_STAT.7 is edge triggered (that means it can be acknowledge before or after
-acknowledging JOY\_STAT.9). However, JOY\_STAT.9 is NOT edge triggered (that
+acknowledging SIO0\_STAT.9). However, SIO0\_STAT.9 is NOT edge triggered (that
 means it CANNOT be acknowledged while the external /IRQ input is still low; ie.
-one must first wait until JOY\_STAT.7=0, and then set JOY\_CTRL.4=1) (this is
+one must first wait until SIO0\_STAT.7=0, and then set SIO0\_CTRL.4=1) (this is
 apparently a hardware glitch; note: the LOW duration is circa 100 clock
 cycles).<br/>
 
 #### /IRQ10 (/IRQ) Controller - Lightpen Interrupt
-Pin8 on Controller Port. Routed directly to the Interrupt Controller (at
-1F80107xh). There are no status/enable bits in the JOY\_registers (at
+Pin 8 on Controller Port. Routed directly to the Interrupt Controller (at
+1F80107xh). There are no status/enable bits in the SIO0\_registers (at
 1F80104xh).<br/>
-
-#### RX FIFO / TX FIFO Notes
-The JOY registers can hold up to 8 bytes in RX direction, and almost 2 bytes in
-TX direction (just like the SIO registers, see there for details), however,
-normally only 1 byte should be in the RX/TX registers (one shouldn't send a 2nd
-byte until /ACK is sensed, and, since the transfer CLK is dictated by the CPU,
-the amount of incoming data cannot exceed 1 byte; provided that one reads
-received response byte after each transfer).<br/>
-Unlike SIO, the JOY status register doesn't have a RX FIFO Overrun flag.<br/>
-
-#### General Notes
-RXEN should be usually zero (the hardware automatically enables receive when
-/JOYn is low). When RXEN is set, the next transfer causes data to be stored in
-RX FIFO even when /JOYn is high; the hardware automatically clears RXEN after
-the transfer.<br/>
-For existing joypads and memory cards, data should be always transferred as
-8bit no parity (although the JOY registers do support parity just like SIO
-registers).<br/>
 
 #### Plugging and Unplugging Cautions
 During plugging and unplugging, the Serial Data line may be dragged LOW for a
@@ -186,9 +101,6 @@ acknowledge any old IRQ7, and does then wait for the new IRQ7. Due to that
 bizarre coding, emulators can't trigger IRQ7 immediately within 0 cycles after
 sending the byte.<br/>
 
-
-
-##   Controller and Memory Card Misc
 #### BIOS Functions
 Controllers can be probably accessed via InitPad and StartPad functions,<br/>
 [BIOS Joypad Functions](kernelbios.md#bios-joypad-functions)<br/>
@@ -196,34 +108,11 @@ Memory cards can be accessed by the filesystem (with device names "bu00:"
 (slot1) and "bu10:" (slot2) or so). Before using that device names, it seems to
 be required to call InitCard, StartCard, and \_bu\_init (?).<br/>
 
-#### Connectors
-The PlayStation has four connectors (two controllers, two memory cards),<br/>
-```
-  Memory Card 1         Memory Card 2
-  Controller 1          Controller 2
-```
-The controller ports have 9 pins, the memory cards only 8 pins. However, there
-are only 10 different pins in total.<br/>
-```
-  JOYDAT,JOYCMD,JOYCLK  Data in/out/clock
-  +7.5V,+3.5V,GND       Supply
-  /JOY1,/JOY2  Selects controller/memorycard 1, or controller/memorycard 2
-  /ACK         Indicates that the device is ready to send more data (IRQ7)
-  /IRQ10       Lightgun (controllers only, not memory card) (IRQ10)
-```
-Most of these pins are shared for all 4 connectors (eg. a CLK signal meant to
-be sent to one device will also arrive at the other 3 devices).<br/>
-The /JOYn signals are selecting BOTH the corresponding controller, and the
-corresponding memory card (whether it is a controller access or memory card
-access depends on the first byte transferred via the CMD line; this byte should
-be 01h=Controller, or 81h=Memory Card; or, a special case would be 21h=Yaroze
-Access Card).<br/>
-
-#### Data In/Out
+#### Synchronous I/O
 The data is transferred in units of bytes, via separate input and output lines.
 So, when sending byte, the hardware does simultaneously receive a response
 byte.<br/>
-One exception is the first command byte (which selects either the controller,
+One exception is the address byte (which selects either the controller,
 or the memory card) until that byte has been sent, neither the controller nor
 memory card are selected (and so the first "response" byte should be ignored;
 probably containing more or less stable high-z levels).<br/>
@@ -236,44 +125,55 @@ usually 00h) to receive the response bytes.<br/>
 ##   Controller and Memory Card Signals
 #### Overview
 ```
-       ____                                                              _____
-  /SEL     |____________________________________________________________|
-       ______        ____        ____        ____        ____        _________
-  CLK        ||||||||    ||||||||    ||||||||    ||||||||    ||||||||
-       _______________________________________________________________________
-  CMD       X  01h   XXXX  42h   XXXX  00h   XXXX  00h   XXXX  00h   XXXX
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            _____________________________________________________________
-  DAT  -----XXXXXXXXXXXXX   ID   XXXX  5Ah   XXXX  key1  XXXX  key2  XXXX-----
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  /ACK ---------------|_|---------|_|---------|_|---------|_|-----------------
+        ____                                                              _____
+  /CS       \____________________________________________________________/
+        ______        ____        ____        ____        ____        _________
+  SCK         ||||||||    ||||||||    ||||||||    ||||||||    ||||||||
+        ____                                                              _____
+  MOSI      '=[ Addr ]====[ Cmd  ]====[ Tap  ]====[Param ]====[Param ]==='
+
+  MISO  ---------------===[ IDlo ]====[ IDhi ]====[ Data ]====[ Data ]===------
+        _______________   _________   _________   _________   _________________
+  /ACK                 |_|         |_|         |_|         |_|
+
+--- High impedance
+=== Any state (don't care)
 ```
 
-#### Top command. First comminucation(device check)
+#### Address byte (01h) being sent
 ```
-       ____
-  /SEL     |__________________________________________________________________
-       ______   _   _   _   _   _   _   _   __________________   _   _   _   _
-  CLK        |_| |_| |_| |_| |_| |_| |_| |_|                  |_| |_| |_| |_|
-       __________                                                  ___
-  CMD            |________________________________________________|   |_______
-                                                              ____
-  DAT  -----XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX    |___________
-  /ACK ----------------------------------------------|___|--------------------
+        ____
+  /CS       \__________________________________________________________________
+        ______   _   _   _   _   _   _   _   __________________   _   _   _   _
+  SCK         |_| |_| |_| |_| |_| |_| |_| |_|                  |_| |_| |_| |_|
+        __________                                                  ___
+  MOSI          1 |_0___0___0___0___0___0___0____________________0_| 1 |_0___0_
+                                                               ____
+  MISO  -----------------------------------------------======='  1 |_0___0___0_
+        ______________________________________________     ____________________
+  /ACK                                                |___|
+
+--- High impedance
+=== Any state (don't care)
 ```
 
-X = none, - = Hi-Z<br/>
+Notes:
 
-\* 0x81 is memory-card, 0x01 is standard-pad at top command.<br/>
-\* serial data transfer is LSB-First format.<br/>
-\* data is down edged output, PSX is read at up edge in shift clock.<br/>
-\* PSX expects No-connection if not returned Acknowledge less than 100 usec.<br/>
-\* clock pulse is 250KHz.<br/>
-\* no need Acknowledge at last data.<br/>
-\* Acknowledge signal width is more than 2 usec.<br/>
-\* time is 16msec between SEL from previous SEL.<br/>
-\* SEL- for memory card in PAD access.<br/>
-
+- All bytes are sent LSB first.
+- The standard baud rate used by the kernel is ~250 kHz. Some controllers and
+  memory cards may work with faster rates, but others will not.
+- The clock polarity is high-when-idle (sometimes referred to as CPOL=1). Each
+  bit is output on a falling clock edge and sampled by the other end on the
+  rising clock edge that follows it (CPHA=1).
+- The device has to pull /ACK low for at least 2 µs to request the host to
+  transfer another byte. Once the last byte of the packet is transferred, the
+  device shall no longer pulse /ACK.
+- The kernel's controller driver will time out if /ACK is not pulled low by the
+  device within 100 µs from the last SCK pulse. It will also ignore /ACK pulses
+  sent within the first 2-3 µs (100 cycles) of the last SCK pulse.
+- Devices should not respond immediately when /CS is asserted, but should wait
+  for the address byte to be sent and only send an /ACK pulse back and start
+  replying with data if the address matches.
 
 ##   Controller and Memory Card Multitap Adaptor
 #### SCPH-1070 (Multitap)
@@ -281,48 +181,75 @@ The Multitap is an external adaptor that allows to connect 4 controllers, and 4
 memory cards to one controller port. When using two adaptors (one on each
 slot), up to 8 controllers and 8 memory cards can be used.<br/>
 
-The Multitap has a physical lip that blocks access to the memory card slot above the controller port it is plugged into. This is done to prevent ambiguity/contention between the memory card plugged into Multitap slot A and the memory card slot, since both are accessed via byte 0x81.
+#### Multitap Controller Access
+Normally joypad reading is done by sending this bytes to the pad:<br/>
+```
+  01 42 00 00 ..   ;normal read
+```
+And with the multitap, there are even two different ways how to access extra
+pads:<br/>
+```
+  01 42 01 00 ..   ;method 1: receive special ID and data from ALL four pads
+  0n 42 00 00 ..   ;method 2: receive data from pad number "n" (1..4)
+```
+The first method seems to be the more commonly used one (and its special ID is
+also good for detecting the multitap); see below for details.<br/>
+The second method works more like "normal" reads, among other it's allowing to
+transfer more than 4 halfwords per slot (unknown if any existing games are
+using that feature).<br/>
+The IRQ10 signal (for Konami Lightguns) is simply wired to all four slots via
+small resistors (without special logic for activating/deactivating the IRQ on
+certain slots).<br/>
 
-#### Multitap Controller Passthrough Mode
-In passthrough mode, the access byte sent to the Multitap is 0Nh, where N is the desired pad. On receiving a valid access byte, the multitap will send a 01h access byte to the controller to activate it for transfer. All following bytes are passed through normally as if the software is communicating directly with the controller. If the initial Multitap access byte is out of range (i.e. not 01h, 02h, 03h, or 04h) or a controller is not plugged into the port, the Multitap will not ACK the access.
-
-#### Multitap Controller Buffered Transfer All Mode
-To activate the buffered Transfer All mode, 01h must be sent as the third byte in the controller transfer sequence (so the second byte in the command halfword), like so:
+#### Multitap Controller Access, Method 1 Details
+Below LONG response is activated by sending "01h" as third command byte;
+observe that sending that byte does NOT affect the current response. Instead,
+it does request that the NEXT command shall return special data, as so:<br/>
 ```
-  0Nh 42h 01h ..
-```
-Sending any value other than 00h or 01h for that byte, in either operation mode, seems to cause the Multitap to end communication at that byte (no ACK). When activating buffered Transfer All mode, the current response is not affected. Instead, it signals the Multitap to send/receive data for all the controllers on the *next* transfer sequence, like so:
-```
-  Access Byte
   Halfword 0      --> Controller ID for MultiTap (5A80h=Multitap)
   Halfword 1..4   --> Player A (Controller ID, Buttons, Analog Inputs, if any)
   Halfword 5..8   --> Player B (Controller ID, Buttons, Analog Inputs, if any)
   Halfword 9..12  --> Player C (Controller ID, Buttons, Analog Inputs, if any)
   Halfword 13..16 --> Player D (Controller ID, Buttons, Analog Inputs, if any)
 ```
-With this method, the Multitap always sends 4 halfwords per slot, padded with FFh for devices like Digital Controllers and Mice which use less than 4 halfwords. For Empty slots, all 4 halfwords are filled with FFh bytes. <br/>
-
-A number of things can cause the Transfer All mode to fail. First, the controller corresponding to the access byte must be present, or the transfer will end on the access byte, same as for a passthrough transfer. Secondly, the command halfword must be 42h 00h or 42h 01h, or transfer will end on the second byte of the halfword.<br/>
-
-In Transfer All mode, controller response are buffered by an entire transfer sequence, so software must request another Transfer All to receive the results from the previous Transfer All, like so:</br>
+With this method, the Multitap is always sending 4 halfwords per slot (padded
+with FFFFh values for devices like Digital Joypads and Mice; which do use less
+than 4 halfwords); for empty slots it's padding all 4 halfwords with FFFFh.<br/>
+Sending the request is possible ONLY if there is a controller in Slot A (if
+controller Slot A is empty then the Slot A access aborts after the FIRST byte,
+and it's thus impossible to send the request in the THIRD byte).<br/>
+Sending the request works on access to Slot A, trying to send another request
+during the LONG response is glitchy (for whatever strange reason); one must
+thus REPEATEDLY do TWO accesses: one dummy Slot A access (with the request),
+followed by the long Slot A+B+C+D access.<br/>
 ```
-  0Nh 42h 01h .. ; Passthrough, request Transfer All mode for next command
-  0Nh 42h 01h .. ; Transfer All, responses should be ignored as previous mode was not Transfer All
-  0Nh 42h 01h .. ; Transfer All, receive responses from previous Transfer All
-  ..             ; And so forth
-  0Nh 42h 00h .. ; Return to Passthrough mode on next transfer sequence if currently in Transfer All mode
+  Previous access had REQ=0 and returned Slot A data ---> returns Slot A data
+  Previous access had REQ=0 and returned Slot A-D data -> returns Slot A data
+  Previous access had REQ=1 and returned Slot A data ---> returns Slot A-D data
+  Previous access had REQ=1 and returned Slot A-D data -> returns garbage
+  Previous access had REQ=1 and returned garbage -------> returns Slot A-D data
 ```
-
-The IRQ10 line (used by the Konami Justifier) is simply wired to all four slots via small resistors without any special logic for activating/deactivating the IRQ on specific slots.<br/>
+In practice:<br/>
+Toggling REQ on/off after each command: Returns responses toggling between
+normal Slot A data and long Slot A+B+C+D data.<br/>
+Sending REQ=1 in ALL commands: Returns responses toggling between Garbage and
+long Slot A+B+C+D data.<br/>
+Both of the above is working (one needs only the Slot A+B+C+D part, and it
+doesn't matter if the other part is Slot A, or Garbage; as long as the software
+is able/aware of ignoring the Garbage). Garbage response means that the
+multitap returns ONLY four bytes, like so: Hiz,80h,5Ah,LSB (ie. the leading
+HighZ byte, the 5A80h Multitap ID, and the LSB of the Slot A controller ID),
+and aborts transfer after that four bytes.<br/>
 
 #### Multitap Memory Card Access
-Memory card access is done like so:<br/>
+Normally memory card access is done by sending this bytes to the card:<br/>
 ```
-  8Nh xxh .. ..      ;access memory card in slot "N" (1..4)
+  80 xx .. ..      ;normal access
 ```
-There is no other known method for accessing memory cards through the Multitap.
-
-Unverified notes from Nocash:<br/>
+And with the multitap, memory cards can be accessed as so:<br/>
+```
+  8n xx .. ..      ;access memory card in slot "n" (1..4)
+```
 That's the way how its done in Silent Hill. Although for the best of confusion,
 it doesn't actually work in that game (probably the developer has just linked
 in the multitap library, without actually supporting the multitap at higher
@@ -370,7 +297,7 @@ The cable connects to one of the PSX controller ports (which also carries the
 memory card signals). The PSX memory card port is left unused (and is blocked
 by a small edge on the Multitap's plug).<br/>
 
-#### Software-parsed Controller IDs
+#### MultiTap Parsed Controller IDs
 Halfword 0 is parsed (by the BIOS) as usually, ie. the LSB is moved to MSB, and
 LSB is replaced by status byte (so ID 5A80h becomes 8000h=Multitap/okay, or
 xxFFh=bad). Halfwords 1,5,9,13 are NOT parsed (neither by the BIOS nor by the
@@ -386,6 +313,14 @@ joypads). However, the Multitap hardware itself doesn't do much on supply
 restrictions (+3.5V is passed through something; maybe some fuse, loop, or 1
 ohm resistor or so) (and +7.5V is passed without any restrictions).<br/>
 
+#### PS2 multitap
+Sony made a multitap adapter for the PS2, however it is not compatible with the
+PS1 as it plugs into both the controller and memory card ports (which are not
+wired in parallel on the PS2). The protocol is also different: rather than
+modifying packets it seems to act as a mostly-passive port multiplexer,
+accepting switching commands with address 61h. Unknown if the PS2 multitap is
+backwards compatible with the SCPH-1070 protocol.<br/>
+
 #### See also
 [Pinouts - Component List and Chipset Pin-Outs for Multitap, SCPH-1070](pinouts.md#pinouts-component-list-and-chipset-pin-outs-for-multitap-scph-1070)<br/>
 
@@ -395,7 +330,7 @@ ohm resistor or so) (and +7.5V is passed without any restrictions).<br/>
 #### Controller Communication Sequence
 ```
   Send Reply Comment
-  01h  Hi-Z  Controller Access (unlike 81h=Memory Card access), dummy response
+  01h  Hi-Z  Controller address
   42h  idlo  Receive ID bit0..7 (variable) and Send Read Command (ASCII "B")
   TAP  idhi  Receive ID bit8..15 (usually/always 5Ah)
   MOT  swlo  Receive Digital Switches bit0..7
@@ -433,11 +368,18 @@ Known 16bit ID values are:<br/>
   5A53h=Analog Stick        (or analog pad in "flight mode"; LED=Green)
   5A63h=Namco Lightgun      (Cinch-type)
   5A73h=Analog Pad          (in normal analog mode; LED=Red)
+  5A7xh=Dualshock2          (with variable number of inputs enabled)
+  5A79h=Dualshock2          (with all analog/digital inputs enabled)
   5A80h=Multitap            (multiplayer adaptor) (when activated)
+  5A96h=Keyboard            (rare lightspan keyboard)
   5AE3h=Jogcon              (steering dial)
+  5AE8h=Keyboard/Sticks     (rare homebrew keyboard/segasticks adaptor)
   5AF3h=Config Mode         (when in config mode; see rumble command 43h)
   FFFFh=High-Z              (no controller connected, pins floating High-Z)
 ```
+The PS2 DVD remote receiver identifies as either 5A41h (i.e. a digital
+controller) when polled using standard controller commands, or 5A12h when using
+address 61h to access the IR functionality.<br/>
 
 
 
@@ -482,6 +424,10 @@ Known 16bit ID values are:<br/>
   __Halfword 3 (Left joystick) (analog pad/stick in analog mode only)__________
   0-7   adc2 LeftJoyX  (00h=Left, 80h=Center, FFh=Right)
   8-15  adc3 LeftJoyY  (00h=Up,   80h=Center, FFh=Down)
+  __Further Halfword(s) (Dualshock2 only, and only if enabled)_________________
+  0-7   ..   Analog Button (if enabled) (00h=Released, FFh=Max Pressure)
+  8-15  ..   Analog Button (if enabled) (00h=Released, FFh=Max Pressure)
+  ..    ..   ..
 ```
 
 #### Analog Mode Note
@@ -605,7 +551,6 @@ slots.<br/>
   Discworld
   Discworld II: Missing Presumed...!?
   Discworld Noir
-  Dracula - The Resurrection
   Dune 2000
   Final Doom
   Galaxian 3
@@ -663,17 +608,23 @@ Solder/SMD Side:<br/>
 ```
 Cable:<br/>
 ```
-  PSX.Controller.Pin1 JOYDAT ---- brown  -- Mouse.Pin4
-  PSX.Controller.Pin2 JOYCMD ---- red    -- Mouse.Pin3
-  PSX.Controller.Pin3 +7.5V  ---- N/A
-  PSX.Controller.Pin4 GND    ---- orange -- Mouse.Pin7 GND (G)
-  PSX.Controller.Pin5 +3.5V  ---- yellow -- Mouse.Pin1
-  PSX.Controller.Pin6 /JOYn  ---- green  -- Mouse.Pin5
-  PSX.Controller.Pin7 JOYCLK ---- blue   -- Mouse.Pin2
-  PSX.Controller.Pin8 /IRQ10 ---- N/A
-  PSX.Controller.Pin9 /ACK   ---- purple -- Mouse.Pin6
-  PSX.Controller.Shield --------- shield -- Mouse.Pin8 GND (SHIELD)
+  PSX.Controller.Pin1 DAT   ---- brown  -- Mouse.Pin4
+  PSX.Controller.Pin2 CMD   ---- red    -- Mouse.Pin3
+  PSX.Controller.Pin3 +7.5V ---- N/A
+  PSX.Controller.Pin4 GND   ---- orange -- Mouse.Pin7 GND (G)
+  PSX.Controller.Pin5 +3.5V ---- yellow -- Mouse.Pin1
+  PSX.Controller.Pin6 /CSn  ---- green  -- Mouse.Pin5
+  PSX.Controller.Pin7 SCK   ---- blue   -- Mouse.Pin2
+  PSX.Controller.Pin8 /IRQ  ---- N/A
+  PSX.Controller.Pin9 /ACK  ---- purple -- Mouse.Pin6
+  PSX.Controller.Shield -------- shield -- Mouse.Pin8 GND (SHIELD)
 ```
+
+#### PS/2 and USB Mouse Adaptors
+Some keyboard adaptors are also including a mouse adaptor feature (either by
+simulating normal Sony Mouse controller data, or via more uncommon ways like
+using the PSX expansion port).<br/>
+[Controllers - Keyboards](controllersandmemorycards.md#controllers---keyboards)<br/>
 
 #### RS232 Mice
 Below is some info on RS232 serial mice. That info isn't directly PSX related
@@ -1237,7 +1188,7 @@ both methods:<br/>
   Simple 1500 Series Vol.063 - The Gun Shooting 2 (unknown type)
   Snatcher (IRQ10)
   Sporting Clays (Charles Doty) (homebrew with buggy source code) (IRQ10/Cinch)
-  Star Wars: Rebel Assault II (IRQ10)
+  Star Wars Rebel Assault II (IRQ10)
   Time Crisis, and Time Crisis 2: Project Titan (Namco) (Cinch)
 ```
 Note: The RPG game Dragon Quest Monsters does also contain IRQ10 lightgun code
@@ -1245,16 +1196,228 @@ Note: The RPG game Dragon Quest Monsters does also contain IRQ10 lightgun code
 
 
 
-##   Controllers - Rumble Configuration
+
+##   Controllers - Configuration Commands
+Some controllers can be switched from Normal Mode to Config Mode. The Config
+Mode was invented for activating the 2nd rumble motor in SCPH-1200 analog
+joypads. Additionally, the Config commands can switch between analog/digital
+inputs (without needing to manually press the Analog button), activate more
+analog inputs (on Dualshock2), and read some type/status bytes.<br/>
+
+#### Normal Mode
+```
+  42h "B" Read Buttons (and analog inputs when in analog mode)
+  43h "C" Enter/Exit Configuration Mode (stay normal, or enter)
+```
+Transfer length in Normal Mode is 5 bytes (Digital mode), or 9 bytes (Analog
+mode), or up to 21 bytes (Dualshock2).<br/>
+
+#### Configuration Mode
+```
+  40h "@" Unused, or Dualshock2: Get/Set ButtonAttr?
+  41h "A" Unused, or Dualshock2: Get Reply Capabilities
+  42h "B" Read Buttons AND analog inputs (even when in digital mode)
+  43h "C" Enter/Exit Configuration Mode (stay config, or exit)
+  44h "D" Set LED State (analog mode on/off)
+  45h "E" Get LED State (and Type/constants)
+  46h "F" Get Variable Response A (depending on incoming bit)
+  47h "G" Get whatever values (response HiZ F3h 5Ah 00h 00h 02h 00h 01h 00h)
+  48h "H" Unknown (response HiZ F3h 5Ah 00h 00h 00h 00h 01h 00h)
+  49h "I" Unused
+  4Ah "J" Unused
+  4Bh "K" Unused
+  4Ch "L" Get Variable Response B (depending on incoming bit)
+  4Dh "M" Get/Set RumbleProtocol
+  4Eh "N" Unused
+  4Fh "O" Unused, or Dualshock2: Set ReplyProtocol
+```
+Transfer length in Config Mode is always 9 bytes.<br/>
+
+#### Normal Mode - Command 42h "B" - Read Buttons (and analog inputs when enabled)
+```
+  Send  01h 42h 00h xx  yy  (00h 00h 00h 00h) (...)
+  Reply HiZ id  5Ah buttons ( analog-inputs ) (dualshock2 buttons...)
+```
+The normal read command, see Standard Controller chapter for details on buttons
+and analog inputs. The xx/yy bytes have effect only if rumble is unlocked; use
+Command 43h to enter config mode, and Command 4Dh to unlock rumble. Command 4Dh
+has billions of combinations, among others allowing to unlock only one of the
+two motors, and to exchange the xx/yy bytes, however, with the default values,
+xx/yy are assigned like so:<br/>
+```
+  yy.bit0-7 ---> Left/Large Motor M1 (analog slow/fast) (00h=stop, FFh=fastest)
+  xx.bit0   ---> Right/small Motor M2 (digital on/off)  (0=off, 1=on)
+```
+The Left/Large motor starts spinning at circa min=50h..60h, and, once when
+started keeps spinning downto circa min=38h. The exact motor start boundary
+depends on the current position of the weight (if it's at the "falling" side,
+then gravity helps starting), and also depends on external movements (eg. it
+helps if the user or the other rumble motor is shaking the controller), and may
+also vary from controller to controller, and may also depend on the room
+temperature, dirty or worn-out mechanics, etc.<br/>
+
+#### Normal Mode - Command 43h "C" - Enter/Exit Configuration Mode
+```
+  Send  01h 43h 00h xx  00h (zero padded...)   (...)
+  Reply HiZ id  5Ah buttons (analog inputs...) (dualshock2 buttons...)
+```
+When issuing command 43h from inside normal mode, the response is same as for
+command 42h (button data) (and analog inputs when in analog mode) (but without
+M1 and M2 parameters). While in config mode, the ID bytes are always "F3h 5Ah"
+(instead of the normal analog/digital ID bytes).<br/>
+```
+  xx=00h Stay in Normal mode
+  xx=01h Enter Configuration mode
+```
+Caution: Additionally to activating configuration commands, entering config
+mode does also activate a Watchdog Timer which does reset the controller if
+there's been no communication for about 1 second or so. The watchdog timer
+remains active even when returning to normal mode via Exit Config command. The
+reset does disable and lock rumble motors, and switches the controller to
+Digital Mode (with LED=off, and analog inputs disabled). To prevent this, be
+sure to keep issuing joypad reads even when not needing user input (eg. while
+loading data from CDROM).<br/>
+Caution 2: A similar reset occurs when the user pushes the Analog button; this
+is causing rumble motors to be stopped and locked, and of course, the
+analog/digital state gets changed.<br/>
+Caution 3: If config commands were used, and the user does then push the analog
+button, then the 5Ah-byte gets replaced by 00h (ie. responses change from "HiZ
+id 5Ah ..." to "HiZ id 00h ...").<br/>
+
+#### Config Mode - Command 42h "B" - Read Buttons AND analog inputs
+```
+  Send  01h 42h 00h M2  M1  00h 00h 00h 00h
+  Reply HiZ F3h 5Ah buttons  analog-inputs
+```
+Same as command 42h in normal mode, but with forced analog response (ie. analog
+inputs and L3/R3 buttons are returned even in Digital Mode with LED=Off).<br/>
+
+#### Config Mode - Command 43h "C" - Enter/Exit Configuration Mode
+```
+  Send  01h 43h 00h xx  00h 00h 00h 00h 00h
+  Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
+```
+Equivalent to command 43h in normal mode, but returning 00h bytes rather than
+button data, can be used to return to normal mode.<br/>
+```
+  xx=00h Enter Normal mode (Exit Configuration mode)
+  xx=01h Stay in Configuration mode
+```
+Back in normal mode, the rumble motors (if they were enabled) can be controlled
+with normal command 42h.<br/>
+
+#### Config Mode - Command 44h "D" - Set LED State (analog mode on/off)
+```
+  Send  01h 44h 00h Led Key 00h 00h 00h 00h
+  Reply HiZ F3h 5Ah 00h 00h Err 00h 00h 00h
+```
+The Led byte can be:<br/>
+```
+  When Led=00h      --> Digital mode, with LED=Off
+  When Led=01h      --> Analog mode, with LED=On/red
+  When Led=02h..FFh --> Ignored (and, in case of dualshock2: set Err=FFh)
+```
+The Key byte can be:<br/>
+```
+  When Key=00h..02h --> Unlock (allow user to push Analog button)
+  When Key=03h      --> Lock (stay in current mode, ignore Analog button)
+  When Key=04h..FFh --> Acts same as (Key AND 03h)
+```
+The Err byte is usually 00h (except, Dualshock2 sets Err=FFh upon Led=02h..FFh;
+older PSX/PSone controllers don't do that).<br/>
+
+#### Config Mode - Command 45h "E" - Get LED State (and Type/constants)
+```
+  Send  01h 45h 00h 00h 00h 00h 00h 00h 00h
+  Reply HiZ F3h 5Ah Typ 02h Led 02h 01h 00h
+```
+Returns two interesting bytes:<br/>
+```
+  Led: Current LED State (00h=Off, 01h=On/red)
+  Typ: Controller Type (01h=PSX/Analog Pad, 03h=PS2/Dualshock2)
+```
+The other bytes might indicate the number of rumble motors, analog sticks, or
+version information, or so.<br/>
+
+#### Config Mode - Command 46h "F" - Get Variable Response A
+```
+  Send  01h 46h 00h ii  00h 00h 00h 00h 00h
+  Reply Hiz F3h 5Ah 00h 00h cc  dd  ee  ff
+```
+When ii=00h --\> returns cc,dd,ee,ff = 01h,02h,00h,0ah<br/>
+When ii=01h --\> returns cc,dd,ee,ff = 01h,01h,01h,14h<br/>
+Otherwise --\> returns cc,dd,ee,ff = all zeroes<br/>
+Note: This is called PadInfoAct in official docs, ii is the actuator (aka
+motor) and the last response byte contains its current drain (10 or 20 units).
+Whereas, Sony inisits that controllers should never exceed 60 units (eg. when
+having more than 2 joypads connected to multitaps).<br/>
+
+#### Config Mode - Command 47h "G" - Get whatever values
+```
+  Send  01h 47h 00h 00h 00h 00h 00h 00h 00h
+  Reply HiZ F3h 5Ah 00h 00h 02h 00h 01h 00h
+```
+Purpose unknown.<br/>
+
+#### Config Mode - Command 4Ch "L" - Get Variable Response B
+```
+  Send  01h 4Ch 00h ii  00h 00h 00h 00h 00h
+  Reply Hiz F3h 5Ah 00h 00h 00h dd  00h 00h
+```
+When ii=00h --\> returns dd=04h.<br/>
+When ii=01h --\> returns dd=07h.<br/>
+Otherwise --\> returns dd=00h.<br/>
+
+#### Config Mode - Command 48h "H" - Unknown (response HiZ F3h 5Ah 4x00h 01h 00h)
+```
+  Send  01h 48h 00h ii  00h 00h 00h 00h 00h
+  Reply HiZ F3h 5Ah 00h 00h 00h 00h ee  00h
+```
+When ii=00h..01h --\> returns ee=01h.<br/>
+Otherwise --\> returns ee=00h.<br/>
+Purpose unknown. The command does not seem to be used by any games.<br/>
+
+#### Config Mode - Command 4Dh "M" - Get/Set RumbleProtocol
+[Controllers - Vibration/Rumble Control](controllersandmemorycards.md#controllers-vibrationrumble-control)<br/>
+
+#### Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?
+#### Config Mode - Command 41h "A" Dualshock2: Get Reply Capabilities
+#### Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol
+[Controllers - Analog Buttons (Dualshock2)](controllersandmemorycards.md#controllers-analog-buttons-dualshock2)<br/>
+
+#### Config Mode - Command 49h "I" - Unused
+#### Config Mode - Command 4Ah "J" - Unused
+#### Config Mode - Command 4Bh "K" - Unused
+#### Config Mode - Command 4Eh "N" - Unused
+#### Config Mode - Command 40h "@" - Unused (except, used by Dualshock2)
+#### Config Mode - Command 41h "A" - Unused (except, used by Dualshock2)
+#### Config Mode - Command 4Fh "O" - Unused (except, used by Dualshock2)
+```
+  Send  01h 4xh 00h 00h 00h 00h 00h 00h 00h
+  Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
+```
+These commands do return a bunch of 00h bytes. These commands do not seem to be
+used by any games (apart from the Dualshock2 commands being used by Dualshock2
+games).<br/>
+
+#### Note
+Something called "Guitar Hero controller" does reportedly also support Config
+commands. Unknown if that thing does have the same inputs & rumble motors
+as normal analog PSX joypads, and if it does return special type values.<br/>
+
+
+
+##   Controllers - Vibration/Rumble Control
 Rumble (aka "Vibration Function") is basically controlled by two previously
 unused bytes of the standard controller Read command.<br/>
 There are two methods to control the rumble motors, the old method is very
 simple (but supports only one motor), the new method envolves a bunch of new
 configuration commands (and supports two motors).<br/>
 ```
-  SCPH-1150 DualAnalog Pad with 1 motor                 ;-old rumble method
-  SCPH-1200 DualAnalog Pad with 2 motors, PSX-design    ;\new rumble method
-  SCPH-110  DualAnalog Pad with 2 motors, PSone-design  ;/
+  SCPH-1150  DualAnalog Pad with 1 motor                  ;-old rumble method
+  SCPH-1200  DualAnalog Pad with 2 motors, PSX-design     ;\new rumble method
+  SCPH-110   DualAnalog Pad with 2 motors, PSone-design   ;/
+  SCPH-10010 DualAnalog Pad with 2 motors, PS2/Dualshock2 ;-plus analog buttons
   Blaze Scorpion Lightgun with rumble      ;\unknow how to control rumble
   Fishing controllers with rumble          ;/
   SCPH-1180 Analog Pad without rumble      ;\unknow if there're config commands
@@ -1282,8 +1445,6 @@ For backwards compatibility, the above old method does also work on SCPH-1200
 and SCPH-110 (for controlling the right/small motor), alternately those newer
 pads can use the config commands (for gaining access to both motors).<br/>
 
-When the controller enters configuration mode, the old rumble method is disabled until a hard reset. Unknown if it's possible to re-enable the old rumble method programmatically.
-
 #### New Method, two motors, with config commands (SCPH-1200, SCPH-110)
 For using the new rumble method, one must unlock the new rumble mode, for that
 purpose Sony has invented a "slightly" overcomplicated protocol with not less
@@ -1291,204 +1452,167 @@ than 16 new commands (the rumble relevant commands are 43h and 4Dh, also,
 command 44h may be useful for activating analog inputs by software, and, once
 when rumble is unlocked, command 42h is used to control the rumble motors).
 Anyways, here's the full command set...<br/>
+[Controllers - Configuration Commands](controllersandmemorycards.md#controllers-configuration-commands)<br/>
+And, the rumble-specific config command is described below...<br/>
 
-#### Normal Mode
+#### Config Mode - Command 4Dh "M" - Get/Set RumbleProtocol
 ```
-  42h "B" Read Buttons (and analog inputs when in analog mode)
-  43h "C" Enter/Exit Configuration Mode (stay normal, or enter)
+  Send  01h 4Dh 00h aa  bb  cc  dd  ee  ff     ;<-- set NEW aa..ff values
+  Reply Hiz F3h 5Ah aa  bb  cc  dd  ee  ff     ;<-- returns OLD aa..ff values
 ```
+Bytes aa,bb,cc,dd,ee,ff control the meaning of the 4th,5th,6th,7th,8th,9th
+command byte in the controller read command (Command 42h).<br/>
+```
+  00h      = Map Right/small Motor (Motor M2) to bit0 of this byte
+  01h      = Map Left/Large Motor (Motor M1) to bit0-7 of this byte
+  02h..FEh = Unknown (can be mapped, maybe for extra motors/outputs)
+  FFh      = Map nothing to this byte
+```
+In practice, one would usually send either one of these command/values:<br/>
+```
+  Send  01h 4Dh 00h 00h 01h FFh FFh FFh FFh    ;enable new method (two motors)
+  Send  01h 4Dh 00h FFh FFh FFh FFh FFh FFh    ;disable motor control
+```
+Alternately, one could swap the motors by swapping values in aa/bb. Or one
+could map the motors anywhere to cc/dd/ee/ff (this will increase the command
+length in digital mode, hence changing digital mode ID from 41h to 42h or 43h).
+Or, one could map further rumble motors or other outputs to the six bytes (if
+any such controller would exist).<br/>
+In the initial state, aa..ff are all FFh, and the controller does then use the
+old rumble control method (with only one motor). However, that old method gets
+disabled once when having messed with config commands (unknown if/how one can
+re-enable the old method by software).<br/>
 
-#### Configuration Mode
-```
-  40h "@" Unknown (response HiZ F3h 5Ah 6x00h)
-  41h "A" Unknown (response HiZ F3h 5Ah 6x00h)
-  42h "B" Read Buttons AND analog inputs (even when in digital mode)
-  43h "C" Enter/Exit Configuration Mode (stay config, or exit)
-  44h "D" Set LED State (analog mode on/off)
-  45h "E" Get LED State (and whatever other status/version values)
-  46h "F" Get Variable Response A (depending on incoming bit)
-  47h "G" Get whatever values (response HiZ F3h 5Ah 00h 00h 02h 00h 01h 00h)
-  48h "H" Unknown (response HiZ F3h 5Ah 00h 00h 00h 00h 01h 00h)
-  49h "I" Unknown (response HiZ F3h 5Ah 6x00h)
-  4Ah "J" Unknown (response HiZ F3h 5Ah 6x00h)
-  4Bh "K" Unknown (response HiZ F3h 5Ah 6x00h)
-  4Ch "L" Get Variable Response B (depending on incoming bit)
-  4Dh "M" Unlock Rumble (and select response length)
-  4Eh "N" Unknown (response HiZ F3h 5Ah 6x00h)
-  4Fh "O" Unknown (response HiZ F3h 5Ah 6x00h)
-```
-
-#### Normal Mode - Command 42h "B" - Read Buttons (and analog inputs when enabled)
-```
-  Send  01h 42h 00h xx  yy  (00h 00h 00h 00h)
-  Reply HiZ id  5Ah buttons ( analog-inputs )
-```
-The normal read command, see Standard Controller chapter for details on buttons
-and analog inputs. The xx/yy bytes have effect only if rumble is unlocked; use
-Command 43h to enter config mode, and Command 4Dh to unlock rumble. Command 4Dh
-has billions of combinations, among others allowing to unlock only one of the
-two motors, and to exchange the xx/yy bytes, however, with the default values,
-xx/yy are assigned like so:<br/>
-```
-  yy.bit0-7 ---> Left/Large Motor M1 (analog slow/fast) (00h=stop, FFh=fastest)
-  xx.bit0   ---> Right/small Motor M2 (digital on/off)  (0=off, 1=on)
-```
-The Left/Large motor starts spinning at circa min=50h..60h, and, once when
-started keeps spinning downto circa min=38h. The exact motor start boundary
-depends on the current position of the weight (if it's at the "falling" side,
-then gravity helps starting), and also depends on external movements (eg. it
-helps if the user or the other rumble motor is shaking the controller), and may
-also vary from controller to controller, and may also depend on the room
-temperature, dirty or worn-out mechanics, etc.<br/>
-
-#### Normal Mode - Command 43h "C" - Enter/Exit Configuration Mode
-```
-  Send  01h 43h 00h xx  00h (zero padded...)
-  Reply HiZ id  5Ah buttons (analog inputs...)
-```
-When issuing command 43h from inside normal mode, the response is same as for
-command 42h (button data) (and analog inputs when in analog mode) (but without
-M1 and M2 parameters). While in config mode, the ID bytes are always "F3h 5Ah"
-(instead of the normal analog/digital ID bytes).<br/>
-
-Entering configuration mode enables the DualShock rumble method and disables the legacy rumble method. Unknown if it's possible to re-enable the old rumble method programmatically.
-
-```
-  xx=00h Stay in Normal mode
-  xx=01h Enter Configuration mode
-```
-
-#### Config Mode - Command 42h "B" - Read Buttons AND analog inputs
-```
-  Send  01h 42h 00h M2  M1  00h 00h 00h 00h
-  Reply HiZ F3h 5Ah buttons  analog-inputs
-```
-Same as command 42h in normal mode, but with forced analog response (ie. analog
-inputs and L3/R3 buttons are returned even in Digital Mode with LED=Off).<br/>
-
-#### Config Mode - Command 43h "C" - Enter/Exit Configuration Mode
-```
-  Send  01h 43h 00h xx  00h 00h 00h 00h 00h
-  Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
-```
-Equivalent to command 43h in normal mode, but returning 00h bytes rather than
-button data, can be used to return to normal mode.<br/>
-```
-  xx=00h Enter Normal mode (Exit Configuration mode)
-  xx=01h Stay in Configuration mode
-```
-Back in normal mode, the rumble motors (if they were enabled) can be controlled
-with normal command 42h. Some controller revisions will only change config mode
-state upon receiving the entire command sequence while others will set it
-immediately on receiving the xx byte. So while aborting the command sequence
-early (i.e. setting JOY_CTRL to 0 after sending xx, which some homebrew software
-does) may work for setting config mode state on some controllers, in practice
-this technique is undefined behavior and use should be avoided.<br/>
-
-#### Config Mode - Command 44h "D" - Set LED State (analog mode on/off)
-```
-  Send  01h 44h 00h val sel 00h 00h 00h 00h
-  Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
-```
-If "sel=02h", then "val" is applied as new LED state (val=00h for LED off aka
-Digital mode, and val=01h for LED on/red aka analog mode).<br/>
-
-Using this command has a side effect of resetting the DualShock rumble configuration to FFh FFh FFh FFh FFh FFh.
-
-#### Config Mode - Command 45h "E" - Get LED State (and whatever values)
-```
-  Send  01h 45h 00h 00h 00h 00h 00h 00h 00h
-  Reply HiZ F3h 5Ah 01h 02h val 02h 01h 00h
-```
-Returns val=00h for LED off, and val=01h for LED on/red. The other values might
-indicate the number of rumble motors, analog inputs, or version information, or
-so.<br/>
-
-#### Config Mode - Command 46h "F" - Get Variable Response A
-```
-  Send  01h 46h 00h xx  00h 00h 00h 00h 00h
-  Reply Hiz F3h 5Ah 00h 00h yy  yy  yy  yy
-```
-Purpose unknown, but seems to be used by some games to identify the controller as a DualShock Analog Controller since Jogcon returns different values. Response varies: If xx=00h then yy=01h,02h,00h,0ah, else if xx=01h then yy=01h,01h,01h,14h. Other values of xx will cause yy = 00h 00h 00h 00h to be returned. Unknown what happens if the other values after xx are modified, but it is likely that the controller will default to yy = 00h 00h 00h 00h. <br/>
-
-#### Config Mode - Command 47h "G" - Get whatever values
-```
-  Send  01h 47h 00h 00h 00h 00h 00h 00h 00h
-  Reply HiZ F3h 5Ah 00h 00h 02h 00h 01h 00h
-```
-Purpose unknown, but seems to be used by some games to identify the controller as a DualShock Analog Controller since Jogcon returns different values. Modifications to the sequence being sent to the controller seem to cause the controller to respond with 00h 00h 00h 00h 00h 00h.<br/>
-
-#### Config Mode - Command 4Ch "L" - Get Variable Response B
-```
-  Send  01h 4Ch 00h xx  00h 00h 00h 00h 00h
-  Reply Hiz F3h 5Ah 00h 00h 00h yy  00h 00h
-```
-Purpose unknown, but as with 46h and 47h, may be used by some games to identify the controller as a DualShock Analog Controller. Response varies: If xx=00h then yy=04h, else if xx=01h then yy=07h. All other xx values and sequences seem to have a 00h 00h 00h 00h 00h 00h response.<br/>
-
-#### Config Mode - Command 4Dh "M" - Set Rumble Configuration (and select response length)
-```
-  Send  01h 4Dh 00h aa  bb  cc  dd  ee  ff
-  Reply Hiz F3h 5Ah <-----old values----->
-```
-Nocash's original notes state that this command unlocks the rumble motors -- however, based on hardware testing, the DualShock rumble mode is unlocked as soon as a controller enters configuration mode. This command just sets the DualShock rumble configuration.
-
-The rumble configuration works as follows: The last 00h byte in the rumble configuration sequence determines which byte in the 42h pad read command will be used for setting the small motor strength. The last 01h byte in the sequence similarly determines which byte will be used for the large motor strength. If either 00h or 01h or both are not present in the configuration sequence, the corresponding motor will not be able to receive any rumble, as expected.
-
-Most games will use 00h 01h FFh FFh FFh FFh, however a number of games will use uncommon sequences. For example, Final Fantasy VIII uses FFh 00h 01h FFh FFh FFh while Armored Core Project Phantasma uses 00h 00h 01h 01h FFh FFh.
-
-Untested Nocash notes:
-The extra halfword(s) increase the transfer length by 1 or 2 halfwords (and
-accordingly, the digital mode ID changes from 41h to 42h or 43h), the
-controller returns 00h bytes for the extra halfwords, in analog mode, the ID
-and transfer length remains unchanged (since it always has extra halfwords for
-analog responses). So, the extra halfwords seem to be output to the controller
-(rather than response data), possibly intended to control additional rumble
-motors or to output data to other hardware features.<br/>
-
-#### Config Mode - Command 48h "H" - Unknown (response HiZ F3h 5Ah 4x00h 01h 00h)
-```
-  Send  01h 48h 00h 00h 00h 00h 00h 00h 00h
-  Reply HiZ F3h 5Ah 00h 00h 00h 00h 01h 00h
-```
-This command does return a bunch of 00h bytes, and one 01h byte. Purpose
-unknown. The command does not seem to be used by any games.<br/>
-
-#### Config Mode - Command 40h "@" - Unknown (response HiZ F3h 5Ah 6x00h)
-#### Config Mode - Command 41h "A" - Unknown (response HiZ F3h 5Ah 6x00h)
-#### Config Mode - Command 49h "I" - Unknown (response HiZ F3h 5Ah 6x00h)
-#### Config Mode - Command 4Ah "J" - Unknown (response HiZ F3h 5Ah 6x00h)
-#### Config Mode - Command 4Bh "K" - Unknown (response HiZ F3h 5Ah 6x00h)
-#### Config Mode - Command 4Eh "N" - Unknown (response HiZ F3h 5Ah 6x00h)
-#### Config Mode - Command 4Fh "O" - Unknown (response HiZ F3h 5Ah 6x00h)
-```
-  Send  01h 4xh 00h 00h 00h 00h 00h 00h 00h
-  Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
-```
-These commands do return a bunch of 00h bytes. Purpose unknown. These commands
-do not seem to be used by any games.<br/>
-
-#### Watchdog Timer
-Caution: Additionally to activating configuration commands, entering config
-mode does also activate a Watchdog Timer which does reset the controller if
-there's been no communication for about 1 second or so. The watchdog timer
-remains active even when returning to normal mode via Exit Config command. The
-reset does disable and lock rumble motors, and switches the controller to
-Digital Mode (with LED=off, and analog inputs disabled). To prevent this, be
-sure to keep issuing joypad reads even when not needing user input (eg. while
-loading data from CDROM).<br/>
-Caution 2: A similar reset occurs when the user pushes the Analog button; this
-is causing rumble motors to be stopped and locked, and of course, the
-analog/digital state gets changed.<br/>
-Caution 3: If config commands were used, and the user does then push the analog
-button, then the 5Ah-byte gets replaced by 00h (ie. responses change from "HiZ
-id 5Ah ..." to "HiZ id 00h ...").<br/>
-Caution 4: Most emulators do not emulate this watchdog functionality
-so any homebrew with analog pad support should ideally also be tested on hardware
-to make sure it doesn't accidentally trigger the watchdog<br/>
+#### Unknown Dualshock2 Vibration
+Dualshock2 does reportedly have "two more levels of vibration", unknown what
+that means and if it's used by any PSX or PS2 games... it might refer to the
+small motor which usually has only 2 levels (on/off) and might have 4 levels
+(fast/med/slow/off) on dualshock2... but, if so, it's unknown how to
+control/unlock that feature.<br/>
+Also, the PSone controller (SCPH-110) appear to have been released shortly
+after Dualshock2, unknown if that means that it might have that feature, too.<br/>
 
 #### Note
 Rumble is a potentially annoying feature, so games that do support rumble
 should also include an option to disable it.<br/>
+
+
+
+##   Controllers - Analog Buttons (Dualshock2)
+Dualshock2 has three new commands (40h,41h,4Fh) for configuring analog buttons.
+Additionally, Command 45h does return a different type byte for Dualshock2.<br/>
+Dualshock2 is a PS2 controller. However, it can be also used with PSX games
+(either by connecting the controller to a PSX console, or by playing a PSX game
+on a PS2 console).<br/>
+The analog button feature is reportedly rarely used by PS2 games (and there
+aren't any PSX games known to use it).<br/>
+
+#### Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?
+```
+  Send  01h 40h 00h Idx Val 00h 00h 00h 00h  ;<-- Set NEW Val, array[Idx]=Val
+  Reply HiZ F3h 5Ah 00h 00h Val 00h 00h 00h  ;<-- Old Val (or FFh when Idx>0Bh)
+```
+Allows to change twelve 3bit values (with Idx=00h..0Bh, and Val=00h..03h).
+Default is Val=02h. Purpose is unknown, the 12 values might be related to the
+12 analog buttons, but there is no noticable difference between Val=0,1,2,3.
+Maybe it does have some subtle effects on things like...<br/>
+```
+  Digital button sensitivity, or Analog button sensitivity, or
+  Analog button bit-depth/conversion speed, or something else?
+```
+
+#### Config Mode - Command 41h "A" Dualshock2: Get Reply Capabilities
+```
+  Send  01h 41h 00h 00h 00h 00h 00h 00h 00h
+  Reply HiZ F3h 5Ah FFh FFh 03h 00h 00h 00h
+```
+This seems to return a constant bitmask indicating which reply bytes can be
+enabled/disabled via Command 4Fh (ie. 3FFFFh = 18 bits).<br/>
+
+#### Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol
+```
+  Send  01h 41h 00h aa  bb  cc  dd  ee  ff
+  Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
+```
+This can output some 48bit value (bit0=aa.bit0, bit47=ff.bit7), used to
+enable/disable Reply bytes in the controller read command (Command 42h).<br/>
+```
+  -      HighZ                   (always transferred)      1st byte
+  -      ID/Mode/Len             (always transferred)      2nd byte
+  -      5Ah                     (always transferred)      3rd byte
+  0      LSB of digital buttons  (0=No, 1=Yes)             4th byte
+  1      MSB of digital buttons  (0=No, 1=Yes)             5th byte
+  2      RightJoyX               (0=No, 1=Yes)             6th byte
+  3      RightJoyY               (0=No, 1=Yes)             7th byte
+  4      LeftJoyX                (0=No, 1=Yes)             8th byte
+  5      LeftJoyY                (0=No, 1=Yes)             9th byte
+  6      DPAD Right              (0=No, 1=Yes) button 00h  10th byte
+  7      DPAD Left               (0=No, 1=Yes) button 01h  11th byte
+  8      DPAD Uup                (0=No, 1=Yes) button 02h  12th byte
+  9      DPAD Down               (0=No, 1=Yes) button 03h  13th byte
+  10     Button /\               (0=No, 1=Yes) button 04h  14th byte
+  11     Button ()               (0=No, 1=Yes) button 05h  15th byte
+  12     Button ><               (0=No, 1=Yes) button 06h  16th byte
+  13     Button []               (0=No, 1=Yes) button 07h  17th byte
+  14     Button L1               (0=No, 1=Yes) button 08h  18th byte
+  15     Button R1               (0=No, 1=Yes) button 09h  19th byte
+  16     Button L2               (0=No, 1=Yes) button 0Ah  20th byte
+  17     Button R2               (0=No, 1=Yes) button 0Bh  21st byte
+  18-39  Must be 0 (otherwise command is ignored)
+  40-47  Unknown (no effect?)
+```
+Usually, one would use one of the following command/values:<br/>
+```
+  Send  01h 41h 00h 03h 00h 00h 00h 00h 00h  Digital buttons
+  Send  01h 41h 00h 3Fh 00h 00h 00h 00h 00h  Digital buttons + analog sticks
+  Send  01h 41h 00h FFh FFh 03h 00h 00h 00h  Enable all 18 input bytes
+```
+The transfer order is 1st..21st byte as shown above (unless some bits are
+cleared, eg. if bit0-5=0 and bit6=1 then DPAD Right would appear as 4th byte
+instead of 10th byte). The command length increases/decreases depening on the
+number of enabled bits. The transfer length is always 3+N\*2 bytes (including a
+00h padding byte when the number of enabled bits is odd). The analog mode ID
+byte changes depending on number of halfwords.<br/>
+CAUTION: Sending Command 44h does RESET the Command 4Fh setting (either to
+DigitalMode=000003h or AnalogMode=00003Fh; same happens when toggling mode via
+Analog button).<br/>
+
+Note: Some Dualshock2 Config Mode commands do occassionally send 00h, 5Ah, or
+FFh as last (9th) reply byte (unknown if that is some error/status thing, or
+garbage).<br/>
+
+#### Analog Button Sensitivity
+The pressure sensors are rather imprecise and results may vary on various
+factors, including the pressure angle.<br/>
+```
+  00h       Button released
+  01h..2Fh  Normal (soft) pressure
+  30h..FEh  Medium pressure
+  FFh       Hard pressure
+```
+Software can safely distinguish between soft and hard pressure.<br/>
+Medium pressure is less predictably: The values do not increase linearily, it's
+difficult to apply a specific amount of medium pressure (such like 80h..9Fh),
+increasing pressure may sometimes jump from 24h to FFh, completely skipping the
+medium range.<br/>
+Relying on the medium range might work for accelleration buttons (where the
+user could still adjust the pressure when the accelleration is too high or too
+low); but it would be very bad practice to assign irreversible actions to
+medium pressure (such like Soft=Load, Medium=Save, Hard=Quit).<br/>
+
+#### Digital Button Sensitivity
+Digital inputs are converting the analog inputs as so:<br/>
+```
+  Analog=00h      --> not pressed
+  Analog=01h..FFh --> pressed (no matter if soft, medium, or hard pressure)
+```
+Digital inputs are working even when also having analog input enabled for the
+same button.<br/>
+
+#### See also
+[https://gist.github.com/scanlime/5042071] - tech (=mentions unknown details)
+[https://store.curiousinventor.com/guides/PS2/] - guide (=omits unknown stuff)
+
 
 
 ##   Controllers - Dance Mats
@@ -1578,20 +1702,6 @@ side-steps. Not to mention that it would melt when dropping a burning cigarette
 on it. Stay Away!<br/>
 
 
-## Controllers - Pop'n Controllers
-Controllers used for Konami's Pop'n Music series. At least a few different versions of the controller (Pop'n Controller, Pop'n Controller 2, larger arcade-size version, possibly others and in different color variations) have been released for the PS1 and PS2. Unknown if the controllers released in the PS2 era have any additional commands not present in the original Pop'n Controller, but they are supposedly fully compatible with PS1 Pop'n Music games.
-
-Pop'n Controllers report as digital controllers (ID byte 41h), but the left, right, and down d-pad controls are not connected to any physical buttons and are always reported as pressed (in the first transferred button byte, bits 5-7 are always 0). Pop'n Music games check these bits to determine if a Pop'n Controller is connected and will change the in-game controls accordingly if so.
-
-## Controllers - Densha de Go! / Jet de Go! Controllers
-Controllers used for Taito's Densha de Go! and Jet de Go! series.
-Unknown what method is being used by Densha de Go! and Jet de Go! games for detecting these controllers.
-
-- The workings of Densha de Go! PSX controllers have been extensively researched in the [ddgo-controller-docs](https://github.com/MarcRiera/ddgo-controller-docs) repo.
-- The Jet de Go! PSX controller comes in gray and black color.
-  It seems to work the same as an analog controller and supports vibration.
-  The steering wheel is mapped to the left stick (wheel rotation as horizontal, wheel raise/lower as vertical axis).
-  The thrust throttle seems mapped to the right stick Y-axis full range (so half throttle matches vertically centered right stick).
 
 ##   Controllers - Fishing Controllers
 The fishing rods are (next to lightguns) some of the more openly martial
@@ -1630,8 +1740,6 @@ dynamite: it's okay to kill them cause they don't have any feelings."<br/>
   Umi no Nushi Tsuri-Takarajima ni Mukatte (1999)(Victor)(BANC-0001,SLPH-00100)
   Winning Lure (Hori) (2000) (for Hori HPS-97 controller)  AKA HPS-98 ?
 ```
-For more see: http://www.gamefaqs.com/ps/list-109
-(sports-\>nature-\>fishing)<br/>
 
 #### Logos on CD Covers
 US Fishing games should have a "SLUH-00063" logo. European Fishing games don't
@@ -1660,7 +1768,7 @@ of the SLPH-00100.<br/>
   Bandai Fishing Controller BANC-0001 (dark gray/blue) (has less buttons than ASCII/agetec)
   Interact Fission (light gray/blue)(similar to ASCII/agetec, 2 extra buttons?)
   Naki (transparent blue) (looks like a clone of the ASCII/agetec controllers)
-  Hori Fighting Rod HPS-97/HPS-98 (black/gray) (a fishing rod attached to a plastic fish)
+  Hori HPS-97/HPS-98 (black/gray) (a fishing rod attached to a plastic fish)
 ```
 Of these, the ASCII/agetec controllers seem to be most popular (and most
 commonly supported). The Bandai contoller is also supported by a couple of
@@ -1767,27 +1875,141 @@ Unknown how the Hori thing works.<br/>
            '--...___ cable 1
 ```
 
-## Controllers - Stepper Controller
-A controller in the form of a stepper machine.
-Comes in an orange variant (TW-20001) and a blue variant (TW-20002).
-Was available for purchase as a standalone controller or as a bundle with Happy Jogging in Hawaii.
-Requires an analog controller to be connected to the stepper in order to work.
-The stepper forces the analog controller to switch to analog mode.
-With some (cheap?) third-party Playstation controllers, this might actually result in permanently activating the controller's rumble.
-The stepper overwrites the left stick X-axis values with the position of the stepper pedals:
-- Left stepper pedal fully down equals to left stick fully to left
-- Right stepper pedal fully down equals to left stick fully to right
-- Left and right stepper pedal equal height matches left stick horizontally centered
-Further details unknown.
+##   Controllers - PS2 DVD Remote
+An accessory released by Sony for the PS2, consisting of an infrared remote
+control and a receiver dongle that plugs into a controller port. The remote
+features all standard controller buttons (including L3/R3) as well as additional
+controls for the PS2's DVD player.<br/>
+The receiver behaves very differently from any other known device: it does not
+respond to any command until a button on the remote is pressed. When a valid IR
+code is received it will start accepting commands for about 2000-2500 ms, then
+become unresponsive again. It will initially behave as two different devices,
+one with address 01h acting like a standard digital controller and the other
+with address 61h exposing IR codes as received from the remote.<br/>
 
+#### Command 04h - IR poll (and disable controller mode)
 ```
-  Happy Diet (SLPS-03182)
-  Happy Jogging in Hawaii (SLPS-03306)
-  Tonde! Tonde! Diet Stepper Action Game (SLPS-03347)
-  Undou Busoku Kaishou! Punch de Diet (SLPS-03380)
-  Chasing de Diet (unreleased)
-  Happy Jogging in Paris (unreleased)
+  Send Reply Comment
+  61h  N/A   IR receiver address
+  04h  12h   Receive ID bits 0-7, send command byte
+  00h  5Ah   Receive ID bits 8-15
+  00h  len   Receive code length (20 for DVD remote, 0 if no button is pressed)
+  00h  code  Receive code bits 16-23
+  00h  code  Receive code bits 8-15
+  00h  code  Receive code bits 0-7
 ```
+Returns the IR code of the currently pressed button and its length in bits, or
+000000h if no button is pressed (and the receiver is still responding to
+commands). Received codes seem to "stick around" for some time even after the
+button has been released; when a button is held down the remote resends its code
+every 45 ms, so the receiver presumably keeps returning the same code for about
+50 ms as a debouncing measure.<br/>
+The code is returned LSB first and MSB aligned, i.e. it should be right-shifted
+by (24 - len) bits to obtain the "raw" code as sent by the remote. For
+instance:<br/>
+```
+  Code sent by remote (first bit after preamble to last bit):
+    0000 0000 1011 1001 0010
+  Code sent by remote (MSB to LSB):
+    0100 1001 1101 0000 0000
+  Data returned by receiver:
+    code[16:23] = 01001001
+    code[8:15]  = 11010000
+    code[0:7]   = 0000xxxx ; xxxx = (24 - len) bits of padding (all zeroes)
+  Reassembled MSB-aligned code (MSB to LSB):
+    0100 1001 1101 0000 0000 xxxx
+```
+The receiver will stop acting like a digital controller and replying to address
+01h after this command is sent for the first time. Command 06h can be used to
+restore controller functionality (see below), unknown if there is also a
+watchdog to automatically restore controller mode if no IR poll commands are
+issued.<br/>
+
+#### Command 06h, 03h - Re-enable controller mode
+```
+  Send Reply Comment
+  61h  N/A   IR receiver address
+  06h  12h   Receive ID bits 0-7, send command byte 1
+  03h  5Ah   Receive ID bits 8-15, send command byte 2
+  00h  ?     Receive unknown data, send padding
+  00h  ?
+  00h  ?
+  00h  ?
+```
+
+#### Command 0Fh - Unknown
+This command exists (the receiver will keep pulling /ACK low) but its purpose is
+currently unknown. It could possibly be an alternate poll command that does not
+disable controller mode.<br/>
+
+#### IR code format
+The DVD remote always emits 20-bit IR codes. The receiver does return the length
+of the code, but it's unclear if it can receive codes with lengths other than 20
+bits.<br/>
+All non-controller buttons on the remote are arranged in an 8x16 button matrix,
+shown below (transposed for readability):<br/>
+
+| Col | Row 0  | Row 1    | Row 2  | Row 3    | Row 4 | Row 5   | Row 6    | Row 7 |
+| --: | :----- | :------- | :----- | :------- | :---- | :------ | :------- | :---- |
+|   0 | 1      |          |        | Previous |       |         | Slow <<  |       |
+|   1 | 2      |          |        | Next     |       |         | Slow >>  |       |
+|   2 | 3      |          |        | Play     |       |         |          |       |
+|   3 | 4      |          |        | Scan <<  |       |         | Subtitle |       |
+|   4 | 5      |          |        | Scan >>  |       | Display | Audio    |       |
+|   5 | 6      |          |        | Shuffle  |       |         | Angle    |       |
+|   6 | 7      |          |        |          |       |         |          |       |
+|   7 | 8      |          |        |          |       |         |          |       |
+|   8 | 9      |          | Time   | Stop     |       |         |          |       |
+|   9 | 0      |          |        | Pause    |       |         |          | Up    |
+|  10 |        | Title    | A<->B  |          |       |         |          | Down  |
+|  11 | Enter  | DVD Menu |        |          |       |         |          | Left  |
+|  12 |        |          | Repeat |          |       |         |          | Right |
+|  13 |        |          |        |          |       |         |          |       |
+|  14 | Return |          |        |          |       |         |          |       |
+|  15 | Clear  | Program  |        |          |       |         |          |       |
+
+Each button in the matrix is assigned a code as follows:<br/>
+```
+  code = 49D00h OR (row << 4) OR (column) ; sent LSB first
+
+  ; where row = 0..7, column = 0..15
+```
+Controller buttons are handled separately and assigned different codes:<br/>
+```
+  code = DAD50h OR (id) ; sent LSB first
+
+  ; where id = 0..15, index of the bit that would normally represent the button
+  ; in the bitfield returned by a controller poll command
+  ; (i.e. 0=Select, 1=L3, 2=R3, 3=Start, 4=Up, 5=Right, etc.)
+```
+Arrow buttons are a special case, as they are controller buttons but also have
+matrix codes assigned. For those the remote alternates between both codes (see
+below).<br/>
+
+#### Low-level IR protocol
+The remote emits IR pulses modulated with a 38 kHz carrier, as most remotes do.
+Codes are sent as a 2460 µs "preamble" pulse followed by 24 data pulses, each of
+which can be either 1250 µs (if the respective bit is 1) or 650 µs (if the
+respective bit is 0) long. After each pulse including the preamble, the remote
+waits 530 µs before sending the next pulse.<br/>
+Every code is always sent at least 3 times in a row (more if the button is held
+down but not necessarily a multiple of 3), approximately every 45 ms. For arrow
+buttons the matrix code is sent 3 times first, then the respective controller
+button code is sent 3 times, then the sequence repeats until the button is
+released (with the total number of codes sent always being a multiple of 6 in
+this case).<br/>
+
+#### Built-in IR receivers
+In later PS2 models, Sony integrated the IR receiver into the console. Assuming
+the built-in receivers used the same circuitry as the external dongle, this may
+explain its weird behavior: the receiver was likely designed to be wired in
+parallel with one of the controller ports, and to be unresponsive until the
+remote is actually in use to avoid interfering with another controller plugged
+into the same port. Whether or not the integrated receivers are connected this
+way has not been confirmed.<br/>
+There is a second revision of the DVD remote with power and eject buttons, meant
+to be used with the PS2 models that have a built-in receiver. Weirdly enough,
+however, it seems to be incompatible with the older receiver dongle.<br/>
 
 ##   Controllers - I-Mode Adaptor (Mobile Internet)
 The I-Mode Adaptor cable (SCPH-10180) allows to connect an I-mode compatible
@@ -1822,6 +2044,144 @@ the PSX, at least it's depicted like so on the CD cover). This is apparently
 something different than the SCPH-10180 controller-port cable. Unknown what it
 is exactly - probably some mobile internet connection too, maybe also using
 I-mode, or maybe some other protocol.<br/>
+
+
+
+##   Controllers - Keyboards
+There isn't any official retail keyboard for PSX, however, there is a shitload
+of obscure ways to connect keyboards...<br/>
+
+#### Sony SCPH-2000 PS/2 Keyboard/Mouse Adaptor (prototype/with cable) (undated)
+#### Sony SCPH-2000 PS/2 Keyboard/Mouse Adaptor (without cable) (undated)
+A PS/2 to PSX controller port adaptor. Maybe for educational Lightspan titles?<br/>
+There are two hardware variants of the adaptor:<br/>
+```
+  Adaptor with short cable to PSX-controller port (and prototype marking)
+  Adaptor without cable, directly plugged into controller port (final version?)
+```
+Unknown ^how to access those adaptors, and unknown if the two versions differ
+at software side. There seem to be not much more than a handful of people
+owning that adaptors, and none of them seems to know how to use it, or even how
+to test if it's working with existing software...<br/>
+- Keyboard reading might work with the Online Connection CD.<br/>
+- Mouse reading might work with normal mouse compatible PSX games.<br/>
+
+#### Lightspan Online Connection CD Keyboard (1997)
+The Online Connection CD is a web browser from the educational Lightspan
+series, the CD is extremly rare (there's only one known copy of the disc).<br/>
+The thing requires a dial-up modem connected to the serial port (maybe simply
+using the same RS232 adaptor as used by Yaroze). User input can be done via
+joypad, or optionally, via some external keyboard (or keyboard adaptor)
+hardware:<br/>
+```
+  Send  01h 42h 00h 00h 00h 00h 00h 00h 00h 00h 00h 00h 00h 00h 06h
+  Reply HiZ 96h 5Ah num dat dat dat dat dat dat dat dat dat dat dat
+```
+The num byte indicates number of following scancodes (can be num=FFh, maybe
+when no keyboard connected?, or num=00h..0Bh for max 11 bytes, unless the last
+some bytes should have other meaning, like status/mouse data or so).<br/>
+The keyboard scancodes are in "PS/2 Keyboard Scan Code Set 2" format.<br/>
+The binary contains some (unused) code for sending data to the keyboard by
+changing the 4th-11th byte, and resuming normal operation by setting 4th and
+11th byte back to zero:<br/>
+```
+  Send  ..  ..  ..  01h xxh FFh FFh FFh FFh FFh 00h ..  ..  ..  ..
+  Send  ..  ..  ..  00h ..  ..  ..  ..  ..  ..  00h ..  ..  ..  ..
+```
+Maybe 4th and 11th byte are number of following bytes, with xxh being some
+command, and FFh's just being bogus padding; the xxh looks more like an
+incrementing value though.<br/>
+Despite of the mouse-based GUI, the browser software doesn't seem to support
+mouse hardware (neither via PS/2 mice, nor PSX mice). Instead, the mouse arrow
+can be merely moved via joypad's DPAD, or (in a very clumsy fashion) via
+keyboard cursor keys.<br/>
+Note: The browser uses SysEnqIntRP to install some weird IRQ handler that
+forcefully aborts all controller (or memory card) transfers upon Vblank.
+Unknown if that's somehow required to bypass bugs in the keyboard hardware. The
+feature is kinda dangerous for memory card access (especially with fast memcard
+access in nocash kernel, which allows to transfer more than one sector per
+frame).<br/>
+
+#### Spectrum Emulator Keyboard Adaptor (v1/serial port) (undated)
+Made by Anthony Ball. [http://www.sinistersoft.com/psxkeyboard]
+
+```
+  [1F801058h]=00CEh  ;SIO_MODE 8bit, no parity, 2 stop bits (8N2)
+  [1F80105Ah]=771Ch  ;SIO_CTRL rx enable (plus whatever nonsense bits)
+  [1F80105Eh]=006Ch  ;SIO_BAUD 19200 bps
+  RX   Keyboard Scancode (same ASCII-style as in later versions?)
+  CTS  Caps-Lock state
+  DSR  Num-Lock state
+```
+
+#### Spectrum Emulator Keyboard & Sega Sticks Adaptor (v2/controller port) (2000)
+Made by Anthony Ball. [http://www.sinistersoft.com/psxkeyboard]
+
+This adaptor can send pad/stick data,<br/>
+```
+  Send  01h 42h 00h  0h 0h
+  Reply HiZ 41h 5Ah  PadA
+```
+as well as pad/sticks+keyboard data,<br/>
+```
+  Send  01h 42h 00h  0h 0h 0h 0h 0h 0h 0h 0h  00h 00h   0h 0h 0h 0h 0h 0h
+  Reply HiZ E8h 5Ah  PadA  PadB  PadC  PadD   Ver Lock  Buffer(0..5)
+```
+The above mode(s) can be switched via ACPI Power/Sleep/Wake keys (on keyboards
+that do have such keys).<br/>
+```
+  Version=1     ; version number
+  0  SCROLL          ; scroll lock on
+  1  NUM             ; num lock on
+  2  CAPS            ; caps lock on
+  3  DONETEST        ; keyboard has just done a selftest
+  4  EMUA            ; emulation mode a
+  5  EMUB            ; emulation mode b
+```
+For whatever reason, the PS/2 scancodes are translated to ASCII-style scancode
+values (with bit7=KeyUp flag):<br/>
+```
+  01   11 12 13 14  15 16 17 18  19 1A 1B 1C  1D 69 1F
+  60 21 22 68 24 25 5E 26 2A 28 29 5F 3D  2D  0B 0E 0F  67 2F 1E 2D
+  27  51 57 45 52 54 59 55 49 4F 50 5B 5D 0D  10 61 62  37 38 39
+  3B   41 53 44 46 47 48 4A 4B 4C 3A 40 23              34 35 36 2B
+  02 5C 5A 58 43 56 42 4E 4D 3C 3E 3F     03     63     31 32 33
+  04 05 06           20          07 08 09 0A  65 64 66  30    2E 6A
+```
+BUG: The thing conflicts with memory cards: It responds to ANY byte with value
+01h (it should do so only if the FIRST byte is 01h).<br/>
+
+#### Homebrew PS/2 Keyboard/Mouse Adaptor (undated/from PSone era)
+```
+  Send  01h 42h 00h 00h 00h 00h 00h
+  Reply HiZ 12h 5Ah key flg dx  dy
+```
+flg:<br/>
+```
+  bit0-1 = Always 11b (unlike Sony mouse)
+  bit2 = Left Mouse Button  (0=Pressed, 1=Released)
+  bit3 = Right Mouse Button (0=Pressed, 1=Released)
+  bit4-5 = Always 11b (like Sony mouse)
+  bit6 = Key Release  (aka F0h prefix) (0=Yes)
+  bit7 = Key Extended (aka E0h prefix) (0=Yes)
+```
+Made by Simon Armstrong. This thing emulates a standard PSX Mouse (and should
+thus work with most or all mouse compatible games). Additionally, it's sending
+keyboard flags/scancodes via unused mouse button bits.<br/>
+
+#### Runix hardware add-on USB Keyboard/Mouse Adaptor (2001) (PIO extension port)
+Runix is a homebrew linux kernel for PSX, it can be considered being the holy
+grail of the open source scene because nobody has successfully compiled it in
+the past 16 years.<br/>
+- USB host controller SL811H driver with keyboard and mouse support;<br/>
+- RTC support.<br/>
+file: drivers/usb/sl811h.c<br/>
+
+#### TTY Console
+The PSX kernel allows to output "printf" debug messages via stdout. In the
+opposite direction, it's supporting to receive ASCII user input via
+"std\_in\_gets" (there isn't any software actually using that feature though,
+except maybe debug consoles like DTL-H2000).<br/>
 
 
 
@@ -1876,15 +2236,8 @@ BIOS side, this is supported as "std\_in".<br/>
 ```
   SCPH-4010 VPick (guitar-pick controller) (for Quest for Fame, Stolen Song)
 ```
+SLPH-0001 (nejicon)<br/>
 BANDAI "BANC-0002" - 4 Buttons (Triangle, Circle, Cross, Square) (nothing more)<br/>
-
-#### SCPH-2000 Keyboard/Mouse adapter
-A PS/2 to PSX controller port adaptor, for educational Lightspan titles.<br/>
-There are two variants of the adaptor:<br/>
-```
-  Adaptor with short cable to PSX-controller port (and prototype marking)
-  Adaptor without cable, directly plugged into controller port (final version?)
-```
 
 #### Joystick
 ```
@@ -1896,8 +2249,8 @@ There are two variants of the adaptor:<br/>
    ___|    |___________________________|    |___   Not sure if all buttons
   |   |    | SEL STA              =?=  |    |   |  are shown at their
   |   |    |                           |    |   |  correct locations?
-  |   |    |_         []   /\         _|    |   |
-  |  _|     /    L1             R1    \     |_  |
+  |   |    |_         []   /\         _|    |   |    (drawing is based on
+  |  _|     /    L1             R1    \     |_  |    below riddle/lyrics)
   |  \_____/          X     O          \_____/  |
   |   /___\      L2             R2      /___\   |
   |                                             |
@@ -1918,13 +2271,38 @@ There are two variants of the adaptor:<br/>
     not a button like on dual shock.
 ```
 
+#### MX4SIO
+The MX4SIO is a homebrew microSD card adapter for the PS2 that plugs into a
+memory card slot, taking advantage of the fact that SD cards support an SPI mode
+which is more or less compatible with SIO0. The adapter is completely passive
+and has the card wired up as follows:<br/>
 
+| uSD pin | Name         | Wired to MC pin |
+| ------: | :----------- | :-------------- |
+|       1 | `D2`/`NC`    | -               |
+|       2 | `D3`/`/CS`   | `/CS`           |
+|       3 | `CMD`/`MOSI` | `CMD`/`MOSI`    |
+|       4 | `VCC`        | `+3.5V`         |
+|       5 | `SCK`        | `SCK`           |
+|       6 | `GND`        | `GND`, `/ACK`   |
+|       7 | `D0`/`MISO`  | `DAT`/`MISO`    |
+|       8 | `D1`/`NC`    | -               |
+
+Unfortunately, this design has a fatal flaw that makes it unusable as-is on the
+PS1: /ACK is permanently shorted to ground, taking down the entire controller
+bus. However, it should be possible to use the MX4SIO on a PS1 with custom
+driver code once the MX4SIO's /ACK pin is masked out with some tape, or if no
+other controllers or memory cards are plugged in.<br/>
+Note that, as SD cards do not employ the addressing scheme used by standard
+controllers and memory cards, the MX4SIO should get its own dedicated /CSn pin
+and not share the port with a controller (i.e. if the MX4SIO is plugged in slot
+2, then controller port 2 shall be left unused).<br/>
 
 ##   Memory Card Read/Write Commands
 #### Reading Data from Memory Card
 ```
   Send Reply Comment
-  81h  N/A   Memory Card Access (unlike 01h=Controller access), dummy response
+  81h  N/A   Memory card address
   52h  FLAG  Send Read Command (ASCII "R"), Receive FLAG Byte
   00h  5Ah   Receive Memory Card ID1
   00h  5Dh   Receive Memory Card ID2
@@ -1948,7 +2326,7 @@ sector number).<br/>
 #### Writing Data to Memory Card
 ```
   Send Reply Comment
-  81h  N/A   Memory Card Access (unlike 01h=Controller access), dummy response
+  81h  N/A   Memory card address
   57h  FLAG  Send Write Command (ASCII "W"), Receive FLAG Byte
   00h  5Ah   Receive Memory Card ID1
   00h  5Dh   Receive Memory Card ID2
@@ -1964,7 +2342,7 @@ sector number).<br/>
 #### Get Memory Card ID Command
 ```
   Send Reply Comment
-  81h  N/A   Memory Card Access (unlike 01h=Controller access), dummy response
+  81h  N/A   Memory card address
   53h  FLAG  Send Get ID Command (ASCII "S"), Receive FLAG Byte
   00h  5Ah   Receive Memory Card ID1
   00h  5Dh   Receive Memory Card ID2
@@ -1982,7 +2360,7 @@ might be number of sectors (0400h) and sector size (0080h) or whatever.<br/>
 #### Invalid Commands
 ```
   Send Reply Comment
-  81h  N/A   Memory Card Access (unlike 01h=Controller access), dummy response
+  81h  N/A   Memory card address
   xxh  FLAG  Send Invalid Command (anything else than "R", "W", or "S")
 ```
 Transfer aborts immediately after the faulty command byte, or, occasionally

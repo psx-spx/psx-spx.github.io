@@ -88,6 +88,12 @@
   SCPH-10180K DoCoMo I-Mode Adaptor Cable (for internet via mobile phones)
 ```
 
+#### Sony's own hardware (for PS2, can be used with PSX/PSone)
+```
+  SCPH-10150 PS2 DVD remote
+  SCPH-10160 IR receiver dongle for PS2 DVD remote
+```
+
 #### Sony's own devkits
 ```
   DTL-H201A Graphic Artist Board (ISA bus) (with NTSC video out)

@@ -29,9 +29,10 @@ To discuss the contents of this document, or hang out with likely minded people 
 [DMA Channels](dmachannels.md)<br/>
 [Timers](timers.md)<br/>
 [CDROM Drive](cdromdrive.md)<br/>
+[CDROM File Formats](cdromfileformats.md)<br/>
 [Controllers and Memory Cards](controllersandmemorycards.md)<br/>
 [Pocketstation](pocketstation.md)<br/>
-[Serial Port (SIO)](serialportsio.md)<br/>
+[Serial Interfaces (SIO)](serialinterfacessio.md)<br/>
 [Expansion Port (PIO)](expansionportpio.md)<br/>
 [Memory Control](memorycontrol.md)<br/>
 [Unpredictable Things](unpredictablethings.md)<br/>

@@ -883,8 +883,8 @@ burning functions). PU-9 boards boards seem to use a similar PROM (with some
 sticker on it).<br/>
 DTL-H2000 uses 80pin CXP82300 chip with socketed piggyback 32pin EPROM - that
 chip is a Sony SPC700 CPU, not a Motorola HC05 CPU. Accordingly there's no
-Motorola Bootstrap mode in it, but of course one could simply dump the EPROM
-with standard eprom utilities, but nobody did do so yet).<br/>
+Motorola Bootstrap mode in it, but of course one can simply dump the EPROM with
+standard eprom utilities, as done by TriMesh).<br/>
 
 
 
@@ -1174,10 +1174,10 @@ set...?<br/>
 ```
   0-2 HINTSTS  Pending Host Interrupt (INT1..INT7, or 0=None/All acknowledged)
   3   DMABUSY  DMA Busy (0=Data FIFO Empty and HXFRC=0, 1=Data Transfer Busy)
-  4   PRMRRDY  Paramter Read Ready (0=Parameter FIFO Empty, 1=Ready/Not Empty)
-  5   RSLEMPT  Result Empty        (0=Response FIFO Not Empty, 1=Empty)
-  6   RSLWRDY  Result Write Ready  (0=Response FIFO Full, 1=Ready/Not Full)
-  7   BUSYSTS  Command Busy Status (0=Command Not Empty, 1=Ack'ed by CLRBUSY)
+  4   PRMRRDY  Parameter Read Ready (0=Parameter FIFO Empty, 1=Ready/Not Empty)
+  5   RSLEMPT  Result Empty         (0=Response FIFO Not Empty, 1=Empty)
+  6   RSLWRDY  Result Write Ready   (0=Response FIFO Full, 1=Ready/Not Full)
+  7   BUSYSTS  Command Busy Status  (0=Command Not Empty, 1=Ack'ed by CLRBUSY)
 ```
 
 #### 0Ah - CLRCTL - Clear Control (W)
@@ -1185,9 +1185,9 @@ set...?<br/>
   0   RESYNC   Sync with CD DSP (0=No change, 1=Resync, eg. after speed change)
   1-3 "L"      Reserved (should be 0)
   4   RTADPCLR Abort Real-time ADPCM (0=No Change, 1=Abort; when ADPMNT.7=0)
-  5   CLRRSLT  Clear Reply FIFO    (0=No change, 1=Acknowledge; clear FIFO)
-  6   CLRBUSY  Acknowledge Command (0=No change, 1=Acknowledge; clear BUSYSTS)
-  7   CHPRST   Chip Reset          (0=No change, 1=Do Chip Initialization)
+  5   CLRRSLT  Clear Reply FIFO     (0=No change, 1=Acknowledge; clear FIFO)
+  6   CLRBUSY  Acknowledge Command  (0=No change, 1=Acknowledge; clear BUSYSTS)
+  7   CHPRST   Chip Reset           (0=No change, 1=Do Chip Initialization)
 ```
 
 #### 07h - INTSTS - Interrupt Status (R) - (0=No, 1=IRQ)

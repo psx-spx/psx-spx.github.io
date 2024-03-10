@@ -114,18 +114,19 @@ This command is typically used to do a quick clear, as it'll be faster to run
 than an equivalent Render Rectangle command.
 
 #### VRAM Overview / VRAM Addressing
-VRAM is 1MByte (not mapped to the CPU bus) (it can be read/written only via I/O
-or DMA). The memory is used for:<br/>
+VRAM can be 1 MB or 2 MB (not mapped to the CPU bus) (it can be read/written
+only via I/O or DMA). The memory is used for:<br/>
 ```
   Framebuffer(s)      ;Usually 2 buffers (Drawing Area, and Display Area)
   Texture Page(s)     ;Required when using Textures
   Texture Palette(s)  ;Required when using 4bit/8bit Textures
 ```
-The 1MByte VRAM is organized as 512 lines of 2048 bytes. It is accessed via
-coordinates, ranging from (0,0)=Upper-Left to (N,511)=Lower-Right.<br/>
+1 MB VRAM is laid out as 512 lines of 2048 bytes each. 2 MB VRAM (only present
+on some arcade boads, not on consoles) is laid out as 1024 lines instead. It is
+accessed via coordinates, ranging from (0,0)=Upper-Left to (N,1023)=Lower-Right.<br/>
 ```
   Unit  = 4bit  8bit  16bit  24bit   Halfwords   | Unit   = Lines
-  Width = 4096  2048  1024   682.66  1024        | Height = 512
+  Width = 4096  2048  1024   682.66  1024        | Height = 512/1024
 ```
 The horizontal coordinates are addressing memory in
 4bit/8bit/16bit/24bit/halfword units (depending on what data formats you are
@@ -356,9 +357,10 @@ This attribute is used in all Textured-Polygons commands.<br/>
 This attribute is used in all Textured Polygon/Rectangle commands. Of course,
 it's relevant only for 4bit/8bit textures (don't care for 15bit textures).<br/>
 ```
-  0-5      X coordinate X/16  (ie. in 16-halfword steps)
-  6-14     Y coordinate 0-511 (ie. in 1-line steps)
-  15       Unknown/unused (should be 0)
+  0-5    X coordinate X/16  (ie. in 16-halfword steps)
+  6-14   Y coordinate 0-511 (ie. in 1-line steps)  ;\on v0 GPU (max 1 MB VRAM)
+  15     Unused (should be 0)                      ;/
+  6-15   Y coordinate 0-1023 (ie. in 1-line steps) ;on v2 GPU (max 2 MB VRAM)
 ```
 Specifies the location of the CLUT data within VRAM.<br/>
 
@@ -370,7 +372,7 @@ Specifies the location of the CLUT data within VRAM.<br/>
   7-8   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved);GPUSTAT.7-8
   9     Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled) ;GPUSTAT.9
   10    Drawing to display area (0=Prohibited, 1=Allowed)          ;GPUSTAT.10
-  11    Texture page Y Base 2 (N*512) (only for 2MB VRAM)          ;GPUSTAT.15
+  11    Texture page Y Base 2 (N*512) (only for 2 MB VRAM)         ;GPUSTAT.15
   12    Textured Rectangle X-Flip   (BIOS does set this bit on power-up...?)
   13    Textured Rectangle Y-Flip   (BIOS does set it equal to GPUSTAT.13...?)
   14-23 Not used (should be 0)
@@ -378,13 +380,15 @@ Specifies the location of the CLUT data within VRAM.<br/>
 ```
 The GP0(E1h) command is required only for Lines, Rectangle, and
 Untextured-Polygons (for Textured-Polygons, the data is specified in form of
-the Texpage attribute; except that, Bit9-10 can be changed only via GP0(E1h),
+the Texpage attribute; except that, Bits 9-10 can be changed only via GP0(E1h),
 not via the Texpage attribute).<br/>
 Texture page colors setting 3 (reserved) is same as setting 2 (15bit).<br/>
-Bits 4 and 11 are the LSB and MSB of the 2bit texture page Y coordinate.
-Normally only bit4 is used as retail consoles only have 1MB VRAM. Setting bit11
-(Y>=512) on a retail console with a New GPU will result in textures
-disappearing. Bit11 is ignored by Old GPUs that do not support 2MB VRAM.<br/>
+Bits 4 and 11 are the LSB and MSB of the 2-bit texture page Y coordinate.
+Normally only bit 4 is used as retail consoles only have 1 MB VRAM. Setting bit
+11 (Y>=512) on a retail console with a v2 GPU will result in textures
+disappearing if 2 MB VRAM support was previously enabled using GP1(09h), as the
+VRAM chip select will no longer be active. Bit 11 is always ignored by v0 GPUs
+that do not support 2 MB VRAM.<br/>
 Note: GP0(00h) seems to be often inserted between Texpage and Rectangle
 commands, maybe it acts as a NOP, which may be required between that commands,
 for timing reasons...?<br/>
@@ -411,10 +415,10 @@ repeated patterns as if they were there.<br/>
 #### GP0(E4h) - Set Drawing Area bottom right (X2,Y2)
 ```
   0-9    X-coordinate (0..1023)
-  10-18  Y-coordinate (0..511)   ;\on Old 160pin GPU (max 1MB VRAM)
+  10-18  Y-coordinate (0..511)   ;\on v0 GPU (max 1 MB VRAM)
   19-23  Not used (zero)         ;/
-  10-19  Y-coordinate (0..1023)  ;\on New 208pin GPU (max 2MB VRAM)
-  20-23  Not used (zero)         ;/(retail consoles have only 1MB though)
+  10-19  Y-coordinate (0..1023)  ;\on v2 GPU (max 2 MB VRAM)
+  20-23  Not used (zero)         ;/
   24-31  Command  (Exh)
 ```
 Sets the drawing area corners. The Render commands GP0(20h..7Fh) are
@@ -647,6 +651,7 @@ capable of about 330 pixels horizontal, and 272 vertical in 320\*240 mode)"<br/>
 Upper/left Display source address in VRAM. The size and target position on
 screen is set via Display Range registers; target=X1,Y2;
 size=(X2-X1/cycles\_per\_pix), (Y2-Y1).<br/>
+Unknown if using Y values in 512-1023 range is supported (with 2 MB VRAM).<br/>
 
 #### GP1(06h) - Horizontal Display range (on Screen)
 ```
@@ -693,7 +698,7 @@ Some games such as Chrono Cross will occasionally adjust these values to create 
   4     Display Area Color Depth    (0=15bit, 1=24bit)           ;GPUSTAT.21
   5     Vertical Interlace          (0=Off, 1=On)                ;GPUSTAT.22
   6     Horizontal Resolution 2     (0=256/320/512/640, 1=368)   ;GPUSTAT.16
-  7     "Reverseflag"               (0=Normal, 1=Distorted)      ;GPUSTAT.14
+  7     Flip screen horizontally    (0=Off, 1=On, v1 only)       ;GPUSTAT.14
   8-23  Not used (zero)
 ```
 Note: Interlace must be enabled to see all lines in 480-lines mode (interlace
@@ -702,23 +707,21 @@ better quality than a high resolution interlaced image, a pretty bad example
 is the intro screens shown by the BIOS). The Display Area Color Depth bit does
 NOT affect GP0 draw commands, which always draw in 15 bit. However, the
 Vertical Interlace flag DOES affect GP0 draw commands.<br/>
-When the "Reverseflag" is set, the display scrolls down 2 lines or so, and
-colored regions are getting somehow hatched/distorted, but black and white
-regions are still looking okay. Don't know what that's good for? Probably
-relates to PAL/NTSC-Color Clock vs PSX-Dot Clock mismatches: Bit7=0 causes
-Flimmering errors (errors at different locations in each frame), and Bit7=1
-causes Static errors (errors at same locations in all frames)?<br/>
+Bit 7 is known as "reverseflag" and can reportedly be used on (v1?)
+arcade/prototype GPUs to flip the screen horizontally. On a v2 GPU setting this
+bit corrupts the display output, possibly due to leftovers of the v1 GPU's
+screen flipping circuitry still being present.<br/>
 
-#### GP1(10h) - Get GPU Info
-#### GP1(11h..1Fh) - Mirrors of GP1(10h), Get GPU Info
+#### GP1(10h) - Read GPU internal register
+#### GP1(11h..1Fh) - Mirrors of GP1(10h), Read GPU internal register
 After sending the command, the result can be read (immediately) from GPUREAD
 register (there's no NOP or other delay required) (namely GPUSTAT.Bit27 is used
-only for VRAM-Reads, but NOT for GPU-Info-Reads, so do not try to wait for that
+only for VRAM reads, but NOT for register reads, so do not try to wait for that
 flag).<br/>
 ```
-  0-23  Select Information which is to be retrieved (via following GPUREAD)
+  0-23  Register index (via following GPUREAD)
 ```
-On Old 180pin GPUs, following values can be selected:<br/>
+On v0 GPUs, the following indices are supported:<br/>
 ```
   00h-01h = Returns Nothing (old value in GPUREAD remains unchanged)
   02h     = Read Texture Window setting  ;GP0(E2h) ;20bit/MSBs=Nothing
@@ -728,7 +731,7 @@ On Old 180pin GPUs, following values can be selected:<br/>
   06h-07h = Returns Nothing (old value in GPUREAD remains unchanged)
   08h-FFFFFFh = Mirrors of 00h..07h
 ```
-On New 208pin GPUs, following values can be selected:<br/>
+On v2 (and v1?) GPUs, the following indices are supported:<br/>
 ```
   00h-01h = Returns Nothing (old value in GPUREAD remains unchanged)
   02h     = Read Texture Window setting  ;GP0(E2h) ;20bit/MSBs=Nothing
@@ -736,8 +739,8 @@ On New 208pin GPUs, following values can be selected:<br/>
   04h     = Read Draw area bottom right  ;GP0(E4h) ;20bit/MSBs=Nothing
   05h     = Read Draw offset             ;GP0(E5h) ;22bit
   06h     = Returns Nothing (old value in GPUREAD remains unchanged)
-  07h     = Read GPU Type (usually 2)    ;see "GPU Versions" chapter
-  08h     = Unknown (Returns 00000000h) (lightgun on some GPUs?)
+  07h     = Read GPU version (1 or 2)
+  08h     = Unknown (Returns 00000000h) (lightgun? VRAM size set via GP1(09h)?)
   09h-0Fh = Returns Nothing (old value in GPUREAD remains unchanged)
   10h-FFFFFFh = Mirrors of 00h..0Fh
 ```
@@ -745,23 +748,26 @@ The selected data is latched in GPUREAD, the same/latched value can be read
 multiple times, but, the latch isn't automatically updated when changing GP0
 registers.<br/>
 
-#### GP1(09h) - New Texture Disable
+#### GP1(09h) - Set VRAM size (v2)
 ```
-  0     Texture Disable (0=Normal, 1=Allow Disable via GP0(E1h).11) ;GPUSTAT.15
+  0     Allow Y coordinates in 512-1023 range (0=No/wrap to 0-511, 1=Yes)
   1-23  Unknown (seems to have no effect)
 ```
-This feature seems to be intended for debugging purposes (most released games
-do contain program code for disabling textures, but never execute it).<br/>
-GP1(09h) seems to be supported only on New GPUs. Old GPUs don't support it at all,
-and there seem to be some special/prototype GPUs that use GP1(20h) instead of
-GP1(09h).<br/>
+Controls whether or not GP0(E1h).bit11 can be used to reference textures in the
+second half of VRAM on systems with 2 MB VRAM (possibly affects drawing/display
+area commands and DMA transfers as well). The GPU has two separate chip select
+outputs for the first and second half; on a retail console only the first output
+is used, so enabling this feature will result in textures disappearing if
+GP0(E1h).bit11 is also set.<br/>
+GP1(09h) is supported only on v2 GPUs; v0 GPUs don't support 2 MB VRAM at all
+and v1 seems to use command GP1(20h) instead.<br/>
 
-#### GP1(20h) - Special/Prototype Texture Disable
+#### GP1(20h) - Set VRAM size (v1)
 ```
-  0-23  Unknown (501h=Texture Enable, 504h=Texture Disable, or so?)
+  0-23  Unknown (501h=1 MB, 504h=2 MB, or so?)
 ```
-Seems to be used only on whatever arcade/prototype GPUs. New GPUs are using
-GP1(09h) instead of GP1(20h).<br/>
+Seems to be used only on v1 arcade/prototype GPUs. Regular v2 GPUs use GP1(09h)
+instead of GP1(20h).<br/>
 
 #### GP1(0Bh) - Unknown/Internal?
 ```
@@ -807,8 +813,8 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
   11    Set Mask-bit when drawing pixels (0=No, 1=Yes/Mask)       ;GP0(E6h).0
   12    Draw Pixels           (0=Always, 1=Not to Masked areas)   ;GP0(E6h).1
   13    Interlace Field       (or, always 1 when GP1(08h).5=0)
-  14    "Reverseflag"         (0=Normal, 1=Distorted)             ;GP1(08h).7
-  15    Texture page Y Base 2 (N*512) (only for 2MB VRAM)         ;GP0(E1h).11
+  14    Flip screen horizontally (0=Off, 1=On, v1 only)           ;GP1(08h).7
+  15    Texture page Y Base 2 (N*512) (only for 2 MB VRAM)        ;GP0(E1h).11
   16    Horizontal Resolution 2     (0=256/320/512/640, 1=368)    ;GP1(08h).6
   17-18 Horizontal Resolution 1     (0=256, 1=320, 2=512, 3=640)  ;GP1(08h).0-1
   19    Vertical Resolution         (0=240, 1=480, when Bit22=1)  ;GP1(08h).2
@@ -856,69 +862,77 @@ transfers, especially in the FIFO State mode.<br/>
 ##   GPU Versions
 #### Summary of GPU Differences
 ```
-  Differences...                Old 160pin GPU          New 208pin GPU
-  GPU Chip                      CXD8514Q                CXD8561Q/BQ/CQ/CXD9500Q
-  Mainboard                     EARLY-PU-8 and below    LATE-PU-8 and up
-  Memory Type                   Dual-ported VRAM        Normal DRAM
-  GPUSTAT.13 when interlace=off always 0                always 1
-  GPUSTAT.14                    always 0                reverseflag
-  GPUSTAT.15                    always 0                texture_disable
-  GP1(10h:index3..4)            19bit (1MB VRAM)        20bit (2MB VRAM)
-  GP1(10h:index7)               N/A                     00000002h version
-  GP1(10h:index8)               mirror of index0        00000000h zero
-  GP1(10h:index9..F)            mirror of index1..7     N/A
-  GP1(20h)                      whatever? used for detecting old gpu
-  GP0(E1h).bit11                N/A                     bit1 of texpage Y base
-  GP0(E1h).bit12/13             without x/y-flip        with x/y-flip
-  GP0(03h)                      N/A (no stored in fifo) unknown/unused command
-  Shaded Textures               ((color/8)*texel)/2     (color*texel)/16
-  GP0(02h) FillVram             xpos.bit0-3=0Fh=bugged  xpos.bit0-3=ignored
-  dma-to-vram: doesn't work with blksiz>10h (new gpu works with blksiz=8C0h!)
+  Differences...                v0 (160-pin)            v1 (208-pin prototype)  v2 (208-pin)
+  GPU Chip                      CXD8514Q                CXD8538Q                CXD8561Q/BQ/CQ/CXD9500Q
+  Mainboard                     EARLY-PU-8 and below    Arcade boards only      LATE-PU-8 and up
+  Memory Type                   Dual-ported VRAM        Dual-ported VRAM?       Normal DRAM
+  GPUSTAT.13 when interlace=off always 0                unknown                 always 1
+  GPUSTAT.14                    always 0                screen flip             nonfunctional screen flip
+  GPUSTAT.15                    always 0                always 0?               bit1 of texpage Y base
+  GP1(10h:index3..4)            19-bit (1 MB VRAM)      22-bit (2 MB VRAM)      20-bit (2 MB VRAM)
+  GP1(10h:index7)               N/A                     00000001h version       00000002h version
+  GP1(10h:index8)               mirror of index0        00000000h zero          00000000h zero
+  GP1(10h:index9..F)            mirror of index1..7     unknown                 N/A
+  GP1(09h)                      N/A                     N/A                     VRAM size
+  GP1(20h)                      N/A                     VRAM size/settings      N/A
+  GP0(E1h).bit11                N/A                     N/A                     bit1 of texpage Y base
+  GP0(E1h).bit12/13             without x/y-flip        without x/y-flip        with x/y-flip
+  GP0(03h)                      N/A (no stored in fifo) unknown                 unknown/unused command
+  Shaded Textures               ((color/8)*texel)/2     unknown                 (color*texel)/16
+  GP0(02h) FillVram             xpos.bit0-3=0Fh=bugged  unknown                 xpos.bit0-3=ignored
+
+  dma-to-vram: doesn't work with blksiz>10h (v2 gpu works with blksiz=8C0h!)
   dma-to-vram: MAYBE also needs extra software-handshake to confirm DMA done?
    320*224 pix = 11800h pix = 8C00h words
-  GP0(80h) VramToVram           works                   Freeze on large moves?
 ```
+The CXD8538Q (v1) GPU was only ever used in some arcade boards. Among other
+things, this GPU seems to use completely different drawing commands and has some
+additional functionality not available on v0/v2 GPUs (reportedly GP1(08h).bit7
+can be used to flip the screen horizontally?). It may however have a smaller
+texture cache or no cache at all, which would explain why the screen flipping
+feature had to be removed from v2 to make room on the die for the cache.<br/>
+There is another arcade-only GPU revision, the CXD8654Q (v2b). It seems to use
+the same commands as regular v2 GPUs, but the differences between v2b and v2 are
+currently unknown.<br/>
 
 #### Shaded Textures
-The Old GPU crops 8:8:8 bit gouraud shading color to 5:5:5 bit before
-multiplying it with the texture color, resulting in rather poor graphics. For
-example, the snow scence in the first level of Tomb Raider I looks a lot
-smoother on New GPUs.<br/>
+The v0 GPU crops 8:8:8 bit gouraud shading color to 5:5:5 bit before multiplying
+it with the texture color, resulting in rather poor graphics. For example, the
+snow scence in the first level of Tomb Raider I looks a lot smoother on v2 GPUs.
+This bug was presumably already fixed on the v1 prototype GPU (unconfirmed).<br/>
 The cropped colors are looking a bit as if dithering would be disabled
 (although, technically dithering works fine, but due to the crippled color
 input, it's always using the same dither pattern per 8 intensities, instead of
 using 8 different dither patterns).<br/>
 
 #### Memory/Rendering Timings
-The Old GPU uses two Dual-ported VRAM chips (each with two 16bit databusses,
+The v0 GPU uses two Dual-ported VRAM chips (each with two 16bit databusses,
 one for CPU/DMA/rendering access, and one for output to the video DAC). The New
 GPU uses s normal DRAM chip (with single 32bit databus).<br/>
 The exact timing differences are unknown, but the different memory types should
 result in quite different timings:<br/>
-The Old GPU might perform better on non-32bit aligned accesses, and on memory
+The v0 GPU might perform better on non-32bit aligned accesses, and on memory
 accesses performed simultaneously with DAC output.<br/>
-On the other hand, the New GPU's DRAM seems to be faster in some cases (for
+On the other hand, the v2 GPU's DRAM seems to be faster in some cases (for
 example, during Vblank, it's fast enough to perform DMA's with blksiz\>10h,
-which exceeds the GPU's FIFO size, and causes lost data on Old GPUs).<br/>
+which exceeds the GPU's FIFO size, and causes lost data on v0 GPUs).<br/>
 
-#### X/Y-Flip and 2MB Video RAM
+#### X/Y-Flip and PSone 2 MB VRAM
 The X/Y-flipping feature may be used by arcade games (provided that the arcade
-board is fitted with New GPUs). The flipping feature does also work on retail
-consoles with New GPUs, but PSX games should never use that feature (for
+board is fitted with v2 GPUs). The flipping feature does also work on retail
+consoles with v2 GPUs, but PSX games should never use that feature (for
 maintaining compatiblity with older PSX consoles).<br/>
-2Mbyte Video RAM (arranged as a 1024x1024 buffer, rather than 1024x512) is used
-on some arcade boards. PSX retail consoles are always containing only 1MByte
-RAM, so the feature cannot be used even if the console contains a New GPU.
-There's one special case: Some PSone consoles are actually fitted with 2MB
-chips (maybe because smaller chips haven't been in production anymore), but the
-chips are wired so that only half of the memory is accessible (the extra memory
-could be theoretically unlocked with some minimal hardware modification).<br/>
+Some PSone consoles seem to be fitted with 2 MB VRAM chips (maybe because
+smaller chips had not been in production anymore), but only the first 1 MB
+region is accessible. However, as all PSone models use a v2 GPU which supports
+2 MB VRAM, it should be possible to rewire the chip selects to make the uppper
+half accessible.<br/>
 
-#### GPU Detection (and optional texture disable)
+#### GPU Detection (and optional VRAM size switching)
 Below is slightly customized GPU Detection function taken from Perfect Assassin
-(the index7 latching works ONLY on New GPUs, whilst old GPUs would leave the
+(the index7 latching works ONLY on v1/v2 GPUs, whilst v0 GPUs would leave the
 latched value unchanged; as a workaround, the index4 latching is used to ensure
-that the latch won't contain 000002h on old GPUs, assuming that index4 is never
+that the latch won't contain 000002h on v0 GPUs, assuming that index4 is never
 set to 000002h).<br/>
 ```
   [1F801814h]=10000004h       ;GP1(10h).index4 (latch draw area bottom right)
@@ -928,55 +942,43 @@ set to 000002h).<br/>
   dummy=[1F801810h]           ;dummy read (unknown purpose)
   if ([1F801814h] AND 00001000h) then goto @@gpu_v1 else goto @@gpu_v0
  ;---
- @@gpu_v0:  ;Old 160pin GPU (EARLY-PU-8)
+ @@gpu_v0:
   return 0
  ;---
- @@gpu_v1:  ;unknown GPU type, maybe some custom arcade/prototype version ?
-  if want_tex_dis then [1F801814h]=20000504h  ;GP1(20h)
+ @@gpu_v1:
+  if want_2mb_vram then [1F801814h]=20000504h  ;GP1(20h)
   return 1
  ;---
- @@gpu_v2:  ;New 208pin GPU (LATE-PU-8 and up)
-  if want_tex_dis then [1F801814h]=09000001h  ;GP1(09h)
+ @@gpu_v2:
+  if want_2mb_vram then [1F801814h]=09000001h  ;GP1(09h)
   return 2
 ```
 
 #### GP0(02h) FillVram
 The FillVram command does normally ignore the lower 4bit of the x-coordinate
 (and software should always set those bits to zero). However, if the 4bits are
-all set, then the Old GPU does write each 2nd pixel to wrong memory address.
+all set, then the old v0 GPU does write each 2nd pixel to wrong memory address.
 For example, a 32x4 pixel fill produces following results for x=0..1Fh:<br/>
 ```
   0h              10h             20h             30h             40h
   |               |               |               |               |
   ################################                                 ;\x=00h..0Eh
   ################################                                 ; and, x=0Fh
-  ################################                                 ; on NEW GPU
+  ################################                                 ; on v2 GPU
   ################################                                 ;/
    # # # # # # # ################## # # # # # # #                  ;\
    # # # # # # # ################## # # # # # # #                  ; x=0Fh
-   # # # # # # # ################## # # # # # # #                  ; on OLD GPU
+   # # # # # # # ################## # # # # # # #                  ; on v0 GPU
    # # # # # # # ################## # # # # # # #                  ;/
                   ################################                 ;\x=10h..1Eh
                   ################################                 ; and, x=1Fh
-                  ################################                 ; on NEW GPU
+                  ################################                 ; on v2 GPU
                   ################################                 ;/
                    # # # # # # # ################## # # # # # # #  ;\
                    # # # # # # # ################## # # # # # # #  ; x=1Fh
-                   # # # # # # # ################## # # # # # # #  ; on OLD GPU
+                   # # # # # # # ################## # # # # # # #  ; on v0 GPU
                    # # # # # # # ################## # # # # # # #  ;/
 ```
-
-#### Arcade GPUs
-Some arcade boards are using normal retail GPUs, however, there are also two
-special non-retail 208pin GPUs which seem to be solely used on arcade boards:<br/>
-```
-  IC21  - 208pin - "SONY CXD8538Q"   ;seen on GP-11 (namco System 11) boards
-  IC103 - 208pin - "SONY CXD8654Q"   ;seen on GP-15 (namco System 12) boards
-```
-The exact differences to retail GPUs are unknown. One of the special GPUs is
-said to use entierly different command numbers for rendering commands (maybe
-some old prototype variant, or maybe some protection against cloning arcade
-boards with retail chips).<br/>
 
 
 
@@ -1126,7 +1128,8 @@ and a 16x1 image for the 4bit clut mode.<br/>
   15    Semi-transparency Flag    ;/(*) or Non-transparent for opaque commands
 ```
 The clut data can be arranged in the frame buffer at X multiples of 16
-(X=0,16,32,48,etc) and anywhere in the Y range of 0-511.<br/>
+(X=0,16,32,48,etc) and anywhere in the Y range of 0-511 (0-1023 if 2 MB VRAM is
+present).<br/>
 
 #### Texture Color Black Limitations
 On the PSX, texture color 0000h is fully-transparent, that means textures
@@ -1138,21 +1141,9 @@ semi-transparent flag) can be used, depending on the rendering command:<br/>
 ```
 So, with semi-transparent rendering commands, it isn't possible to use
 Non-Transparent Black pixels in textures, the only workaround is to use colors
-like 0001h (dark red) or 0400h (dark blue). However, due to the PSX's rather
-steeply increasing intensity ramp, these colors are clearly visible to be
-brighter than black.<br/>
-
-#### RGB Intensity Notes
-The Playstations RGB values aren't linear to normal RGB values (as used on
-PCs). The min/max values are of course the same, but the medium values differ:<br/>
-```
-  Intensity        PC      PSX
-  Minimum          0       0
-  Medium (circa)   16      8
-  Maximum          31      31
-```
-Ie. on the PSX, the intensity increases steeply from 0 to 15, and less steeply
-from 16 to 31.<br/>
+like 0001h (dark red) or 0400h (dark blue). However, on some monitors with
+particularly high gamma, these colors might be clearly visible to be brighter
+than black.<br/>
 
 
 

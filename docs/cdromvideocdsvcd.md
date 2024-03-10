@@ -253,7 +253,7 @@ extension should be a default feature for SVCDs).<br/>
 #### Playback Control Issues
 Although PBC was intended as "nice extra feature", many VCDs are containing
 faulty PSD files. In general, VCD players should either leave PBC unsupported
-(or provide an option for disabling it).<br/>
+(or at the very least, provide an option for disabling it).<br/>
 Red Dragon from 2003 uses extended selection lists, but crops PSD\_X.VCD to the
 same filesize as PSD.VCD.<br/>
 Muppets from Space from 1999 assigns weird functions to Prev/Next buttons (Next
@@ -858,8 +858,8 @@ data).<br/>
 ```
   12bit Syncword (FFFh)                                         ;\
   1bit  Revision (0=MPEG-2, 1=MPEG-1)                           ; 2 bytes
-  2bit  Layer (2=Audio LayerII)                                 ;
-              (3=LayerI, 1=LayerIII, r3=reserved)               ;
+  2bit  Layer (2=Audio LayerII)                   ;for VCDs     ;
+              (3=LayerI, 1=LayerIII, 0=reserved)  ;not on VCDs  ;
   1bit  Protection_bit (1=no crc)                               ;/
   4bit  Bitrate_index (1..14)                                   ;\
           (0=free format, 15=reserved)                          ;
@@ -875,7 +875,7 @@ data).<br/>
 
 #### MP2 Checksum (optional)
 ```
- 16bit CRC
+  16bit CRC
 ```
 
 #### Allocation Information
@@ -884,236 +884,4 @@ data).<br/>
 #### Data
 ```
   XXX...
-```
-
-
-
-##   Inflate
-Inflate/Deflate is a common (de-)compression algorithm. In the PSX world, it's
-used by the .CDZ cdrom-image format.<br/>
-
-[Inflate - Core Functions](cdromvideocdsvcd.md#inflate-core-functions)<br/>
-[Inflate - Initialization & Tree Creation](cdromvideocdsvcd.md#inflate-initialization--tree-creation)<br/>
-[Inflate - Headers and Checksums](cdromvideocdsvcd.md#inflate-headers-and-checksums)<br/>
-
-
-
-##   Inflate - Core Functions
-#### tinf\_uncompress(dst,src)
-```
- tinf_init()                    ;init constants (needed to be done only once)
- tinf_align_src_to_byte_boundary()
- repeat
-  bfinal=tinf_getbit()          ;read final block flag (1 bit)
-  btype=tinf_read_bits(2)       ;read block type (2 bits)
-  if btype=0 then tinf_inflate_uncompressed_block()
-  if btype=1 then tinf_build_fixed_trees(), tinf_inflate_compressed_block()
-  if btype=2 then tinf_decode_dynamic_trees(), tinf_inflate_compressed_block()
-  if btype=3 then ERROR         ;reserved
- until bfinal=1
- tinf_align_src_to_byte_boundary()
- ret
-```
-
-#### tinf\_inflate\_uncompressed\_block()
-```
- tinf_align_src_to_byte_boundary()
- len=LittleEndian16bit[src+0]                             ;get len
- if LittleEndian16bit[src+2]<>(len XOR FFFFh) then ERROR  ;verify inverse len
- src=src+4                                                ;skip len values
- for i=0 to len-1, [dst]=[src], dst=dst+1, src=src+1, next i    ;copy block
- ret
-```
-
-#### tinf\_inflate\_compressed\_block()
-```
- repeat
-  sym1=tinf_decode_symbol(tinf_len_tree)
-  if sym1<256
-   [dst]=sym1, dst=dst+1
-  if sym1>256
-   len  = tinf_read_bits(length_bits[sym1-257])+length_base[sym1-257]
-   sym2 = tinf_decode_symbol(tinf_dist_tree)
-   dist = tinf_read_bits(dist_bits[sym2])+dist_base[sym2]
-   for i=0 to len-1, [dst]=[dst-dist], dst=dst+1, next i
- until sym1=256
- ret
-```
-
-#### tinf\_decode\_symbol(tree)
-```
- sum=0, cur=0, len=0
- repeat                         ;get more bits while code value is above sum
-  cur=cur*2 + tinf_getbit()
-  len=len+1
-  sum=sum+tree.table[len]
-  cur=cur-tree.table[len]
- until cur<0
- return tree.trans[sum+cur]
-```
-
-#### tinf\_read\_bits(num)     ;get N bits from source stream
-```
- val=0
- for i=0 to num-1, val=val+(tinf_getbit() shl i), next i
- return val
-```
-
-#### tinf\_getbit()           ;get one bit from source stream
-```
- bit=tag AND 01h, tag=tag/2
- if tag=00h then tag=[src], src=src+1, bit=tag AND 01h, tag=tag/2+80h
- return bit
-```
-
-#### tinf\_align\_src\_to\_byte\_boundary()
-```
- tag=01h   ;empty/end-bit (discard any bits, align src to byte-boundary)
- ret
-```
-
-
-
-##   Inflate - Initialization & Tree Creation
-#### tinf\_init()
-```
- tinf_build_bits_base(length_bits, length_base, 4, 3)
- length_bits[28]=0, length_base[28]=258
- tinf_build_bits_base(dist_bits, dist_base, 2, 1)
- ret
-```
-
-#### tinf\_build\_bits\_base(bits,base,delta,base\_val)
-```
- for i=0 to 29
-  bits[i]=min(0,i-delta)/delta
-  base[i]=base_val
-  base_val=base_val+(1 shl bits[i])
- ret
-```
-
-#### tinf\_build\_fixed\_trees()
-```
- for i=0 to 6, tinf_len_tree.table[i]=0, next i       ;[0..6]=0   ;len tree...
- tinf_len_tree.table[7,8,9]=24,152,112                ;[7..9]=24,152,112
- for i=0 to 23,  tinf_len_tree.trans[i+0]  =i+256, next i  ;[0..23]   =256..279
- for i=0 to 143, tinf_len_tree.trans[i+24] =i+0,   next i  ;[24..167] =0..143
- for i=0 to 7,   tinf_len_tree.trans[i+168]=i+280, next i  ;[168..175]=280..287
- for i=0 to 111, tinf_len_tree.trans[i+176]=i+144, next i  ;[176..287]=144..255
- for i=0 to 4, tinf_dist_tree.table[i]=0, next i   ;[0..4]=0,0,0,0,0 ;\dist
- tinf_dist_tree.table[5]=32                        ;[5]=32           ; tree
- for i=0 to 31, tinf_dist_tree.trans[i]=i, next i  ;[0..31]=0..31    ;/
- ret
-```
-
-#### tinf\_decode\_dynamic\_trees()
-```
- hlit  = tinf_read_bits(5)+257           ;get 5 bits HLIT (257-286)
- hdist = tinf_read_bits(5)+1             ;get 5 bits HDIST (1-32)
- hclen = tinf_read_bits(4)+4             ;get 4 bits HCLEN (4-19)
- for i=0 to 18, lengths[i]=0, next i
- for i=0 to hclen-1                      ;read lengths for code length alphabet
-  lengths[clcidx[i]]=tinf_read_bits(3)   ;get 3 bits code length (0-7)
- tinf_build_tree(code_tree, lengths, 19) ;build code length tree
- for num=0 to hlit+hdist-1               ;decode code lengths for dynamic trees
-  sym = tinf_decode_symbol(code_tree)
-  len=1, val=sym                         ;default (for sym=0..15)
-  if sym=16 then len=tinf_read_bits(2)+3, val=lengths[num-1] ;3..6 previous
-  if sym=17 then len=tinf_read_bits(3)+3, val=0              ;3..10 zeroes
-  if sym=18 then len=tinf_read_bits(7)+11, val=0             ;11..138 zeroes
-  for i=1 to len, lengths[num]=val, num=num+1, next i
- tinf_build_tree(tinf_len_tree,  0,      hlit)    ;\build trees
- tinf_build_tree(tinf_dist_tree, 0+hlit, hdist)   ;/
- ret
-```
-
-#### tinf\_build\_tree(tree, first, num)
-```
- for i=0 to 15, tree.table[i]=0, next i     ;clear code length count table
- ;scan symbol lengths, and sum code length counts...
- for i=0 to num-1, x=lengths[i+first], tree.table[x]=tree.table[x]+1, next i
- tree.table[0]=0
- sum=0          ;compute offset table for distribution sort
- for i=0 to 15, offs[i]=sum, sum=sum+tree.table[i], next i
- for i=0 to num-1  ;create code to symbol xlat table (symbols sorted by code)
-  x=lengths[i+first], if x<>0 then tree.trans[offs[x]]=i, offs[x]=offs[x]+1
- next i
- ret
-```
-
-#### tinf\_data
-```
- clcidx[0..18] = 16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15   ;constants
-```
-
-```
- typedef struct TINF_TREE:
-   unsigned short table[16]     ;table of code length counts
-   unsigned short trans[288]    ;code to symbol translation table
-```
-
-```
- TINF_TREE tinf_len_tree   ;length/symbol tree
- TINF_TREE tinf_dist_tree  ;distance tree
- TINF_TREE code_tree       ;temporary tree (for generating the dynamic trees)
- unsigned char lengths[288+32]   ;temporary 288+32 x 8bit ;\for dynamic tree
- unsigned short offs[16]         ;temporary 16 x 16bit    ;/creation
-```
-
-```
- unsigned char  length_bits[30]
- unsigned short length_base[30]
- unsigned char  dist_bits[30]
- unsigned short dist_base[30]
-```
-
-
-
-##   Inflate - Headers and Checksums
-#### tinf\_gzip\_uncompress(void \*dest, \*destLen, \*source, sourceLen)
-```
- src_start=src, dst_start=dst                 ;memorize start addresses
- if (src[0]<>1fh or src[1]<>8Bh) then ERROR   ;check id bytes
- if (src[2]<>08h) then ERROR                  ;check method is deflate
- flg=src[3]                                   ;get flag byte
- if (flg AND 0E0h) then ERROR                 ;verify reserved bits
- src=src+10                                                 ;skip base header
- if (flg AND 04h) then src=src+2+LittleEndian16bit[src]     ;skip extra data
- if (flg AND 08h) then repeat, src=src+1, until [src-1]=00h ;skip file name
- if (flg AND 10h) then repeat, src=src+1, until [src-1]=00h ;skip file comment
- hcrc=(tinf_crc32(src_start, src-src_start) & 0000ffffh))   ;calc header crc
- if (flg AND 02h) then x=LittleEndian16bit[src], src=src+2  ;get header crc
- if (flg AND 02h) then if x<>hcrc then ERROR                ;verify header
- tinf_uncompress(dst, destLen, src, src_start+sourceLen-src-8)  ;----> inflate
- crc32=LittleEndian32bit[src], src=src+4   ;get crc32 of decompressed data
- dlen=LittleEndian32bit[src], src=src+4    ;get decompressed length
- if (dlen<>destLen) then ERROR                              ;verify dest len
- if (crc32<>tinf_crc32(dst_start,dlen)) then ERROR          ;verify crc32
- ret
-```
-
-#### tinf\_zlib\_uncompress(dst, destLen, src, sourceLen)
-```
- src_start=src, dst_start=dst         ;memorize start addresses
- hdr=BigEndian16bit[src], src=src+2   ;get header
- if (hdr MOD 31)<>0 then ERROR        ;check header checksum (modulo)
- if (hdr AND 20h)>0 then ERROR        ;check there is no preset dictionary
- if (hdr AND 0F00h)<>0800h then ERROR ;check method is deflate
- if (had AND 0F000h)>7000h then ERROR ;check window size is valid
- tinf_uncompress(dst, destLen, src, sourceLen-6)      ;------> inflate
- chk=BigEndian32bit[src], src=src+4                   ;get data checksum
- if src-src_start<>sourceLen then ERROR               ;verify src len
- if dst-dst_start<>destLen then ERROR                 ;verify dst len
- if a32<>tinf_adler32(dst_start,destLen)) then ERROR  ;verify data checksum
- ret
-```
-
-#### tinf\_adler32(src, length)
-```
- s1=1, s2=0
- while (length>0)
-  k=max(length,5552)
-  for i=0 to k-1, s1=s1+[src], s2=s2+s1, src=src+1, next i
-  s1=s1 mod 65521, s2=s2 mod 65521, length=length-k
- return (s2*10000h+s1)
 ```
