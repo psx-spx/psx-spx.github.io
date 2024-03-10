@@ -174,7 +174,7 @@ Assault 2 does actually use the "8MB" space (with stacktop in mirrored RAM at
 Clearing bit7 causes many games to hang during CDROM loading on both EARLY-PU-8
 and LATE-PU-8 (but works on PU-18 through PM-41).<br/>
 
-#### FFFE0130h Cache Control (R/W)
+#### FFFE0130h BIU_CONFIG, Cache Control (R/W)
 ```
   0-2   Unknown (Read/Write)                                            (R/W)
   3     Scratchpad Enable 1 (0=Disable, 1=Enable when Bit7 is set, too) (R/W)
@@ -187,7 +187,7 @@ and LATE-PU-8 (but works on PU-18 through PM-41).<br/>
   11    Code-Cache Enable (0=Disable, 1=Enable)                         (R/W)
   12-31 Unknown                                                         (R/W)
 ```
-Used by BIOS to initialize cache (in combination with COP0), like so:<br/>
+Used primarily to flush the i-cache (in combination with COP0), like so:<br/>
 ```
  Init Cache Step 1:
   [FFFE0130h]=00000804h, then set cop0_sr=00010000h, then
@@ -198,6 +198,23 @@ Used by BIOS to initialize cache (in combination with COP0), like so:<br/>
  Finish Initialization:
   read 8 times 32bit from [A0000000h], then set [FFFE0130h]=0001E988h
 ```
+At least one game (TOCA World Touring Cars, SLES-02572) flushes the cache
+without using code from uncached ram (KSEG1) instead of calling the BIOS
+function described above. It follows this sequence:
+- First, it reads the current value of the BIU register, and stores it back
+with this modification: `BIU = (BIU & ~0x0483) | 0x0804`. With the normal
+BIU value of 0x001e988, this results in writing the value 0x001e90c
+- Then, it writes 0x00010000 to cop0's Status register. This order is
+important, as it would otherwise not take the BIU change, and still write
+to main ram instead of the i-cache region.
+- At this point, it proceeds with the step 1 of the flushcache procedure
+of clearing every fourth word.
+- Finally, it restores both the original value of the BIU and Status
+registers it had previously saved.
+
+A usable version of this code
+[is available](https://github.com/pcsx-redux/nugget/blob/main/common/hardware/flushcache.s).
+
 Note: FFFE0130h is described in LSI's "L64360" datasheet, chapter 14 (and
 probably also in their LR33300/LR33310 datasheet, if it were available in
 internet).<br/>
