@@ -592,9 +592,9 @@ Describes the most recently recognised exception<br/>
 ```
   0     IEc Current Interrupt Enable  (0=Disable, 1=Enable) ;rfe pops IUp here
   1     KUc Current Kernel/User Mode  (0=Kernel, 1=User)    ;rfe pops KUp here
-  2     IEp Previous Interrupt Disable                      ;rfe pops IUo here
+  2     IEp Previous Interrupt Enable                       ;rfe pops IUo here
   3     KUp Previous Kernel/User Mode                       ;rfe pops KUo here
-  4     IEo Old Interrupt Disable                       ;left unchanged by rfe
+  4     IEo Old Interrupt Enable                        ;left unchanged by rfe
   5     KUo Old Kernel/User Mode                        ;left unchanged by rfe
   6-7   -   Not used (zero)
   8-15  Im  8 bit interrupt mask fields. When set the corresponding
