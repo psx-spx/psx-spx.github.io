@@ -481,34 +481,62 @@ versions, plus US/JP/PAL-region variants, plus region-free debug variants).<br/>
 
 ##   Pinouts - CPU Pinouts
 #### CPU Pinouts (IC103)
-```
-   1-3.5V   27-GND       53-3.5V       79-3.5V       105-3.5V 131-3.5V   157-3.5V   183-3.5V
-   2-3.5V   28-DQ12      54-3.5V       80-SIO0.DTR1  106-3.5V 132-A5     158-3.5V   184-GD19
-   3-XO(NC) 29-DQ11      55-A11(A8)    81-SIO0.SCK   107-D0   133-A6     159-HBLANK 185-GD20
-   4-XI     30-DQ10      56-A10(NC)    82-SIO0.DSR   108-D1   134-A7     160-DOTCLK 186-GD21
-   5-DQ31   31-DQ9       57-A9         83-SIO0.TX    109-D2   135-A8     161-GD0    187-GD22
-   6-DQ30   32-DQ8       58-A8(NC)     84-SIO0.RX    110-D3   136-A9     162-GD1    188-GD23
-   7-DQ29   33-DQ7       59-A7         85-DACK5(PIO) 111-D4   137-A10    163-GD2    189-GD24
-   8-DQ28   34-DQ6       60-A6         86-DREQ5(PIO) 112-D5   138-A11    164-GD3    190-GD25
-   9-DQ27   35-DQ5       61-A5         87-DACK4(SPU) 113-D6   139-A12    165-GD4    191-GD26
-  10-DQ26   36-DQ4       62-A4         88-DREQ4(SPU) 114-D7   140-A13    166-GD5    192-GD27
-  11-DQ25   37-DQ3       63-A3         89-/IRQ10     115-D8   141-A14    167-GD6    193-GD28
-  12-DQ24   38-3.5V      64-A2         90-/IRQ9(SPU) 116-D9   142-A15    168-GD7    194-GD29
-  13-DQ23   39-GND       65-GND        91-GND        117-GND  143-GND    169-GD8    195-GND
-  14-3.5V   40-DQ2       66-3.5V       92-3.5V       118-3.5V 144-3.5V   170-GND    196-3.5V
-  15-GND    41-DQ1       67-A1         93-TEST(GND)  119-D10  145-A16    171-3.5V   197-GD30
-  16-DQ22   42-DQ0       68-A0         94-/IRQ2      120-D11  146-A17    172-GD9    198-GD31
-  17-DQ21   43-/WE       69-3.5V       95-/CS5(CD)   121-D12  147-A18    173-GD10   199-/IRQ0(VBLANK)
-  18-DQ20   44-/RAS1(NC) 70-SIO1.RTS   96-/CS4(SPU)  122-D13  148-A19    174-GD11   200-DREQ2(GPU)
-  19-DQ19   45-/RAS0     71-SIO1.CTS   97-/CS2(BIOS) 123-D14  149-A20    175-GD12   201-SYSCK0
-  20-DQ18   46-/CAS3     72-SIO1.DTR   98-/CS0(PIO)  124-D15  150-A21    176-GD13   202-DACK2(GPU)
-  21-DQ17   47-/CAS2     73-SIO1.DSR   99-/WR1       125-A0   151-A22    177-GD14   203-/GPUWR
-  22-DQ16   48-/CAS1     74-SIO1.TX   100-/WR0       126-A1   152-A23    178-GD15   204-/GPURD
-  23-DQ15   49-/CAS0     75-SIO1.RX   101-/RD        127-A2   153-GPU.A2 179-GD16   205-/CS7(GPU)
-  24-DQ14   50-3.5V      76-/RESET    102-/IRQ1(GPU) 128-A3   154-SYSCK1 180-GD17   206-DSYSCK0
-  25-DQ13   51-GND       77-SIO0.DTR2 103-GND        129-A4   155-GND    181-GD18   207-GND
-  26-3.5V   52-GND       78-GND       104-GND        130-GND  156-GND    182-GND    208-GND
-```
+
+| PIN 	| PINOUT   	| NOTES  	| PIN 	| PINOUT     	| NOTES                   	| PIN 	| PINOUT    	| NOTES 	| PIN 	| PINOUT   	| NOTES    	|
+|-----	|----------	|--------	|-----	|------------	|-------------------------	|-----	|-----------	|-------	|-----	|----------	|----------	|
+| 1   	| VDD      	| +3.3V  	| 53  	| VDD        	| +3.3V                   	| 105 	| VDD       	| +3.3V 	| 157 	| VDD      	| +3.3V    	|
+| 2   	| VDD      	| +3.3V  	| 54  	| VDD        	| +3.3V                   	| 106 	| VDD       	| +3.3V 	| 158 	| VDD      	| +3.3V    	|
+| 3   	| CRYSTALN 	| N.C    	| 55  	| RAM.A11    	| -->A8                   	| 107 	| BIOS.IO0  	|       	| 159 	| TCLK1    	| HBLANK   	|
+| 4   	| CRYSTALP 	| CPUCLK 	| 56  	| RAM.A10    	| N.C                     	| 108 	| BIOS.IO1  	|       	| 160 	| TCLK0    	| DOTCLK   	|
+| 5   	| RAM.IO31 	|        	| 57  	| RAM.A9     	|                         	| 109 	| BIOS.IO2  	|       	| 161 	| GPU.IO0  	|          	|
+| 6   	| RAM.IO30 	|        	| 58  	| RAM.A8     	| N.C                     	| 110 	| BIOS.IO3  	|       	| 162 	| GPU.IO1  	|          	|
+| 7   	| RAM.IO29 	|        	| 59  	| RAM.A7     	|                         	| 111 	| BIOS.IO4  	|       	| 163 	| GPU.IO2  	|          	|
+| 8   	| RAM.IO28 	|        	| 60  	| RAM.A6     	|                         	| 112 	| BIOS.IO5  	|       	| 164 	| GPU.IO3  	|          	|
+| 9   	| RAM.IO27 	|        	| 61  	| RAM.A5     	|                         	| 113 	| BIOS.IO6  	|       	| 165 	| GPU.IO4  	|          	|
+| 10  	| RAM.IO26 	|        	| 62  	| RAM.A4     	|                         	| 114 	| BIOS.IO7  	|       	| 166 	| GPU.IO5  	|          	|
+| 11  	| RAM.IO25 	|        	| 63  	| RAM.A3     	|                         	| 115 	| BIOS.IO8  	|       	| 167 	| GPU.IO6  	|          	|
+| 12  	| RAM.IO24 	|        	| 64  	| RAM.A2     	|                         	| 116 	| BIOS.IO9  	|       	| 168 	| GPU.IO7  	|          	|
+| 13  	| RAM.IO23 	|        	| 65  	| VSS        	| GND                     	| 117 	| VSS       	| GND   	| 169 	| GPU.IO8  	|          	|
+| 14  	| VDD      	| +3.3V  	| 66  	| VDD        	| +3.3V                   	| 118 	| VDD       	| +3.3V 	| 170 	| VSS      	| GND      	|
+| 15  	| VSS      	| GND    	| 67  	| RAM.A1     	|                         	| 119 	| BIOS.IO10 	|       	| 171 	| VDD      	| +3.3V    	|
+| 16  	| RAM.IO22 	|        	| 68  	| RAM.A0     	|                         	| 120 	| BIOS.IO11 	|       	| 172 	| GPU.IO9  	|          	|
+| 17  	| RAM.IO21 	|        	| 69  	| /RC_NET    	| -->VDD                  	| 121 	| BIOS.IO12 	|       	| 173 	| GPU.IO10 	|          	|
+| 18  	| RAM.IO20 	|        	| 70  	| /RTS1      	|                         	| 122 	| BIOS.IO13 	|       	| 174 	| GPU.IO11 	|          	|
+| 19  	| RAM.IO19 	|        	| 71  	| /CTS1      	|                         	| 123 	| BIOS.IO14 	|       	| 175 	| GPU.IO12 	|          	|
+| 20  	| RAM.IO18 	|        	| 72  	| /DTR1      	|                         	| 124 	| BIOS.IO15 	|       	| 176 	| GPU.IO13 	|          	|
+| 21  	| RAM.IO17 	|        	| 73  	| /DSR1      	|                         	| 125 	| BIOS.A0   	|       	| 177 	| GPU.IO14 	|          	|
+| 22  	| RAM.IO16 	|        	| 74  	| TXD1       	|                         	| 126 	| BIOS.A1   	|       	| 178 	| GPU.IO15 	|          	|
+| 23  	| RAM.IO15 	|        	| 75  	| RXD1       	|                         	| 127 	| BIOS.A2   	|       	| 179 	| GPU.IO16 	|          	|
+| 24  	| RAM.IO14 	|        	| 76  	| /EXT_RESET 	|                         	| 128 	| BIOS.A3   	|       	| 180 	| GPU.IO17 	|          	|
+| 25  	| RAM.IO13 	|        	| 77  	| /DTR0B     	|                         	| 129 	| BIOS.A4   	|       	| 181 	| GPU.IO18 	|          	|
+| 26  	| VDD      	| +3.3V  	| 78  	| VSS        	| GND                     	| 130 	| VSS       	| GND   	| 182 	| VSS      	| GND      	|
+| 27  	| VSS      	| GND    	| 79  	| VDD        	| +3.3V                   	| 131 	| VDD       	| +3.3V 	| 183 	| VDD      	| +3.3V    	|
+| 28  	| RAM.IO12 	|        	| 80  	| /DTR0A     	|                         	| 132 	| BIOS.A5   	|       	| 184 	| GPU.IO19 	|          	|
+| 29  	| RAM.IO11 	|        	| 81  	| /SCK0      	|                         	| 133 	| BIOS.A6   	|       	| 185 	| GPU.IO20 	|          	|
+| 30  	| RAM.IO10 	|        	| 82  	| /DSR0      	|                         	| 134 	| BIOS.A7   	|       	| 186 	| GPU.IO21 	|          	|
+| 31  	| RAM.IO9  	|        	| 83  	| TXD0       	|                         	| 135 	| BIOS.A8   	|       	| 187 	| GPU.IO22 	|          	|
+| 32  	| RAM.IO8  	|        	| 84  	| RXD0       	|                         	| 136 	| BIOS.A9   	|       	| 188 	| GPU.IO23 	|          	|
+| 33  	| RAM.IO7  	|        	| 85  	| DACK5      	|                         	| 137 	| BIOS.A10  	|       	| 189 	| GPU.IO24 	|          	|
+| 34  	| RAM.IO6  	|        	| 86  	| DREQ5      	|                         	| 138 	| BIOS.A11  	|       	| 190 	| GPU.IO25 	|          	|
+| 35  	| RAM.IO5  	|        	| 87  	| DACK4      	| SPU DACK                	| 139 	| BIOS.A12  	|       	| 191 	| GPU.IO26 	|          	|
+| 36  	| RAM.IO4  	|        	| 88  	| DREQ4      	| SPU DREQ                	| 140 	| BIOS.A13  	|       	| 192 	| GPU.IO27 	|          	|
+| 37  	| RAM.IO3  	|        	| 89  	| /IRQ10     	|                         	| 141 	| BIOS.A14  	|       	| 193 	| GPU.IO28 	|          	|
+| 38  	| VDD      	| +3.3V  	| 90  	| /IRQ9(SPU) 	| SPU INT                 	| 142 	| BIOS.A15  	|       	| 194 	| GPU.IO29 	|          	|
+| 39  	| VSS      	| GND    	| 91  	| VSS        	| GND                     	| 143 	| VSS       	| GND   	| 195 	| VSS      	| GND      	|
+| 40  	| RAM.IO2  	|        	| 92  	| VDD        	| +3.3V                   	| 144 	| VDD       	| +3.3V 	| 196 	| VDD      	| +3.3V    	|
+| 41  	| RAM.IO1  	|        	| 93  	| /CSHTST    	| -->VSS                  	| 145 	| BIOS.A16  	|       	| 197 	| GPU.IO30 	|          	|
+| 42  	| RAM.IO0  	|        	| 94  	| /IRQ2      	| CDRD INT                	| 146 	| BIOS.A17  	|       	| 198 	| GPU.IO31 	|          	|
+| 43  	| /RAM.WE  	|        	| 95  	| /CS5       	| CDRD CS                 	| 147 	| BIOS.A18  	|       	| 199 	| /IRQ0    	| VBLANK   	|
+| 44  	| /RAS1    	| N.C    	| 96  	| /CS4       	| SPU CS                  	| 148 	| BIOS.A19  	|       	| 200 	| DREQ2    	| GPU DREQ 	|
+| 45  	| /RAS0    	|        	| 97  	| /CS2       	| BIOS CS                 	| 149 	| BIOS.A20  	|       	| 201 	| SYSCK0   	|          	|
+| 46  	| /CAS3    	|        	| 98  	| /CS0       	|                         	| 150 	| BIOS.A21  	|       	| 202 	| DACK2    	| GPU DACK 	|
+| 47  	| /CAS2    	|        	| 99  	| /SWR1      	| (BIOS ROM WRITE MAYBE)  	| 151 	| BIOS.A22  	|       	| 203 	| /VWR     	| GPU WR   	|
+| 48  	| /CAS1    	|        	| 100 	| /SWR0      	| (BIOS ROM WRITE MAYBE)  	| 152 	| BIOS.A23  	|       	| 204 	| /VRD     	| GPU RD   	|
+| 49  	| /CAS0    	|        	| 101 	| /BIOS.OE   	| /OE ON BIOS ROM         	| 153 	| VA2       	| GPUA2 	| 205 	| /CS7     	| GPU CS   	|
+| 50  	| VDD      	| +3.3V  	| 102 	| /IRQ1      	| GPU INT                 	| 154 	| SYSCLK1   	|       	| 206 	| DSYSCLK  	| DBLCLK   	|
+| 51  	| VSS      	| GND    	| 103 	| VSS        	| GND                     	| 155 	| VSS       	| GND   	| 207 	| VSS      	| GND      	|
+| 52  	| VSS      	| GND    	| 104 	| VSS        	| GND                     	| 156 	| VSS       	| GND   	| 208 	| VSS      	| GND      	|
+
 Pin5-68 = Main RAM bus. Pin 95-152 = System bus. Pin 102,153,159-206 = Video
 bus.<br/>
 
