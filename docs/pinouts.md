@@ -518,22 +518,22 @@ versions, plus US/JP/PAL-region variants, plus region-free debug variants).<br/>
 | 32  	| RAM.IO8  	|        	| 84  	| RXD0       	|                         	| 136 	| BIOS.A9   	|       	| 188 	| GPU.IO23 	|          	|
 | 33  	| RAM.IO7  	|        	| 85  	| DACK5      	|                         	| 137 	| BIOS.A10  	|       	| 189 	| GPU.IO24 	|          	|
 | 34  	| RAM.IO6  	|        	| 86  	| DREQ5      	|                         	| 138 	| BIOS.A11  	|       	| 190 	| GPU.IO25 	|          	|
-| 35  	| RAM.IO5  	|        	| 87  	| DACK4      	| SPU DACK                	| 139 	| BIOS.A12  	|       	| 191 	| GPU.IO26 	|          	|
-| 36  	| RAM.IO4  	|        	| 88  	| DREQ4      	| SPU DREQ                	| 140 	| BIOS.A13  	|       	| 192 	| GPU.IO27 	|          	|
+| 35  	| RAM.IO5  	|        	| 87  	| DACK4      	| SPUDACK                  	| 139 	| BIOS.A12  	|       	| 191 	| GPU.IO26 	|          	|
+| 36  	| RAM.IO4  	|        	| 88  	| DREQ4      	| SPUDREQ                  	| 140 	| BIOS.A13  	|       	| 192 	| GPU.IO27 	|          	|
 | 37  	| RAM.IO3  	|        	| 89  	| /IRQ10     	|                         	| 141 	| BIOS.A14  	|       	| 193 	| GPU.IO28 	|          	|
-| 38  	| VDD      	| +3.3V  	| 90  	| /IRQ9(SPU) 	| SPU INT                 	| 142 	| BIOS.A15  	|       	| 194 	| GPU.IO29 	|          	|
+| 38  	| VDD      	| +3.3V  	| 90  	| /IRQ9(SPU) 	| SPUINT                   	| 142 	| BIOS.A15  	|       	| 194 	| GPU.IO29 	|          	|
 | 39  	| VSS      	| GND    	| 91  	| VSS        	| GND                     	| 143 	| VSS       	| GND   	| 195 	| VSS      	| GND      	|
 | 40  	| RAM.IO2  	|        	| 92  	| VDD        	| +3.3V                   	| 144 	| VDD       	| +3.3V 	| 196 	| VDD      	| +3.3V    	|
 | 41  	| RAM.IO1  	|        	| 93  	| /CSHTST    	| -->VSS                  	| 145 	| BIOS.A16  	|       	| 197 	| GPU.IO30 	|          	|
-| 42  	| RAM.IO0  	|        	| 94  	| /IRQ2      	| CDRD INT                	| 146 	| BIOS.A17  	|       	| 198 	| GPU.IO31 	|          	|
-| 43  	| /RAM.WE  	|        	| 95  	| /CS5       	| CDRD CS                 	| 147 	| BIOS.A18  	|       	| 199 	| /IRQ0    	| VBLANK   	|
-| 44  	| /RAS1    	| N.C    	| 96  	| /CS4       	| SPU CS                  	| 148 	| BIOS.A19  	|       	| 200 	| DREQ2    	| GPU DREQ 	|
-| 45  	| /RAS0    	|        	| 97  	| /CS2       	| BIOS CS                 	| 149 	| BIOS.A20  	|       	| 201 	| SYSCK0   	|          	|
-| 46  	| /CAS3    	|        	| 98  	| /CS0       	|                         	| 150 	| BIOS.A21  	|       	| 202 	| DACK2    	| GPU DACK 	|
-| 47  	| /CAS2    	|        	| 99  	| /SWR1      	| (BIOS ROM WRITE MAYBE)  	| 151 	| BIOS.A22  	|       	| 203 	| /VWR     	| GPU WR   	|
-| 48  	| /CAS1    	|        	| 100 	| /SWR0      	| (BIOS ROM WRITE MAYBE)  	| 152 	| BIOS.A23  	|       	| 204 	| /VRD     	| GPU RD   	|
-| 49  	| /CAS0    	|        	| 101 	| /BIOS.OE   	| /OE ON BIOS ROM         	| 153 	| VA2       	| GPUA2 	| 205 	| /CS7     	| GPU CS   	|
-| 50  	| VDD      	| +3.3V  	| 102 	| /IRQ1      	| GPU INT                 	| 154 	| SYSCLK1   	|       	| 206 	| DSYSCLK  	| DBLCLK   	|
+| 42  	| RAM.IO0  	|        	| 94  	| /IRQ2      	| CDRDINT                  	| 146 	| BIOS.A17  	|       	| 198 	| GPU.IO31 	|          	|
+| 43  	| /RAM.WE  	|        	| 95  	| /CS5       	| CDRDCS                   	| 147 	| BIOS.A18  	|       	| 199 	| /IRQ0    	| VBLANK   	|
+| 44  	| /RAS1    	| N.C    	| 96  	| /CS4       	| SPUCS                    	| 148 	| BIOS.A19  	|       	| 200 	| DREQ2    	| GPUDREQ  	|
+| 45  	| /RAS0    	|        	| 97  	| /CS2       	| BIOSCS                   	| 149 	| BIOS.A20  	|       	| 201 	| SYSCK0   	|          	|
+| 46  	| /CAS3    	|        	| 98  	| /CS0       	|                         	| 150 	| BIOS.A21  	|       	| 202 	| DACK2    	| GPUDACK 	|
+| 47  	| /CAS2    	|        	| 99  	| /SWR1      	| (BIOS ROM WRITE MAYBE)  	| 151 	| BIOS.A22  	|       	| 203 	| /VWR     	| GPUWR   	|
+| 48  	| /CAS1    	|        	| 100 	| /SWR0      	| (BIOS ROM WRITE MAYBE)  	| 152 	| BIOS.A23  	|       	| 204 	| /VRD     	| GPURD   	|
+| 49  	| /CAS0    	|        	| 101 	| /BIOS.OE   	| /OE ON BIOS ROM         	| 153 	| VA2       	| GPUA2 	| 205 	| /CS7     	| GPUCS   	|
+| 50  	| VDD      	| +3.3V  	| 102 	| /IRQ1      	| GPUINT                   	| 154 	| SYSCLK1   	|       	| 206 	| DSYSCLK  	| DBLCLK   	|
 | 51  	| VSS      	| GND    	| 103 	| VSS        	| GND                     	| 155 	| VSS       	| GND   	| 207 	| VSS      	| GND      	|
 | 52  	| VSS      	| GND    	| 104 	| VSS        	| GND                     	| 156 	| VSS       	| GND   	| 208 	| VSS      	| GND      	|
 
@@ -661,34 +661,61 @@ PAL or NTSC clock depending on current frame rate, which is resulting in
 New 206-pin GPU is used LATE-PU-8 boards and up.<br/>
 
 #### GPU Pinouts (IC203)
-```
-  1-/GPUCS  27-GD28  53-GD10       79-D29  105-GND  131-CLKOUT 157-/PAL       183-R3
-  2-GPU.A2  28-GD27  54-GD9        80-3.5V 106-3.5V 132-GND    158-/VSYNC(NC) 184-GND
-  3-/GPURD  29-3.5V  55-GD8        81-GND  107-D17  133-3.5V   159-/HSYNC(NC) 185-3.5V
-  4-/GPUWR  30-GND   56-GD7        82-D28  108-D16  134-CLKIN  160-B0         186-R4
-  5-DACK2   31-GD26  57-GD6        83-D27  109-D7   135-GND    161-B1         187-R5
-  6-/RESET  32-GD25  58-GD5        84-D26  110-D6   136-3.5V   162-B2         188-R6
-  7-3.5V    33-GD24  59-GD4        85-D25  111-D5   137-A9     163-B3         189-R7
-  8-GND     34-GD23  60-GND        86-D24  112-D4   138-A8     164-GND        190-GND
-  9-SYSCK0  35-GD22  61-3.5V       87-3.5V 113-GND  139-A7     165-3.5V       191-3.5V
-  10-3.5V   36-GD21  62-GD3        88-GND  114-3.5V 140-A6     166-B4         192-VCKPAL
-  11-GND    37-3.5V  63-GD2        89-D15  115-D3   141-3.5V   167-B5         193-3.5V
-  12-DREQ2  38-GND   64-GD1        90-D14  116-D2   142-GND    168-B6         194-GND
-  13-/IRQ1  39-GD20  65-GD0        91-D13  117-D1   143-A5     169-B7         195-3.5V
-  14-HBLANK 40-GD19  66-GND        92-D12  118-D0   144-A4     170-G0         196-VCKNTSC
-  15-GND    41-GD18  67-3.5V       93-D11  119-GND  145-A3     171-G1         197-3.5V
-  16-3.5V   42-GD17  68-PCKSL2(NC) 94-D10  120-3.5V 146-GND    172-G2         198-GND
-  17-VBLANK 43-3.5V  69-PCKSL1(NC) 95-D9   121-/CS1 147-3.5V   173-G3         199-DOTCLK
-  18-HVHLD  44-GND   70-PCKSL0(NC) 96-GND  122-/CS0 148-A2     174-GND        200-GND
-  19-GND    45-GD16  71-3.5V       97-3.5V 123-DSF  149-A1     175-3.5V       201-3.5V
-  20-GND    46-GD15  72-3.5V       98-D8   124-/RAS 150-A0     176-G4         202-BLANK(NC)
-  21-NC     47-GD14  73-3.5V       99-D18  125-/CAS 151-3.5V   177-G5         203-ODE2(NC)
-  22-3.5V   48-GD13  74-3.5V       100-D19 126-/WE  152-GND    178-G6         204-GND
-  23-3.5V   49-GD12  75-3.5V       101-D20 127-DQM1 153-FSC    179-G7         205-3.5V
-  24-GD31   50-GD11  76-GND        102-D21 128-DQM0 154-3.5V   180-R0         206-DSYSCK0
-  25-GD30   51-3.5V  77-D31        103-D22 129-GND  155-GND    181-R1         207-GND
-  26-GD29   52-GND   78-D30        104-D23 130-3.5V 156-/CSYNC 182-R2         208-3.5V
-```
+| PIN 	| PINOUT   	| NOTES            	| PIN 	| PINOUT    	| NOTES  	| PIN 	| PINOUT   	| NOTES                                 	| PIN 	| PINOUT  	| NOTES  	|
+|-----	|----------	|------------------	|-----	|-----------	|--------	|-----	|----------	|---------------------------------------	|-----	|---------	|--------	|
+| 1   	| /CS      	| GPUCS            	| 53  	| GPU.IO10  	|        	| 105 	| VSS      	| GND                                   	| 157 	| NTPL    	|        	|
+| 2   	| A2       	| GPUA2            	| 54  	| GPU.IO9   	|        	| 106 	| VDD      	| +3.3V                                 	| 158 	| /VSYNC  	|        	|
+| 3   	| /RD      	| GPURD            	| 55  	| GPU.IO8   	|        	| 107 	| VRAM.IO9 	|                                       	| 159 	| /HSYNC  	|        	|
+| 4   	| /WR      	| GPUWR            	| 56  	| GPU.IO7   	|        	| 108 	| VRAM.IO8 	|                                       	| 160 	| BLUE0   	|        	|
+| 5   	| DACK     	| GPUDACK          	| 57  	| GPU.IO6   	|        	| 109 	| VRAM.IO7 	|                                       	| 161 	| BLUE1   	|        	|
+| 6   	| /RST     	| RES3.3G          	| 58  	| GPU.IO5   	|        	| 110 	| VRAM.IO6 	|                                       	| 162 	| BLUE2   	|        	|
+| 7   	| VDD      	| +3.3V            	| 59  	| GPU.IO4   	|        	| 111 	| VRAM.IO5 	|                                       	| 163 	| BLUE3   	|        	|
+| 8   	| VSS      	| GND              	| 60  	| VSS       	| GND    	| 112 	| VRAM.IO4 	|                                       	| 164 	| VSS     	| GND    	|
+| 9   	| /SYSCLK  	| SYSCLK0          	| 61  	| VDD       	| +3.3V  	| 113 	| VSS      	| GND                                   	| 165 	| VDD     	| +3.3V  	|
+| 10  	| VDD      	| +3.3V            	| 62  	| GPU.IO3   	|        	| 114 	| VDD      	| +3.3V                                 	| 166 	| BLUE4   	|        	|
+| 11  	| VSS      	| GND              	| 63  	| GPU.IO2   	|        	| 115 	| VRAM.IO3 	|                                       	| 167 	| BLUE5   	|        	|
+| 12  	| DREQ     	| GPUDREQ          	| 64  	| GPU.IO1   	|        	| 116 	| VRAM.IO2 	|                                       	| 168 	| BLUE6   	|        	|
+| 13  	| /IREQ    	| GPUINT           	| 65  	| GPU.IO0   	|        	| 117 	| VRAM.IO1 	|                                       	| 169 	| BLUE7   	|        	|
+| 14  	| HBLNK    	| HBLANK           	| 66  	| VSS       	| GND    	| 118 	| VRAM.IO0 	|                                       	| 170 	| GREEN0  	|        	|
+| 15  	| VSS      	| GND              	| 67  	| VDD       	| +3.3V  	| 119 	| VSS      	| GND                                   	| 171 	| GREEN1  	|        	|
+| 16  	| VDD      	| +3.3V            	| 68  	| PCKSL2    	| N.C    	| 120 	| VDD      	| +3.3V                                 	| 172 	| GREEN2  	|        	|
+| 17  	| VBLNK    	| VBLANK           	| 69  	| PCKSL1    	| N.C    	| 121 	| /MCS1    	| used on arcade boards with 2 MB VRAM  	| 173 	| GREEN3  	|        	|
+| 18  	| HVHLD    	| -->4.7kOhm-->VDD 	| 70  	| PCKSL0    	| N.C    	| 122 	| /MCS0    	| VRAM CS                               	| 174 	| VSS     	| GND    	|
+| 19  	| VSS      	| GND              	| 71  	| TEST3     	| -->VDD 	| 123 	| DSF      	| VRAM DSF \| "Define Special Function" 	| 175 	| VDD     	| +3.3V  	|
+| 20  	| VSS      	| GND              	| 72  	| TEST2     	| -->VDD 	| 124 	| /RAS     	| VRAM \| "ROW ADDRESS STROBE"          	| 176 	| GREEN4  	|        	|
+| 21  	| N.C      	|                  	| 73  	| TEST1     	| -->VDD 	| 125 	| /CAS     	| VRAM \| "COLUMN ADDRESS STROBE"       	| 177 	| GREEN5  	|        	|
+| 22  	| VDD      	| +3.3V            	| 74  	| TEST0     	| -->VDD 	| 126 	| /WE      	| VRAM \| WE                            	| 178 	| GREEN6  	|        	|
+| 23  	| VDD      	| +3.3V            	| 75  	| VDD       	| +3.3V  	| 127 	| DQMH     	| -->DQM1 \| DQM3                       	| 179 	| GREEN7  	|        	|
+| 24  	| GPU.IO31 	|                  	| 76  	| VSS       	| GND    	| 128 	| DQML     	| -->DQM0 \| DQM2                       	| 180 	| RED0    	|        	|
+| 25  	| GPU.IO30 	|                  	| 77  	| VRAM.IO31 	|        	| 129 	| VSS      	| GND                                   	| 181 	| RED1    	|        	|
+| 26  	| GPU.IO29 	|                  	| 78  	| VRAM.IO30 	|        	| 130 	| VDD      	| +3.3V                                 	| 182 	| RED2    	|        	|
+| 27  	| GPU.IO28 	|                  	| 79  	| VRAM.IO29 	|        	| 131 	| MCLKOUT  	| -->MCLKIN \| VRAM CLK                 	| 183 	| RED3    	|        	|
+| 28  	| GPU.IO27 	|                  	| 80  	| VDD       	| +3.3V  	| 132 	| VSS      	| GND                                   	| 184 	| VSS     	| GND    	|
+| 29  	| VDD      	| +3.3V            	| 81  	| VSS       	| GND    	| 133 	| VDD      	| +3.3V                                 	| 185 	| VDD     	| +3.3V  	|
+| 30  	| VSS      	| GND              	| 82  	| VRAM.IO28 	|        	| 134 	| MCLKIN   	|                                       	| 186 	| RED4    	|        	|
+| 31  	| GPU.IO26 	|                  	| 83  	| VRAM.IO27 	|        	| 135 	| VSS      	| GND                                   	| 187 	| RED5    	|        	|
+| 32  	| GPU.IO25 	|                  	| 84  	| VRAM.IO26 	|        	| 136 	| VDD      	| +3.3V                                 	| 188 	| RED6    	|        	|
+| 33  	| GPU.IO24 	|                  	| 85  	| VRAM.IO25 	|        	| 137 	| VRAM.A9  	|                                       	| 189 	| RED7    	|        	|
+| 34  	| GPU.IO23 	|                  	| 86  	| VRAM.IO24 	|        	| 138 	| VRAM.A8  	|                                       	| 190 	| VSS     	| GND    	|
+| 35  	| GPU.IO22 	|                  	| 87  	| VDD       	| +3.3V  	| 139 	| VRAM.A7  	|                                       	| 191 	| VDD     	| +3.3V  	|
+| 36  	| GPU.IO21 	|                  	| 88  	| VSS       	| GND    	| 140 	| VRAM.A6  	|                                       	| 192 	| VCKN-A  	|        	|
+| 37  	| VDD      	| +3.3V            	| 89  	| VRAM.IO23 	|        	| 141 	| VDD      	| +3.3V                                 	| 193 	| VDD     	| +3.3V  	|
+| 38  	| VSS      	| GND              	| 90  	| VRAM.IO22 	|        	| 142 	| VSS      	| GND                                   	| 194 	| VSS     	| GND    	|
+| 39  	| GPU.IO20 	|                  	| 91  	| VRAM.IO21 	|        	| 143 	| VRAM.A5  	|                                       	| 195 	| VDD     	| +3.3V  	|
+| 40  	| GPU.IO19 	|                  	| 92  	| VRAM.IO20 	|        	| 144 	| VRAM.A4  	|                                       	| 196 	| VCKP-A  	|        	|
+| 41  	| GPU.IO18 	|                  	| 93  	| VRAM.IO19 	|        	| 145 	| VRAM.A3  	|                                       	| 197 	| VDD     	| +3.3V  	|
+| 42  	| GPU.IO17 	|                  	| 94  	| VRAM.IO18 	|        	| 146 	| VSS      	| GND                                   	| 198 	| VSS     	| GND    	|
+| 43  	| VDD      	| +3.3V            	| 95  	| VRAM.IO17 	|        	| 147 	| VDD      	| +3.3V                                 	| 199 	| PCK     	|        	|
+| 44  	| VSS      	| GND              	| 96  	| VSS       	| GND    	| 148 	| VRAM.A2  	|                                       	| 200 	| VSS     	| GND    	|
+| 45  	| GPU.IO16 	|                  	| 97  	| VDD       	| +3.3V  	| 149 	| VRAM.A1  	|                                       	| 201 	| VDD     	| +3.3V  	|
+| 46  	| GPU.IO15 	|                  	| 98  	| VRAM.IO16 	|        	| 150 	| VRAM.A0  	|                                       	| 202 	| DMASK   	| N.C    	|
+| 47  	| GPU.IO14 	|                  	| 99  	| VRAM.IO15 	|        	| 151 	| VDD      	| +3.3V                                 	| 203 	| ODE2    	| N.C    	|
+| 48  	| GPU.IO13 	|                  	| 100 	| VRAM.IO14 	|        	| 152 	| VSS      	| GND                                   	| 204 	| VSS     	| GND    	|
+| 49  	| GPU.IO12 	|                  	| 101 	| VRAM.IO13 	|        	| 153 	| FSC      	|                                       	| 205 	| VDD     	| +3.3V  	|
+| 50  	| GPU.IO11 	|                  	| 102 	| VRAM.IO12 	|        	| 154 	| VDD      	| +3.3V                                 	| 206 	| /DSYSCK 	| DBLCLK 	|
+| 51  	| VDD      	| +3.3V            	| 103 	| VRAM.IO11 	|        	| 155 	| VSS      	| GND                                   	| 207 	| VSS     	| GND    	|
+| 52  	| VSS      	| GND              	| 104 	| VRAM.IO10 	|        	| 156 	| CSYNC    	|                                       	| 208 	| VDD     	| +3.3V  	|
+
 Pin 77..150 = Video RAM Bus. Pin 156..189 = Video Out Bus. Other = CPU Bus. Pin
 153: Sub Carrier (NC on newer boards whick pick color clock from IC204).<br/>
 
