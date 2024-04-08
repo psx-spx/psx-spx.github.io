@@ -748,14 +748,22 @@ Earlier boards are generating analog RGB via 64pin IC207, and later boards RGB
 via 48pin IC502.<br/>
 
 #### IC502 48pin "SONY CXA2106R-T4" - 24bit RGB video D/A converter
-```
-  1-(cap) 7-Comp.  13-/PAL   19-R4     25-G7     31-G1     37-B3     43-NC
-  2-GND   8-Chro.  14-C/SYNC 20-5.0V   26-G6     32-G0     38-B2     44-(cap)
-  3-Red   9-5.0V   15-4.4MHz 21-R3     27-G5     33-B7     39-B1     45-GND
-  4-Green 10-YTRAP 16-R7     22-R2     28-G4     34-B6     40-B0     46-(cap)
-  5-Blue  11-NC    17-R6     23-R1     29-G3     35-B5     41-DOTCLK 47-5.0V
-  6-Lum.  12-NC    18-R5     24-R0     30-G2     36-B4     42-GND    48-(cap)
-```
+
+| PIN 	| PINOUT     	| NOTES 	| PIN 	| PINOUT 	| NOTES 	| PIN 	| PINOUT 	| NOTES 	| PIN 	| PINOUT  	| NOTES 	|
+|-----	|------------	|-------	|-----	|--------	|-------	|-----	|--------	|-------	|-----	|---------	|-------	|
+| 1   	| BCLAMP     	|       	| 13  	| NT/PAL 	|       	| 25  	| GREEN7 	|       	| 37  	| BLUE3   	|       	|
+| 2   	| AGND2      	| GND   	| 14  	| SYNCIN 	|       	| 26  	| GREEN6 	|       	| 38  	| BLUE2   	|       	|
+| 3   	| ROUT       	|       	| 15  	| SCIN   	|       	| 27  	| GREEN5 	|       	| 39  	| BLUE1   	|       	|
+| 4   	| GOUT       	|       	| 16  	| RED7   	|       	| 28  	| GREEN4 	|       	| 40  	| BLUE0   	|       	|
+| 5   	| BOUT       	|       	| 17  	| RED6   	|       	| 29  	| GREEN3 	|       	| 41  	| VCLK    	|       	|
+| 6   	| YOUT       	|       	| 18  	| RED5   	|       	| 30  	| GREEN2 	|       	| 42  	| DGND    	| GND   	|
+| 7   	| COUT       	|       	| 19  	| RED4   	|       	| 31  	| GREEN1 	|       	| 43  	| VREFIN  	| N.C   	|
+| 8   	| VOUT       	|       	| 20  	| DVDD   	| +5V   	| 32  	| GREEN0 	|       	| 44  	| VREFOUT 	|       	|
+| 9   	| AVCC2      	| +5V   	| 21  	| RED3   	|       	| 33  	| BLUE7  	|       	| 45  	| AGND1   	| GND   	|
+| 10  	| YTRAP      	|       	| 22  	| RED2   	|       	| 34  	| BLUE6  	|       	| 46  	| RCRAMP  	|       	|
+| 11  	| N.C        	|       	| 23  	| RED1   	|       	| 35  	| BLUE5  	|       	| 47  	| AVCC1   	| +5V   	|
+| 12  	| POWER_SAVE 	| N.C   	| 24  	| RED0   	|       	| 36  	| BLUE4  	|       	| 48  	| GCLAMP  	|       	|
+
 Pin 3..8 (analogue outputs) are passed via external 75 ohm resistors.<br/>
 Pin 6,7 additionally via 220uF. Pin 8 additionally via smaller capacitor.<br/>
 Pin 10 (YTRAP) wired via 2K7 to 5.0V.<br/>
