@@ -2,11 +2,12 @@
 # Konami System 573
 
 The System 573 is a PlayStation-based system used in a number of Konami arcade
-games from the late 90s and early 2000s, most notably Dance Dance Revolution
-and other early Bemani (Konami's rhythm game division) games.
+games from the late 90s and early 2000s, most notably Dance Dance Revolution and
+other titles from the Bemani series of rhythm games.
 
 - [Differences vs. PS1](#differences-vs-ps1)
 - [Register map](#register-map)
+- [JVS interface](#jvs-interface)
 - [I/O boards](#io-boards)
 - [Security cartridges](#security-cartridges)
 - [External modules](#external-modules)
@@ -23,29 +24,21 @@ things that need more research:
 - The BIOS and games are notoriously picky about ATAPI drives. Konami's code
   shall be disassembled and tested in order to find out where and why drive
   initialization fails with most drives.
-- JVS communications and the microcontroller that handles them have to be
-  documented. The microcontroller's firmware has already been dumped.
-- I/O boards, *especially* the digital I/O board, need to be properly reverse
-  engineered and documented. The fishing controls board has been fully reverse
-  engineered but documentation for it is missing.
-- The digital I/O board's networking protocol seems to be based on ARCnet, with
-  some kind of network interface implemented in hardware in the FPGA. Not much
-  else is currently known.
+- The fishing controls I/O board has been fully reverse engineered, but
+  documentation for it is missing.
 - The DDR stage I/O board's communication protocol is largely unknown. More
   tests need to be done on real hardware and its CPLD shall be dumped if
   possible.
-- The 700B01 BIOS contains references to the ability to boot from a FAT
-  filesystem on a CF card inserted into a PCMCIA slot, which would actually be
-  impossible due to the way the slots are wired up. The H8/3644 check is also
-  completely different from the one performed by the 700A01 shell.
+- The protocol used by the 573 to communicate with the e-Amusement network PCB
+  is currently not known.
 
 ## Differences vs. PS1
 
 ### Main changes
 
-- **Main RAM is 4 MB** instead of 2 MB and **VRAM is 2 MB** instead of 1 MB.
-  SPU RAM is still 512 KB.
-- **The CD drive is completely different**. While the PS1's drive is fully
+- **Main RAM is 4 MB** instead of 2 MB and **VRAM is 2 MB** instead of 1 MB. SPU
+  RAM is still 512 KB.
+- **The CD-ROM drive is completely different**. While the PS1's drive is fully
   integrated into the motherboard and uses a custom protocol, the 573 employs a
   standard ATAPI drive. This means there is no provision for playing XA-ADPCM,
   even though CD audio can still be played (as long as the 4-pin audio cable
@@ -53,10 +46,10 @@ things that need more research:
   groove to worry about, but some drives the system shipped with are reportedly
   unable to read CD-Rs. Most 573 units have had their drive replaced (usually
   with a DVD drive) at least once, so this should not be an issue.
-- **The SPI bus for controllers and memory cards is unused**. It is broken out
+- **The SIO0 bus for controllers and memory cards is unused**. It is broken out
   to a connector, however no known I/O board uses it. Some games supported PS1
-  memory cards through an adapter connected over JVS, with its own CPU and
-  local SPI bus (more details about this later).
+  controllers and memory cards through an adapter connected over JVS (see the
+  external modules section).
 - **The "parallel I/O" expansion port is replaced by 2 PCMCIA slots**. These
   slots are wired in parallel and mapped at the same address as the internal
   flash through bank switching. They are fairly limited though as they only
@@ -80,23 +73,20 @@ things that need more research:
   game before starting. Most games still require the CD, in some cases a
   different one, to be kept in the drive after installation as they use it for
   music playback or to stream additional data.
-- **PCMCIA memory card**: some games shipped with additional flash memory in
-  the form of a PCMCIA card, with sizes ranging from 16 to 64 MB. Note that
-  these are "linear" memory-mapped cards without any built-in controller, not
-  CF or ATA-compatible cards (which would be incompatible with the 573's PCMCIA
+- **PCMCIA memory card**: some games shipped with additional flash memory in the
+  form of one or more 16 or 32 MB PCMCIA cards. Note that these are "linear"
+  memory mapped flash cards without any built-in controller, not CF or
+  ATA-compatible cards (which would be incompatible with the 573's PCMCIA
   wiring).
 - **RTC and battery-backed 8 KB RAM**: used by games to store settings, save
   data and installation info (possibly including serial numbers). Unfortunately
   the RTC chip is one of those all-in-one things with a battery sealed inside,
-  soldered directly to the motherboard. It goes without saying that 573 boards
-  with a working RTC are rare.
-- **JVS bus**: allows connection of multiple daisy chained peripherals using a
-  standardized protocol based on a serial (RS-485) bus. The JVS specification
-  requires devices to use *USB connectors* (USB-A at the host side, full size
-  USB-B on peripherals) to carry RS-485 signals. The JVS port on the 573 was
-  only ever "officially" used for the PS1 memory card reader module, however
-  some games seem to support JVS I/O boards and input devices in addition to
-  the built-in JAMMA connector.
+  soldered directly to the motherboard.
+- **JVS host**: allows connection of multiple daisy chained peripherals using
+  the standardized JVS protocol, based on a serial (RS-485) bus. The JVS port on
+  the 573 was only ever "officially" used for the PS1 memory card reader module,
+  however some games seem to support JVS I/O boards and input devices in
+  addition to the built-in JAMMA connector.
 - **Security cartridge**: optionally installed on the 573's side, contains a
   password protected EEPROM that holds factory pre-programmed data as well as
   keys generated during game installation, plus in some case a 64-bit serial
@@ -106,17 +96,17 @@ things that need more research:
 
 ## Register map
 
-All standard PS1 registers, with the exception of the CD drive's, are present.
-System 573-specific hardware is mapped into the EXP1 region at `0x1f000000`.
-IRQ10 and DMA5, normally reserved for the expansion bus (and lightguns) on a
-regular PS1, are used to access the ATAPI CD drive, while IRQ2 and DMA3 go
-unused.
+All standard PS1 registers, with the exception of the CD-ROM drive's, are
+present and accessible. System 573-specific hardware is mapped into the EXP1
+region at `0x1f000000`. IRQ10 and DMA5, normally reserved for the expansion bus
+(and lightguns) on a regular PS1, are used to access the ATAPI drive, while IRQ2
+and DMA3 go unused.
 
-**NOTE**: EXP1 must be configured prior to accessing any of these registers.
-The proper configuration value to write to the EXP1 delay/size register at
+**NOTE**: EXP1 must be configured prior to accessing any of these registers. The
+configuration value written by Konami's code to the EXP1 delay/size register at
 `0x1f801008` is `0x24173f47`. Afterwards, *all* bus writes shall be 16 or 32
-bits wide. The behavior of 8-bit writes is undefined (8-bit reads work as
-intended).
+bits wide. The behavior of 8-bit writes is undefined, but 8-bit reads work as
+intended.
 
 | Address range           | Description                                            |
 | :---------------------- | :----------------------------------------------------- |
@@ -129,72 +119,102 @@ intended).
 
 ### Konami ASIC registers
 
-The Konami 056879 ASIC, used in most of their late 90s arcade boards, is
-nothing more than a single 16-bit output port and 6 (possibly more?) 16-bit
-input ports in a single package.
+Registers in the `0x1f400000-0x1f40000f` region are handled by the Konami 056879
+I/O ASIC, consisting of a single 8-bit output port and at least six 16-bit input
+ports. The same chip was used in other Konami arcade boards of the time.
 
 #### `0x1f400000` (ASIC register 0): **ADC SPI, coin counters, audio**
 
-| Bits | RW | Description                                 |
-| ---: | :- | :------------------------------------------ |
-|    0 | W  | SPI MOSI to ADC                             |
-|    1 | W  | SPI CS to ADC                               |
-|    2 | W  | SPI SCK to ADC                              |
-|    3 | W  | Coin counter 1 (1 = energize counter coil)  |
-|    4 | W  | Coin counter 2 (1 = energize counter coil)  |
-|    5 | W  | Built-in audio amplifier enable (0 = muted) |
-|    6 | W  | External audio input enable? (0 = muted)    |
-|    7 | W  | SPU DAC output enable (0 = muted)           |
-|    8 | W  | Status bus clock to microcontroller         |
-| 9-15 |    | Unused?                                     |
+| Bits | RW | Description                                   |
+| ---: | :- | :-------------------------------------------- |
+|    0 | W  | Data input to ADC (`DI`)                      |
+|    1 | W  | Chip select to ADC (`/CS`)                    |
+|    2 | W  | Data clock to ADC (`CLK`)                     |
+|    3 | W  | Coin counter 1 (1 = energize counter coil)    |
+|    4 | W  | Coin counter 2 (1 = energize counter coil)    |
+|    5 | W  | Built-in audio amplifier enable (0 = muted)   |
+|    6 | W  | External audio input enable (0 = muted)       |
+|    7 | W  | SPU DAC output enable (0 = muted)             |
+|    8 | W  | JVS MCU reset output (0 = pull reset low)     |
+| 9-15 |    | _Unused_                                      |
 
-The ADC chip is an ADC0834 from TI, which uses a proprietary SPI(-like)
-protocol. Its four inputs are wired to the `ANALOG` connector on the 573
-motherboard. Refer to the ADC083x datasheet for details on how to bitbang the
-protocol.
+The ADC chip is an ADC0834 from TI, which uses a proprietary SPI-like protocol.
+Its four inputs are wired to the `ANALOG` connector on the 573 motherboard.
+Refer to the ADC083x datasheet for details on how to bitbang the protocol.
 
-Mechanical coin counters are incremented by games whenever a coin is inserted
-by setting bit 3 or 4 for a fraction of a second and then clearing them. Bit 5
-controls whether the onboard audio amp is enabled, but does not affect the RCA
-line level outputs (which are always enabled). Setting bit 5 has no effect
-immediately as the amp takes about a second to turn on.
+Mechanical coin counters are incremented by games whenever a coin is inserted by
+setting bit 3 or 4 for a fraction of a second and then clearing them. Bit 5
+controls whether the onboard audio amp is enabled but does not affect the RCA
+line level outputs, which are always enabled. Setting bit 5 has no effect
+immediately as the amplifier takes about a second to turn on.
 
-The exact purpose of bit 6 is unclear. Games use it to mute audio from the CD
-drive or digital I/O board; in particular, this bit is cleared during attract
-mode if attract mode sounds are disabled. However, testing on real hardware
-seems to suggest it is some sort of downmixing or attenuation control rather
-than a proper mute.
+Bit 6 is used by games to mute audio from the CD-ROM drive or digital I/O board.
+However, testing on real hardware seems to suggest it is actually some sort of
+attenuation control, as the audio is still audible (albeit at a very low volume)
+when the bit is cleared. Note that some games, such as GuitarFreaks, break the
+CD/MP3 output to separate jacks on the sub-panel rather than routing it through
+the motherboard, making bit 6 meaningless.
+
+Bit 8 resets the JVS MCU. Since the reset pin is active-low, resetting is done
+by writing 0, waiting at least 10 H8 clock cycles (the BIOS waits 2 hblanks)
+and writing 1 again. Resetting the MCU will clear `JVSDRDY` but not `JVSIRDY`.
+As the 056879 ASIC's output register is only 8 bits wide, bit 8 is actually
+handled by a discrete flip-flop on the motherboard.
 
 Unknown what reading from this port does.
 
 #### `0x1f400004` (ASIC register 2): **Misc. inputs**
 
-| Bits  | RW | Description                        |
-| ----: | :- | :--------------------------------- |
-|   0-3 | R  | DIP switch status                  |
-|   4-7 | R  | Status bus from microcontroller    |
-|  8-15 | RW | From `I0-I7` on security cartridge |
+| Bits  | RW | Description                     |
+| ----: | :- | :------------------------------ |
+|   0-3 | R  | DIP switch status               |
+|   4-5 | R  | Current JVS MCU status code     |
+|   6-7 | R  | Current JVS MCU error code      |
+|  8-15 | R  | `I0-I7` from security cartridge |
 
-The highest 8 bits read from this register are the state of the security
-cartridge's pins `I0-I7`. See the security cartridge section for an explanation
-of what each bit is wired to.
+The MCU status code can be one of the following values:
 
-Bit 3 (DIP switch 4) is used by the BIOS to determine whether to boot from the
-internal flash or CD drive. If set, the BIOS will attempt to search for a valid
-executable on the flash before initializing the drive.
+| Code | Description                                                     |
+| ---: | :-------------------------------------------------------------- |
+|    0 | Waiting for the 573 to read or write the first word of a packet |
+|    1 | Busy (sending a packet or waiting for a response)               |
+|    2 | Waiting for the 573 to finish reading or writing a packet       |
+|    3 | _Unused_                                                        |
+
+The MCU error code can be one of the following values:
+
+| Code | Description                                                      |
+| ---: | :--------------------------------------------------------------- |
+|    0 | _Unused_                                                         |
+|    1 | Packet written by the 573 has an invalid checksum                |
+|    2 | Packet written by the 573 does not start with a `0xe0` sync byte |
+|    3 | No error                                                         |
+
+Once an error is reported, the MCU will enter an endless loop and become
+unresponsive. In order to clear the error the MCU must be reset using bit 8 in
+register `0x1f400000`.
+
+The highest 8 bits read from this register are the current state of the security
+cartridge's `I0-I7` pins. See the security cartridge section for an explanation
+of what each bit is wired to. Unknown whether reading from this register will
+clear the `IRDY` flag, if previously set by the cartridge.
+
+Bit 3 (DIP switch 4) is used by the BIOS to determine whether to boot from
+flash. If set, the BIOS will attempt to search for a valid executable on the
+internal flash and both PCMCIA cards prior to falling back to the CD-ROM.
 
 #### `0x1f400006` (ASIC register 3): **Misc. inputs**
 
 | Bits  | RW | Description                                   |
 | ----: | :- | :-------------------------------------------- |
-|     0 | R  | SPI MISO from ADC                             |
-|     1 | R  | SAR status from ADC                           |
+|     0 | R  | Data output from ADC (`DO`)                   |
+|     1 | R  | SAR status from ADC (`SARS`)                  |
 |     2 | R  | From `SDA` on security cartridge              |
-|     3 | R  | JVS sense input                               |
-|     4 | R  | JVS receive buffer status (1 = not empty)     |
-|     5 | R  | Unknown (JVS-related)                         |
-|     6 | R  | `ISIG` status on security cartridge           |
-|     7 | R  | `DSIG` status on security cartridge           |
+|     3 | R  | Sense input from JVS port                     |
+|     4 | R  | `JVSIRDY` status from JVS MCU                 |
+|     5 | R  | `JVSDRDY` status from JVS MCU                 |
+|     6 | R  | `IRDY` status from security cartridge         |
+|     7 | R  | `DRDY` status from security cartridge         |
 |     8 | R  | Coin switch input 1 (0 = coin being inserted) |
 |     9 | R  | Coin switch input 2 (0 = coin being inserted) |
 |    10 | R  | PCMCIA card 1 insertion (0 = card present)    |
@@ -202,9 +222,9 @@ executable on the flash before initializing the drive.
 |    12 | R  | Service button (JAMMA pin R, 0 = pressed)     |
 | 13-15 |    | Unused?                                       |
 
-See the security cartridge section for more details about `ISIG` and  `DSIG`.
-For bit 2 to be valid, `SDA` should be set as an input by clearing the
-respective bit in the bank switch register.
+See the security cartridge section for more details about `IRDY` and  `DRDY`. In
+order for bit 2 to be valid, `SDA` should be set as an input by clearing the
+respective bit in register `0x1f500000`.
 
 #### `0x1f400008` (ASIC register 4): **JAMMA controls**
 
@@ -227,17 +247,20 @@ respective bit in the bank switch register.
 |   14 | R  | Player 1 button 3 (JAMMA pin 24)       |
 |   15 | R  | Player 1 start button (JAMMA pin 17)   |
 
-**NOTE**: since buttons are active low (wired between JAMMA pins and ground),
-all bits are 0 when a button is pressed and 1 when it isn't.
+As buttons are active-low (wired between JAMMA pins and ground), all bits are 0
+when a button is pressed and 1 otherwise. The BIOS and games often read from
+this register and discard the result as a way of (inefficiently) flush the CPU's
+write queue.
 
-The BIOS and games often read from this register and discard the result as a
-way of (inefficiently) keeping the CPU's write queue flushed.
+#### `0x1f40000a` (ASIC register 5): **Data from JVS MCU**
 
-#### `0x1f40000a` (ASIC register 5): **JVS receive buffer**
+| Bits | RW | Description                |
+| ---: | :- | :------------------------- |
+| 0-15 | R  | Current data word from MCU |
 
-| Bits | RW | Description                          |
-| ---: | :- | :----------------------------------- |
-| 0-15 | R  | JVS data output from microcontroller |
+This register is only valid when the `JVSIRDY` flag is set. After reading, a
+dummy write to `0x1f520000` shall be issued to clear `JVSIRDY`. If the MCU has
+more data available, it will update the register and set the flag again.
 
 #### `0x1f40000c` (ASIC register 6): **JAMMA controls** / **External inputs**
 
@@ -250,12 +273,12 @@ way of (inefficiently) keeping the CPU's write queue flushed.
 |    11 | R  | Player 1 button 6                       |
 | 12-15 |    | Unused?                                 |
 
-**NOTE**: since buttons are active low (wired between JAMMA pins and ground),
-all bits are 0 when a button is pressed and 1 when it isn't.
+As buttons are active-low (wired between JAMMA pins and ground), all bits are 0
+when a button is pressed and 1 otherwise.
 
 The signals for buttons 4 and 5 are wired in parallel to both JAMMA and the
-`EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and
-is usually unused.
+`EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and is
+usually unused.
 
 #### `0x1f40000e` (ASIC register 7): **JAMMA controls** / **External inputs**
 
@@ -268,176 +291,316 @@ is usually unused.
 |    11 | R  | Player 2 button 6                |
 | 12-15 |    | Unused?                          |
 
-**NOTE**: since buttons are active low (wired between JAMMA pins and ground),
-all bits are 0 when a button is pressed and 1 when it isn't.
+As buttons are active-low (wired between JAMMA pins and ground), all bits are 0
+when a button is pressed and 1 otherwise.
 
 The signals for buttons 4 and 5 are wired in parallel to both JAMMA and the
-`EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and
-is usually unused.
+`EXT-IN` connector, while button 6 can only be connected through `EXT-IN` and is
+usually unused.
 
 ### IDE registers
 
-The IDE interface is already well documented in many places. It consists of a
-16-bit parallel data bus with a 3-bit address bus and 2 bank select pins
-(`/CS0` and `/CS1`), giving a total of 16x 16-bit registers of which only 9 are
-typically used. The 40-pin IDE cable carries a few other signals, such as an
-interrupt pin and DMA control pins (unused on the 573). On the 573 the two IDE
-banks are mapped to two separate memory regions at `0x1f480000` (CS0) and
-`0x1f4c0000` (CS1). The interrupt pin is routed into IRQ10 through the CPLD,
-while DMA and status pins are not connected.
+The IDE interface consists of a 16-bit parallel data bus with a 3-bit address
+bus and two bank select pins (`/CS0` and `/CS1`), giving a total of sixteen
+16-bit registers of which only nine are typically used. On the 573 the two IDE
+banks are mapped to two separate memory regions at `0x1f480000` and `0x1f4c0000`
+respectively. The IDE interrupt pin is routed into IRQ10 through the CPLD, while
+all other signals on the 40-pin connector (DMA handshaking lines, status pins,
+etc.) go unused.
 
-On the 573 most (but not all) games expect an ATAPI CD drive to be always
-connected and set as master. Connecting an additional ATA hard drive, CF card
-or IDE-to-SATA bridge configured as slave does not seem to interfere with the
-BIOS. Homebrew games and apps can leverage such a drive to e.g. dump the flash
-or save arbitrary data, or to load assets for debugging without having to burn
-discs.
+Most 573 games, with the exception of those that run entirely from the internal
+flash or PCMCIA cards, expect an ATAPI CD-ROM drive to be always connected and
+configured as the primary (master) drive. Connecting an additional ATA hard
+drive, CF card, IDE-to-SATA bridge or other device configured as secondary will
+not interfere with the BIOS or games, thus homebrew games and apps can leverage
+such a drive to store data separately from the currently installed game.
 
-Note that ATAPI gives slightly different meanings to most IDE registers, so
-homebrew apps that support an additional ATA drive will have to interpret
-registers differently depending on whether they are accessing the master ATAPI
-drive or the slave ATA drive. Refer to the ATA and ATAPI specifications for
-more details.
+Note that IDE and ATAPI give slightly different meanings to each register. Refer
+to the ATA and ATAPI specifications for more details.
 
-#### `0x1f480000` (IDE address 0, CS0): **Data transfer**
+#### `0x1f480000` (IDE bank 0, address 0): **Data**
 
-Data transfers can also be performed through DMA5, see below for details.
+| Bits | RW | Description                 |
+| ---: | :- | :-------------------------- |
+| 0-15 | RW | Current packet or data word |
 
-#### `0x1f480002` (IDE address 1, CS0): **Error** / **Features**
+Data transfers can also be performed through DMA. See below for details.
 
-#### `0x1f480004` (IDE address 2, CS0): **Sector count**
+#### `0x1f480002` (IDE bank 0, address 1): **Error** / **Features**
 
-#### `0x1f480006` (IDE address 3, CS0): **Sector number**
+When read:
 
-#### `0x1f480008` (IDE address 4, CS0): **Cylinder number low**
+| Bits | RW | Description (ATA)                 | Description (ATAPI)           |
+| ---: | :- | :-------------------------------- | :---------------------------- |
+|    0 | R  | _Unused_                          | Illegal length flag (`ILI`)   |
+|    1 | R  | No media flag (`NM`)              | End of media flag (`EOM`)     |
+|    2 | R  | Command aborted flag (`ABRT`)     | Command aborted flag (`ABRT`) |
+|    3 | R  | Media change request flag (`MCR`) | _Unused_                      |
+|    4 | R  | Address not found flag (`IDNF`)   | SCSI sense key bit 0          |
+|    5 | R  | Media changed flag (`MC`)         | SCSI sense key bit 1          |
+|    6 | R  | Uncorrectable error flag (`UNC`)  | SCSI sense key bit 2          |
+|    7 | R  | DMA CRC error flag (`ICRC`)       | SCSI sense key bit 3          |
+| 8-15 |    | _Unused_                          | _Unused_                      |
 
-#### `0x1f48000a` (IDE address 5, CS0): **Cylinder number high**
+When written:
 
-#### `0x1f48000c` (IDE address 6, CS0): **Head number** / **Drive select**
+| Bits | RW | Description                             |
+| ---: | :- | :-------------------------------------- |
+|  0-7 | W  | Command-specific feature index or flags |
+| 8-15 |    | _Unused_                                |
 
-#### `0x1f48000e` (IDE address 7, CS0): **Status** / **Command**
+#### `0x1f480004` (IDE bank 0, address 2): **Sector count**
 
-#### `0x1f4c000c` (IDE address 6, CS1): **Alternate status**
+| Bits | RW | Description (ATA)     | Description (ATAPI) |
+| ---: | :- | :-------------------- | :------------------ |
+|  0-7 | W  | Transfer sector count | _Unused_            |
+| 8-15 |    | _Unused_              | _Unused_            |
+
+In ATA 48-bit LBA mode, bits 8-15 of the number of sectors to transfer must be
+written to this register first, followed by bits 0-7.
+
+In ATA CHS or 28-bit LBA mode, setting this register to 0 will cause 256 sectors
+to be transferred.
+
+#### `0x1f480006` (IDE bank 0, address 3): **Sector number**
+
+| Bits | RW | Description (ATA)                | Description (ATAPI) |
+| ---: | :- | :------------------------------- | :------------------ |
+|  0-7 | W  | CHS sector index or LBA bits 0-7 | _Unused_            |
+| 8-15 |    | _Unused_                         | _Unused_            |
+
+In ATA 48-bit LBA mode, bits 24-31 of the target LBA must be written to this
+register first, followed by bits 0-7.
+
+#### `0x1f480008` (IDE bank 0, address 4): **Cylinder number low**
+
+| Bits | RW | Description (ATA)                            | Description (ATAPI)          |
+| ---: | :- | :------------------------------------------- | :--------------------------- |
+|  0-7 | RW | CHS cylinder index bits 0-7 or LBA bits 8-15 | Transfer chunk size bits 0-7 |
+| 8-15 |    | _Unused_                                     | _Unused_                     |
+
+In ATA 48-bit LBA mode, bits 32-39 of the target LBA must be written to this
+register first, followed by bits 8-15.
+
+#### `0x1f48000a` (IDE bank 0, address 5): **Cylinder number high**
+
+| Bits | RW | Description (ATA)                              | Description (ATAPI)           |
+| ---: | :- | :--------------------------------------------- | :---------------------------- |
+|  0-7 | RW | CHS cylinder index bits 8-15 or LBA bits 16-23 | Transfer chunk size bits 8-15 |
+| 8-15 |    | _Unused_                                       | _Unused_                      |
+
+In ATA 48-bit LBA mode, bits 40-47 of the target LBA must be written to this
+register first, followed by bits 16-23.
+
+#### `0x1f48000c` (IDE bank 0, address 6): **Head number** / **Drive select**
+
+| Bits | RW | Description (ATA)                         | Description (ATAPI)                       |
+| ---: | :- | :---------------------------------------- | :---------------------------------------- |
+|  0-3 | W  | CHS head index or 28-bit LBA bits 24-27   | Reserved (should be 0)                    |
+|    4 | RW | Drive select (0 = primary, 1 = secondary) | Drive select (0 = primary, 1 = secondary) |
+|    5 |    | Reserved (should be 1?)                   | Reserved (should be 1?)                   |
+|    6 | W  | Sector addressing mode (0 = CHS, 1 = LBA) | Reserved (should be 0)                    |
+|    7 |    | Reserved (should be 1?)                   | Reserved (should be 1?)                   |
+| 8-15 |    | _Unused_                                  | _Unused_                                  |
+
+Bits 0-3 are not used in ATA 48-bit LBA mode.
+
+#### `0x1f48000e` (IDE bank 0, address 7): **Status** / **Command**
+
+When read:
+
+| Bits | RW | Description (ATA)              | Description (ATAPI)              |
+| ---: | :- | :----------------------------- | :------------------------------- |
+|    0 | R  | Error flag (`ERR`)             | Error flag (`CHK`)               |
+|    1 | R  | _Unused_                       | _Unused_                         |
+|    2 | R  | _Unused_                       | _Unused_                         |
+|    3 | R  | Data request flag (`DRQ`)      | Data request flag (`DRQ`)        |
+|    4 | R  | Drive write error flag (`DWE`) | Overlapped service flag (`SERV`) |
+|    5 | R  | Drive fault flag (`DF`)        | Drive fault flag (`DF`)          |
+|    6 | R  | Drive ready flag (`DRDY`)      | Drive ready flag (`DRDY`)        |
+|    7 | R  | Drive busy flag (`BSY`)        | Drive busy flag (`BSY`)          |
+| 8-15 |    | _Unused_                       | _Unused_                         |
+
+When written:
+
+| Bits | RW | Description   |
+| ---: | :- | :------------ |
+|  0-7 | W  | Command index |
+| 8-15 |    | _Unused_      |
+
+In order to issue a command, the features, sector, cylinder and head registers
+must be set up appropriately before writing the command ID to this register.
+Refer to the ATA specification for a list of available commands and their
+parameters.
+
+`DRDY` is set by the drive when it is ready to execute an ATA command. Note that
+ATAPI drives will *not* set `DRDY` initially, while still accepting ATAPI
+commands, in order to prevent misdetection as a hard drive. Before sending any
+command, a polling loop shall be used to wait until `BSY` is cleared.
+
+`DRQ` is set when the drive is waiting for data to be read or written. Depending
+on the drive and command, an interrupt may also be fired when `DRQ` goes high
+after a command is issued. `ERR`/`CHK` is set if the last command executed
+resulted in an error; in that case the error register will contain more
+information about the cause of the error.
+
+Reading from this register will acknowledge any pending drive interrupt and
+deassert IRQ10. Note that, as with all PS1 interrupts, IRQ10 must additionally
+be acknowledged at the interrupt controller side in order for it to fire again.
+
+#### `0x1f4c000c` (IDE bank 1, address 6): **Alternate status**
+
+| Bits | RW | Description (ATA)              | Description (ATAPI)              |
+| ---: | :- | :----------------------------- | :------------------------------- |
+|    0 | R  | Error flag (`ERR`)             | Error flag (`CHK`)               |
+|    1 | R  | _Unused_                       | _Unused_                         |
+|    2 | R  | _Unused_                       | _Unused_                         |
+|    3 | R  | Data request flag (`DRQ`)      | Data request flag (`DRQ`)        |
+|    4 | R  | Drive write error flag (`DWE`) | Overlapped service flag (`SERV`) |
+|    5 | R  | Drive fault flag (`DF`)        | Drive fault flag (`DF`)          |
+|    6 | R  | Drive ready flag (`DRDY`)      | Drive ready flag (`DRDY`)        |
+|    7 | R  | Drive busy flag (`BSY`)        | Drive busy flag (`BSY`)          |
+| 8-15 |    | _Unused_                       | _Unused_                         |
+
+Read-only mirror of the status register at `0x1f48000e` that returns the same
+flags, but does not acknowledge any pending IRQ when read.
 
 ### IDE DMA and quirks
 
-DMA channel 5, normally unused/reserved for the expansion port on a PS1, can be
-used to transfer data to/from the IDE bus... with some caveats. The "correct"
-way to connect an IDE drive to the PS1's DMA controller would to be to wire up
-`DMARQ` and `/DMACK` from the drive directly to the respective pins on the CPU,
-allowing the DMA controller to synchronize transfers to the drive's internal
-buffer seamlessly.
+DMA channel 5, normally reserved for the expansion port on a PS1, can be used to
+transfer data to/from the IDE bus... with some caveats. The "correct" way to
+connect an IDE drive to the PS1's DMA controller would to be to wire up `DMARQ`
+and `/DMACK` from the drive directly to the respective pins on the CPU, allowing
+the DMA controller to synchronize transfers to the drive's internal buffer in
+chunked mode.
 
-However, Konami being Konami, they didn't do this on the 573. Instead the drive
-will "see" a DMA read or write as a burst of regular (PIO) CPU-issued reads or
-writes. As such, the drive shall be configured (using the IDE "set features"
-command) for PIO data transfer rather than DMA transfer, and bits 9-10 in the
-`DMA5_CHCR` register shall be cleared to put the channel in manual sync mode.
-The `DRQ` bit in the status register must also be polled manually prior to
-starting a transfer to make sure the drive is ready for it.
+However, Konami being Konami, they did not do this on the 573. IDE drives will
+instead interpret DMA reads or writes as a burst of regular ("PIO", as defined
+in the ATA specification) CPU-issued reads or writes. As such, the drive shall
+be configured for PIO data transfers rather than DMA using the "set features"
+ATA command, and bits 9-10 in the `DMA5_CHCR` register shall be cleared to put
+the channel in manual synchronization mode. The `DRQ` bit in the status register
+must also be polled manually prior to starting a transfer, to ensure the drive
+is ready for it.
 
 ### RTC registers
 
-The RTC chip is an ST M48T58. This chip behaves like a normal 8192-byte 8-bit
-static RAM; in the System 573 it's connected to the lower 8 bits of the
-16-bit data bus and should be accessed by performing 16-bit bus accesses and
-ignoring/masking out the upper 8 bits (like when accessing IDE/ATAPI control
-registers).
+The RTC is an ST M48T58. This chip behaves like an 8 KB 8-bit static RAM, wired
+to the lower 8 bits of the 16-bit data bus. It must thus be accessed by
+performing 16-bit bus accesses and ignoring/masking out the upper 8 bits (as
+with IDE control registers).
 
-As explained in the M48T58 datasheet, the first 8184 bytes are just regular
-SRAM while the last 8 bytes are mapped to the RTC. Note that all clock values
-are buffered, i.e. they are stored in intermediate registers rather than being
-directly read from/written to the clock counters. Bit 6 in the control register
-must be set before reading the time to fetch the current time from the clock,
-and bit 7 must be set after writing new values to copy them over.
+The first 8184 bytes are mapped to the `0x1f620000-0x1f623fef` region and are
+simply battery-backed SRAM, which will retain its contents across power cycles
+as long as the RTC's battery is not dead. The last 8 bytes are used as clock and
+control registers.
 
-**NOTE**: in the "RWC" column, "C" means the value is updated by the clock
-logic when bit 6 in the control register is set.
+The values of the clock registers are buffered: they are stored in intermediate
+registers rather than being read from or written to the clock counters directly.
+Bits 6 and 7 in the control register at `0x1f623ff0` are used to control
+transfers between the registers and clock counters. All clock values are
+returned in BCD format.
 
-#### `0x1f623ff0` (M48T58 addr. `0x1ff8`): **Calibration** / **Control**
+#### `0x1f623ff0` (M48T58 register `0x1ff8`): **Calibration** / **Control**
 
-| Bits | RWC | Description                                             |
-| ---: | :-- | :------------------------------------------------------ |
-|  0-4 | RW  | Calibration offset (0-31), adjusts oscillator frequency |
-|    5 | RW  | Sign bit for calibration offset                         |
-|    6 | W   | Read trigger, write 1 to update registers from clock    |
-|    7 | W   | Write trigger, write 1 to set clock to match registers  |
-| 8-15 |     | _Unused_                                                |
+| Bits | RW | Buffered | Description                                             |
+| ---: | :- | :------- | :------------------------------------------------------ |
+|  0-4 | RW | Unknown  | Calibration offset (0-31), adjusts oscillator frequency |
+|    5 | RW | Unknown  | Sign bit for calibration offset (1 = positive)          |
+|    6 | W  | No       | Read mutex (1 = prevent buffered register updates)      |
+|    7 | W  | No       | Write mutex and trigger                                 |
+| 8-15 |    |          | _Unused_                                                |
 
-#### `0x1f623ff2` (M48T58 addr. `0x1ff9`): **Seconds** / **Stop**
+The values of all buffered clock registers are updated automatically. Setting
+bit 6 will disable this behavior while keeping the counters running, allowing
+for the registers to be read reliably without the RTC updating them at the same
+time. The bit shall be cleared after reading the registers.
 
-| Bits | RWC | Description                                      |
-| ---: | :-- | :----------------------------------------------- |
-|  0-3 | RWC | Seconds (0-9)                                    |
-|  4-6 | RWC | Tens of seconds (0-5)                            |
-|    7 | RW  | Stop flag, write 1 to pause clock or 0 to resume |
-| 8-15 |     | _Unused_                                         |
+Setting bit 7 will also halt buffered register updates, so that they can be
+overwritten manually with new values. Clearing it afterwards will result in the
+registers' values being copied back to the clock counters.
 
-#### `0x1f623ff4` (M48T58 addr. `0x1ffa`): **Minutes**
+#### `0x1f623ff2` (M48T58 register `0x1ff9`): **Seconds** / **Stop**
 
-| Bits | RWC | Description           |
-| ---: | :-- | :-------------------- |
-|  0-3 | RWC | Minutes (0-9)         |
-|  4-6 | RWC | Tens of minutes (0-5) |
-| 7-15 |     | _Unused_              |
+| Bits | RW | Buffered | Description                                     |
+| ---: | :- | :------- | :---------------------------------------------- |
+|  0-3 | RW | Yes      | Second units (0-9)                              |
+|  4-6 | RW | Yes      | Second tens (0-5)                               |
+|    7 | RW | Unknown  | Stop flag (0 = clock paused, 1 = clock running) |
+| 8-15 |    |          | _Unused_                                        |
 
-#### `0x1f623ff6` (M48T58 addr. `0x1ffb`): **Hours**
+#### `0x1f623ff4` (M48T58 register `0x1ffa`): **Minute**
 
-| Bits | RWC | Description                     |
-| ---: | :-- | :------------------------------ |
-|  0-3 | RWC | Hours (0-9, or 0-3 if tens = 2) |
-|  4-5 | RWC | Tens of hours (0-2)             |
-| 6-15 |     | _Unused_                        |
+| Bits | RW | Buffered | Description          |
+| ---: | :- | :------- | :------------------- |
+|  0-3 | RW | Yes      | Minute units (0-9)   |
+|  4-6 | RW | Yes      | Minute tens (0-5)    |
+|    7 |    |          | Reserved (must be 0) |
+| 8-15 |    |          | _Unused_             |
 
-Hours are always returned in 24-hour format. Unlike other RTC chips there is no
-way to switch to 12-hour format.
+#### `0x1f623ff6` (M48T58 register `0x1ffb`): **Hour**
 
-#### `0x1f623ff8` (M48T58 addr. `0x1ffc`): **Day of week** / **Century**
+| Bits | RW | Buffered | Description                          |
+| ---: | :- | :------- | :----------------------------------- |
+|  0-3 | RW | Yes      | Hour units (0-9, or 0-3 if tens = 2) |
+|  4-5 | RW | Yes      | Hour tens (0-2)                      |
+|  6-7 |    |          | Reserved (must be 0)                 |
+| 8-15 |    |          | _Unused_                             |
 
-| Bits | RWC | Description                                      |
-| ---: | :-- | :----------------------------------------------- |
-|  0-2 | RWC | Day of week (1-7)                                |
-|    3 |     | _Unused_                                         |
-|    4 | RWC | Century flag                                     |
-|    5 | RW  | Century flag toggling enable, write 0 to disable |
-|    6 | RW  | Enable 512 Hz clock signal output on pin 1       |
-| 7-15 |     | _Unused_                                         |
+Hours are always returned in 24-hour format, as there is no way to switch to
+12-hour format.
 
-The day of week register is an independent counter that is incremented at
-midnight. There is no logic for calculating the day of week, it is the user's
-responsibility to calculate it when changing the time. It's unclear whether
-Konami games interpret 1 as Monday or Sunday.
+#### `0x1f623ff8` (M48T58 register `0x1ffc`): **Day of week** / **Century**
 
-Bit 4 is a single-bit "counter" that gets toggled on each turn of the century
-(not something that happens that often). It can be frozen by clearing bit 5.
-Setting bit 6 will route the internal oscillator's output to M48T58 pin 1,
-which does not seem to be connected to anything on the 573.
+| Bits | RW | Buffered | Description                                |
+| ---: | :- | :------- | :----------------------------------------- |
+|  0-2 | RW | Yes      | Day of week (1-7)                          |
+|    3 |    |          | Reserved (must be 0)                       |
+|    4 | RW | Yes      | Century flag                               |
+|    5 | RW | Unknown  | Century flag toggling enable (1 = enabled) |
+|    6 | RW | Unknown  | Enable 512 Hz clock signal output on pin 1 |
+|    7 |    |          | Reserved (must be 0)                       |
+| 8-15 |    |          | _Unused_                                   |
 
-#### `0x1f623ffa` (M48T58 addr. `0x1ffd`): **Day of month** / **Battery state**
+The day of week register is a free-running counter incremented alongside the day
+counter. There is no logic for calculating the day of the week, so it must be
+updated manually when setting the time. Konami games use 1 as Sunday, 2 as
+Monday and so on.
 
-| Bits | RWC | Description                                          |
-| ---: | :-- | :--------------------------------------------------- |
-|  0-3 | RWC | Day of month (range depends on tens and month)       |
-|  4-5 | RWC | Tens of day of month (range depends on month)        |
-|    6 | R   | Low battery flag (1 = battery voltage is below 2.5V) |
-|    7 | RW  | Battery monitoring enable (1 = enabled)              |
-| 8-15 |     | _Unused_                                             |
+Bit 4 is a single-bit "counter" that gets toggled each time the year counter
+overflows. It can be frozen by clearing bit 5. Konami games do not use the
+century flag, as they interpret any year counter value in 70-99 range as
+1970-1999 and all other values as a year after 2000.
 
-#### `0x1f623ffc` (M48T58 addr. `0x1ffe`): **Month**
+#### `0x1f623ffa` (M48T58 register `0x1ffd`): **Day of month** / **Battery state**
 
-| Bits | RWC | Description                     |
-| ---: | :-- | :------------------------------ |
-|  0-3 | RWC | Month (1-9, or 0-2 if tens = 1) |
-|    4 | RWC | Tens of month (0-1)             |
-| 5-15 |     | _Unused_                        |
+| Bits | RW | Buffered | Description                                          |
+| ---: | :- | :------- | :--------------------------------------------------- |
+|  0-3 | RW | Yes      | Day of month units (range depends on tens and month) |
+|  4-5 | RW | Yes      | Day of month tens (range depends on month)           |
+|    6 | R  | No       | Low battery flag (1 = battery voltage is below 2.5V) |
+|    7 | RW | Unknown  | Battery monitoring enable (1 = enabled)              |
+| 8-15 |    |          | _Unused_                                             |
 
-#### `0x1f623ffe` (M48T58 addr. `0x1fff`): **Year**
+Bit 6 is updated when the system is power cycled, if bit 7 has previously been
+set.
 
-| Bits | RWC | Description        |
-| ---: | :-- | :----------------- |
-|  0-3 | RWC | Year (0-9)         |
-|  4-7 | RWC | Tens of year (0-9) |
-| 8-15 |     | _Unused_           |
+#### `0x1f623ffc` (M48T58 register `0x1ffe`): **Month**
+
+| Bits | RW | Buffered | Description                           |
+| ---: | :- | :------- | :------------------------------------ |
+|  0-3 | RW | Yes      | Month units (1-9, or 0-2 if tens = 1) |
+|    4 | RW | Yes      | Month tens (0-1)                      |
+|  5-7 |    |          | Reserved (must be 0)                  |
+| 8-15 |    |          | _Unused_                              |
+
+#### `0x1f623ffe` (M48T58 register `0x1fff`): **Year**
+
+| Bits | RW | Buffered | Description      |
+| ---: | :- | :------- | :--------------- |
+|  0-3 | RW | Yes      | Year units (0-9) |
+|  4-7 | RW | Yes      | Year tens (0-9)  |
+| 8-15 |    |          | _Unused_         |
 
 The year counter covers a full century, going from 00 to 99. On each overflow
 the century flag in the day of week register is toggled.
@@ -456,11 +619,10 @@ XC9536 CPLD on the main board.
 |    7 |    | Unknown (goes into CPLD)                                 |
 | 8-15 |    | _Unused_                                                 |
 
-Bit 6 controls whether `SDA` on the security cartridge is an input or an
-output. If set, `SDA` will output the same logic level as `D0`, otherwise the
-pin will be floating. Bits 0-5 are used to select what shall be mapped to the
-first 4 MB of the expansion region at `0x1f000000`, according to the following
-table:
+Bit 6 controls whether `SDA` on the security cartridge is an input or an output.
+If set, `SDA` will output the same logic level as `D0`, otherwise the pin will
+be floating. Bits 0-5 are used to switch the device mapped to the 4 MB
+`0x1f000000-0x1f3fffff` region:
 
 | Bank  | Mapped to                             |
 | ----: | :------------------------------------ |
@@ -473,16 +635,15 @@ table:
 | 32-47 | PCMCIA card slot 2                    |
 | 48-63 | _Unused_                              |
 
-#### `0x1f520000`: **JVS MCU reset control?**
+#### `0x1f520000`: **`JVSIRDY` clear**
 
-| Bits | RW | Description                           |
-| ---: | :- | :------------------------------------ |
-|  0-6 |    | _Unused_                              |
-|    8 | W  | Reset pin output (0 = pull reset low) |
-| 9-15 |    | _Unused_                              |
+| Bits | RW | Description |
+| ---: | :- | :---------- |
+| 0-15 |    | _Unused_    |
 
-This register hasn't been tested nor confirmed to exist, but it is supposed to
-reset the H8/3644 microcontroller.
+This register is a dummy write-only port that clears the `JVSIRDY` flag when any
+value is written to it. The flag is set by the JVS MCU whenever a new data word
+is available for reading from `0x1f40000a`.
 
 #### `0x1f560000`: **IDE reset control**
 
@@ -491,10 +652,10 @@ reset the H8/3644 microcontroller.
 |    0 | W  | Reset pin output (0 = pull reset low) |
 | 1-15 |    | _Unused_                              |
 
-Since the IDE reset pin is active-low, resetting the CD drive is done by
-writing 0 to this register, then waiting a few milliseconds and finally writing
-1 again. Note that the IDE protocol also specifies a way to "soft-reset"
-devices using the `SRST` bit in the device control register.
+Since the IDE reset pin is active-low, a reset is performed by writing 0 to this
+register, then waiting a few milliseconds and writing 1 again. Note that the IDE
+specification also defines a way to "soft-reset" devices (e.g. to abort
+execution of a command) using the `SRST` bit in the device control register.
 
 #### `0x1f5c0000`: **Watchdog clear**
 
@@ -502,15 +663,14 @@ devices using the `SRST` bit in the device control register.
 | ---: | :- | :---------- |
 | 0-15 |    | _Unused_    |
 
-This register is a dummy write-only port that clears the watchdog timer
-embedded in the Konami 058232 power-on reset and coin counter driver chip when
-any value is written to it. The BIOS and most games seem to write to this port
-at least once per frame.
+This register is a dummy write-only port that clears the watchdog timer embedded
+in the Konami 058232 power-on reset and coin counter driver chip when any value
+is written to it. The BIOS and games write to this port roughly once per frame.
 
-If the watchdog is not cleared *at least* every 350-390 ms, it will pull the
-system's reset line low for about 50 ms and reboot the 573. The watchdog can be
-disabled without affecting power-on reset by placing a jumper on `S86` (see
-pinouts).
+If the watchdog is not cleared at least every 350-400 ms, it will pull the
+system's reset line low for about 50 ms in order to force a reboot. The watchdog
+can be disabled without affecting power-on reset by placing a jumper on `S86`
+(see the pinouts section).
 
 #### `0x1f600000`: **External outputs**
 
@@ -519,28 +679,105 @@ pinouts).
 |  0-7 | W  | To `OUT0-OUT7` on `EXT-OUT` connector |
 | 8-15 |    | _Unused_                              |
 
-The lower 8 bits written to this register are latched on pins `OUT0-OUT7` on
-the external output connector (see the pinouts section). This connector is used
-by some games to control cabinet lights without using an I/O board.
+The lower 8 bits written to this register are latched on pins `OUT0-OUT7` of the
+external output connector (see the pinouts section). This connector is used by
+some games to control cabinet lights without using an I/O board.
 
-#### `0x1f680000`: **JVS transmit buffer**
+#### `0x1f680000`: **Data to JVS MCU**
 
-| Bits | RW | Description                       |
-| ---: | :- | :-------------------------------- |
-| 0-15 | W  | JVS data input to microcontroller |
+| Bits | RW | Description      |
+| ---: | :- | :--------------- |
+| 0-15 | W  | Data word to MCU |
+
+In order to prevent overruns, this register shall only be accessed when
+`JVSDRDY` is cleared. Writing to it will set `JVSDRDY`.
 
 #### `0x1f6a0000`: **Security cartridge outputs**
 
 | Bits | RW | Description                      |
 | ---: | :- | :------------------------------- |
-|  0-7 | RW | To `D0-D7` on security cartridge |
+|  0-7 | W  | To `D0-D7` on security cartridge |
 | 8-15 |    | _Unused_                         |
 
-The lower 8 bits written to this register go to the cartridge's pins `D0-D7`.
-See the security cartridge section for an explanation of what each pin is wired
-to. Bit 0 additionally controls the `SDA` pin when set to output (see the bank
-switch register). According to MAME, reading from this register will yield the
-last value written to it.
+The lower 8 bits written to this register are latched on pins `D0-D7` of the
+cartridge slot. See the security cartridge section for an explanation of what
+each pin is wired to. Bit 0 additionally controls the `SDA` pin when configured
+as an output through the bank switch register. Writing to this register will set
+the `DRDY` flag, which can then be cleared by the cartridge.
+
+Some games may rely on reads from this register returning the last value written
+to it. This behavior is unconfirmed.
+
+## JVS interface
+
+The System 573 is equipped with a JVS host interface, allowing for connection of
+I/O modules, controllers and other devices that implement the JVS protocol
+commonly used in arcade cabinets.
+
+JVS uses a single RS-485 bus running at 115200 bits per second, shared by all
+devices. The standard JVS connector is a single USB-A port, with the data lines
+used as the RS-485 differential pair and the `VBUS` pin as a sensing line (see
+the JVS specification for details). JVS devices typically have a full size USB-B
+port for connection to the host, plus optionally another USB-A port for daisy
+chaining additional devices. The RS-485 bus needs to be terminated; some boards
+will automatically insert a termination resistor when connected as the last node
+in a daisy chain.
+
+### Packet format
+
+A JVS packet can be up to 258 bytes long and is made up of the following fields:
+
+| Byte | Description                                                    |
+| ---: | :------------------------------------------------------------- |
+|    0 | Synchronization byte, must be `0xe0`                           |
+|    1 | Destination address                                            |
+|    2 | Length (number of payload bytes including checksum)            |
+|   3- | Payload                                                        |
+|      | Checksum (sum of address, length and payload bytes modulo 256) |
+
+**NOTE**: when a JVS packet is sent over the RS-485 bus, any `0xd0` or `0xe0`
+byte other than the synchronization byte must be escaped as `0xd0 0xcf` or
+`0xd0 0xdf` respectively, in order to allow downstream devices to reliably
+determine the end of a packet. On the 573, the JVS MCU handles escaping outbound
+packets and unescaping inbound packets automatically. The escaping process does
+*not* update the length field to reflect the escaped length of the packet.
+
+Refer to the JVS specification for details on the contents of standard and
+vendor-specific payloads.
+
+### MCU communication protocol
+
+The system's JVS interface is managed by a dedicated H8/3644 microcontroller,
+interfaced through two 16-bit latches and handshaking lines (in a similar way to
+the 8-bit ports on the security cartridge slot). The MCU's firmware is stored in
+OTP ROM and consists of a simple loop that buffers the data written by the 573,
+sends it, waits for a response to be received and lets the 573 read it.
+
+In order to perform a JVS transaction the 573 must:
+
+1. Reset the MCU through register `0x1f400000`, clear `JVSIRDY` by writing to
+   `0x1f520000` then wait for the status and error codes in register
+   `0x1f400004` to be set to 0 and 3 respectively.
+2. Write the packet two bytes at a time to `0x1f680000`, waiting for `JVSDRDY`
+   to go low before each write. Words are little endian, so for instance the
+   first word of a packet with destination address `0x01` would be `0x01e0`. If
+   the total length of the packet is odd, the last byte shall still be written
+   as a word (with the upper byte zeroed out).
+3. Wait for the status code to become 1. At this point the MCU will send the
+   packet and wait for a response from a device on the bus.
+4. Wait for the status code to become 0, signalling a valid response has been
+   received and can be read out. A timeout should be implemented here, as the
+   MCU will wait for a response indefinitely even if no device is present.
+5. Read the packet, again two bytes at a time, from `0x1f40000a`, waiting for
+   `JVSIRDY` to go high before each read and clearing it by writing to
+   `0x1f520000` after each read. The status code will be set to 2 after the
+   first word is read and back to 0 once no more data is available to read.
+
+The MCU does not allow for non-JVS packets to be sent as it validates the sync
+byte, checksum and uses the length field to determine packet length. Responses
+cannot be received without sending a packet first either. The MCU will also
+insert a 200 us minimum delay between the last byte of a received packet and the
+first byte of the next packet.
 
 ## I/O boards
 
@@ -1849,39 +2086,40 @@ functional. Pin 3 is an active-high reset output, unused on the 573.
 
 ## Credits, sources and links
 
-This document is the result of a joint effort consisting of months if not years
-of original research, brought to you by:
+This document is the result of a joint effort consisting of years' worth of
+research, brought to you by:
 
-- **spicyjpeg** (documentation writing, hardware test coding)
-- **Naoki Saito** (hardware reverse engineering, schematic tracing, tests)
+- **spicyjpeg** (documentation writing, software reverse engineering, testing)
+- **Naoki Saito** (hardware reverse engineering, schematic tracing, testing)
+- **987123879113** (digital I/O board reverse engineering, testing)
 - **smf** (initial reverse engineering and implementation of the 573 MAME
   driver)
-- **Grandstand** (tests with security cartridges and ATAPI drives)
+- **tensionvex** (testing)
 - **Shiz** (security cartridge details)
 
-Traced schematics, datasheets and additional resources are available in
-[Naoki's 573 repo](https://github.com/NaokiS28/KSystem-573). Shiz also
-maintains a [documentation repo](https://github.com/Shizmob/arcade-docs) for
+Traced schematics, images, datasheets and additional resources are available in
+[Naoki's 573 repo](https://github.com/NaokiS28/KSystem-573). Shiz also maintains
+a [general documentation repo](https://github.com/Shizmob/arcade-docs) for
 several arcade systems including the 573.
 
-In addition to original research, some information has been aggregated from the
-following sources:
+Some information has been aggregated from the following sources:
 
 - [System 573 MAME driver](https://github.com/mamedev/mame/blob/master/src/mame/konami/ksys573.cpp)
-- [windyfairy/987123879113's MAME fork](https://github.com/987123879113/mame)
-  and [gobbletools](https://github.com/987123879113/gobbletools)
+- [987123879113's MAME fork](https://github.com/987123879113/mame) and
+  [gobbletools](https://github.com/987123879113/gobbletools)
 - ATAPI specification (revision 2.6, January 1996)
-- M48T58, ADC0834, X76F041 and X76F100 datasheets
+- ATA/ATAPI-6 specification (revision 1e, June 2001)
+- JVS specification (third edition, command reference revision 1.3)
+- HD6473644, M48T58, ADC0834, XCS40XL, MAS3507D, X76F041 and X76F100 datasheets
 - [DDR stage I/O protocol notes](https://github.com/nchowning/open-io/blob/master/NOTES.txt)
+- [JVS protocol notes](https://github.com/TheOnlyJoey/openjvs/wiki/Protocol)
 - [Original (incomplete) list of working ATAPI drives](https://gamerepair.info/hardware/1_system_573)
 - ["The Almost Definitive Guide to Session Mode Linking"](https://www2.gvsu.edu/brittedg/SessionGuide.pdf)
-- [Japanese page about drummania](https://callusnext.com/pcbs/system573_dm.html)
-  (has network adapter and multisession unit pictures)
+- [Callus Next PCB information](https://callusnext.com/pcbs)
 - [Light output for Salary Man Champ](http://solid-orange.com/1569) and
   [Hyper Bishi Bashi Champ](http://solid-orange.com/1581)
-- [system573\_tool](https://github.com/mrdion/system573_tool) (possibly the
-  first ever homebrew app for the 573)
-- [Arduino-based master calendar clone](https://www.arcade-projects.com/threads/konami-system-573-master-calendar.2646/#post-34907)
+- [system573\_tool](https://github.com/mrdion/system573_tool)
+- [Arduino-based master calendar implementation](https://www.arcade-projects.com/threads/konami-system-573-master-calendar.2646/#post-34907)
 - [Z-I-v forum post with security cartridge info](https://zenius-i-vanisher.com/v5.2/viewthread.php?threadid=2825)
 
 Huge thanks to the Rhythm Game Cabs Discord server and everyone who provided
