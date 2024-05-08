@@ -308,14 +308,12 @@ The files are occassionally also found on PSX CDROMs:<br/>
   08h .. Chunks (see below)
 ```
 
-```
- _______________________________ Symbol Chunks ________________________________
-```
+#### Symbol Chunks
 
-#### Chunk 01h: Symbol (Immediate, eg. memsize, or membase)
-#### Chunk 02h: Symbol (Function Address for Internal & External Functions)
-#### Chunk 05h: Symbol (?)
-#### Chunk 06h: Symbol (?)
+##### Chunk 01h: Symbol (Immediate, eg. memsize, or membase)
+##### Chunk 02h: Symbol (Function Address for Internal &amp; External Functions)
+##### Chunk 05h: Symbol (?)
+##### Chunk 06h: Symbol (?)
 ```
   00h 4   Address/Value
   04h 1   Chunk ID (01h/02h/05h/06h)
@@ -323,38 +321,36 @@ The files are occassionally also found on PSX CDROMs:<br/>
   06h LEN Symbol (eg. "VSync")
 ```
 
-```
- __________________________ Source Code Line Chunks ___________________________
-```
+#### Source Code Line Chunks
 
-#### Chunk 80h: Source Code Line Numbers: Address for 1 Line
+##### Chunk 80h: Source Code Line Numbers: Address for 1 Line
 ```
   00h 4   Address (for 1 line, starting at current line)
   04h 1   Chunk ID (80h)
 ```
 
-#### Chunk 82h: Source Code Line Numbers: Address for N Lines (8bit)
+##### Chunk 82h: Source Code Line Numbers: Address for N Lines (8bit)
 ```
   00h 4   Address (for N lines, starting at current line)
   04h 1   Chunk ID (82h)
   05h 1   Number of Lines (00h=None, or 02h and up?)
 ```
 
-#### Chunk 84h: Source Code Line Numbers: Address for NN Lines (16bit)
+##### Chunk 84h: Source Code Line Numbers: Address for NN Lines (16bit)
 ```
   00h 4   Address (for N lines, starting at current line)
   04h 1   Chunk ID (84h)
   05h 2   Number of Lines (?)
 ```
 
-#### Chunk 86h: Source Code Line Numbers: Address for Line NNN (32bit?)
+##### Chunk 86h: Source Code Line Numbers: Address for Line NNN (32bit?)
 ```
   00h 4   Address (for 1 line, starting at newly assigned current line)
   04h 1   Chunk ID (84h)
   05h 4   Absolute Line Number (rather than number of lines) (?)
 ```
 
-#### Chunk 88h: Source Code Line Numbers: Start with Filename
+##### Chunk 88h: Source Code Line Numbers: Start with Filename
 ```
   00h 4   Address (start address)
   04h 1   Chunk ID (88h=Filename)
@@ -363,17 +359,15 @@ The files are occassionally also found on PSX CDROMs:<br/>
   0Ah LEN Filename (eg. "C:\path\main.c")
 ```
 
-#### Chunk 8Ah: Source Code Line Numbers: End of Source Code
+##### Chunk 8Ah: Source Code Line Numbers: End of Source Code
 ```
   00h 4   Address (end address)
   04h 1   Chunk ID (8Ah)
 ```
 
-```
- __________________________ Internal Function Chunks __________________________
-```
+#### Internal Function Chunks
 
-#### Chunk 8Ch: Internal Function: Start with Filename
+##### Chunk 8Ch: Internal Function: Start with Filename
 ```
   00h 4    Address
   04h 1    Chunk ID (8Ch)
@@ -388,15 +382,15 @@ The files are occassionally also found on PSX CDROMs:<br/>
   xxh LEN2 Symbol (eg. "VSync")
 ```
 
-#### Chunk 8Eh: Internal Function: End of Function (end of chunk 8Ch)
+##### Chunk 8Eh: Internal Function: End of Function (end of chunk 8Ch)
 ```
   00h 4   Address
   04h 1   Chunk ID (8Eh)
   05h 4   Line Number                 <-- line number (32bit?)
 ```
 
-#### Chunk 90h: Internal Function:Whatever90h... first instruction in main func?
-#### Chunk 92h: Internal Function:Whatever92h... last instruction in main func?
+##### Chunk 90h: Internal Function:Whatever90h... first instruction in main func?
+##### Chunk 92h: Internal Function:Whatever92h... last instruction in main func?
 Maybe line numbers? Or end of definitions for incoming parameters?<br/>
 ```
   00h 4   Address
@@ -404,11 +398,9 @@ Maybe line numbers? Or end of definitions for incoming parameters?<br/>
   05h 4   Whatever (1Fh,00h,00h,00h)  <-- line number relative to main.start?
 ```
 
-```
- _____________________________ Class/Type Chunks ______________________________
-```
+#### Class/Type Chunks
 
-#### Chunk 94h: Type/Symbol (Simple Types?)
+##### Chunk 94h: Type/Symbol (Simple Types?)
 ```
   00h 4   Offset (when used within a structure, or stack-N, or otherwise zero)
   04h 1   Chunk ID (94h)
@@ -419,7 +411,7 @@ Maybe line numbers? Or end of definitions for incoming parameters?<br/>
   0xh LEN Symbol Name (eg. "size_t")
 ```
 
-#### Chunk 96h: Type/Symbol (Complex Structures/Arrays?)
+##### Chunk 96h: Type/Symbol (Complex Structures/Arrays?)
 ```
   00h 4   Offset (when used within a structure, otherwise zero)
   04h 1   Chunk ID (96h)
@@ -434,11 +426,9 @@ Maybe line numbers? Or end of definitions for incoming parameters?<br/>
   xxh LEN2  Symbol Name (eg. "r")
 ```
 
-```
- ______________________________ Class/Type Values _____________________________
-```
+#### Class/Type Values
 
-#### Class definition (in chunk 94h) (and somewhat same/similar in chunk 96h)
+##### Class definition (in chunk 94h) (and somewhat same/similar in chunk 96h)
 (looks same/similar as C\_xxx class values in COFF files!)<br/>
 ```
   0001h = Local variable              (with Offset = negative stack offset)
@@ -449,7 +439,7 @@ Maybe line numbers? Or end of definitions for incoming parameters?<br/>
   000Dh = Type alias                  (with Offset = zero)
 ```
 
-#### Type definition (in chunk 94h/96h)
+##### Type definition (in chunk 94h/96h)
 (maybe lower 4bit=type, and next 4bit=usage/variant?)<br/>
 (looks same/similar as T\_xxx type values in COFF files!)<br/>
 ```
@@ -479,11 +469,9 @@ Maybe line numbers? Or end of definitions for incoming parameters?<br/>
   ??    = custom type/struct (using value 000xh plus "fake" name, or so?)
 ```
 
-```
- __________________________________ .MAP File _________________________________
-```
+#### .MAP File
 
-#### PsyQ .MAP File
+##### PsyQ .MAP File
 The .SYM file is usually bundled with a .MAP file, which is containing a
 summary of the symbolic info as ASCII text (but without info on line numbers or
 data types). For example:<br/>
@@ -542,7 +530,7 @@ NFL Blitz 2000 (MagDemo26: B2000\DATA\ARTD\_G.BIN) does additionally use Type
 5=8bit.<br/>
 The Type value value is only a hint on how to view the Pixel data (the data is
 copied to VRAM regardless of the type; 4=Mixed is meant to indicate that the
-data contains different types, eg. both 4bpp & 8bpp textures).<br/>
+data contains different types, eg. both 4bpp &amp; 8bpp textures).<br/>
 Type 3=24bpp is quite rare, but does exist (eg. Colony Wars (MagDemo02:
 CWARS\GAME.RSC\DEMO.TIM).<br/>
 
@@ -591,21 +579,15 @@ This does probably support the same 5 types as in .TIMs (though official Sony
 docs claim the .PXL type to be only 1bit wide, but netherless claim that PXL
 can be 4bpp, 8bpp, or 16bpp).<br/>
 
-```
- _______________________________ Compressed TIM _______________________________
-```
-
 #### Compressed TIMs
 Ape Escape (Sony 1999) is using a customized TIM format with 4bpp compression:<br/>
 [CDROM File Compression TIM-RLE4/RLE8](cdromfileformats.md#cdrom-file-compression-tim-rle4rle8)<br/>
 Other than that, TIMs can be compressed via generic compression functions (like
 LZSS, GZIP), or via bitmap dedicated compression formats (like BS, JPG, GIF).<br/>
 
-```
- ______________________________ Malformed Files _______________________________
-```
+#### Malformed Files
 
-#### Malformed TIMs in BIGFILE.DAT
+##### Malformed TIMs in BIGFILE.DAT
 ```
   Used by Legacy of Kain: Soul Reaver (eg. BIGFILE.DAT\folder04h\file13h)
   Used by Gex - Enter the Gecko (eg. BIGFILE.DAT\file0Fh\LZcompressed)
@@ -622,12 +604,12 @@ The malformed entries include:<br/>
   [08h]=Width*2*Height+0Ch should be 8000Ch, but malformed is 80004h.
   Total filesize should be 80014h, but Gecko files are often MUCH smaller.
 ```
-Also, destination yloc should be 0..1FFh, but PSX "Lemmings & Oh No! More
+Also, destination yloc should be 0..1FFh, but PSX "Lemmings &amp; Oh No! More
 Lemmings" (FILES\GFX\\*.TIM) has yloc=200h (that game also has vandalized .BMP
 headers with 2-byte alignment padding after ID "BM", whilst pretending that
 those extra bytes aren't there in data offset and total size entries).<br/>
 
-#### Oversized TIMs
+##### Oversized TIMs
 ```
   Used by Pong (MagDemo24: LES02020\*\*.TIM)
 ```
@@ -638,11 +620,11 @@ Has 200x200h pix, but section size (and filesize) are +2 bigger than that:<br/>
   10 00 00 00 02 00 00 00 0E 80 03 00 00 02 00 01 C0 01 00 01  ;Pong ZONE*.TIM
 ```
 
-#### Miscomputed Section Size
+##### Miscomputed Section Size
 NBA Basketball 2000 (MagDemo28: FOXBB\TIM\\*.TIM) has TIMs with section size
 "0Ch+Xsiz\*Ysiz" instead of "0Ch+Xsiz\*2\*Ysiz".<br/>
 
-#### NonTIMs in Bloody Roar 1 and 2
+##### NonTIMs in Bloody Roar 1 and 2
 ```
   Bloody Roar 1 (CMN\INIT.DAT\000Eh)
   Bloody Roar 2 (CMN\SE00.DAT, CMD\SEL00.DAT\0030h and CMN\VS\VS.DAT\0000h)
@@ -653,7 +635,7 @@ This looks somehow TIM-inspired, but has ID=13h.<br/>
   13 00 00 00 02 00 00 00 0C 20 00 00 00 00 00 00 00 01 10 00  ;Bloody Roar 2
 ```
 
-#### Other uncommon/malformed TIM variants
+##### Other uncommon/malformed TIM variants
 And, Heart of Darkness has a TIM with Size entry set to Xsiz\*2\*Ysiz+0Eh
 (instead of +0Ch) (that malformed TIM is found inside of the RNC compressed
 IMAGES\US.TIM file).<br/>
@@ -663,7 +645,7 @@ Also, not directly malformed, but uncommon: Final Fantasy IX contains 14h-byte
 0x0 pixel TIMs (eg. FF9.IMG\dir04\file0046\1B-0000\04-0001).<br/>
 Klonoa (MagDemo08: KLONOA\FILE.IDX\3\2\0..1) has 0x0pix TIM (plus palette).<br/>
 
-#### Malformed CLTs
+##### Malformed CLTs
 ```
   Used by Secret of Mana, WM\WEFF\*.CLT
 ```
@@ -789,7 +771,7 @@ has X=0..Width, Y=0..Height+1Ah (eg. S\BKEY\*, S\BFG\*, S\PISFA0 have large Y).<
 The files do not contain any palette info... maybe 2800h-byte PLAYPAL does
 contain the palette(s)?<br/>
 
-#### Lemmings & Oh No! More Lemmings (FILES\GFX\\*.BOB, FILES\SMLMAPS\\*.BOB)
+#### Lemmings &amp; Oh No! More Lemmings (FILES\GFX\\*.BOB, FILES\SMLMAPS\\*.BOB)
 ```
   000h 2       Width
   002h 2       Height
@@ -1203,7 +1185,7 @@ image).<br/>
   ..   300h VGA Palette (256 colors, 3-byte per color  = R,G,B)  ;/
 ```
 Decoding PCX files is quite a hardcore exercise due to a vast amount of
-versions, revisions, corner cases, incomplete & bugged specifications, and
+versions, revisions, corner cases, incomplete &amp; bugged specifications, and
 inofficial third-party glitches.<br/>
 
 #### PCX Versions
@@ -1277,7 +1259,7 @@ to use this colors:<br/>
   color1=white
 ```
 There are rumours that color1 could be changed to any of the 16 CGA colors
-(supposedly via [10h].bit7-4, but most older & newer 2-color files have
+(supposedly via [10h].bit7-4, but most older &amp; newer 2-color files have
 that byte set to 00h, so one would end up with black-on-black).<br/>
 Some newer 2-color files contain RGB palette entries [10h]=000000h,
 [13h]=FFFFFFh (and [16h..3Fh]=00h-filled or FFh-filled).<br/>
@@ -1645,9 +1627,6 @@ This is an ASCII text file for "artist boards" with following entries:<br/>
 
 
 ##   CDROM File Video 3D Graphics TMD/PMD/TOD/HMD/RSD (Sony)
-```
- ____________________________________ TMD _____________________________________
-```
 
 #### TMD - Modeling Data for OS Library
 ```
@@ -1754,12 +1733,8 @@ Used by WCW/nWo Thunder (MagDemo19: THUNDER\RING\\*.TMD)<br/>
 Used by Witch of Salzburg (the MODELS\\*.MDL\\*.TMD)<br/>
 Used by Scooby Doo and the Cyber Chase (MagDemo54: MODEL\\*\\*)<br/>
 
-```
- ____________________________________ PMD _____________________________________
-```
-
 #### PMD - High-Speed Modeling Data
-This is about same as TMD, with less features, intended to work fasrer.<br/>
+This is about same as TMD, with less features, intended to work faster.<br/>
 ```
   000h 4    ID (00000042h)
   004h 4    Offset to Primitives
@@ -1820,10 +1795,6 @@ Used only by a few games:<br/>
 ```
 Unknown if/which other games are using the PMD format.<br/>
 
-```
- ____________________________________ TOD _____________________________________
-```
-
 #### TOD - Animation Data
 ```
   000h 1    ID (50h)
@@ -1856,10 +1827,6 @@ Used by Macross VF-X 2 (MagDemo23: VFX2\DATA01\\*.TOD and \*.TOX)<br/>
 Used by Alice in Cyberland (ALICE.PAC\xxx\_T\*.FA\\*.TOD)<br/>
 Unknown if/which other games are using the TOD format.<br/>
 
-```
- ____________________________________ HMD _____________________________________
-```
-
 #### HMD - Hierarchical 3D Model, Animation and Other Data
 ```
   000h 4    ID (00000050h)   ;same as in TOD, which CAN ALSO have MSBs=zero(!)
@@ -1878,10 +1845,6 @@ details.<br/>
 .HMD used by Bloody Roar 2 (MagDemo22: LON\LON\*.DAT\\*, ST5\ST\*.DAT\02h..03h)<br/>
 .HMD used by Ultimate Fighting Championship (MagDemo38: UFC\CU00.RBB\6Bh..EFh)<br/>
 Unknown if/which games other are using the HMD format.<br/>
-
-```
- ____________________________________ RSD _____________________________________
-```
 
 #### RSD Files (RSD,PLY,MAT,GRP,MSH,PVT,COD,MOT,OGP)
 RSD files consist of a set of several files (RSD,PLY,MAT,etc). The files
@@ -2068,10 +2031,6 @@ In practice, the following values are used (of which, 8001h is most common).<br/
   8101h=MDEC Video, Standard MDEC plus bit8=FlagDisc2 (Chrono Cross Disc 2)
 ```
 
-```
- ______________________________________________________________________________
-```
-
 #### Leading XA-ADPCM
 Most movies start with STR video sectors. But a few games start with XA-ADPCM:<br/>
 ```
@@ -2149,25 +2108,23 @@ Subtitle entries:<br/>
 The text strings are ASCII, with special 2-byte codes (80h,7Bh=Linebreak,
 1Fh,20h=u-Umlaut, etc).<br/>
 
-```
- ________________________ Customized STR Video Headers ________________________
-```
+#### Customized STR Video Headers
 
-#### Viewpoint (with slightly modified STR header)
+##### Viewpoint (with slightly modified STR header)
 ```
   008h 4    Frame number (0=First)                      ;<-- instead of 1=First
   01Ch 2    Unknown (always D351h)                      ;<-- instead of zero
   01Eh 2    Number of Frames in this STR file           ;<-- instead of zero
 ```
 
-#### Capcom games
+##### Capcom games
 Resident Evil 2 (ZMOVIE\\*.STR, PL0\ZMOVIE\\*.STR)<br/>
 Super Puzzle Fighter II Turbo (STR/CAPCOM15.STR)<br/>
 ```
   01Ch 4    Sector number of 1st sector of current frame  ;<-- instead of zero
 ```
 
-#### Chrono Cross Disc 2 Video
+##### Chrono Cross Disc 2 Video
 Chrono Cross Disc 1 does have normal STR headers, but Disc 2 has Type.bit8
 toggled:<br/>
 ```
@@ -2178,7 +2135,7 @@ properties". Unknown, what that means, it does probably refer to the last movie
 on Chrono Cross Disc 2, which is quite huge (90Mbyte), and has lower resolution
 (160x112), and might have whatever "additional properties"?<br/>
 
-#### Need for Speed 3
+##### Need for Speed 3
 Need for Speed 3 Hot Pursuit (MOVIES\\*.XA, contains videos, not raw XA-ADPCM)<br/>
 Jackie Chan Stuntmaster (FE\MOVIES\\*.STR)<br/>
 With slightly modified STR headers:<br/>
@@ -2187,7 +2144,7 @@ With slightly modified STR headers:<br/>
   018h 4    Unlike the above modified entry, this is normal  ;-copy of BS[4..7]
 ```
 
-#### ReBoot (MOVIES\\*.WXA)
+##### ReBoot (MOVIES\\*.WXA)
 This has leading XA-ADPCM, and customized STR header:<br/>
 ```
   014h 2    Type (0000h=Normal, 01FFh=Empty frames at end of video)
@@ -2195,7 +2152,7 @@ This has leading XA-ADPCM, and customized STR header:<br/>
   018h 8    Zerofilled
 ```
 
-#### Gran Turismo 1 (230Mbyte STREAM.DAT) and Gran Turismo 2 (330Mbyte STREAM.DAT)
+##### Gran Turismo 1 (230Mbyte STREAM.DAT) and Gran Turismo 2 (330Mbyte STREAM.DAT)
 These two games use BS iki format, and (unlike other iki videos) also special
 STR headers:<br/>
 ```
@@ -2211,7 +2168,7 @@ Caution: The STR header values aren't constant throughout the frame:<br/>
   and of course [04h] does also increase per sector.
 ```
 
-#### PGA Tour 96, 97, 98 (VIDEO\..\\*.XA and ZZBUFFER\\*.STR)
+##### PGA Tour 96, 97, 98 (VIDEO\..\\*.XA and ZZBUFFER\\*.STR)
 Used by all movies in PGA Tour 96, 97 (and for the ZZBUFFER\BIGSPY.STR dummy
 padding movie in PGA Tour 98).<br/>
 The videos have normal BS v2 data, but the Frame Size entry is 8 smaller than
@@ -2233,7 +2190,7 @@ junk is probably unrelated to BS fraquant). The oddities for SPYTEST.STR do
 also occur in some frames in PGA Tour 98 BIGSPY.STR. Anyways, those ZZBUFFER
 files seem to be only unused padding files.<br/>
 
-#### Alice in Cyber Land (\*.STR)
+##### Alice in Cyber Land (\*.STR)
 Note: First sector contains XA-ADPCM audio (video starts in 2nd sector).<br/>
 ```
  STR Sector Header:
@@ -2250,13 +2207,13 @@ Many of the movies have a variable frame rate. All movies contain frames
 sequences that match one of the following frame rates: 7.5 fps, 10 fps, 15 fps,
 30 fps.<br/>
 
-#### Encrypted iki (Panekit - Infinitive Crafting Toy Case)
+##### Encrypted iki (Panekit - Infinitive Crafting Toy Case)
 ```
   014h 8    Copy of decrypted BS header (instead of encrypted BS header)
 ```
 
-#### Princess Maker: Yumemiru Yousei (PM3.STR)
-#### Parappa (Japanese Demo version only) (S0/GUIDE.STR)
+##### Princess Maker: Yumemiru Yousei (PM3.STR)
+##### Parappa (Japanese Demo version only) (S0/GUIDE.STR)
 These files do have BS ID=3000h (except, the first and last some frames have
 nromal ID=3800h). The STR header is quite normal (apart from reflecting the odd
 BS ID):<br/>
@@ -2265,7 +2222,7 @@ BS ID):<br/>
   020h 7E0h Data (in BS format, also with BS ID 3000h, instead of 3800h)
 ```
 
-#### Starblade Alpha and Galaxian 3
+##### Starblade Alpha and Galaxian 3
 These movies have Extra stuff in the data section. The STR header is quite
 normal (apart from reflecting the Extra stuff):<br/>
 ```
@@ -2284,7 +2241,7 @@ The data part looks as so:<br/>
 Note: Starblade Alpha does use that format for GAMEn.STR and NAME.STR in FLT
 and TEX folders (the other movies in that game are in normal STR format).<br/>
 
-#### Largo Winch: Commando SAR (FMV\NSPIN\_W.RNG)
+##### Largo Winch: Commando SAR (FMV\NSPIN\_W.RNG)
 This is a somewhat "normal" movie, without audio, and with the STR headers
 moved to the begin of the file:<br/>
 ```
@@ -2294,7 +2251,7 @@ moved to the begin of the file:<br/>
 Note: The movie contains the rotating "W" logo, which is looped in Start
 screen.<br/>
 
-#### Player Manager (1996, Anco Software) (FILMS\1..3\\*.STR)
+##### Player Manager (1996, Anco Software) (FILMS\1..3\\*.STR)
 ```
   006h 2    Number of Sectors in this Frame-1 (8..9 = 9..10 sectors)
   00Ch 4    Frame Size in bytes               (8..9*7E0h = 3F00h or 46E0h)
@@ -2318,7 +2275,7 @@ frame, but it's accidentally leaving the last sector unused:<br/>
 Apart from the odd format in FILMS\1..3\\*.STR, the game does also have normal
 videos in FILMS\\*.STR.<br/>
 
-#### Chiisana Kyojin Microman (DAT\STAGE\*\\*.MV)
+##### Chiisana Kyojin Microman (DAT\STAGE\*\\*.MV)
 The .MV files have 5 sectors/frame: Either 5 video sectors without audio, or
 4-5 video sectors plus XA-ADPCM audio (in the latter case, audio is in each 8th
 sector (07h,0Fh,17h,1Fh,etc), hence having filesize rounded up to N\*8 sectors):<br/>
@@ -2345,7 +2302,7 @@ Apart from the odd DAT\STAGE\*\\*.MV files, the game does also have .STR files
 with normal STR headers and more sectors per frame (DAT\STAGE16,21,27\\*.STR,
 DAT\OTHER\\*.STR, DAT\OTHER\CM\\*.STR, and MAT\DAT\\*.STR).<br/>
 
-#### Black Silence padding
+##### Black Silence padding
 Used by Bugriders: The Race of Kings (MOVIE\\*XB.STR)<br/>
 Used by Rugrats Studio Tour (MagDemo32: RUGRATS\DATA\OPEN\\*B.STR)<br/>
 ```
@@ -2371,7 +2328,7 @@ data contains only 320x192 pixels).<br/>
 The huge 7 second padding is a very crude way to avoid the next movie to be
 played when not immediately pausing the CDROM at end of current movie.<br/>
 
-#### Ridge Racer Type 4 (only PAL version) (R4.STR)
+##### Ridge Racer Type 4 (only PAL version) (R4.STR)
 The 570Mbyte R4.STR file contains XA-ADPCM in first three quarters, and two STR
 movies in last quarter:<br/>
 ```
@@ -2393,7 +2350,7 @@ higher resolution, plus some other customized STR header entries:<br/>
 That is, the special video is standard MDEC, the only problem is detecting it
 as such (despite of the custom STR Type entry).<br/>
 
-#### Mat Hoffman's Pro BMX (MagDemo48: MHPB\SHORT.STR)
+##### Mat Hoffman's Pro BMX (MagDemo48: MHPB\SHORT.STR)
 This contains a normal MDEC movie, but with distorted "garbage" in first and
 last some sectors.<br/>
 ```
@@ -2448,7 +2405,7 @@ Last 96h Sectors:<br/>
   014h 7ECh Zerofilled
 ```
 
-#### Final Fantasy VII (FF7) (MOVIE\\*.MOV and MOVIE\\*.STR)
+##### Final Fantasy VII (FF7) (MOVIE\\*.MOV and MOVIE\\*.STR)
 These movies have Extra stuff in the data section. The STR header is quite
 normal (apart from reflecting the Extra stuff):<br/>
 ```
@@ -2462,7 +2419,7 @@ The data part looks as so:<br/>
   028h ..   BS Data (in BS v1 format)
 ```
 
-#### Final Fantasy IX (FF9) (\*.STR and \*.MBG)
+##### Final Fantasy IX (FF9) (\*.STR and \*.MBG)
 There are several customized STR header entries:<br/>
 ```
   002h 2    STR Type (0004h=FF9/Video)                      ;instead of 8001h
@@ -2515,11 +2472,9 @@ often/always(?) just these 28h-bytes:<br/>
 Unknown if some sectors contain more/other MBG data, perhaps compressed BG
 pixel-depth values for drawing OBJs in front/behind BG pixels?<br/>
 
-```
- _______________________ Non-standard STR Video Headers _______________________
-```
+#### Non-standard STR Video Headers
 
-#### Final Fantasy VIII (FF8)
+##### Final Fantasy VIII (FF8)
 Video frames are always 320x224. The video frames are preceeded by two
 SPU-ADPCM audio sectors.<br/>
 ```
@@ -2530,7 +2485,7 @@ SPU-ADPCM audio sectors.<br/>
   008h 7F8h Data (in BS v2 format)
 ```
 
-#### Ace Combat 3 Electrosphere (in 520Mbyte ACE.SPH/SPB archive)
+##### Ace Combat 3 Electrosphere (in 520Mbyte ACE.SPH/SPB archive)
 The videos start with one XA-ADPCM sector, followed by the first Video sector.<br/>
 ```
  STR Sector Header:
@@ -2562,7 +2517,7 @@ The Japanese version may be the only game that has two streaming videos running
 in parallel on different channels.<br/>
 That means, non-japanese version is different...?<br/>
 
-#### Judge Dredd (1998, Gremlin) (CUTS\\*.IXA and LEVELS\\*\\*.IXA)
+##### Judge Dredd (1998, Gremlin) (CUTS\\*.IXA and LEVELS\\*\\*.IXA)
 This is a lightgun-game with "interactive movies". The gameplay consists of
 running on a fixed path through a scene with pre-recorded background graphics,
 the only player interaction is aiming the gun at other people that show up in
@@ -2594,8 +2549,6 @@ The unusual 320x352pix resoltution contains a 320x240pix BG image, with
 additional 320x112pix texture data appended at the bottom.<br/>
 Extra Stuff 1..6 does supposedly contain info for animating enemies and/or
 backgrounds.<br/>
-
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_<br/>
 
 #### iki
 The .iki video format (found in files with .IKI or .IK2 extension) is used in
@@ -3414,7 +3367,7 @@ The number of blocks is NumBlocks=(Width+15)/16\*(height+15)/16\*6. The size of
 the decompressed GT-ZIP data is NumBlocks\*2.<br/>
 
 #### Encrypted iki
-The first 20h byte of the iki header & data are encrypted. Among others,
+The first 20h byte of the iki header &amp; data are encrypted. Among others,
 the ID 3800h is inverted (=C7FFh). To decrypt them:<br/>
 ```
   [buf+00h]=[buf+00h] XOR FFFFFFFFh
@@ -4354,10 +4307,8 @@ Used by Blue's Clues: Blue's Big Musical (SEPD chunks in \*.TXD)<br/>
 
 
 ##   CDROM File Audio Other Formats
-```
- __________________________ .SQ .HD .HD (SSsq/SShd) ___________________________
-```
 
+#### .SQ .HD .HD (SSsq/SShd)
 This is a newer Sony format from 1999 (resembling the older .SEQ .VH .VB
 format).<br/>
 Used by Alundra 2, Ape Escape, Arc the Lad 3, Koukidou Gensou - Gunparade
@@ -4369,7 +4320,7 @@ March, Omega Boost, PoPoLoCrois Monogatari II, The Legend of Dragoon, Wild Arms
   .BD Voice Binary  (raw SPU-ADPCM, same as .VB)
 ```
 
-#### Sequence Data (\*.SQ)
+##### Sequence Data (\*.SQ)
 ```
   000h 2       Unknown (always 64h)
   002h 2       Unknown (always 1E0h)
@@ -4380,7 +4331,7 @@ March, Omega Boost, PoPoLoCrois Monogatari II, The Legend of Dragoon, Wild Arms
   110h ..      Unknown Data
 ```
 
-#### Voice Header (\*.HD)
+##### Voice Header (\*.HD)
 ```
   000h 4     Size of the .HD file itself
   004h 4     Size of the corresponding .BD file
@@ -4390,15 +4341,12 @@ March, Omega Boost, PoPoLoCrois Monogatari II, The Legend of Dragoon, Wild Arms
   080h ..    Data
 ```
 
-#### Voice Bonary (\*.BD) (same as .VB files)
+##### Voice Binary (\*.BD) (same as .VB files)
 ```
   000h ..    SPU-ADPCM data (usually starting with zerofilled 10h-byte block)
 ```
 
-```
- ____________________________ DNSa/PMSa/FNSa/FMSa _____________________________
-```
-
+#### DNSa/PMSa/FNSa/FMSa
 There are four four file types:<br/>
 ```
   "DNSa"  (aka SouND backwards)         ;sequence data
@@ -4417,7 +4365,7 @@ Used by several games (usually inside of BIGFILE.DAT):<br/>
 ```
 Note: The exact file format does reportedly differ in each game.<br/>
 
-#### "PMSa"  (aka SaMPles backwaords)
+##### "PMSa"  (aka SaMPles backwaords)
 ```
   000h 4     ID "PMSa"
   004h 4     Total Filesize
@@ -4425,7 +4373,7 @@ Note: The exact file format does reportedly differ in each game.<br/>
   010h ..    SPU-ADPCM data (usually starting with zerofilled 10h-byte block)
 ```
 
-#### "DNSa"  (aka SouND backwards)
+##### "DNSa"  (aka SouND backwards)
 ```
   000h 4      ID "DNSa"   ;aka SND backwards
   004h 2      Offset from DNSa+4 to 8-byte entries (can be odd)
@@ -4440,24 +4388,21 @@ Note: The exact file format does reportedly differ in each game.<br/>
   ...  ..     Several blocks with ID "QESa" or "QSMa"  ;supposedly MIDI-style?
 ```
 
-#### "FNSa"  (aka SouNd-F... backwards)
+##### "FNSa"  (aka SouNd-F... backwards)
 These are whatever tiny files (with filesize 1Ch or 2Ch).<br/>
 ```
   000h 4     ID "FNSa"
   ...  ..    Unknown
 ```
 
-#### "FMSa"  (aka SaMples-F... backwards)
+##### "FMSa"  (aka SaMples-F... backwards)
 ```
   000h 4     ID "FMSa"
   008h ..    Unknown..
   ...  ..    SPU-ADPCM data (usually starting with zerofilled 10h-byte block)
 ```
 
-```
- ____________________________________ AKAO ____________________________________
-```
-
+#### AKAO
 There a several games that have sound files with ID "AKAO".<br/>
 ```
   XXX does that include different AKAO formats... for Samples and Midi?
@@ -4465,16 +4410,13 @@ There a several games that have sound files with ID "AKAO".<br/>
 AKAO is also used in several streaming movies:<br/>
 [CDROM File Video Streaming Audio](cdromfileformats.md#cdrom-file-video-streaming-audio)<br/>
 
-```
- ___________________________________ Others ___________________________________
-```
-
+#### Others
 Alone in the Dark IV has MIDB and DSND chunks (which contain sound files).<br/>
 
 #### See also
 The page below does mention several PSX sound formats, plus some open source
-& closed source tools for handling those files.<br/>
-github.com/loveemu/vgmdocs/blob/master/Conversion\_Tools\_for\_Video\_Game\_Music.md<br/>
+&amp; closed source tools for handling those files.<br/>
+[https://github.com/loveemu/vgmdocs/blob/master/Conversion_Tools_for_Video_Game_Music.md]<br/>
 
 
 
@@ -4496,11 +4438,10 @@ Other than that, tracks can be accessed via TOC instead of filenames.<br/>
 
 
 ##   CDROM File Archives with Filename
-```
- _______________________________ Entrysize=08h ________________________________
-```
 
-#### WWF Smackdown (MagDemo33: TAI\\*.PAC)
+#### Entrysize=08h
+
+##### WWF Smackdown (MagDemo33: TAI\\*.PAC)
 ```
   000h 4     ID ("DPAC")                                        ;\
   004h 4     Unknown (100h)                                     ;
@@ -4520,11 +4461,9 @@ Other than that, tracks can be accessed via TOC instead of filenames.<br/>
 The DPAC archives can contain generic files (eg .TIM) and child archives (in a
 separate archive format, with ID "PAC ").<br/>
 
-```
- _______________________________ Entrysize=10h ________________________________
-```
+#### Entrysize=10h
 
-#### Championship Motocross (MagDemo25: SMX\RESHEAD.BIN and RESBODY.BIN)
+##### Championship Motocross (MagDemo25: SMX\RESHEAD.BIN and RESBODY.BIN)
 RESHEAD.BIN:<br/>
 ```
   000h N*10h  File List (220h bytes)
@@ -4538,7 +4477,7 @@ RESBODY.BIN:<br/>
   000h ..     File Data (referenced from RESHEAD.BIN)
 ```
 
-#### One (DIRFILE.BIN\w\*\sect\*.bin)
+##### One (DIRFILE.BIN\w\*\sect\*.bin)
 ```
   000h N*10h File List
   ...  ..    File Data area
@@ -4547,7 +4486,7 @@ RESBODY.BIN:<br/>
   00Ch 4     Offset (increasing, N*10h and up) ;for last entry: zero
 ```
 
-#### True Love Story 1 and 2 (TLS\*\MCD.DIR and MCD.IMG)
+##### True Love Story 1 and 2 (TLS\*\MCD.DIR and MCD.IMG)
 MCD.DIR:<br/>
 ```
   000h N*10h  File List
@@ -4596,8 +4535,8 @@ could be used to distinguish between encrypted and unencrypted MCD archives
   First word in MCD.IMG   00000010h     074D4C8Ah
 ```
 
-#### Star Wars Rebel Assault 2 (RESOURCE.\*, and nested therein)
-#### BallBlazer Champions (\*.DAT, and nested therein)
+##### Star Wars Rebel Assault 2 (RESOURCE.\*, and nested therein)
+##### BallBlazer Champions (\*.DAT, and nested therein)
 The Rebel RESOURCE.\* files start with name "bigEx" or "fOFS", BallBlazer \*.DAT
 start with "SFXbase" or "tpage", nested files start with whatever other names.<br/>
 ```
@@ -4629,11 +4568,9 @@ Compressed Data Format (when List entry [08h]\>0 and [0Ch].bit31=1)::<br/>
 ```
 [CDROM File Compression RESOURCE (Star Wars Rebel Assault 2)](cdromfileformats.md#cdrom-file-compression-resource-star-wars-rebel-assault-2)<br/>
 
-```
- _______________________________ Entrysize=14h ________________________________
-```
+#### Entrysize=14h
 
-#### Fighting Force (MagDemo01: FGHTFRCE\\*.WAD)
+##### Fighting Force (MagDemo01: FGHTFRCE\\*.WAD)
 ```
   000h 4     Number of files                                  (big endian)
   004h N*14h File List
@@ -4646,8 +4583,8 @@ File List entries:<br/>
   010h 4     Fileoffset in bytes (increasing, 4-byte aligned) (big endian)
 ```
 
-#### Parappa (MagDemo01: PARAPPA\\*.INT)
-#### Um Jammer Lammy (MagDemo24: UJL\\*.INT)
+##### Parappa (MagDemo01: PARAPPA\\*.INT)
+##### Um Jammer Lammy (MagDemo24: UJL\\*.INT)
 ```
   0000h 2000h Folder 1
   2000h ..    File Data for Folder 1
@@ -4675,9 +4612,9 @@ contains Filesizes that aren's multiples of 4).<br/>
 Note: There can be more than one folder with same ID (ie. when having more than
 198h TIM files, which won't fit into a single 2000h-byte folder).<br/>
 
-#### Gran Turismo 1 (MagDemo10: GT\BG.DAT\\*, GT\COURSE.DAT\\*)
-#### Gran Turismo 1 (MagDemo15: GT\BG.DAT\\*, GT\COURSE.DAT\\*)
-#### JumpStart Wildlife Safari Field Trip (MagDemo52: DEMO\DATA.DAT\\*.DAT)
+##### Gran Turismo 1 (MagDemo10: GT\BG.DAT\\*, GT\COURSE.DAT\\*)
+##### Gran Turismo 1 (MagDemo15: GT\BG.DAT\\*, GT\COURSE.DAT\\*)
+##### JumpStart Wildlife Safari Field Trip (MagDemo52: DEMO\DATA.DAT\\*.DAT)
 These are child archives found inside of the main GT-ARC and DATA.DAT archives.<br/>
 ```
   000h 4     Number of Files (eg. 26h) (usually at least 02h or higher)
@@ -4688,9 +4625,9 @@ These are child archives found inside of the main GT-ARC and DATA.DAT archives.<
   010h 4     Offset in bytes (increasing, 4-byte-aligned?)
 ```
 
-#### Croc 2 (MagDemo22: CROC2\CROCII.DAT and CROCII.DIR)
-#### Disney's The Emperor's New Groove (MagDemo39: ENG\KINGDOM.DIR+DAT)
-#### Disney's Aladdin in Nasira's Revenge (MagDemo46: ALADDIN\ALADDIN.DIR+DAT)
+##### Croc 2 (MagDemo22: CROC2\CROCII.DAT and CROCII.DIR)
+##### Disney's The Emperor's New Groove (MagDemo39: ENG\KINGDOM.DIR+DAT)
+##### Disney's Aladdin in Nasira's Revenge (MagDemo46: ALADDIN\ALADDIN.DIR+DAT)
 ```
  DIR:
   000h 4     Number of Entries (0Eh)
@@ -4705,7 +4642,7 @@ File List entries:<br/>
   010h 4     File Offset in .DAT file (800h-byte aligned, increasing)
 ```
 
-#### Alice in Cyberland (ALICE.PAC, and nested .PAC, .FA, .FA2 archives)
+##### Alice in Cyberland (ALICE.PAC, and nested .PAC, .FA, .FA2 archives)
 ```
   000h N*14h File List
   ...  14h   Zerofilled (File List end marker)
@@ -4718,7 +4655,7 @@ File List entries:<br/>
 PAC and FA are uncompressed, FA2 is compressed via some LZ5-variant:<br/>
 [CDROM File Compression LZ5 and LZ5-variants](cdromfileformats.md#cdrom-file-compression-lz5-and-lz5-variants)<br/>
 
-#### Interplay Sports Baseball 2000 (MagDemo22:BB2000\DATA\HOG.TOC\UNIFORMS\\*.UNI)
+##### Interplay Sports Baseball 2000 (MagDemo22:BB2000\DATA\HOG.TOC\UNIFORMS\\*.UNI)
 ```
   000h N*14h  File List (3Ch*14b bytes, unused entries are zeropadded)
   4B0h ..     Data area (TIM files for player uniforms)
@@ -4727,11 +4664,9 @@ PAC and FA are uncompressed, FA2 is compressed via some LZ5-variant:<br/>
   010h 4      Offset (zerobased, from begin of Data area, increasing)
 ```
 
-```
- _______________________________ Entrysize=18h ________________________________
-```
+#### Entrysize=18h
 
-#### Invasion from Beyond (MagDemo15: IFB\\*.CC)
+##### Invasion from Beyond (MagDemo15: IFB\\*.CC)
 ```
   000h 0Ch   Fixed ID (always "KotJCo01Dir ") (always that same string)
   00Ch 4     Number of Files
@@ -4748,7 +4683,7 @@ Note: Alignment is optional: Files in IFB\HANGAR\\*.CC and IFB\MAPS\\*.CC use
 4-byte aligned offsets (but may have odd filesizes). Files in IFB\INCBINS\\*.CC
 don't use any alignment/padding.<br/>
 
-#### Ghost in the Shell (MagDemo03: GITSDEMO\S01\\*.FAC)
+##### Ghost in the Shell (MagDemo03: GITSDEMO\S01\\*.FAC)
 ```
   000h N*18h File List (18h-bytes each)
   ...  18h   File List end marker (zerofilled)
@@ -4764,8 +4699,8 @@ File List entries:<br/>
   014h 4     Offset (increasing, 4-byte aligned)
 ```
 
-#### Oddworld: Abe's Exodus (MagDemo17: ABE2\\*.LVL)
-#### Oddworld: Abe's Exodus (MagDemo21: ABE2\\*.LVL and nested .IDX files)
+##### Oddworld: Abe's Exodus (MagDemo17: ABE2\\*.LVL)
+##### Oddworld: Abe's Exodus (MagDemo21: ABE2\\*.LVL and nested .IDX files)
 ```
   000h 4     Header Size in bytes  (2800h) (can be MUCH bigger than needed)
   004h 4     Zero
@@ -4795,7 +4730,7 @@ File List entries (in .IDX files):<br/>
   XXX: That's not tested/verified, and not implemented in no$psx file viewer.
 ```
 
-#### Monkey Hero (MagDemo17: MONKEY\BIGFILE.PSX and nested .PSX files)
+##### Monkey Hero (MagDemo17: MONKEY\BIGFILE.PSX and nested .PSX files)
 ```
   000h 4     Unknown              (6)
   004h 4     Total Filesize       (1403800h)
@@ -4814,8 +4749,8 @@ File List entries:<br/>
   014h 4     File Size in bytes
 ```
 
-#### NHL Faceoff '99 (MagDemo17: FO99\\*.KGB and nested \*.PRM \*.TMP \*.ZAM)
-#### NHL Faceoff 2000 (MagDemo28: FO2000\\*.KGB, Z.CAT, and nested \*.PRM and \*.TMP)
+##### NHL Faceoff '99 (MagDemo17: FO99\\*.KGB and nested \*.PRM \*.TMP \*.ZAM)
+##### NHL Faceoff 2000 (MagDemo28: FO2000\\*.KGB, Z.CAT, and nested \*.PRM and \*.TMP)
 ```
   000h 4     ID "KGB",00h
   004h 4     Number of Files         (N)
@@ -4831,7 +4766,7 @@ File List entries:<br/>
   014h 4     File Offset (800h-byte or 1/4-byte? aligned)
 ```
 
-#### Syphon Filter 1 (MagDemo18: SYPHON\SUBWAY.FOG) (4Mbyte, namelen=10h)
+##### Syphon Filter 1 (MagDemo18: SYPHON\SUBWAY.FOG) (4Mbyte, namelen=10h)
 ```
   000h 4     Unknown (80000001h)
   004h 4     Offset/800h to Final Padding area
@@ -4851,7 +4786,7 @@ File List entries:<br/>
 This is almost same as the newer v2 format in Syphon Filter 2 (see there for
 details).<br/>
 
-#### Centipede (MagDemo23: ARTFILES\\*.ART)
+##### Centipede (MagDemo23: ARTFILES\\*.ART)
 ```
   000h 0Fh   ID ("Art", zeropadded)             ;\
   00Fh 1     Type or so ("?")                   ; sorts of File List entry
@@ -4870,8 +4805,8 @@ doesn't have any such zerofilled entry.<br/>
 Unknown if this can have child folders (maybe in similar form as the root
 folder entry).<br/>
 
-#### Sheep Raider (MagDemo52: SDWDEMO\\*.SDW)
-#### Sheep Raider (MagDemo54: SDWDEMO\\*.SDW)
+##### Sheep Raider (MagDemo52: SDWDEMO\\*.SDW)
+##### Sheep Raider (MagDemo54: SDWDEMO\\*.SDW)
 ```
   000h 4     Unknown (301h)
   004h 4     Zero (0)
@@ -4891,7 +4826,7 @@ The SDW archive contains malformed 200h\*1A4h pixel TIMs.<br/>
   Filesize is 6A000h, but should be 69014h = 200h*1A4h*2+14h
 ```
 
-#### Wing Commander III (\*.LIB)
+##### Wing Commander III (\*.LIB)
 ```
   000h 2     Number of Files (C9h)
   002h N*18h File List
@@ -4903,7 +4838,7 @@ The SDW archive contains malformed 200h\*1A4h pixel TIMs.<br/>
   008h 10h   Filename ("filename.ext", zeropadded)
 ```
 
-#### Largo Winch - Commando SAR (LEVELS\\*.DCF)
+##### Largo Winch - Commando SAR (LEVELS\\*.DCF)
 ```
   000h 4     ID "DCAT"
   004h 4     Number of Entries
@@ -4916,7 +4851,7 @@ The SDW archive contains malformed 200h\*1A4h pixel TIMs.<br/>
   014h 4     Offset (increasing, 800h-byte aligned)
 ```
 
-#### Policenauts (NAUTS\\*.DPK)
+##### Policenauts (NAUTS\\*.DPK)
 ```
   000h 4     ID "FRID"
   004h 4     Always E0000000h
@@ -4935,7 +4870,7 @@ The SDW archive contains malformed 200h\*1A4h pixel TIMs.<br/>
   014h 4     Unknown (checksum? random?)
 ```
 
-#### Actua Ice Hockey 2 (Best Sports Games Ever (demo), AH2\GAMEDATA\\*.MAD)
+##### Actua Ice Hockey 2 (Best Sports Games Ever (demo), AH2\GAMEDATA\\*.MAD)
 ```
   000h N*18h File List
   ...  ..    File Data area (directly after File List, without end-code)
@@ -4955,7 +4890,7 @@ There are several oddities in demo version (unknown if that's in retail, too):<b
  MISCFILE.MAD\panfont.mad\*.txt --> starts with FF,FE --> that's 16bit Unicode?
 ```
 
-#### Muppet Monster Adventure (MagDemo37: MMA\GAMEDATA+WORLDS\*\\*.INF+WAD)
+##### Muppet Monster Adventure (MagDemo37: MMA\GAMEDATA+WORLDS\*\\*.INF+WAD)
 ```
  INF:
   000h N*18h File List
@@ -4969,7 +4904,7 @@ File List entries:<br/>
   008h 10h   Filename ("FILENAME.EXT", zeropadded)
 ```
 
-#### Army Men Air Attack 2 (MagDemo40: AMAA2\\*.PCK)
+##### Army Men Air Attack 2 (MagDemo40: AMAA2\\*.PCK)
 ```
   000h 4     Number of entries (N)
   004h N*18h File List
@@ -4981,7 +4916,7 @@ File List entries:<br/>
   014h 4     Filesize in bytes
 ```
 
-#### Mort the Chicken (MagDemo41: MORT\\*.PPF and .TPF)
+##### Mort the Chicken (MagDemo41: MORT\\*.PPF and .TPF)
 ```
   000h 2     Type (31h=TPF with TIMs, 32=PPF with PMDs)
   002h 2     Number of entries (N) (can be 0=None, eg. STAGE*\MORT.PPF)
@@ -4997,7 +4932,7 @@ File List entries:<br/>
   014h 4     Fileoffset (from begin of Data area, increasing)
 ```
 
-#### Hot Wheels Extreme Racing (MagDemo52: US\_01293\VEHICLES\\*.CAB)
+##### Hot Wheels Extreme Racing (MagDemo52: US\_01293\VEHICLES\\*.CAB)
 ```
   000h 4     ID "BACR" (aka RCAB backwards)
   004h 4     Number of entries (N)
@@ -5009,11 +4944,9 @@ File List entries:<br/>
   024h 4     Filesize in bytes (can be odd)
 ```
 
-```
- _______________________________ Entrysize=19h ________________________________
-```
+#### Entrysize=19h
 
-#### WAD Format (Wipeout 2097)
+##### WAD Format (Wipeout 2097)
 PSX Wipeout 2097, cdrom:\WIPEOUT2\SOUND\SAMPLES.WAD:\\*.vag<br/>
 PSX Wipeout 2097, cdrom:\WIPEOUT2\TRACK\*\TRACK.WAD:\\*.\*<br/>
 PSX Wipeout 3 (MagDemo25: WIPEOUT3\\*)<br/>
@@ -5031,11 +4964,9 @@ Directory Entries<br/>
 ```
 The filesize entry implies offset to next file.<br/>
 
-```
- _______________________________ Entrysize=1Ch ________________________________
-```
+#### Entrysize=1Ch
 
-#### Command & Conquer, Red Alert (MagDemo05: RA\\*) FAT/MIX/XA
+##### Command &amp; Conquer, Red Alert (MagDemo05: RA\\*) FAT/MIX/XA
 ```
   000h 4     Number of entries with location 0=MIX (M=65h)
   000h 4     Number of entries with location 1=XA  (X=1)
@@ -5050,7 +4981,7 @@ File List entries:<br/>
   018h 4     File Location (0=DATA.MIX, 1=DATA.XA)
 ```
 
-#### Syphon Filter 2 (MagDemo30: SYPHON\TRAIN.FOG) (2.8Mbyte, namelen=14h)
+##### Syphon Filter 2 (MagDemo30: SYPHON\TRAIN.FOG) (2.8Mbyte, namelen=14h)
 ```
   000h 4     Unknown (80000001h)
   004h 4     Offset/800h to Final Padding area
@@ -5076,12 +5007,10 @@ padding bytes" at offset 10h.<br/>
 Note: The FOG archive in Syphon Filter 2 demo version does contain some empty
 dummy files (with intact filename, but with offset=0 and size=0).<br/>
 
-```
- _______________________________ Entrysize=20h ________________________________
-```
+#### Entrysize=20h
 
-#### Colony Wars (MagDemo02: CWARS\GAME.RSC)
-#### Colony Wars Venegance (MagDemo14: CWV\GAME.RSC, 8Mbyte)
+##### Colony Wars (MagDemo02: CWARS\GAME.RSC)
+##### Colony Wars Venegance (MagDemo14: CWV\GAME.RSC, 8Mbyte)
 ```
   000h 4     Number of Files
   004h N*20h File List
@@ -5099,7 +5028,7 @@ File List entries:<br/>
 Note: Colony Wars Red Sun does also have a GAME.RSC file (but in different
 format, with folder structure).<br/>
 
-#### WarGames (MagDemo14: WARGAMES\\*.DAT)
+##### WarGames (MagDemo14: WARGAMES\\*.DAT)
 ```
   000h 4     Number of Files (1C3h)
   004h N*20h File List
@@ -5115,7 +5044,7 @@ File List entries:<br/>
   01Ch 4     Zero
 ```
 
-#### Running Wild (MagDemo15: RUNWILD\\*.BIN)
+##### Running Wild (MagDemo15: RUNWILD\\*.BIN)
 ```
   000h N*20h File List
   ...  4     File List End Offset/800h (end of last file)
@@ -5133,7 +5062,7 @@ File List entries:<br/>
 Files with extension .z or .Z are compressed:<br/>
 [CDROM File Compression Z (Running Wild)](cdromfileformats.md#cdrom-file-compression-z-running-wild)<br/>
 
-#### Test Drive Off-Road 3 (MagDemo27: TDOR3\TDOR3.DAT)
+##### Test Drive Off-Road 3 (MagDemo27: TDOR3\TDOR3.DAT)
 About same as the other Test Drive games, but with shorter filenames.<br/>
 ```
   000h N*20h  File List (1920h bytes used; with padding: 5800h bytes in total)
@@ -5147,7 +5076,7 @@ About same as the other Test Drive games, but with shorter filenames.<br/>
 TDOR3.DAT contains DOT1 child archives and many RNC compressed files: --\>
 CDROM File Compression RNC (Rob Northen Compression)<br/>
 
-#### Tiny Tank (MagDemo23: TINYTANK\\*.DSK)
+##### Tiny Tank (MagDemo23: TINYTANK\\*.DSK)
 ```
   000h 4     ID ("TDSK")                                      ;\
   004h 4     Number of Files (1Bh)                            ; Directory
@@ -5167,7 +5096,7 @@ CDROM File Compression RNC (Rob Northen Compression)<br/>
 Note: The File Offset points to a 32bit value containing a copy of the
 Filesize, and the actual file starts at Offset+4.<br/>
 
-#### MAG 3 (MagDemo26: MAG3\MAG3.DAT, 7Mbyte)
+##### MAG 3 (MagDemo26: MAG3\MAG3.DAT, 7Mbyte)
 ```
   000h N*20h  File List (B60h bytes)
   ...  ..     Zeropadding to 800h-byte boundary
@@ -5178,7 +5107,7 @@ Filesize, and the actual file starts at Offset+4.<br/>
   006h 1Ah    Filename ("FILENAME.EXT" or "PATH\FILENAME.EXT", zeropadded)
 ```
 
-#### Play with the Teletubbies (MagDemo35: TTUBBIES\\*.RES)
+##### Play with the Teletubbies (MagDemo35: TTUBBIES\\*.RES)
 ```
   000h 2     Zero (0000h)
   002h 2     Number of Files (N)
@@ -5198,8 +5127,8 @@ File List entries:<br/>
   010h 10h   Filename ("FILENAME.EXT", zeropadded)
 ```
 
-#### Mat Hoffman's Pro BMX (old demo) (MagDemo39: BMX\FE.WAD+STR) (uncompressed)
-#### Mat Hoffman's Pro BMX (new demo) (MagDemo48: MHPB\FE.WAD+STR) (compressed)
+##### Mat Hoffman's Pro BMX (old demo) (MagDemo39: BMX\FE.WAD+STR) (uncompressed)
+##### Mat Hoffman's Pro BMX (new demo) (MagDemo48: MHPB\FE.WAD+STR) (compressed)
 ```
  WAD:
   000h N*20h File List
@@ -5240,11 +5169,9 @@ Note: Apart from the MHPB\FE.WAD archive, many MHPB\\*.BIN files seem to be also
 compressed (unknown if that's the same compression method; and, if so, they
 would lack decompressed size info).<br/>
 
-```
- _______________________________ Entrysize=28h ________________________________
-```
+#### Entrysize=28h
 
-#### Demo Menu, PlayStation Magazine Demo Disc 03-54, MENU.FF
+##### Demo Menu, PlayStation Magazine Demo Disc 03-54, MENU.FF
 Used on most PlayStation Magazine Demo Discs (Disc 03-54, except Disc 01-02)<br/>
 Used on PlayStation Underground 3.1 (and maybe other issues)<br/>
 Used on Interactive CD Sampler Disc Volume 10 (maybe others, but not Vol 4,5)<br/>
@@ -5265,9 +5192,9 @@ Contains .BS, .TIM, .TXT, .VH, .VB files. The size seems to be always(?)
 2048Kbytes, 2992Kbytes, 2000Kbytes, or 3000Kbytes (often using only the first
 quarter, and having the remaining bytes zeropadded).<br/>
 
-#### Test Drive 4 (MagDemo03: TD4.DAT) (headersize=2000h, used=0...h)
-#### Test Drive 5 (MagDemo13: TD5.DAT) (headersize=3000h, used=1EF8h)
-#### Demolition Racer (MagDemo27: DR\DD.DAT) (headersize=5000h, used=2328h)
+##### Test Drive 4 (MagDemo03: TD4.DAT) (headersize=2000h, used=0...h)
+##### Test Drive 5 (MagDemo13: TD5.DAT) (headersize=3000h, used=1EF8h)
+##### Demolition Racer (MagDemo27: DR\DD.DAT) (headersize=5000h, used=2328h)
 This is used by several games, with different Headersizes (2000h or 3000h or
 5000h), with Offsets relative to the Headersize. To detect the Headersize, skip
 used entries, skip following zeropadding, then round-down to 800h-byte boundary
@@ -5286,7 +5213,7 @@ File List entries:<br/>
 TD5.DAT and DD.DAT contain DOT1 child archives and many RNC compressed files:<br/>
 [CDROM File Compression RNC (Rob Northen Compression)](cdromfileformats.md#cdrom-file-compression-rnc-rob-northen-compression)<br/>
 
-#### Gekido (MagDemo31: GEKIDO\GLOBAL.CD)
+##### Gekido (MagDemo31: GEKIDO\GLOBAL.CD)
 ```
   0000h N*28h File List
   21C0h ...   Unknown random gibberish? (23h,E8h,0Ch,1Dh,79h,C5h,24h,...)
@@ -5303,7 +5230,7 @@ There is no "number of files" entry, and no "file list end marker" (though the
 "random gibberish" might serve as end marker, as long it doesn't start with "\"
 backslash).<br/>
 
-#### Team Buddies (MagDemo37: BUDDIES\BUDDIES.DAT\\* and nested \*.BND files)
+##### Team Buddies (MagDemo37: BUDDIES\BUDDIES.DAT\\* and nested \*.BND files)
 ```
   000h 4     ID "BIND"
   004h 4     Number of files (N)
@@ -5327,7 +5254,7 @@ forcefully rounded-up to 4 bytes boundary. If that rounding has occurred then
 there is no additional 4-byte gap (but the 4-byte gap will appear if the
 original filesize was already 4-byte aligned).<br/>
 
-#### JumpStart Wildlife Safari Field Trip (MagDemo52: DEMO\DATA.DAT)
+##### JumpStart Wildlife Safari Field Trip (MagDemo52: DEMO\DATA.DAT)
 ```
   000h 4     Number of entries (N)
   004h 4     Number of entries (same as above)
@@ -5342,11 +5269,9 @@ original filesize was already 4-byte aligned).<br/>
   024h 4     Filesize in bytes
 ```
 
-```
- _______________________________ Entrysize=34h ________________________________
-```
+#### Entrysize=34h
 
-#### Army Men: Air Attack (MagDemo28: AMAA\PAK\\*.PAK)
+##### Army Men: Air Attack (MagDemo28: AMAA\PAK\\*.PAK)
 ```
   000h 4      Number of Files
   004h N*34h  File List
@@ -5379,11 +5304,9 @@ The used Type.Subtype values are:<br/>
   1Ah.0   Misc (.3DO=TIM, .V=TXT, and TERRAIN.CLP .HI .LIT .MAP .PAT .POB .TER)
 ```
 
-```
- _______________________________ Entrysize=40h ________________________________
-```
+#### Entrysize=40h
 
-#### Ninja (MagDemo13: NINJA\CUTSEQ\\*.WAD and NINJA\WADS\\*.WAD)
+##### Ninja (MagDemo13: NINJA\CUTSEQ\\*.WAD and NINJA\WADS\\*.WAD)
 ```
   000h 4     Number of Files (N)
   004h 4     Size of File Data area (SIZ) (total filesize-8-N*40h)
@@ -5394,8 +5317,8 @@ The used Type.Subtype values are:<br/>
   004h 4     Fileoffset in bytes (zerobased, from begin of File Data area)
   008h 38h   Filename, zeropadded
 ```
-#### You Don't Know Jack (MagDemo23: YDKJ\RES\\*.GLU)
-#### You Don't Know Jack 2 (MagDemo41: YDKJV2\\*\\*.GLU)
+##### You Don't Know Jack (MagDemo23: YDKJ\RES\\*.GLU)
+##### You Don't Know Jack 2 (MagDemo41: YDKJV2\\*\\*.GLU)
 ```
   000h 4     ID ("GLUE")
   004h 4     Unknown (always 400h)
@@ -5419,11 +5342,9 @@ which use 4-byte alignment).<br/>
 The files do start on alignment boundaries, but there is no alignment padding
 after end of last file.<br/>
 
-```
- _______________________________ Entrysize=60h ________________________________
-```
+#### Entrysize=60h
 
-#### Army Men Air Attack 2 (MagDemo40: AMAA2\\*.PCK\\*.PAK)
+##### Army Men Air Attack 2 (MagDemo40: AMAA2\\*.PCK\\*.PAK)
 ```
   000h 4     Number of entries (N)
   010h N*60h File List
@@ -5454,14 +5375,12 @@ Most of the files are SCRATCH compressed:<br/>
 There are also several uncompressed files (eg. VERSION.V, \*.SFX, and many of
 the TERRAIN.\* files).<br/>
 
-```
- _______________________________ Entrysize=90h ________________________________
-```
+#### Entrysize=90h
 
-#### Grind Session (MagDemo33: GRIND\SLIP.GRV)
-#### Grind Session (MagDemo36: GRIND\SLIP.GRV)
-#### Grind Session (MagDemo42: GRIND\SLIP.GRV)
-#### Grind Session (MagDemo45: GRIND\SLIP.GRV)
+##### Grind Session (MagDemo33: GRIND\SLIP.GRV)
+##### Grind Session (MagDemo36: GRIND\SLIP.GRV)
+##### Grind Session (MagDemo42: GRIND\SLIP.GRV)
+##### Grind Session (MagDemo45: GRIND\SLIP.GRV)
 ```
   000h 4     ID (A69AA69Ah)
   004h 4     Number of files (N)
@@ -5474,11 +5393,9 @@ the TERRAIN.\* files).<br/>
   088h 8     Unknown (random/checksum?)
 ```
 
-```
- _____________________________ Variable Entrysize _____________________________
-```
+#### Variable Entrysize
 
-#### HED/WAD
+##### HED/WAD
 ```
   Used by Spider-Man (MagDemo31,40: SPIDEY\CD.HED and CD.WAD)
   Used by Spider-Man 2 (MagDemo52: SPIDEY\CD.HED and CD.WAD)
@@ -5501,7 +5418,7 @@ File Entry format:<br/>
 PADBUG: Apocalypse does append 1..800h bytes alignment padding (instead of
 1..7FFh or 0 bytes).<br/>
 
-#### Dance UK (DATA.PAK)
+##### Dance UK (DATA.PAK)
 ```
   000h 4      Number of Files (N) (1ADh)
   004h 4      Unknown (7) (maybe HeaderSize/800h, same as first Offset/800h ?)
@@ -5516,7 +5433,7 @@ PADBUG: Apocalypse does append 1..800h bytes alignment padding (instead of
   ...  ..     File Data area
 ```
 
-#### Kula Quest / Kula World / Roll Away (\*.PAK)
+##### Kula Quest / Kula World / Roll Away (\*.PAK)
 ```
   000h 4     Number of Files (N)
   004h N*8   File List (2x32bit entries: Offset, Size) (unaligned, can be odd)
@@ -5528,7 +5445,7 @@ PADBUG: Apocalypse does append 1..800h bytes alignment padding (instead of
 ```
 [CDROM File Compression ZIP/GZIP/ZLIB (Inflate/Deflate)](cdromfileformats.md#cdrom-file-compression-zipgzipzlib-inflatedeflate)<br/>
 
-#### Largo Winch - Commando SAR (NTEXTURE\\*.GRP and LEVELS\\*.DCF\\*.CAT and \*.GRP)
+##### Largo Winch - Commando SAR (NTEXTURE\\*.GRP and LEVELS\\*.DCF\\*.CAT and \*.GRP)
 ```
   000h 4     ID (12h,34h,56h,78h) (aka 12345678h in big endian)
   004h 4     Header Size (offset to File Data area)
@@ -5539,7 +5456,7 @@ PADBUG: Apocalypse does append 1..800h bytes alignment padding (instead of
   ...  ..    File Data area
 ```
 
-#### Jackie Chan Stuntmaster (RTARGET\GAME.GCF and LEV\*.LCF)
+##### Jackie Chan Stuntmaster (RTARGET\GAME.GCF and LEV\*.LCF)
 ```
   000h 4     Number of files (N) (3..EBh)                 (big-endian)
   004h N*Var File List (list size is implied in first file offset)
@@ -5553,8 +5470,8 @@ PADBUG: Apocalypse does append 1..800h bytes alignment padding (instead of
   010h ..    Extra Data (if any) (32bit number, or "TEXTURES")
 ```
 
-#### Syphon Filter 1 (MagDemo18: SYPHON\\*.HOG, SYPHON\SUBWAY.FOG\\*.HOG,SLF.RFF)
-#### Syphon Filter 2 (MagDemo30: SYPHON\\*.HOG, SYPHON\TRAIN.FOG\\*.HOG,SLF.RFF)
+##### Syphon Filter 1 (MagDemo18: SYPHON\\*.HOG, SYPHON\SUBWAY.FOG\\*.HOG,SLF.RFF)
+##### Syphon Filter 2 (MagDemo30: SYPHON\\*.HOG, SYPHON\TRAIN.FOG\\*.HOG,SLF.RFF)
 ```
   000h 4     Timestamp? (36xxxxxxh=v1?, 38xxxxxxh=v2?, other=SLF.RFF)
   004h 4     Number of Files          (N)
@@ -5594,7 +5511,7 @@ headersize=908h which means one 800h-byte sector plus 108h bytes) (the 920h
 thing should occur only in v2 though, since v1 has STR files stored in ISO
 filesystem instead of in HOG archives).<br/>
 
-#### Electronic Arts 32bit BIGF archives
+##### Electronic Arts 32bit BIGF archives
 ```
   000h 4   ID "BIGF" (normal case, all big-endian, 4-byte aligned)     ;\
            ID "BIGH" (with [04h]=little-endian instead big-endian)     ;
@@ -5616,20 +5533,20 @@ Used by PGA Tour 96, 97, 98 (\*.VIV)<br/>
 Used by FIFA - Road to World Cup 98 (MOP\*.BK\*, Z4TBLS.BIG\\*.t, ZMO\*.BIG\\*.viv)<br/>
 Used by Fifa 2000 (Best Sports demo: FIFADEMO\\*.BIG, \*.SBK, and nested .viv)<br/>
 Used by Need for Speed 3 Hot Pursuit (\*.VIV)<br/>
-Used by WCW Mayhem (MagDemo28: WCWDEMO\\*.BIG) (odd filesizes & nameless
+Used by WCW Mayhem (MagDemo28: WCWDEMO\\*.BIG) (odd filesizes &amp; nameless
 files)<br/>
 This is reportedly also used for various other Electronic Arts games for PC,
 PSX, and PS2 (often with extension \*.BIG, \*.VIV).<br/>
 Reportedly also "BIGH" and "BIG4" exist:<br/>
-```
-  http://wiki.xentax.com/index.php/EA_BIG_BIGF_Archive
-```
-Other Electronic Arts file formats (used inside or alongside big archives):<br/>
-```
-  https://wiki.multimedia.cx/index.php/Electronic_Arts_Formats_(2) - BNK etc
-```
 
-#### Electronic Arts 24bit C0FB archives
+[http://wiki.xentax.com/index.php/EA_BIG_BIGF_Archive]
+
+Other Electronic Arts file formats (used inside or alongside big archives):<br/>
+
+[https://wiki.multimedia.cx/index.php/Electronic_Arts_Formats_(2)] - BNK etc
+
+
+##### Electronic Arts 24bit C0FB archives
 ```
   000h 2   ID C0FBh                (C0h,FBh)  (big-endian)      ;\
   002h 2   Size of Header-4        (00h,15h)  (big-endian)      ; Header
@@ -5650,7 +5567,7 @@ File List entries (with variable length names, and unaligned 24bit values):<br/>
 Used by FIFA - Road to World Cup 98 (\*.BIG)<br/>
 Used by Sled Storm (MagDemo24: ART\ZZRIDER.UNI, with 8 files insides)<br/>
 
-#### Destruction Derby Raw (MagDemo35: DDRAW\\*.PTH+.DAT, and nested therein)
+##### Destruction Derby Raw (MagDemo35: DDRAW\\*.PTH+.DAT, and nested therein)
 ```
  PTH File:
   000h N*var File List
@@ -5672,7 +5589,7 @@ used (normally, the top-level DATs are uncompressed, and nested DATs are
 compressed).<br/>
 [CDROM File Compression PCK (Destruction Derby Raw)](cdromfileformats.md#cdrom-file-compression-pck-destruction-derby-raw)<br/>
 
-#### SnoCross Championship Racing (MagDemo37: SNOCROSS\SNOW.TOC+.IMG)
+##### SnoCross Championship Racing (MagDemo37: SNOCROSS\SNOW.TOC+.IMG)
 ```
  TOC:
   000h N*var File List
@@ -6072,7 +5989,7 @@ File List entries:<br/>
   000h 4     File Offset in bytes (increasing, 800h-byte aligned)
   004h 4     File Size in bytes
 ```
-Padding Note: Padding after headers & files is weirdly done in two steps:<br/>
+Padding Note: Padding after headers &amp; files is weirdly done in two steps:<br/>
 ```
   Step 1: Zeropadding to 200h-byte boundary    (first 0..1FFh bytes)
   Step 2: Garbagepadding to 800h-byte boundary (last 0..600h bytes)
@@ -6657,7 +6574,7 @@ Files are compressed, starting with 0Bh, same as in Bugs Bunny...<br/>
   005h 3     Filesize in bytes (24bit) (can be odd)
 ```
 Jackie Chan Stuntmaster does always have headersize=1730h (with many unused
-entries with size=0, both in the middle & at the end of File List).<br/>
+entries with size=0, both in the middle &amp; at the end of File List).<br/>
 
 #### Bomberman World (MagDemo15: BOMBER\\*.RC)
 ```
@@ -6885,7 +6802,7 @@ ID "hMBD" used by Alice in Cyberland (ALICE.PAC\\*.FA2\\*.MBD)<br/>
 ID "hHBS" used by Alice in Cyberland (ALICE.PAC\0x\_xx.HBS)<br/>
 
 #### Touring Car Championship (MagDemo09: TCAR\GAME\\*\\*.BFX)
-#### Jarret & LaBonte Stock Car Racing (MagDemo38: WTC\\*\\*.BFX)
+#### Jarret &amp; LaBonte Stock Car Racing (MagDemo38: WTC\\*\\*.BFX)
 Contains several simple chunks:<br/>
 ```
   000h 4     Chunksize in bytes (SIZ) (usually a multiple of 4)
@@ -8756,7 +8673,7 @@ nested WADs inside of the main WAD, which is about same as folders.<br/>
 The alignment can be 4-byte or 800h-byte: N2O uses 4-byte for the main WADs.
 Madden NFL '98 uses 800h-byte for main WAD and 4-byte for child WADs (file
 08h,0Ah,0Ch in TIBURON\MODEL01.DAT and file 76h in PIX01.DAT). Crash Bandicoor
-3 and Crash Team Racing use 800h-byte for both main & child WADs (although
+3 and Crash Team Racing use 800h-byte for both main &amp; child WADs (although
 with garbage padding instead of zeropadding in child WAD headers).<br/>
 Unused entries have Offset=0, Size=0.<br/>
 Empty 0-byte files (should) have Size=0 and Offset=PrevOffs+PrevSize+Align
@@ -9096,11 +9013,9 @@ actual CD-XA sectors).<br/>
   v3  Crash Bandicoot 3 Warped  (MagDemo26,50: (S0\*.NSD and .NSF)
 ```
 
-```
- ____________________________________ NSD _____________________________________
-```
+#### NSD
 
-#### Overall NSD Structure (v0 contains only the Lookup entries)
+##### Overall NSD Structure (v0 contains only the Lookup entries)
 ```
   0000h 100h*4  Lookup Table, using index=((Filename/8000h) AND FFh) ;\
   0400h 4       Number of Chunks in .NSF file                        ; Lookup
@@ -9127,7 +9042,7 @@ There are four .NSD versions, which can be distinguished via filesize:<br/>
 Note: v0 is mainly used by the Crash Bandicoot prototype, but the Crash
 Bandicoot 1 retail version does also have a few v0 files.<br/>
 
-#### NSD Lookup
+##### NSD Lookup
 The lookup table allows to find files (by filenames) in the NSF files. It does
 merely contain the NSF chunk number, so one must load/decompress that chunk to
 find the file's exact size/location in that chunk.<br/>
@@ -9150,7 +9065,7 @@ Filenames:<br/>
 ```
 Special name: 6396347Fh="NONE.!"<br/>
 
-#### NSD Level Data
+##### NSD Level Data
 Level Data exists in NSD v1-v3 (v0 does also have Level Data, but it's stored
 in NSF file "DAT\*.L" instead of in the NSD file). There are two major versions:<br/>
 ```
@@ -9175,10 +9090,10 @@ in NSF file "DAT\*.L" instead of in the NSD file). There are two major versions:
   ...   S*18h   Spawn Points                                         ;/
 ```
 
-#### NSD Bitmap
+##### NSD Bitmap
 This bitmap is displayed while loading the level.<br/>
 
-#### NSD Compression Info
+##### NSD Compression Info
 Compression is only used in v1 (v2-v3 do also have the compression entries at
 [418h..51Fh], but they are always zerofilled).<br/>
 ```
@@ -9190,9 +9105,7 @@ Note: Crash Bandicoot 1 retail does also have a few uncompressed files (either
 v0 files without compression info, or v1 files with zerofilled compression
 info).<br/>
 
-```
- ____________________________________ NSF _____________________________________
-```
+#### NSF
 
 NSF files consist of 64Kbyte chunks (compressed chunks are smaller, but will be
 64Kbyte after decompression). Each chunk can contain one or more file(s). That
@@ -9201,7 +9114,7 @@ samples must be broken into multiple smaller files).<br/>
 All files (except Textures) are NSF Child Archives which contain one or more
 smaller files/items.<br/>
 
-#### NSF Chunk Types
+##### NSF Chunk Types
 ```
  N*8Kbyte-Compressed-chunks:
   000h 2    ID, always 1235h (instead of 1234h)
@@ -9231,7 +9144,7 @@ smaller files/items.<br/>
   ...  ..   Padding to 10000h-byte boundary
 ```
 
-#### NSF Child Archives
+##### NSF Child Archives
 ```
   000h 4    ID, always 0100FFFFh
   004h 4    Filename (five 6bit characters)
@@ -9242,7 +9155,7 @@ smaller files/items.<br/>
   ...  ..   Data (Items)
 ```
 
-#### NSF Chunk Loading and Decompression
+##### NSF Chunk Loading and Decompression
 The compression is a mixup of LZSS and RLE. Compressed chunks are max F800h
 bytes tall (10000h bytes after decompression).<br/>
 ```
@@ -9280,11 +9193,9 @@ Note: All compressed files seem to have an uncompressed copy with same filename
 in another chunk (the NSD Lookup table does probably(?) point to the compressed
 variant, which should reduce CDROM loading time).<br/>
 
-```
- _________________________________ Filetypes __________________________________
-```
+#### Filetypes
 
-#### Filetype Summary
+##### Filetype Summary
 Below shows File Type, Chunk Family, Extension (5th character of filename), the
 version where the type is used, 4-letter type names (as found in the EXE
 files), and a more verbose description.<br/>
@@ -9322,13 +9233,13 @@ two variants each (with different extensions). The Extensions do usually
 corresponding with the Types (although extension V,D are used for two different
 types each).<br/>
 
-#### See also:
+##### See also:
 [https://gist.github.com/ughman/3170834]
 
 [https://dl.dropbox.com/s/fu29g6xn97sa4pl/crash2fileformat.html]
 
 
-#### Weird Note
+##### Weird Note
 "Sound entries don't need to be aligned as strictly for most (all?) emulators."<br/>
 What does that mean???<br/>
 Is there a yet unknown 16-byte DMA alignment requirement on real hardware?<br/>
@@ -10183,7 +10094,7 @@ Some games use files that contain several files badged together. For example,<br
   Misadventures of Tron Bonne, KATWA\*.BIN contains headerless archives (with TIMs and audio)
   Headerless BSS files contain several BS files with huge padding inbetween
 ```
-To some level one could detect & resolve such cases, eg. TIM contains
+To some level one could detect &amp; resolve such cases, eg. TIM contains
 information about the data block size(s), if the file is bigger, then there may
 be further file(s) appended.<br/>
 Some corner cases may be: Files with odd size may insert alignment padding
@@ -10315,7 +10226,7 @@ Dino Crisis LZSS Decompression for files with type 7 and 8:<br/>
    if src<src_end then goto @@decompress_lop
    ret
 ```
-The compressed file & archive header don't contain any info on the
+The compressed file &amp; archive header don't contain any info on the
 decompressed size (except, for compressed bitmaps, the archive header does
 contain width/height entries, nethertheless the decompressed file is usually
 BIGGER then width\*height\*2 (it can contain padding, plus 8 bytes).<br/>
@@ -10400,7 +10311,7 @@ This LZSS variant is unusually using 8bit len and 8bit disp.<br/>
 
 
 ##   CDROM File Compression ZOO/LZSS
-#### Jarret & LaBonte Stock Car Racing (MagDemo38: WTC\\*.ZOO)
+#### Jarret &amp; LaBonte Stock Car Racing (MagDemo38: WTC\\*.ZOO)
 ```
   0000h 4     Decompressed Size                          ;\1st sector
   0004h 7FCh  Garbage                                    ;/
@@ -10410,7 +10321,7 @@ This LZSS variant is unusually using 8bit len and 8bit disp.<br/>
   1800h 800h  LZSS compressed data, part 3               ;-4th sector
   ...   ..    etc.
 ```
-Note: The file format & compression method is unrelated to ZOO archives (to
+Note: The file format &amp; compression method is unrelated to ZOO archives (to
 distinguish between the formats: ZOO archives have [0014h]=FDC4A7DCh, the
 ZOO/LZSS files have [0014h]=Garbage).<br/>
 The decompressed WTC\\*.ZOO files can contain large TIMs, or chunk-based
@@ -10670,7 +10581,7 @@ contain several .PAK files).<br/>
 
 #### PSX Power Spike (MagDemo43: POWER\GAME.IDX\\*.BIZ)
 BIZ compression is used in BIZ archives (which are nested in IDX/HUG archive).
-The compressed & decompressed size is stored in the BIZ archive.<br/>
+The compressed &amp; decompressed size is stored in the BIZ archive.<br/>
 Note: Power Spike 20h-filled initial BIZ ringbuf is required for sky pixels in:<br/>
 ```
   MagDemo43: POWER\GAME.IDX\PERSOS\PSX\CUSTOM\\TEXTURE\NFIELD.BIZ\LPORJ.PSI
@@ -10678,7 +10589,7 @@ Note: Power Spike 20h-filled initial BIZ ringbuf is required for sky pixels in:<
 
 #### PSX Army Men Air Attack 2 (MagDemo40: AMAA2\\*.PCK\\*.PAK)
 SCRATCH compression is used in PAK archives (which are nested in PCK archive).
-The compressed & decompressed size is stored in the PAK archive.<br/>
+The compressed &amp; decompressed size is stored in the PAK archive.<br/>
 Note: The decompressor uses half of the 1Kbyte Scratchpad RAM at 1F800000h as
 ringbuf (hence the name and unusual small 200h-byte ringbuf size).<br/>
 
@@ -11489,10 +11400,9 @@ decompressed data is max 3000h bytes per chunk. Unknown if the next chunk may
 copy data from previous chunk.<br/>
 
 #### Links
-```
-  http://aminet.net/package/util/pack/RNC_ProPack - official tool & source code
-  https://segaretro.org/Rob_Northen_compression - description (contains bugs)
-```
+[http://aminet.net/package/util/pack/RNC_ProPack] - official tool &amp; source code<br/>
+[https://segaretro.org/Rob_Northen_compression] - description (contains bugs)<br/>
+
 
 RNC is used in a number of games by UK developers (notably Bullfrog and
 Traveller's Tales), including Sonic 3D: Flickies' Island, Blam! Machinehead,
@@ -11514,8 +11424,8 @@ Dungeon Keeper 2, Magic Carpet, Syndicate and Syndicate Wars.<br/>
   Addams Family
   Addams Family Values
   The Adventures of Mighty Max
-  Ast�rix and the Great Rescue
-  Ast�rix and the Power of the Gods
+  Asterix and the Great Rescue
+  Asterix and the Power of the Gods
   The Incredible Hulk
   The Itchy & Scratchy Game (unreleased)
   Marsupilami
@@ -12025,7 +11935,7 @@ Inflate/Deflate is a common (de-)compression algorithm, used by ZIP, ZLIB, and
 GZIP.<br/>
 
 [Inflate - Core Functions](cdromfileformats.md#inflate-core-functions)<br/>
-[Inflate - Initialization & Tree Creation](cdromfileformats.md#inflate-initialization-tree-creation)<br/>
+[Inflate - Initialization &amp; Tree Creation](cdromfileformats.md#inflate-initialization-tree-creation)<br/>
 [Inflate - Headers and Checksums](cdromfileformats.md#inflate-headers-and-checksums)<br/>
 
 #### PSX Disk Images
@@ -12135,7 +12045,7 @@ In PSX games, Inflate (with ignored block type, dynamic tree only) is used by:<b
 
 
 
-##   Inflate - Initialization & Tree Creation
+##   Inflate - Initialization &amp; Tree Creation
 #### tinf\_init()
 ```
  tinf_build_bits_base(length_bits, length_base, 4, 3)
@@ -12610,9 +12520,9 @@ Apart from the chunks, LZMA2 does usually contain a Dictionary Size byte:<br/>
 
 #### LZMA Source code
 Compact LZMA decompression ASM code can be found here:<br/>
-```
-  https://github.com/ilyakurdyukov/micro-lzmadec
-```
+
+[https://github.com/ilyakurdyukov/micro-lzmadec]
+
 Above code is for self-decompressing executables (for plain LZMA, ignore the
 stuff about EXE/ELF headers). The two "static" versions are size-optimized
 (they contain weird and poorly commented programming tricks, and do require
@@ -12828,15 +12738,14 @@ XZ Utils for Windows is claimed to work on Win98 (that is, it will throw an
 error about missing MSVCRT.DLL:\_\_\_mb\_cur\_max\_func). XZ Utils for DOS does work
 on Win98.<br/>
 Official XZ file format specs for can be found at:<br/>
-```
-  https://tukaani.org/xz/format.html
-```
+
+[https://tukaani.org/xz/format.html]
+
 The BCJ filters aren't documented in XZ specs, but are defined in XZ source
 code, see src\liblzma\simple\\*.c). There's also this mail thread about
 semi-official ARM64 filters:<br/>
-```
-  https://www.mail-archive.com/xz-devel@tukaani.org/msg00537.html
-```
+
+[https://www.mail-archive.com/xz-devel@tukaani.org/msg00537.html]
 
 
 
@@ -13102,7 +13011,7 @@ ARJ methods are allocating slighly less memory for the sliding window).<br/>
 get\_bits(N) is same as in method 1-3 (fetching N bits, MSB first, starting with
 bit7 of first byte).<br/>
 
-#### ARJ Glossary & Oddities
+#### ARJ Glossary &amp; Oddities
 BACKUPs seem to keep old files (instead overwrting them by newer files)<br/>
 CHAPTERs seems to be a new backup type (instead of [008h].Bit5=Backup flag).<br/>
 COMMENTS can be text... with ANSI.SYS style ANSI escape codes?<br/>
@@ -13664,7 +13573,7 @@ All offsets are originated from begin of archive.<br/>
 This format is called Tiny in Zoo source code, but isn't documented in the Zoo
 manual or Zoo help screen. Tiny can contain only a single file (alike gzip).
 The purpose appears to be using Tiny as temporary files when moving files from
-one archive to another (without needing to decompress & recompress the
+one archive to another (without needing to decompress &amp; recompress the
 file), for example:<br/>
 ```
   zoo xz source.too testfile.txt     ;extract to tiny/temp file testfile.tzt
@@ -14137,7 +14046,7 @@ MAC File Type,Creator IDs = "PIT ","UPIT" \<-- other (=compressed?)<br/>
     [tree+index*4+1*2] = GetTreeEntry  ;-recursive call for node1
     return index
 ```
-http://www.network172.com/early-mac-software/packit-source-code/] - official<br/>
+[http://www.network172.com/early-mac-software/packit-source-code/] - official<br/>
 
 #### StuffIt (.sit) (Macintosh) (old format) (1987) (big-endian)
 MAC File Type,Creator IDs = "SIT!","SIT!" (version=01h).<br/>
@@ -14571,12 +14480,13 @@ Compressed Resources (when Attributes.bit0=1)<br/>
   00Ch 2      For Type9: dcmpID (ID in "dmcp" decompress resource) ;\Type9
   00Eh 4      For Type9: decompressor_specific_parameters_with_io  ;/
   012h ..     Compressed Resource Data
- http://formats.kaitai.io/compressed_resource/
 ```
+[http://formats.kaitai.io/compressed_resource/]
+
 Owned Resources (with Resource ID=C000h..FFFFh):<br/>
-```
- https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format
-```
+
+[https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format]
+
 The upper 5bit (mask F800h) indicate the resource type of the owner, the middle
 6bit (mask 07E0h) indicate the resource id of the owner, and the lower 5bit
 (mask 001Fh) indicate the "sub-id" of the owned resource.<br/>
@@ -14616,7 +14526,7 @@ There are different ways to make sure that the file is at end of the disc:<br/>
 - Some games (additionally) have large zeropadding at end of their archive file<br/>
 
 #### XYZ Files
-To reduce seek times, it can make sense to have the boot files & small
+To reduce seek times, it can make sense to have the boot files &amp; small
 files at the begin of the disc.<br/>
 Some games seem to use alphabetically sorted file/folder names to tweak Movies
 and XA-audio to be located at the end of disc (eg. using ZMOVIE as folder
@@ -14719,7 +14629,7 @@ usually TOC info for Track 1 and up.<br/>
   etc.
 ```
 
-#### Missing Sectors & Sector Size
+#### Missing Sectors &amp; Sector Size
 The .CCD file doesn't define the "PreGapSize" (the number of missing sectors at
 begin of first track). It seems to be simply constant "PreGapSize=150". Unless
 one is supposed to calculate it as
@@ -14748,7 +14658,7 @@ located 2 seconds before INDEX=1, or, to use the information from the separate
 .SUB file, if that file is present; note: presence of index 0 is absolutely
 required for some games like PSX Tomb Raider 2).<br/>
 
-#### Entry & Points & Sessions
+#### Entry &amp; Points &amp; Sessions
 The [Entry N] fields are usually containing Point A0h,A1h,A2h, followed by
 Point 1..N (for N tracks). For multiple sessions: The session is terminated by
 Point B0h,C0h. The next session does then contain Point A0h,A1h,A2h, and Point
@@ -15734,10 +15644,11 @@ V3/V4 are inventing new "metadata" for info about harddisks or cdroms.<br/>
   ...  ..   Uncompressed Sectors (aka hunks)    ;/
   ...  ..   Compressed Sectors (aka hunks)      ;-when compressed
   ...  ..   Map
- ________________________________ CHD Metadata ________________________________
 ```
 
-#### V3/V4/V5 Metadata
+#### CHD Metadata
+
+##### V3/V4/V5 Metadata
 Overall Metadata chunk format:<br/>
 ```
   000h 4   Chunk ID (aka Blob Tag) (eg. "CHT2" for each CDROM track)
@@ -15763,7 +15674,7 @@ There can be one or more chunks (eg. CHT2 chunk(s), one for each CDROM track).<b
   "AVLD"   ?   (A/V Laserdisc frame)                                   ;/
 ```
 
-#### V3/V4/V5 Metadata in ASCII format
+##### V3/V4/V5 Metadata in ASCII format
 The ASCII items are separated by spaces as shown above (or commas for GDDD).<br/>
 The last item in each chunk is terminated by 00h (at least so for CHTR/CHT2).<br/>
 Most items are followed by a colon and decimal string (eg. TRACK:1), except,
@@ -15814,7 +15725,7 @@ issue; those newer files include a "V" prefix to indicate that the entry
 contains "valid" info (eg. "PGTYPE:VAUDIO") (except, Track 1 keeps using
 "PGTYPE:MODE1" without "V" and it's "MODE1" even on MODE2 discs).<br/>
 
-#### CHCD Metadata (94Ch bytes, plus 10h-byte metadata header)
+##### CHCD Metadata (94Ch bytes, plus 10h-byte metadata header)
 ```
   000h 4     Number of tracks (N) (1..99)
   004h N*18h Track entries
@@ -15828,21 +15739,19 @@ contains "valid" info (eg. "PGTYPE:VAUDIO") (except, Track 1 keeps using
   014h 4     Padding Frames   (0..3) (to make Total Frames a multiple of 4)
 ```
 
-```
- __________________________________ CHD Maps __________________________________
-```
+#### CHD Maps
 
 The Maps contain info (offset, size, compression method, etc.) for the separate
 compression blocks.<br/>
 
-#### V1/V2 map format (64bit entries with 44bit+20bit):
+##### V1/V2 map format (64bit entries with 44bit+20bit):
 ```
   44bit     Offset to compressed data
   20bit     Size of compressed data (or uncompressed data when size=hunksize)
 ```
 Unknown if offset is in upper or lower 44bit.<br/>
 
-#### V3/V4 map entries (per hunk):
+##### V3/V4 map entries (per hunk):
 ```
   000h 8    Offset to compressed data  (64bit big-endian)
   008h 4    CRC32 on uncompressed data (32bit big-endian)
@@ -15867,7 +15776,7 @@ Blurp: Secondary algorithm is "usually FLAC CDDA" (unknown where that is
 defined, and if one could also select other algorithms) ("usually FLAC" might
 mean "always FLAC" for cdroms, and "not used" elsewhere).<br/>
 
-#### V5 Map Formats
+##### V5 Map Formats
 ```
  V5 uncompressed map format (when [filehdr+10h]=00000000h):
   000h N*4  Hunk List (32bit offsets: Offset/BytesPerHunk) (usually 1,2,3..)
@@ -15899,7 +15808,7 @@ mean "always FLAC" for cdroms, and "not used" elsewhere).<br/>
   "avhu" = CHD_CODEC_AVHUFF       ;-A/V codecs
 ```
 
-#### Uncompressed V5 Map loading (when [filehdr+10h]=00000000h)
+##### Uncompressed V5 Map loading (when [filehdr+10h]=00000000h)
 ```
   readfile(src,NumberOfHunks*4)                            ;\
   i=0                                                      ; load uncomoressed
@@ -15912,7 +15821,7 @@ mean "always FLAC" for cdroms, and "not used" elsewhere).<br/>
     ofs=ofs+len, i=i+1                                     ;/
 ```
 
-#### Compressed V5 Map loading (when [filehdr+10h]\<\>00000000h)
+##### Compressed V5 Map loading (when [filehdr+10h]\<\>00000000h)
 ```
   readfile(hdr,10h)                                        ;\read map hdr and
   readfile(src,bigendian32bit[hdr+0])                      ; compressed map
@@ -15964,45 +15873,43 @@ nonlzh\_explode\_tree: Uses the same concept as for LZH/ARJ huffman trees (it's
 storing only the number of bits per each codes, and the codes are then
 automatically assigned). But CHD is doing that backwards: It's starting with
 the biggest codes (instead of smallest codes). For example, if you have three
-codes with size 1, 2, 2. The traditional standard assignment would be 0, 10,
-11. But CHD is instead assigning them as 00, 01, 1.<br/>
+codes with size 1, 2, 2. The traditional standard assignment would be 0, 10, 11.
+But CHD is instead assigning them as 00, 01, 1.<br/>
 
-```
- ______________________________ CHD Compression _______________________________
-```
+#### CHD Compression
 
-#### Compression V1-V4 format 0 (uncompressed)
-#### Compression V5 0,0,0,0 (uncompressed)
+##### Compression V1-V4 format 0 (uncompressed)
+##### Compression V5 0,0,0,0 (uncompressed)
 ```
   000h ..   Uncompressed data
 ```
 Uncompressed format can be selected in CHD Map entries (per hunk), and in CHD
 file header (per whole file).<br/>
 
-#### Compression V1-V4 format 1 (zlib) (Generic Deflate)
-#### Compression V1-V4 format 2 (zlib+) (Generic Deflate)
-#### Compression V5 "zlib" (Generic Deflate)
+##### Compression V1-V4 format 1 (zlib) (Generic Deflate)
+##### Compression V1-V4 format 2 (zlib+) (Generic Deflate)
+##### Compression V5 "zlib" (Generic Deflate)
 ```
   000h ..   Deflate-compressed data
 ```
 
-#### Compression V5 "lzma" (Generic LZMA)
+##### Compression V5 "lzma" (Generic LZMA)
 ```
   000h ..   LZMA-compressed data (with lc=3, lp=0, pb=2) (without EOS end code)
 ```
 
-#### Compression V5 "flac" (Generic FLAC)
+##### Compression V5 "flac" (Generic FLAC)
 ```
   000h 1    Output format for 16bit samples ("L"=Little-endian, "B"=Big-endian)
   001h ..   FLAC-compressed data frame(s)
 ```
 
-#### Compression V5 "huff" (Generic Huffman)
+##### Compression V5 "huff" (Generic Huffman)
 ```
   000h ..   Huffman-compressed data (small tree, large tree, plus data)
 ```
 
-#### Compression V5 "cdzl" (CDROM Deflate+Delate)
+##### Compression V5 "cdzl" (CDROM Deflate+Delate)
 ```
   000h ..   ECC Flags, (SectorsPerHunk+7)/8 bytes ;little-endian, bit0=1st flag
   ...  2/3  Size of compressed Data part (SIZ)    ;big-endian, 16bit or 24bit
@@ -16010,7 +15917,7 @@ file header (per whole file).<br/>
   ...  ..   Deflate compressed Subchannel part    ;uncompressed=60h*N bytes
 ```
 
-#### Compression V5 "cdlz" (CDROM LZMA+Deflate)
+##### Compression V5 "cdlz" (CDROM LZMA+Deflate)
 ```
   000h ..   ECC Flags, (SectorsPerHunk+7)/8 bytes ;little-endian, bit0=1st flag
   ...  2/3  Size of compressed Data part (SIZ)    ;big-endian, 16bit or 24bit
@@ -16018,30 +15925,28 @@ file header (per whole file).<br/>
   ...  ..   Deflate compressed Subchannel part    ;uncompressed=60h*N bytes
 ```
 
-#### Compression V5 "cdfl" (CDROM FLAC+Deflate)
+##### Compression V5 "cdfl" (CDROM FLAC+Deflate)
 ```
   000h ..   FLAC-compressed Data Frame(s)         ;uncompressed=930h*N bytes
   ...  ..   Deflate compressed Subchannel part    ;uncompressed=60h*N bytes
 ```
 
-#### Compression V5 "avhu" (A/V mixup with Huffman and FLAC or so)
+##### Compression V5 "avhu" (A/V mixup with Huffman and FLAC or so)
 This isn't used on CDROMs and details are unknown/untested. It does reportedly
 exist in different versions, and does combine different compression methods for
 audio and video data.<br/>
 
-#### Compression V4 format 3 (AV)
+##### Compression V4 format 3 (AV)
 Unknown, maybe same/similar as "avhu".<br/>
 
-#### Compression V3-V4 secondary compression method (FLAC CDDA)
+##### Compression V3-V4 secondary compression method (FLAC CDDA)
 CHD source code claims that V3-V4 maps support "FLAC CDDA", but it doesn't
 actually seem to support that (audio discs compressed with chdman v0.145 are
 merely using Deflate).<br/>
 
-```
- _________________________ CHD Compression for CDROMs _________________________
-```
+#### CHD Compression for CDROMs
 
-#### CDROM "cdzl" and "cdlz"
+##### CDROM "cdzl" and "cdlz"
 If the sector's ECC flag is set:<br/>
 ```
   Fix the 0Ch-byte Sync mark at [000h..00Bh]
@@ -16057,14 +15962,14 @@ useful for:<br/>
   and for using libraries that don't return the end of the compressed data part
 ```
 
-#### CDROM "cdfl"
+##### CDROM "cdfl"
 There are no ECC flags (since Audio sectors don't have ECC).<br/>
 There is no size entry (one must decompress the whole FLAC part to find the
 begin of the Subchannel part).<br/>
 The FLAC output is always stored in BIG-ENDIAN format (because CHD likes to use
 big-endian for audio sectors, unlike formats like CUE/BIN).<br/>
 
-#### CDROM Subchannel data
+##### CDROM Subchannel data
 The Data part and Subchannel part must be interleaved after decompression (to
 form 990h-byte sectors with 930h+60h bytes). The CHD map's CRC is then computed
 on that interleaved data.<br/>
@@ -16077,9 +15982,7 @@ Although CHD files can contain subchannel data, CHDMAN has very limited support
 for creating such files (the most practical way seems to be to convert
 CCD/IMG/SUB to TOC/BIN and then convert that to CHD format).<br/>
 
-```
- ___________________________ CHD CDROM Sector Sizes ___________________________
-```
+#### CHD CDROM Sector Sizes
 
 Decompressed CHD CDROM Sectors are always 990h bytes tall (930h+60h). However,
 the Metadata TYPE/SUBTYPE entries may specify smaller sizes (corresponding to
@@ -16104,11 +16007,9 @@ After the CRC check, one most relocate the Sector/Subchannel parts to their
 actual locations (and replace zeropadding by actual Sync marks, header,
 sub-header, ECC/EDC, and Subchannel data as needed).<br/>
 
-```
- __________________________ CHD Compression Methods ___________________________
-```
+#### CHD Compression Methods
 
-#### Deflate
+##### Deflate
 This is raw Deflate (despite of being called "zlib" in chd headers and source
 code; there aren't any ZLIB headers nor Adler checksums). V1-V4 does
 distinguish between "zlib" and "zlib+" (both are using normal Deflate) (V3/V4
@@ -16116,14 +16017,14 @@ are always using "zlib+") (the "+" does probably just mean that file was
 compressed with improved compression ratio).<br/>
 [CDROM File Compression ZIP/GZIP/ZLIB (Inflate/Deflate)](cdromfileformats.md#cdrom-file-compression-zipgzipzlib-inflatedeflate)<br/>
 
-#### LZMA
+##### LZMA
 This contains a raw LZMA bitstream (without .lzma or .lz headers). The LZMA
 bitstream starts with 8 ignored bits, if Normalization occurs after last
 compression code, then it will also end with 8 ignored bits (those ignored bits
 aren't CHD-specific, they do also occur in other LZMA-based formats).<br/>
 [CDROM File Compression LZMA](cdromfileformats.md#cdrom-file-compression-lzma)<br/>
 
-#### FLAC
+##### FLAC
 The data consists of raw FLAC Frames (without FLAC file header or FLAC metadata
 blocks), the format is always signed 16bit/stereo (NumChannels=2
 SampleDepth=16), the sample rate is don't care for compression purposes (the
@@ -16135,7 +16036,7 @@ Each FLAC Frame contains Left samples, followed by Right samples. After
 decompression, CHD does store them in interleaved form (L,R,L,R,etc.)<br/>
 [CDROM File Compression FLAC audio](cdromfileformats.md#cdrom-file-compression-flac-audio)<br/>
 
-#### Huffman
+##### Huffman
 This is using some custom CHD-specific Huffman compression.<br/>
 ```
  decompress_chd_huffman_hunk:
@@ -16165,11 +16066,9 @@ This is using some custom CHD-specific Huffman compression.<br/>
     [dst]=GetHuffCode(codetree), dst=dst+1  ;using large tree codes  ;/
 ```
 
-```
- _________________________________ CHD Notes __________________________________
-```
+#### CHD Notes
 
-#### Track/Hunk Padding and Missing Index0 sectors
+##### Track/Hunk Padding and Missing Index0 sectors
 A normal CDROM contains a series of sectors. The CHD format is violating that
 in several ways: It's removing Index0/Pregap sectors, and it's instead
 inserting dummy/padding sectors between tracks.<br/>
@@ -16192,7 +16091,7 @@ Track padding is total nonsense. The final hunk padding makes sense (but
 confusingly that extra padding isn't included in the uncompressed size entry in
 CHD header).<br/>
 
-#### Parent references
+##### Parent references
 Parent files are only used for writeable media like harddisks. The idea is to
 store the original installation and operating system in a readonly Parent file,
 and to store changes that file in a writeable Child file.<br/>
@@ -16200,7 +16099,7 @@ Unknown what determines which parent belongs to which child, and if parents can
 be nested with other grandparents. Anyways, Parents aren't needed for CDROMs
 (except, one could theoretically store CDROM patches in child files).<br/>
 
-#### Self references
+##### Self references
 This can be used to reference to another identical hunk in the same file (eg.
 zerofilled sectors or other duplicated data). There are some restrictions for
 CDROMs: Data sector headers contain increasing sector numbers, so there won't
@@ -16208,7 +16107,7 @@ be any identical sectors. However, Audio sectors can be identical (unless they
 are stored with subchannel info, which does also contain increasing sector
 numbers).<br/>
 
-#### Mini
+##### Mini
 Mini is only used in V3/V4 maps. It does apparently store the "data" directly
 in the 8-byte Map offset field.<br/>
 ```
@@ -16219,7 +16118,7 @@ Mini isn't used in V5 because the compressed V5 map doesn't contain any offset
 fields (and things like zerofilled sectors could be as well encoded as Self
 instead of Mini).<br/>
 
-#### CHDMAN versions
+##### CHDMAN versions
 CHD files can (cannot) be generated with the CHDMAN.EXE tool:<br/>
 ```
   chdman hdr meta  features/requirements/bugs/quirks/failures...
@@ -16252,23 +16151,22 @@ CHD files can (cannot) be generated with the CHDMAN.EXE tool:<br/>
 Note: The compression tool was originally called HDCOMP (V1/V2), and later
 renamed to CHDMAN (V3/V4/V5).<br/>
 
-#### References
+##### References
 CHD source code (see files cdrom.\*, chd\*.\*, etc):<br/>
-```
-  https://github.com/mamedev/mame/tree/master/src/lib/util
-```
+
+[https://github.com/mamedev/mame/tree/master/src/lib/util]
+
 CHDMAN commandline tool for generating chd files:<br/>
-```
-  https://github.com/mamedev/mame/blob/master/src/tools/chdman.cpp
-```
+
+[https://github.com/mamedev/mame/blob/master/src/tools/chdman.cpp]
+
 CHD decompression clone with useful comments:<br/>
-```
-  https://github.com/SnowflakePowered/chd-rs/tree/master/chd-rs/src
-```
+
+[https://github.com/SnowflakePowered/chd-rs/tree/master/chd-rs/src]
+
 CHD format reverse-engineering thread:<br/>
-```
-  http://www.psxdev.net/forum/viewtopic.php?f=70&t=3980
-```
+
+[http://www.psxdev.net/forum/viewtopic.php?f=70&t=3980]
 
 
 
@@ -16295,9 +16193,9 @@ Some info on (uncompressed) .C2D files can be found in libmirage source code.<br
 #### .ISZ - compressed ISO file with 800h-byte sectors (UltraISO)
 This contains a compressed ISO filesystem, without supporting any CD-specific
 features like Tracks, FORM2 sectors, or CD-DA Audio.<br/>
-```
-  http://www.ezbsystems.com/isz/iszspec.txt
-```
+
+[http://www.ezbsystems.com/isz/iszspec.txt]
+
 The format might be suitable for PC CDROMs, but it's useless for PSX CDROMs.<br/>
 
 
