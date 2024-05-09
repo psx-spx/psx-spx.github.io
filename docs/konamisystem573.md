@@ -11,7 +11,6 @@ other titles from the Bemani series of rhythm games.
 - [I/O boards](#io-boards)
 - [Security cartridges](#security-cartridges)
 - [External modules](#external-modules)
-- [Connectors](#connectors)
 - [BIOS](#bios)
 - [Game-specific information](#game-specific-information)
 - [Misc. notes](#misc-notes)
@@ -61,6 +60,12 @@ things that need more research:
 
 ### Additional hardware
 
+- **Audio and video outputs**: unlike the PS1, which outputs composite, S-video
+  and RGB, the 573 only outputs RGB with C-sync through the JAMMA connector and
+  a DB15 port compliant with the JVS specification (same pinout as VGA but not
+  directly compatible, as VGA normally runs at higher resolutions and uses
+  separate H/V sync pins). A built-in 15 watt stereo speaker amplifier is also
+  provided for cabinets that lack their own sound system.
 - **JAMMA interface and built-in I/O ports**: the 573 provides multiple digital
   and analog ports for interfacing with arcade cabinet controls. Depending on
   the I/O board the system came with, these signals might be broken out through
@@ -781,37 +786,37 @@ first byte of the next packet.
 
 ## I/O boards
 
-Having been used in all sorts of games, from DDR to fishing simulators, the
-System 573 was designed to be expanded with game-specific hardware using I/O
-boards mounted on top of the main board, custom security cartridges or both.
-I/O boards have full access to the 16-bit system bus and are mapped to the
-`0x1f640000-0x1f6400ff` region.
+The System 573 was designed to be expanded with game-specific hardware using I/O
+expansion boards mounted on top of the main board, and/or custom security
+cartridges. I/O boards have access to the 16-bit system bus and are accessible
+through the `0x1f640000-0x1f6400ff` region.
 
-Several boards are known to exist although so far most of them haven't yet
-been documented nor fully emulated in MAME.
+The following boards are currently known to exist:
 
 - [Analog I/O board (`GX700-PWB(F)`)](#analog-io-board-gx700-pwbf)
 - [Digital I/O board (`GX894-PWB(B)A`)](#digital-io-board-gx894-pwbba)
 - [Alternate analog I/O board (`GX700-PWB(K)`)](#alternate-analog-io-board-gx700-pwbk)
-- [Fishing controls board (`GE765-PWB(B)A`)](#fishing-controls-board-ge765-pwbba)
+- [Fishing controller I/O board (`GE765-PWB(B)A`)](#fishing-controller-io-board-ge765-pwbba)
 - [DDR Karaoke Mix I/O board (`GX921-PWB(B)`)](#ddr-karaoke-mix-io-board-gx921-pwbb)
-- [Gun Mania I/O board (`PWB0000073070`, unconfirmed)](#gun-mania-io-board-pwb0000073070-unconfirmed)
+- [GunMania I/O board (`PWB0000073070`)](#gunmania-io-board-pwb0000073070)
 - [Hypothetical debugging board](#hypothetical-debugging-board)
 
 ### Analog I/O board (`GX700-PWB(F)`)
 
-The name is misleading as the board does not deal with any analog signals
-whatsoever; the name was given retroactively to differentiate it from the
-digital I/O board. It provides up to 28 optoisolated open-collector outputs
-usually used to control cabinet lights, split across 4 banks:
+Used in early Bemani games such as DDR 1stMIX and 2ndMIX, as well as some
+non-Bemani games. The name is misleading as the board does not deal with any
+analog signals whatsoever; the name was given retroactively to distinguish it
+from the digital I/O board. It provides up to 28 optoisolated open-drain outputs
+typically used to control cabinet lights, split across 4 banks:
 
-- **Bank A** (wired to `CN33`): 8 outputs (A0-A7)
-- **Bank B** (wired to `CN34`): 8 outputs (B0-B7)
-- **Bank C** (wired to `CN35`): 8 outputs (C0-C7)
-- **Bank D** (wired to `CN36`): 4 outputs (D0-D3)
+- **Bank A** (`CN33`): 8 outputs (A0-A7)
+- **Bank B** (`CN34`): 8 outputs (B0-B7)
+- **Bank C** (`CN35`): 8 outputs (C0-C7)
+- **Bank D** (`CN36`): 4 outputs (D0-D3)
 
-See the game-specific information section for details on how lights are wired
-up on each cabinet type.
+Some games shipped with partially populated analog I/O boards, thus not all
+banks may be available. See the game-specific information section for details on
+how lights are wired up on each cabinet type.
 
 #### `0x1f640080`: **Bank A**
 
@@ -867,45 +872,91 @@ up on each cabinet type.
 
 ### Digital I/O board (`GX894-PWB(B)A`)
 
-This board was used by pretty much all Bemani games, besides earlier ones which
-used CD audio and the analog I/O board. In addition to light control outputs,
-this board features an FPGA and an MPEG decoder ASIC to play encrypted MP3
-files. The FPGA has 24 MB of dedicated RAM into which the files are preloaded
-on startup, then decrypted on the fly and fed to the decoder. The board also
-features an ARCnet PHY and two RCA jacks for communication with other cabinets
-and a 64-bit unique serial number, copied to the security cartridge during
-installation in order to prevent operators from installing the same game on
-multiple systems.
+Used by later Bemani games, such as DDR from Solo onwards. This board features
+the same 28 isolated open-drain outputs as the analog I/O board, plus a Xilinx
+XCS40XL Spartan-XL FPGA and a Micronas MAS3507D audio decoder ASIC used to play
+encrypted MP3 files. The FPGA has 24 MB of dedicated DRAM into which the files
+are preloaded on startup, then decrypted on the fly and fed to the decoder. The
+board also features 128 KB of SRAM used as a cache, RS-232 and ARCnet
+transceivers for communication with other hardware and a DS2401 serial number
+chip, used to prevent usage of the same security cartridge on more than one 573.
 
 The vast majority of the registers provided by this board (including some but
 not all light outputs) are handled by its FPGA, which requires a configuration
 bitstream to be uploaded to it in order to work. Registers in the
 `0x1f6400f0-0x1f6400ff` region are handled by a CPLD and are functional even if
-no bitstream is loaded. There are three known versions of Konami's bitstream:
+no bitstream is loaded. There are several known versions of Konami's bitstream:
 
-| SHA-1                                      | First used by                        |
-| :----------------------------------------- | :----------------------------------- |
-| `32d455a25eb26fe4e4b577cb0f0e3bebd0f82959` | Dance Dance Revolution Solo Bass Mix |
-| `a53b8906de95c34b6e3f053bd7488c888bc904b6` | Dance Dance Revolution 3rdMIX        |
-| `450b12627b7eacd3ea3f8b0b7a16589a13010c41` | Mambo a Go-Go                        |
+| SHA-1 (LSB first)                          | First used by                          |
+| :----------------------------------------- | :------------------------------------- |
+| `32d455a25eb26fe4e4b577cb0f0e3bebd0f82959` | Dance Dance Revolution Solo Bass Mix   |
+| `a53b8906de95c34b6e3f053bd7488c888bc904b6` | Dance Dance Revolution 3rdMIX          |
+| `450b12627b7eacd3ea3f8b0b7a16589a13010c41` | Mambo a Go-Go                          |
+| `53d0c1e3f6ae042d7d45ce889b79a12f1be5eabd` | Martial Beat e-Amusement               |
+| `d1d0f123bbb9d5abfefbd556c366f9ded0779e41` | Martial Beat (leftover file 1, unused) |
+| `f354619fe1a80cabe0b774784181b3bfeff0a3e9` | Martial Beat (leftover file 2, unused) |
 
-Distributing these bitstreams would be problematic from a copyright standpoint,
-thus **most of the digital I/O board's functionality is currently unusable by**
-**homebrew software**. This might change in the future if a custom FPGA
-bitstream is ever going to be developed; the custom bitstream would not only
-skip decryption but also implement a custom set of registers (rather than the
-ones described below), sidestepping the lack of documentation entirely.
+The DDR and Mambo bitstreams all implement the same registers (listed below) and
+seem to only differ in the MP3 decryption algorithm, while the unused Martial
+Beat bitstreams seem to behave in a completely different way. Homebrew tools may
+also load custom bitstreams, which can be developed using the Xilinx ISE
+toolchain. See the pinouts section for a list of all devices connected to the
+FPGA.
 
-#### `0x1f640080`: **Magic number** (impl. by bitstream)
+#### `0x1f640080` (FPGA, DDR/Mambo bitstream): **Magic number**
 
 | Bits | RW | Description             |
 | ---: | :- | :---------------------- |
 | 0-15 | R  | Magic number (`0x1234`) |
 
-This register is read by Konami's digital I/O driver to make sure the bitstream
-was properly loaded into the FPGA.
+This register is checked by Konami's digital I/O board driver to make sure the
+bitstream was properly loaded into the FPGA.
 
-#### `0x1f6400e0`: **Bank A** (impl. by bitstream)
+#### `0x1f640090` (FPGA, DDR/Mambo bitstream): **Network board address**
+
+#### `0x1f640092` (FPGA, DDR/Mambo bitstream): **Unknown (network related)**
+
+#### `0x1f6400a0` (FPGA, DDR/Mambo bitstream): **MP3 data start address high**
+
+#### `0x1f6400a2` (FPGA, DDR/Mambo bitstream): **MP3 data start address low**
+
+#### `0x1f6400a4` (FPGA, DDR/Mambo bitstream): **MP3 data end address high**
+
+#### `0x1f6400a6` (FPGA, DDR/Mambo bitstream): **MP3 data end address low**
+
+#### `0x1f6400a8` (FPGA, DDR/Mambo bitstream): **MP3 frame counter** / **Decryption key 1**
+
+#### `0x1f6400aa` (FPGA, DDR/Mambo bitstream): **MP3 playback status**
+
+#### `0x1f6400ac` (FPGA, DDR/Mambo bitstream): **MAS3507D I2C**
+
+#### `0x1f6400ae` (FPGA, DDR/Mambo bitstream): **MP3 data feeder control**
+
+#### `0x1f6400b0` (FPGA, DDR/Mambo bitstream): **RAM write address high**
+
+#### `0x1f6400b2` (FPGA, DDR/Mambo bitstream): **RAM write address low**
+
+#### `0x1f6400b4` (FPGA, DDR/Mambo bitstream): **RAM data**
+
+#### `0x1f6400b6` (FPGA, DDR/Mambo bitstream): **RAM read address high**
+
+#### `0x1f6400b8` (FPGA, DDR/Mambo bitstream): **RAM read address low**
+
+#### `0x1f6400c0` (FPGA, DDR/Mambo bitstream): **Network data**
+
+#### `0x1f6400c2` (FPGA, DDR/Mambo bitstream): **Network output buffer size**
+
+#### `0x1f6400c4` (FPGA, DDR/Mambo bitstream): **Network input buffer size**
+
+#### `0x1f6400c8` (FPGA, DDR/Mambo bitstream): **Unknown (network related)**
+
+#### `0x1f6400ca` (FPGA, DDR/Mambo bitstream): **DAC sample counter high**
+
+#### `0x1f6400cc` (FPGA, DDR/Mambo bitstream): **DAC sample counter low**
+
+#### `0x1f6400ce` (FPGA, DDR/Mambo bitstream): **DAC sample counter delta**
+
+#### `0x1f6400e0` (FPGA, DDR/Mambo bitstream): **Bank A**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -915,7 +966,7 @@ was properly loaded into the FPGA.
 |   14 | W  | Output A6 (0 = grounded) |
 |   15 | W  | Output A7 (0 = grounded) |
 
-#### `0x1f6400e2`: **Bank A** (impl. by bitstream)
+#### `0x1f6400e2` (FPGA, DDR/Mambo bitstream): **Bank A**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -925,7 +976,7 @@ was properly loaded into the FPGA.
 |   14 | W  | Output A2 (0 = grounded) |
 |   15 | W  | Output A3 (0 = grounded) |
 
-#### `0x1f6400e4`: **Bank B** (impl. by bitstream)
+#### `0x1f6400e4` (FPGA, DDR/Mambo bitstream): **Bank B**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -935,7 +986,7 @@ was properly loaded into the FPGA.
 |   14 | W  | Output B6 (0 = grounded) |
 |   15 | W  | Output B7 (0 = grounded) |
 
-#### `0x1f6400e6`: **Bank D** (impl. by bitstream)
+#### `0x1f6400e6` (FPGA, DDR/Mambo bitstream): **Bank D**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -945,59 +996,95 @@ was properly loaded into the FPGA.
 |   14 | W  | Output D2 (0 = grounded) |
 |   15 | W  | Output D3 (0 = grounded) |
 
-#### `0x1f6400ee`: **DS2401 ID chip** (impl. by bitstream)
+#### `0x1f6400e8` (FPGA, DDR/Mambo bitstream): **Initialization/reset related**
 
-#### `0x1f6400f0`: **Unknown**
+| Bits | RW | Description          |
+| ---: | :- | :------------------- |
+| 0-11 |    | _Unused_             |
+|   12 | W  | Unknown (0 = reset?) |
+|   13 | W  | Unknown (0 = reset?) |
+|   14 | W  | Unknown (0 = reset?) |
+|   15 | W  | Unknown (0 = reset?) |
 
-Konami's code does not use this CPLD register.
+Konami's code writes `0xf000`, followed by `0x0000`, a delay and `0xf000` again,
+to this register after uploading the bitstream.
 
-#### `0x1f6400f2`: **Unknown**
+#### `0x1f6400ea` (FPGA, DDR/Mambo bitstream): **Decryption key 2**
 
-Konami's code does not use this CPLD register.
+#### `0x1f6400ec` (FPGA, DDR/Mambo bitstream): **Decryption key 3**
 
-#### `0x1f6400f4`: **Unknown (reset?)**
-
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-| 0-14 |    | _Unused_           |
-|   15 | W  | Unknown (0 = low?) |
-
-Probably controls the MAS3507D's reset pin. Bit 15 is cleared before uploading
-the bitstream (and set again once the FPGA is initialized...?).
-
-#### `0x1f6400f6`: **FPGA status and control**
+#### `0x1f6400ee` (FPGA, DDR/Mambo bitstream): **1-wire bus**
 
 When read:
 
-| Bits | RW | Description       |
-| ---: | :- | :---------------- |
-| 0-11 |    | _Unused_          |
-|   12 | R  | `/INIT` from FPGA |
-|   13 | R  | `DONE` from FPGA  |
-|   14 | R  | `/HDC` from FPGA  |
-|   15 | R  | `LDC` from FPGA   |
+| Bits  | RW | Description               |
+| ----: | :- | :------------------------ |
+|  0-11 |    | _Unused_                  |
+|    12 | R  | DS2401 1-wire bus readout |
+| 13-15 |    | Unused? (see note)        |
 
-**NOTE**: all registers in the `0x1f6400f0-0x1f6400ff` region seem to return
-the same bits as this register when read, possibly due to incomplete address
-decoding in the CPLD. Konami's code only ever reads from this register and
+When written:
+
+| Bits  | RW | Description                                             |
+| ----: | :- | :------------------------------------------------------ |
+|  0-11 |    | _Unused_                                                |
+|    12 | W  | Drive DS2401 1-wire bus low (1 = pull low, 0 = release) |
+| 13-15 |    | Unused? (see note)                                      |
+
+In addition to the DS2401 the board has an unpopulated footprint for a DS2433
+1-wire EEPROM, connected to a separate FPGA pin. Bit 13, 14 or 15 may actually
+be mapped to the unused DS2433 bus.
+
+#### `0x1f6400f0` (CPLD): **Unknown (unused?)**
+
+Konami's code does not write to this CPLD register.
+
+#### `0x1f6400f2` (CPLD): **Unknown (unused?)**
+
+Konami's code does not write to this CPLD register.
+
+#### `0x1f6400f4` (CPLD): **Unknown (reset?)**
+
+| Bits | RW | Description          |
+| ---: | :- | :------------------- |
+| 0-14 |    | _Unused_             |
+|   15 | W  | Unknown (0 = reset?) |
+
+Probably controls the MAS3507D or DAC's reset pin. Bit 15 is cleared before
+uploading the bitstream and set again once the FPGA is initialized.
+
+#### `0x1f6400f6` (CPLD): **FPGA status and control**
+
+When read:
+
+| Bits | RW | Description                      |
+| ---: | :- | :------------------------------- |
+| 0-11 |    | _Unused_                         |
+|   12 | R  | Possibly `/INIT` from FPGA       |
+|   13 | R  | Possibly `DONE` from FPGA        |
+|   14 | R  | Board identification? (always 1) |
+|   15 | R  | Board identification? (always 0) |
+
+**NOTE**: all registers in the `0x1f6400f0-0x1f6400ff` region seem to return the
+same value as this register when read, possibly due to incomplete address
+decoding in the CPLD. Konami's driver only ever reads from this register and
 treats all other CPLD registers as write-only.
 
 When written:
 
-| Bits | RW | Description        |
-| ---: | :- | :----------------- |
-| 0-11 |    | _Unused_           |
-|   12 | W  | Unknown 1          |
-|   13 | W  | Unknown 2          |
-|   14 | W  | Unknown 3          |
-|   15 | W  | Unused? (always 1) |
+| Bits | RW | Description                 |
+| ---: | :- | :-------------------------- |
+| 0-11 |    | _Unused_                    |
+|   12 | W  | Possibly `/INIT` to FPGA    |
+|   13 | W  | Possibly `DONE` to FPGA     |
+|   14 | W  | Possibly `/PROGRAM` to FPGA |
+|   15 | W  | Unused? (always 1)          |
 
 This register is only written to 3 times when resetting the FPGA prior to
 loading the bitstream. The values written are `0x8000` first, then `0xc000` and
-finally `0xf000`. One of these bits probably controls the FPGA's `/PROGRAM`
-input.
+finally `0xf000`.
 
-#### `0x1f6400f8`: **FPGA bitstream upload**
+#### `0x1f6400f8` (CPLD): **FPGA bitstream upload**
 
 | Bits | RW | Description             |
 | ---: | :- | :---------------------- |
@@ -1010,12 +1097,12 @@ control the `CCLK` pin as clocking is handled automatically. The FPGA is wired
 to boot in "slave serial" mode and wait for a bitstream to be loaded by the 573
 through this port.
 
-All known games load the bitstream from a file on the internal flash (usually
-named `data/fpga/fpga_mp3.bin`), then bitbang its contents to this port LSB
-first and monitor the FPGA status register. The bitstream is always 330696 bits
-(41337 bytes) long as per the XCS40XL datasheet.
+All known games load the bitstream from an array embedded in the executable or a
+file on the internal flash (usually named `data/fpga/fpga_mp3.bin`), then write
+its contents to this port LSB first and monitor the FPGA status register. The
+bitstream is always 330696 bits (41337 bytes) long as per the XCS40XL datasheet.
 
-#### `0x1f6400fa`: **Bank C**
+#### `0x1f6400fa` (CPLD): **Bank C**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -1025,7 +1112,7 @@ first and monitor the FPGA status register. The bitstream is always 330696 bits
 |   14 | W  | Output C2 (0 = grounded) |
 |   15 | W  | Output C3 (0 = grounded) |
 
-#### `0x1f6400fc`: **Bank C**
+#### `0x1f6400fc` (CPLD): **Bank C**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -1035,7 +1122,7 @@ first and monitor the FPGA status register. The bitstream is always 330696 bits
 |   14 | W  | Output C6 (0 = grounded) |
 |   15 | W  | Output C7 (0 = grounded) |
 
-#### `0x1f6400fe`: **Bank B**
+#### `0x1f6400fe` (CPLD): **Bank B**
 
 | Bits | RW | Description              |
 | ---: | :- | :----------------------- |
@@ -1047,27 +1134,49 @@ first and monitor the FPGA status register. The bitstream is always 330696 bits
 
 ### Alternate analog I/O board (`GX700-PWB(K)`)
 
+Used by Kick &amp; Kick. Has several optocouplers, plus a DS2401 serial number
+chip and several unpopulated footprints.
+
 This board is currently undocumented.
 
-### Fishing controls board (`GE765-PWB(B)A`)
+### Fishing controller I/O board (`GE765-PWB(B)A`)
+
+Used by the Fisherman's Bait series. Uses an NEC uPD4701 mouse/trackball chip to
+track motion of the fishing reel's rotary encoders and contains PWM drivers for
+the feedback motors. Along with the analog I/O board, it is the only known board
+that does *not* have a DS2401.
 
 This board is currently undocumented.
 
 ### DDR Karaoke Mix I/O board (`GX921-PWB(B)`)
 
+Used by DDR Karaoke Mix 1 and 2. Similarly to the digital I/O board, this board
+features several optoisolated light outputs, an ARCnet PHY and a DS2401 serial
+number chip. It also has composite video inputs and outputs, a video encoder to
+convert the 573's native RGB output to composite and additional circuitry to
+superimpose it onto the video feed from an external karaoke machine. An onboard
+PC16552 UART is provided to communicate with the machine (the security cartridge
+also exposes SIO1).
+
 This board is currently undocumented.
 
-### Gun Mania I/O board (`PWB0000073070`, unconfirmed)
+### GunMania I/O board (`PWB0000073070`)
+
+Used by GunMania and GunMania Zone Plus. Contains an RGB to S-video converter
+which drives the cabinet's projector, several motor drivers, optoisolators, a
+PC16552 UART and a DS2401 serial number chip. A DB25 connector on the side of
+the board is used to interface to the resistive matrix used to detect bullet
+shots.
 
 This board is currently undocumented.
 
 ### Hypothetical debugging board
 
-There is no proof whatsoever of this board having ever existed, but the BIOS
-and some games attempt to access the hardware on it. In particular it seems to
-contain at least a Fujitsu MB89371 UART and a 7-segment display, although these
-might have actually been on two separate boards. The only game known to access
-the serial ports is Great Bishi Bashi Champ.
+There is no proof whatsoever of this board having ever existed, but the BIOS and
+some games attempt to access the hardware on it. It seems to contain at least a
+Fujitsu MB89371 UART and a 7-segment display, although these may have actually
+been on two separate boards (or built into a prototype board used by Konami
+during development).
 
 The MB89371 does not have a publicly available datasheet.
 
@@ -1081,206 +1190,549 @@ The MB89371 does not have a publicly available datasheet.
 
 #### `0x1f640010`: **7-segment display**
 
-| Bits | RW | Description                     |
-| ---: | :- | :------------------------------ |
-|    0 | W  | Second digit segment G (0 = on) |
-|    1 | W  | Second digit segment F (0 = on) |
-|    2 | W  | Second digit segment E (0 = on) |
-|    3 | W  | Second digit segment D (0 = on) |
-|    4 | W  | Second digit segment C (0 = on) |
-|    5 | W  | Second digit segment B (0 = on) |
-|    6 | W  | Second digit segment A (0 = on) |
-|    7 |    | _Unused_                        |
-|    8 | W  | First digit segment G (0 = on)  |
-|    9 | W  | First digit segment F (0 = on)  |
-|   10 | W  | First digit segment E (0 = on)  |
-|   11 | W  | First digit segment D (0 = on)  |
-|   12 | W  | First digit segment C (0 = on)  |
-|   13 | W  | First digit segment B (0 = on)  |
-|   14 | W  | First digit segment A (0 = on)  |
-|   15 |    | _Unused_                        |
+| Bits | RW | Description                    |
+| ---: | :- | :----------------------------- |
+|    0 | W  | Right digit segment G (0 = on) |
+|    1 | W  | Right digit segment F (0 = on) |
+|    2 | W  | Right digit segment E (0 = on) |
+|    3 | W  | Right digit segment D (0 = on) |
+|    4 | W  | Right digit segment C (0 = on) |
+|    5 | W  | Right digit segment B (0 = on) |
+|    6 | W  | Right digit segment A (0 = on) |
+|    7 |    | _Unused_                       |
+|    8 | W  | Left digit segment G (0 = on)  |
+|    9 | W  | Left digit segment F (0 = on)  |
+|   10 | W  | Left digit segment E (0 = on)  |
+|   11 | W  | Left digit segment D (0 = on)  |
+|   12 | W  | Left digit segment C (0 = on)  |
+|   13 | W  | Left digit segment B (0 = on)  |
+|   14 | W  | Left digit segment A (0 = on)  |
+|   15 |    | _Unused_                       |
 
 The BIOS shell shows "00" on this display (but contains a function to show any
 hexadecimal value). Kick &amp; Kick shows an animated spinner, some other games
-show error or status codes on it. This might have been meant to be a POST
-display to be integrated into the 573 main board at some point.
+show error or status codes on it. This may have been meant to be a POST display
+integrated into the 573 main board at some point.
 
 ## Security cartridges
 
-There are several different security cartridges, most of which feature game
-specific hardware and connectors to e.g. drive lights or interface to external
-boxes. All of them fall into five categories, based on the actual security
-chips they contain:
+All known System 573 games use cartridges that plug into the slot on the right
+side of the main board as an anti-piracy measure and/or to add game specific I/O
+functionality (particularly for games that do not otherwise require any I/O
+board). Cartridges typically contain a password protected EEPROM, used to store
+game and installation information, and in some cases a DS2401 unique serial
+number chip.
 
-| Type   | Security EEPROM chip | ID chip  |
-| :----- | :------------------- | :------- |
-| **X**  | `X76F041`            |          |
-| **XI** | `X76F041`            | `DS2401` |
-| **Y**  | `X76F100`            |          |
-| **YI** | `X76F100`            | `DS2401` |
-| **ZI** | `PIC16C625` (`ZS01`) | `DS2401` |
+Konami's security cartridge driver supports the following EEPROMs:
 
-**NOTE**: the existence of Y/YI cartridges has never been confirmed. All known
-games that support Y/YI cartridges can also use X/XI cartridges interchangeably
-and no actual X76F100-based cartridge was ever found in the wild.
+| Manufacturer     | Chip                                          | "Response to reset" ID    | Capacity  |
+| :--------------- | :-------------------------------------------- | :------------------------ | --------: |
+| Xicor            | [X76F041](#x76f041-cartridge-variants)        | `19 55 aa 55` (LSB first) | 512 bytes |
+| Xicor            | X76F100                                       | `19 00 aa 55` (LSB first) | 112 bytes |
+| Konami/Microchip | [ZS01 (PIC16CE625)](#zs01-cartridge-variants) | `5a 53 00 01` (MSB first) | 112 bytes |
 
-The following cartridges are currently known to exist:
+**NOTE**: Konami seems to have never manufactured X76F100 cartridges, however
+most games that expect an X76F041 can also use the X76F100 interchangeably. ZS01
+support was only added in later versions of the driver.
 
-| Name (on PCB)   | Type | Used by                     | Additional I/O connectors                     | Additional hardware                                   |
-| :-------------- | :--- | :-------------------------- | :-------------------------------------------- | :---------------------------------------------------- |
-| `GX700-PWB(D)`  | X    | Most early games/installers |                                               | _Unpopulated (T)QFP footprint_                        |
-| `GX896-PWB(A)A` | X    | Early DrumMania             | Network (5-pin), amp box (6-pin)              | RS-232 transceiver powered by isolated DC-DC module   |
-| `GX894-PWB(D)`  | XI?  | Unknown                     |                                               | _Unpopulated SOIC footprints_                         |
-| `GX700-PWB(J)`  | XI   | PunchMania                  | Analog inputs (12-pin), unknown (10-pin)      | SPI ADC chip for analog inputs                        |
-| `GX883-PWB(D)`  | XI   | Early digital I/O games     | Network (5-pin), amp box (6-pin)              | RS-232 transceiver powered by isolated DC-DC module   |
-| `GE949-PWB(D)A` | ZI   | Late digital I/O games      | Network (5-pin), amp box (6-pin)              | RS-232 transceiver powered by isolated DC-DC module   |
-| `GE949-PWB(D)B` | ZI   | Late digital I/O games      | _Same as above but unpopulated_               | _Same as above but only security chips are populated_ |
-| `PWB0000068819` | X    | Hyper BB Champ (2-player)   | 12V (4-pin), lights (16-pin)                  | Latch controlled light outputs                        |
-| Unknown         | X    | Hyper BB Champ (3-player)   | 12V (4-pin), lights (16-pin), unknown (5-pin) | Latch controlled light outputs                        |
-| `PWB0000088954` | XI   | Salary Man Champ            | 12V (4-pin), lights (16-pin)                  | Shift register controlled light outputs               |
+### Cartridge interface
 
-The main security chip in all types other than ZI is actually just a simple
-password-protected I2C EEPROM whose datasheet is readily available. ZI
-cartridges use a microcontroller running custom firmware (which hasn't yet been
-dumped) instead. XI, YI and ZI cartridges also feature a Dallas/Maxim DS2401
-chip that communicates using the 1-wire protocol and, like all 1-wire devices,
-provides a supposedly unique 64-bit serial number to identify the cartridge.
-The DS2401 on ZI cartridges isn't directly accessible, it's instead read by the
-ZS01.
+All communication with the cartridge is performed through the following pins:
 
-PunchMania cartridges additionally contain an ADC0838 chip, which is identical
-to the ADC0834 on the main board except with 8 channels instead of 4. The ADC's
-inputs are broken out to a connector on the cartridge. Hyper Bishi Bashi Champ
-and Salary Man Champ cartridges contain some 74 logic to control cabinet lights
-and are fed 12V through a separate cable on the JAMMA harness.
+- an 8-bit input port (`I0-I7`), readable through register `0x1f400004`;
+- a latched 8-bit output port (`D0-D7`), controlled by register `0x1f6a0000`;
+- a single tristate I/O pin (`SDA`), which can be either configured as a
+  floating input or set to output the same logic level as `D0` through register
+  `0x1f500000`;
+- the CPU's SIO1 interface (`TX`, `RX`, `/RTS`, `/CTS`, `/DTR`, `/DSR`);
+- four bus handshaking lines (`IRDY`, `DRDY`, `/IREQ`, `/DACK`).
 
-Some games used an XI cartridge for running the installer and a ZI cartridge
-for the actual game; MAME calls these games "XZI". MAME also declares some
-games as "YYI" (YI cartridge for the installer and another YI cartridge to run
-the game), however no YI cartridges are known to exist.
+See the pinouts section for more information on the security cartridge slot.
 
-### Interface
+#### Handshaking lines
 
-The 573 motherboard has no dedicated SPI, I2C or 1-wire peripherals (other than
-the unused PS1 controller SPI bus), so all communication with these chips is
-bitbanged in software through a set of 6 UART pins, two 8-bit fixed direction
-I/O ports plus a bidirectional pin:
+The cartridge slot carries two status lines *unofficially* known as `IRDY` and
+`DRDY` plus two inputs named `/IREQ` and `/DACK`, probably meant for
+synchronization with cartridges that would actually use `D0-D7` and `I0-I7` as a
+parallel data bus rather than to bitbang serial protocols. No currently known
+cartridge uses these pins.
 
-| Name   | Dir | Common to all cartridge types            | XI/YI/ZI cartridges                     | Salary Man Champ cart  | Hyper BB Champ cart  | PunchMania cart     |
-| :----- | :-- | :--------------------------------------- | :-------------------------------------- | :--------------------- | :------------------- | :------------------ |
-| `TX`   | W   |                                          | Network connector TX1 (via RS-232 PHY)  |                        |                      |                     |
-| `RX`   | R   |                                          | Network connector RX1 (via RS-232 PHY)  |                        |                      |                     |
-| `/RTS` | W   | Serial port enable (shorted to CTS)      |                                         |                        |                      |                     |
-| `/CTS` | R   | Serial port enable (shorted to RTS)      |                                         |                        |                      |                     |
-| `/DTR` | W   | Not wired to the cartridge slot?         |                                         |                        |                      |                     |
-| `/DSR` | R   | Cartridge presence detection (grounded)  |                                         |                        |                      |                     |
-| `D0`   | W   | I2C SDA to security chip (through `SDA`) |                                         |                        | Player 3 light latch | SPI CS to ADC       |
-| `D1`   | W   | I2C SCL to security chip                 |                                         |                        | Player 2 light latch | SPI SCK to ADC      |
-| `D2`   | W   | I2C CS to security chip                  |                                         |                        |                      |                     |
-| `D3`   | W   | Security chip reset                      |                                         |                        | Player 1 light latch |                     |
-| `D4`   | W   |                                          | Drives 1-wire bus low when pulled high  |                        | Green button lights  |                     |
-| `D5`   | W   |                                          |                                         | SCK to shift register  | Blue button lights   | SPI MOSI to ADC     |
-| `D6`   | W   |                                          |                                         | Shift register reset   | Red button lights    |                     |
-| `D7`   | W   |                                          | Network connector TX2? (via RS-232 PHY) | MOSI to shift register | Start button light   |                     |
-| `I0`   | R   |                                          |                                         |                        |                      | SPI MISO from ADC   |
-| `I1`   | R   |                                          |                                         |                        |                      | SAR status from ADC |
-| `I2`   | R   |                                          |                                         |                        |                      |                     |
-| `I3`   | R   |                                          |                                         |                        |                      |                     |
-| `I4`   | R   |                                          | Network detect (unclear how this works) |                        |                      |                     |
-| `I5`   | R   |                                          |                                         |                        |                      |                     |
-| `I6`   | R   |                                          | 1-wire bus from/to DS2401 readout       |                        |                      |                     |
-| `I7`   | R   |                                          | Network connector RX2? (via RS-232 PHY) |                        |                      |                     |
-| `SDA`  | RW  | I2C SDA from/to security chip (see note) |                                         |                        |                      |                     |
-
-`SDA` is a bidirectional pin that can be set by the 573 as an input (presumably
-with a pullup resistor, as mandated by the I2C specification) or it can be set
-to output the same logic level as `D0`.
-
-#### Bus signalling
-
-In addition to the signals above the cartridge slots carries two status lines
-*unofficially* known as `ISIG` and `DSIG` and two inputs named `/IREQ` and
-`/DACK`, probably meant for synchronization with cartridges that would actually
-use the I/O ports as a parallel data bus rather than for bitbanging. No known
-cartridge ever used these pins.
-
-`DSIG` is set whenever the 573 writes to the output port, even if no bits have
+`DRDY` is set whenever the 573 writes to the output port, even if no bits have
 actually changed. The cartridge can monitor this signal to know when to read a
 byte from the port and then pull `/DACK` low to reset it. To send a byte to the
-573 the cartridge can pulse `/IREQ`, which will cause `ISIG` to go high until
-the 573 accesses the input port. The 573 can read the status of `ISIG` (as well
-as `DSIG`) through the Konami ASIC and wait for it to be set before reading the
+573 the cartridge can pulse `/IREQ`, which will cause `IRDY` to go high until
+the 573 accesses the input port. The 573 can read the status of `IRDY` (as well
+as `DRDY`) through the Konami ASIC and wait for it to be set before reading the
 next byte.
 
-Basically the cartridge I/O ports can be thought of as a single-byte FIFO, with
-`DSIG` being the "TX buffer full" flag and `ISIG` the "RX buffer not empty"
-flag.
+The cartridge I/O ports can basically be thought of as a single-byte FIFO, with
+`DRDY` being the "TX buffer full" flag and `IRDY` the "RX buffer not empty"
+flag. The handshaking lines are implemented using a handful of 74LS74 flip
+flops.
+
+**NOTE**: the JVS MCU also has its own handshaking lines, `JVSIRDY` and
+`JVSDRDY`, which are actually used and work in pretty much the same way. See the
+JVS interface section for more information on communicating with the MCU.
 
 #### Note about RTS/CTS
 
-The CPU's SIO1 has hardware flow control and will not transmit anything if CTS
-isn't asserted. To get around this all known cartridges wire CTS to RTS,
-allowing it to be controlled in software. Cartridges that use the serial port
-(i.e. the ones with the network port) simply have the pins shorted together,
-while all other types break them out to a 2-pin jumper that is either
-unpopulated or shorted out with a piece of wire.
+The PS1 CPU's SIO1 UART has hardware flow control and will not transmit data
+until CTS is asserted. In order to get around this most cartridges tie CTS to
+RTS, allowing it to be controlled in software. Cartridges that use the serial
+port (i.e. ones with a network port) have the pins tied together on the PCB,
+while other cartridge types usually break them out to a shorted 2-pin jumper.
 
-It turns out that many games that don't use SIO1 for networking redirect their
-debug log output to it (by calling the `AddSIO()` function provided by the Sony
-SDK) if they detect that CTS and RTS are shorted on startup. Additionally on
-later 573 revisions the SIO1 pins are broken out to a separate pin header
-(`CN24`) and made accessible without needing any kind of adapter or probe
-between the cartridge and the 573. Thus, was the normally unpopulated jumper
-actually meant as a "debug switch" of sorts?
+Some earlier games that do not use SIO1 for networking purposes redirect their
+debug logging output to it (by calling the `AddSIO()` function provided by the
+Sony SDK) if CTS and RTS are shorted on startup. On later 573 motherboard
+revisions, the SIO1 pins are additionally broken out to a separate connector
+(`CN24`) and made accessible even when a cartridge without a network port is
+inserted.
 
-**NOTE**: I2C SDA from/to the security chip and the DS2401 1-wire bus are
-*open-collector bidirectional lines*, which means they can be controlled by
-both the 573 and the cassette. This is accomplished by having them pulled high
-by a resistor, and using a transistor on each side to force them low. On the
-573's side, the bits that control the transistors (`D0` and `D4`) are outputs
-separate from the inputs used to read the lines (`SDA_I` and `1WIRE`), with
-`D4` being inverted (i.e. set `D4` high to pull the 1-wire bus low).
+### EEPROM-less cartridge variants
 
-Details on how to bitbang SPI, I2C and 1-wire are out of the scope of this
-document, but plenty of documentation can be found online.
+#### Hyper Bishi Bashi Champ 3-player cartridge (`GX700-PWB(E)`)
+
+This is the only known cartridge type that has no EEPROM (although the PCB does
+have an unpopulated X76F041 footprint). It has no plastic case, as it's meant to
+be enclosed in the same case as the 573 itself. It has open-drain outputs for
+driving up to 12 lights, arranged as 3 banks of 4 outputs each (one bank for
+each player's buttons), plus an RS-232 transceiver for SIO1. The following pins
+are used:
+
+| Name   | Dir | Usage                                            |
+| :----- | :-- | :----------------------------------------------- |
+| `TX`   | O   | `TX` to network port (via RS-232 transceiver)    |
+| `RX`   | I   | `RX` from network port (via RS-232 transceiver)  |
+| `/RTS` | O   | Shorted to `/CTS` to enable SIO1                 |
+| `/CTS` | I   | Shorted to `/RTS` to enable SIO1                 |
+| `/DSR` | I   | Cartridge insertion detection (grounded)         |
+| `D0`   | O   | Updates/latches bank 3 when pulsed               |
+| `D1`   | O   | Updates/latches bank 2 when pulsed               |
+| `D3`   | O   | Updates/latches bank 1 when pulsed               |
+| `D4`   | O   | Data for light output 0 (green button)           |
+| `D5`   | O   | Data for light output 1 (blue button)            |
+| `D6`   | O   | Data for light output 2 (red button)             |
+| `D7`   | O   | Data for light output 3 (start button)           |
+| `?`    | O   | `DTR` to network port (via RS-232 transceiver)   |
+| `?`    | I   | `DSR` from network port (via RS-232 transceiver) |
+
+This cartridge has three connectors:
+
+- `CN2` (5-pin): RS-232 port. Note that this port is *not* electrically isolated
+  and shares its ground with the 573, unlike all other cartridges with an RS-232
+  connector.
+- `CN3` (16-pin): breaks out the light outputs and the incoming 12V supply from
+  `CN4`.
+- `CN4` (4-pin): 12V power input, connected through a short cable to `CN17` on
+  the 573 main board.
+
+### X76F041 cartridge variants
+
+All X76F041 cartridges use the following pins:
+
+| Name   | Dir | Usage                                              |
+| :----- | :-- | :------------------------------------------------- |
+| `/DSR` | I   | Cartridge insertion detection (grounded)           |
+| `D0`   | O   | Drives X76F041 I2C SDA when `SDA` is set as output |
+| `D1`   | O   | X76F041 I2C SCL                                    |
+| `D2`   | O   | X76F041 chip select (`/CS`)                        |
+| `D3`   | O   | X76F041 reset (`RST`)                              |
+| `SDA`  | IO  | X76F041 I2C SDA readout                            |
+
+X76F041 cartridges equipped with a DS2401 additionally use the following pins:
+
+| Name   | Dir | Usage                                  |
+| :----- | :-- | :------------------------------------- |
+| `D4`   | O   | Drives 1-wire bus low when pulled high |
+| `I6`   | I   | DS2401 1-wire bus readout              |
+
+#### Generic cartridge (`GX700-PWB(D)`)
+
+Rectangular cartridge used by the earliest 573 games and as a separate
+installation key for some later games. Contains only the X76F041 EEPROM and no
+DS2401, but the PCB has an unpopulated footprint for an unknown 64-pin TQFP
+part.
+
+#### Generic cartridge with DS2401 (`GX894-PWB(D)`)
+
+Rectangular cartridge similar to `GX700-PWB(D)` but equipped with a DS2401. The
+PCB has two unpopulated SOIC footprints, one of which may possibly be for an
+X76F100 or another I2C EEPROM.
+
+#### Early serial port cartridge (`GX896-PWB(A)A`)
+
+Seems to be an older variant of the more common `GX883-PWB(D)` cartridge, with
+the same ports but no DS2401. As with the 3-player Bishi Bashi cartridge, it has
+no case and is instead meant to sit inside the 573's own case.
+
+| Name   | Dir | Usage                                            |
+| :----- | :-- | :----------------------------------------------- |
+| `TX`   | O   | `TX` to network port (via RS-232 transceiver)    |
+| `RX`   | I   | `RX` from network port (via RS-232 transceiver)  |
+| `/RTS` | O   | Shorted to `/CTS` to enable SIO1                 |
+| `/CTS` | I   | Shorted to `/RTS` to enable SIO1                 |
+| `?`    | O   | `CTRL0` to control port                          |
+| `?`    | O   | `CTRL1` to control port                          |
+| `?`    | O   | `CTRL2` to control port                          |
+| `?`    | O   | `DTR` to network port (via RS-232 transceiver)   |
+| `?`    | I   | `DSR` from network port (via RS-232 transceiver) |
+
+This cartridge has two connectors:
+
+- `CN2` (5-pin): electrically isolated RS-232 port. The transceiver is powered
+  by an isolated DC-DC module and all signals going from/to the 573 are
+  optoisolated.
+- `CN3` (6-pin): three 5V logic level signals, used in some cabinets to control
+  lights or the speaker amplifier.
+
+#### Serial port cartridge with DS2401 (`GX883-PWB(D)`)
+
+T-shaped cartridge with a DS2401, a "network" (RS-232) port and a "control" or
+"amp box" port, commonly used by pre-ZS01 Bemani games. Uses the following pins:
+
+| Name   | Dir | Usage                                            |
+| :----- | :-- | :----------------------------------------------- |
+| `TX`   | O   | `TX` to network port (via RS-232 transceiver)    |
+| `RX`   | I   | `RX` from network port (via RS-232 transceiver)  |
+| `/RTS` | O   | Shorted to `/CTS` to enable SIO1                 |
+| `/CTS` | I   | Shorted to `/RTS` to enable SIO1                 |
+| `?`    | O   | `CTRL0` to control port                          |
+| `?`    | O   | `CTRL1` to control port                          |
+| `?`    | O   | `CTRL2` to control port                          |
+| `?`    | O   | `DTR` to network port (via RS-232 transceiver)   |
+| `?`    | I   | `DSR` from network port (via RS-232 transceiver) |
+
+This cartridge has two connectors:
+
+- Network (5-pin, unlabeled on PCB): electrically isolated RS-232 port. The
+  transceiver is powered by an isolated DC-DC module and all signals going
+  from/to the 573 are optoisolated.
+- Control/amp box (6-pin, unlabeled on PCB): three 5V logic level signals, used
+  in some cabinets to control lights or the speaker amplifier.
+
+#### PunchMania cartridge (`GX700-PWB(J)`)
+
+T-shaped cartridge used only by PunchMania/Fighting Mania series. Contains an
+X76F041, a DS2401 and an ADC0838 used to measure up to 8 analog inputs. The ADC
+uses the following pins:
+
+| Name | Dir | Usage                                               |
+| :--- | :-- | :-------------------------------------------------- |
+| `D0` | O   | Chip select to ADC (`/CS`), shared with X76F041 SDA |
+| `D1` | O   | Data clock to ADC (`CLK`), shared with X76F041 SCL  |
+| `D5` | O   | Data input to ADC (`DI`)                            |
+| `I0` | I   | Data output from ADC (`DO`)                         |
+| `I1` | I   | SAR status from ADC (`SARS`)                        |
+
+This cartridge has two connectors:
+
+- Unknown (12-pin): analog input connector. As with the ADC built into the 573
+  motherboard there seems to be no protection on the inputs, so only voltages in
+  0-5V range are accepted.
+- `CN4` (10-pin): unknown purpose. Seems to be always unpopulated.
+
+#### Hyper Bishi Bashi Champ 2-player cartridge (`PWB0000068819`)
+
+T-shaped cartridge with open-drain outputs for driving up to 8 lights, arranged
+as 2 banks of 4 outputs each. Unlike the `GX700-PWB(E)` 3-player variant, it has
+an X76F041 (but no DS2401), lacks the RS-232 port and does not seem to be
+designed to be mounted inside the 573. The latches driving the light outputs use
+the following pins:
+
+| Name | Dir | Usage                                  |
+| :--- | :-- | :------------------------------------- |
+| `?`  | O   | Updates/latches bank 1 when pulsed     |
+| `?`  | O   | Updates/latches bank 2 when pulsed     |
+| `?`  | O   | Data for light output 0 (green button) |
+| `?`  | O   | Data for light output 1 (blue button)  |
+| `?`  | O   | Data for light output 2 (red button)   |
+| `?`  | O   | Data for light output 3 (start button) |
+
+This cartridge has two connectors:
+
+- `CN2` (16-pin): breaks out the light outputs and the incoming 12V supply from
+  `CN3`.
+- `CN3` (4-pin): 12V power input, presumably connected to the power supply
+  externally (i.e. not through the main board).
+
+#### Salary Man Champ cartridge (`PWB0000088954`)
+
+T-shaped cartridge with open-drain outputs for driving up to 8 lights (although
+only 6 outputs seem to be populated). Contains an X76F041, a DS2401 and two 4094
+shift registers, presumably chained. The shift registers use the following pins:
+
+| Name | Dir | Usage                |
+| :--- | :-- | :------------------- |
+| `D5` | O   | Shift register clock |
+| `D6` | O   | Shift register reset |
+| `D7` | O   | Shift register data  |
+
+This cartridge has two connectors:
+
+- Unlabeled (16-pin): breaks out the light outputs and the incoming 12V supply.
+- Unlabeled (4-pin): 12V power input, presumably connected to the power supply
+  externally (i.e. not through the main board).
+
+### ZS01 cartridge variants
+
+All ZS01 cartridges use the following pins:
+
+| Name   | Dir | Usage                                           |
+| :----- | :-- | :---------------------------------------------- |
+| `/DSR` | I   | Cartridge insertion detection (grounded)        |
+| `D0`   | O   | Drives ZS01 I2C SDA when `SDA` is set as output |
+| `D1`   | O   | ZS01 I2C SCL                                    |
+| `D3`   | O   | ZS01 reset                                      |
+| `SDA`  | IO  | ZS01 I2C SDA readout                            |
+
+All cartridges are fitted with a DS2401, however it is connected to a GPIO pin
+on the ZS01 rather than being directly exposed to the 573. The ZS01 additionally
+provides its own unique serial number, which seems to be unused by games.
+
+#### Serial port cartridge (`GE949-PWB(D)A`)
+
+ZS01 variant of the `GX883-PWB(D)` cartridge. Uses the following pins:
+
+| Name   | Dir | Usage                                            |
+| :----- | :-- | :----------------------------------------------- |
+| `TX`   | O   | `TX` to network port (via RS-232 transceiver)    |
+| `RX`   | I   | `RX` from network port (via RS-232 transceiver)  |
+| `/RTS` | O   | Shorted to `/CTS` to enable SIO1                 |
+| `/CTS` | I   | Shorted to `/RTS` to enable SIO1                 |
+| `?`    | O   | `CTRL0` to control port                          |
+| `?`    | O   | `CTRL1` to control port                          |
+| `?`    | O   | `CTRL2` to control port                          |
+| `?`    | O   | `DTR` to network port (via RS-232 transceiver)   |
+| `?`    | I   | `DSR` from network port (via RS-232 transceiver) |
+
+This cartridge has two connectors:
+
+- Network (5-pin, unlabeled on PCB): electrically isolated RS-232 port. The
+  transceiver is powered by an isolated DC-DC module and all signals going
+  from/to the 573 are optoisolated.
+- Control/amp box (6-pin, unlabeled on PCB): three 5V logic level signals, used
+  in some cabinets to control lights or the speaker amplifier.
+
+#### Stripped down serial port cartridge (`GE949-PWB(D)B`)
+
+T-shaped cartridge that uses the same PCB as `GE949-PWB(D)A` but only has the
+ZS01, DS2401 and supporting parts are populated. Used by games that do not need
+the RS-232 interface.
 
 ### ZS01 protocol
 
-Konami's "ZS01" security chip, used in ZI cartridges, is a pre-programmed PIC16
-microcontroller that mostly replicates the X76F100's functionality, allowing
-the 573 to store up to 112 bytes of data protected by a 64-bit key. Unlike the
-X76F100, however, the ZS01 communicates with the 573 using encrypted packets
-and self-erases if too many attempts are made to tamper with the encryption.
+The "ZS01" EEPROM is actually a PIC16 microcontroller that mostly replicates the
+X76F100's functionality, allowing the 573 to store up to 112 bytes of data
+protected by a 64-bit password. Unlike the X76F041 and X76F100, which use
+plaintext commands, all communication with the ZS01 is obfuscated using a
+rudimentary scrambling algorithm. A CRC16 is attached to each packet and used to
+detect attempts to tamper with the obfuscation. Attempting to send too many
+requests with an invalid CRC16 will cause the ZS01 to self-erase and reset the
+password.
 
 A ZS01 transaction can be broken down into the following steps:
 
-1. The 573 prepares a 12-byte buffer to be sent to the ZS01. The first 2 bytes
-   represent the command (read or write) and the address to read from or write
-   to, respectively. Data is always read or written in 8 byte blocks, with some
-   blocks being reserved for "special" purposes such as changing keys or
-   reading out the DS2401.
-2. If the command is a write command the next 8 bytes are populated with the
-   payload, in some cases encrypted with the ZS01's "data key" (different for
-   each game). For read commands the 573 populates them with a random 64-bit
-   nonce derived from RTC time, which will then be used by the ZS01 as a key to
-   encrypt the response. This was probably meant as a way to prevent the replay
-   attacks the X76F041 and X76F100 were vulnerable to.
-3. A (non-standard) CRC16 of the 10 bytes generated so far is calculated and
-   stored in the last 2 bytes of the buffer. All 12 bytes are then encrypted
-   using a 64-bit "command key", which seems to be identical across all ZS01
-   games.
-4. The encrypted packet is sent to the ZS01. If the CRC16 is correct after
-   decryption the ZS01 will reply with an I2C ACK, otherwise it will ignore the
-   packet and decrement its remaining attempts counter.
-5. The 573 proceeds to read 12 bytes from the ZS01 and decrypt them using the
-   nonce it generated earlier. For write commands, the nonce provided in the
-   last read command issued is reused by the ZS01.
-6. The CRC16 of the response's first 10 bytes is calculated and compared
-   against the one received in the last 2 bytes; if it matches, the response is
-   considered valid. The first byte will be zero if the command was executed
-   successfully by the ZS01. The second byte seems to be a "seed" of sorts used
-   in the encryption algorithm. The remaining 8 bytes contain the requested
-   payload for read commands.
+1. The 573 prepares a 12-byte packet to be sent to the ZS01, containing a
+   command, address and payload:
+
+   | Bytes | Description                                       |
+   | ----: | :------------------------------------------------ |
+   |     0 | Command flags                                     |
+   |     1 | Address bits 0-7                                  |
+   |   2-9 | Payload (data for writes, response key for reads) |
+   | 10-11 | CRC16 of bytes 0-9, big endian                    |
+
+   The first byte is a 3-bit bitfield encoding the command and access type:
+
+   | Bits | Description                                    |
+   | ---: | :--------------------------------------------- |
+   |    0 | Command (0 = write/erase, 1 = read)            |
+   |    1 | Address bit 8 (unused, should be 0)            |
+   |    2 | Access type (0 = unprivileged, 1 = privileged) |
+   |  3-7 | Unused? (should be 0)                          |
+
+   The access type bit specifies whether the command is privileged. Privileged
+   commands require the ZS01's current password, while unprivileged commands do
+   not.
+
+   The address must be one of the following values:
+
+   | Address     | Length   | Privileged | Description                                |
+   | :---------- | -------: | :--------- | :----------------------------------------- |
+   | `0x00-0x03` | 32 bytes | No         | Unprivileged data area                     |
+   | `0x04-0x0e` | 80 bytes | Yes        | Privileged data area                       |
+   | `0xfc`      |  8 bytes | No         | Internal ZS01 serial number                |
+   | `0xfd`      |  8 bytes | No         | External DS2401 serial number              |
+   | `0xfd`      |  8 bytes | Yes        | Erases data area when written (write-only) |
+   | `0xfe`      |  8 bytes | Yes        | Configuration registers                    |
+   | `0xff`      |  8 bytes | Yes        | New password (write-only)                  |
+
+   Data is always read or written in aligned 8 byte blocks. Unprivileged areas
+   can be read using either a privileged or unprivileged read command, but
+   writing to them still requires a privileged write command.
+
+2. If the command is a read command, a random 8-byte "response key" is generated
+   (typically as an MD5 hash of the current time from the RTC) and written to
+   the payload field; the ZS01 will later use it to encrypt the returned data
+   as a replay attack prevention measure. For write commands, the payload field
+   is populated with the 8 bytes to be written.
+
+3. A CRC16 is calculated over the first 10 bytes of the packet and stored in the
+   last 2 bytes in big endian format. The CRC is computed as follows:
+
+   ```c
+   #define CRC16_POLYNOMIAL 0x1021
+
+   uint16_t zs01_crc16(const uint8_t *data, size_t length) {
+       uint16_t crc = 0xffff;
+
+       for (; length; length--) {
+           crc ^= *(data++) << 8;
+
+           for (int bit = 8; bit; bit--) {
+               uint16_t temp = crc;
+
+               crc <<= 1;
+               if (temp & (1 << 15))
+                   crc ^= CRC16_POLYNOMIAL;
+           }
+       }
+
+       return (crc ^ 0xffff) & 0xffff;
+   }
+   ```
+
+4. If the command is privileged, the 573 scrambles the payload field with the
+   chip's currently set password, using the following algorithm:
+
+   ```c
+   // Note that this state is preserved across calls to scramble_payload() and
+   // must be updated when a response is received (see step 8).
+   uint8_t scrambler_state = 0;
+
+   void scramble_payload(
+       uint8_t *output, const uint8_t *input, size_t length,
+       const uint8_t *password
+   ) {
+       for (; length; length--) {
+           int value = *(input++) ^ scrambler_state;
+           value     = (value + password[0]) & 0xff;
+
+           for (int i = 1; i < 8; i++) {
+               int add   = password[i] & 0x1f;
+               int shift = password[i] >> 5;
+
+               int shifted = value << shift;
+               shifted    |= value >> (8 - shift);
+               shifted    &= 0xff;
+
+               value = (shifted + add) & 0xff;
+           }
+
+           scrambler_state = value;
+           *(output++)     = value;
+       }
+   }
+   ```
+
+   The CRC16 is *not* updated to reflect the new data. This step is skipped for
+   unprivileged read commands.
+
+5. All 12 bytes of the packet are scrambled with a fixed "command key", using
+   the following algorithm:
+
+   ```c
+   static const uint8_t COMMAND_ADD[]   = { 237, 8, 16, 11, 6, 4, 8, 30 };
+   static const uint8_t COMMAND_SHIFT[] = {   0, 3,  2,  2, 6, 2, 2,  1 };
+
+   void scramble_packet(uint8_t *output, const uint8_t *input, size_t length) {
+       // Unlike scramble_payload(), this state is *not* preserved across calls.
+       uint8_t state = 0xff;
+
+       output += length;
+       input  += length;
+
+       for (; length; length--) {
+           int value = *(--input) ^ state;
+           value     = (value + COMMAND_ADD[0]) & 0xff;
+
+           for (int i = 1; i < 8; i++) {
+               int shifted = value << COMMAND_SHIFT[i];
+               shifted    |= value >> (8 - COMMAND_SHIFT[i]);
+               shifted    &= 0xff;
+
+               value = (shifted + COMMAND_ADD[i]) & 0xff;
+           }
+
+           state       = value;
+           *(--output) = value;
+       }
+   }
+   ```
+
+6. The scrambled packet is sent to the ZS01, which will respond to the first 11
+   bytes immediately with an I2C ACK and to the last byte with an ACK after a
+   short delay. The 573 then proceeds to read 12 bytes from the ZS01, issuing an
+   I2C ACK for each byte received up until the last one.
+
+7. The 573 uses the response key generated in step 2 to unscramble the packet
+   returned by the ZS01. The unscrambling algorithm is the same one used in step
+   5, applied in reverse:
+
+   ```c
+   void unscramble_packet(
+       uint8_t *output, const uint8_t *input, size_t length,
+       const uint8_t *response_key
+   ) {
+       uint8_t state = 0xff;
+
+       output += length;
+       input  += length;
+
+       for (; length; length--) {
+           int value      = *(--input);
+           int last_state = state;
+           state          = value;
+
+           for (int i = 1; i < 8; i++) {
+               int add   = response_key[i] & 0x1f;
+               int shift = response_key[i] >> 5;
+
+               int subtracted = (value - add) & 0xff;
+
+               value  = subtracted >> shift;
+               value |= subtracted << (8 - shift);
+               value &= 0xff;
+           }
+
+           value       = (value - response_key[0]) & 0xff;
+           *(--output) = value ^ last_state;
+       }
+   }
+   ```
+
+   For write commands, the response key required to unscramble the packet is the
+   one sent as part of the last read command issued. For read commands, the ZS01
+   may either use the key provided in the payload field or the one from the last
+   read command issued; Konami's code tries unscrambling responses with both.
+
+8. The unscrambled packet will contain the following fields:
+
+   | Bytes | Description                                |
+   | ----: | :----------------------------------------- |
+   |     0 | Status code (0 = success, 1-5 = error)     |
+   |     1 | New payload scrambler state                |
+   |   2-9 | Payload (empty for writes, data for reads) |
+   | 10-11 | CRC16 of bytes 0-9, big endian             |
+
+   The 573 proceeds to compute the CRC16 of the first 10 bytes. If it does not
+   match the one in the packet, it will try unscrambling the packet with a
+   different response key (see step 7) before giving up. Otherwise, the global
+   `scrambler_state` variable from step 4 is set to the value of byte 1,
+   regardless of whether the status code is zero or not.
+
+   The exact meaning of non-zero status codes is currently unknown.
 
 ## External modules
 
@@ -1368,59 +1820,6 @@ RAM) after an authentication handshake with the master calendar.
 
 Even though nothing is known about the actual hardware Konami used, this device
 has been successfully replicated using an Arduino (see the links section).
-
-## Connectors
-
-The front panel of a 573 looks approximately like this:
-
-```
-_________________________________________________ [3]
-|   .-----------------------.      o------------o \
-|   |     CD drive [1]      |      | Sub-panel  | |
-|   |_______________________|      |    [2]     | |
-|                                  o------------o |
-| [_________JAMMA_________] * DIP JVS VGA RCA ... |
-+------------[4]--------------[5]-[6]---[7]---[8]-+
-```
-
-1. **ATAPI CD drive**: a standard 5.25-inch unit held in place by a bracket
-   mounted to the upper half of the case. Gray case variants usually came with
-   a removable plate covering the drive cutout, while black/blue models have a
-   front panel that hides the eject button behind a small hole.
-2. **Sub-panels**: the gray variant of the case has a cutout for a plate to
-   hold additional I/O connectors here. Different games have different plates,
-   see the game-specific information section for details on which connectors
-   are broken out for each game. There is another sub-panel cutout on the back
-   of the 573 as well, used by some I/O boards to expose additional ports.
-3. **Security cartridge**: cartridges are inserted into a slot on the 573's
-   right side and locked in place by plastic tabs. Hotplugging cartridges while
-   the system is powered on will result in *permanent* damage to the cartridge,
-   the 573 or both due to ESD (this has been proven to happen).
-4. **JAMMA**: a standard PCB edge connector used in arcade systems, carrying 5V
-   and 12V power rails, analog RGB video, a mono speaker output (wired to the
-   left channel of the built-in amp, see below) and button and coin inputs. The
-   573 doesn't use the negative 5V rail provided by some JAMMA power supplies.
-5. **DIP switches**: a set of four DIP switches for quick game configuration.
-   The first three are used by some games (and can be freely used by homebrew)
-   while the last one is reserved by the BIOS and used to select whether to
-   boot from the CD or from the internal flash.
-6. **JVS "USB" port**: this is not an actual USB port, but rather a serial bus
-   which can be used to connect peripherals and external I/O boards. As the
-   underlying protocol is RS-485, multiple devices can be daisy chained.
-7. **"VGA" and RCA outputs**: these are also mandated by the JVS specification
-   and are useful for hooking the system up for testing without needing a JAMMA
-   "supergun" or similar adapter. Note that the VGA connector does not output
-   standard VGA with separate h-sync and v-sync but 15 kHz (240p/480i) RGB with
-   c-sync only. The signal levels are also higher than allowed by the VGA
-   specification, since they are still meant to drive a JAMMA CRT monitor. An
-   upscaler such as the GBS8200 (which has a VGA input that supports 15 kHz and
-   c-sync) might be required to connect the 573 to an LCD monitor, although
-   some monitors with VGA input are known to accept 15 kHz and may work with a
-   direct connection.
-8. **Speaker outputs**: the 573 has a built-in 15W amplifier, which can be used
-   for either mono output (via the speaker pins on the JAMMA connector) or for
-   stereo through this 4-pin connector. Bemani cabs do not use this output,
-   relying on a more powerful external amp plugged into the RCA jacks instead.
 
 ## BIOS
 
@@ -1847,10 +2246,12 @@ first used by Konami in the multisession unit.
 
 ## Pinouts
 
-### Analog input port (`ANALOG`, `CN3`)
+### Main board pinouts (`GX700-PWB(A)`)
 
-The inputs are wired directly to the 573's built-in ADC, so they can only
-accept voltages in 0-5V range. This connector is mostly useful for wiring up
+#### Analog input port (`ANALOG`, `CN3`)
+
+The inputs are wired directly to the 573's built-in ADC with no protection, so
+they can only accept voltages in 0-5V range. This connector is usually used for
 potentiometers and similar resistive analog controls.
 
 | Pin | Name  | Dir |
@@ -1859,54 +2260,61 @@ potentiometers and similar resistive analog controls.
 |   2 | `5V`  |     |
 |   3 | `5V`  |     |
 |   4 | `5V`  |     |
-|   5 | `CH0` | R   |
+|   5 | `CH0` | I   |
 |   6 | `GND` |     |
-|   7 | `CH1` | R   |
-|   8 | `CH2` | R   |
-|   9 | `CH3` | R   |
+|   7 | `CH1` | I   |
+|   8 | `CH2` | I   |
+|   9 | `CH3` | I   |
 |  10 | `GND` |     |
 
-### Digital output port (`EXT-OUT`, `CN4`)
+#### Digital output port (`EXT-OUT`, `CN4`)
+
+Unlike the light output ports on most I/O boards, these are unisolated 5V logic
+level outputs.
 
 | Pin | Name   | Dir |
 | --: | :----- | :-- |
 |   1 | `5V`   |     |
 |   2 | `5V`   |     |
-|   3 | `OUT7` | W   |
-|   4 | `OUT6` | W   |
-|   5 | `OUT5` | W   |
-|   6 | `OUT4` | W   |
-|   7 | `OUT3` | W   |
-|   8 | `OUT2` | W   |
-|   9 | `OUT1` | W   |
-|  10 | `OUT0` | W   |
+|   3 | `OUT7` | O   |
+|   4 | `OUT6` | O   |
+|   5 | `OUT5` | O   |
+|   6 | `OUT4` | O   |
+|   7 | `OUT3` | O   |
+|   8 | `OUT2` | O   |
+|   9 | `OUT1` | O   |
+|  10 | `OUT0` | O   |
 |  11 | `GND`  |     |
 |  12 | `GND`  |     |
 
-### Digital input port (`EXT-IN`, `CN5`)
+#### Digital input port (`EXT-IN`, `CN5`)
 
 Unlike `EXT-OUT`, this port is not a separate input port. It piggybacks on the
 JAMMA button inputs instead, exposing the button 4 and 5 pins for both players
 as well as a sixth button input which is not available on the JAMMA connector.
+All inputs have a pullup resistor to 5V.
 
-| Pin | Name    | Dir | JAMMA |
-| --: | :------ | :-- | ----: |
-|   1 | `5V`    |     |       |
-|   2 | `5V`    |     |       |
-|   3 | `P1_B4` | R   |    25 |
-|   4 | `P1_B5` | R   |    26 |
-|   5 | `P1_B6` | R   |     - |
-|   6 | `GND`   |     |       |
-|   7 | `P2_B4` | R   |     c |
-|   8 | `P2_B5` | R   |     d |
-|   9 | `P2_B6` | R   |     - |
-|  10 | `GND`   |     |       |
+| Pin | Name    | Dir | JAMMA pin |
+| --: | :------ | :-- | --------: |
+|   1 | `5V`    |     |           |
+|   2 | `5V`    |     |           |
+|   3 | `P1_B4` | I   |        25 |
+|   4 | `P1_B5` | I   |        26 |
+|   5 | `P1_B6` | I   |           |
+|   6 | `GND`   |     |           |
+|   7 | `P2_B4` | I   |         c |
+|   8 | `P2_B5` | I   |         d |
+|   9 | `P2_B6` | I   |           |
+|  10 | `GND`   |     |           |
 
-### Main I/O board connector (`CN10`)
+#### Amplified speaker output (`SOUND-OUT`, `CN9`)
 
-Used by all known I/O boards. Some signals seem to be duplicated across more
-than one pin for whatever reason. Note that the address and data bus are 3.3V,
-while all other signals are 5V as they go through the CPLD.
+The pinout of this connector is currently unknown.
+
+#### Main I/O board connector (`CN10`)
+
+Used by I/O boards to connect to the motherboard. Note that the address and data
+bus are 3.3V, while all other signals are 5V as they go through the CPLD.
 
 | Pin | Name     | Dir | Pin | Name     | Dir |
 | --: | :------- | :-- | --: | :------- | :-- |
@@ -1915,33 +2323,33 @@ while all other signals are 5V as they go through the CPLD.
 |  A3 | `5V`     |     |  B3 | `5V`     |     |
 |  A4 | `5V`     |     |  B4 | `5V`     |     |
 |  A5 | `5V`     |     |  B5 | `5V`     |     |
-|  A6 | `/RD`    | W   |  B6 | `/WR0`   | W   |
-|  A7 | `/WR1`   | W   |  B7 | `GND`    |     |
-|  A8 | `GND`    |     |  B8 | `SYSCLK` | W   |
+|  A6 | `/RD`    | O   |  B6 | `/WR0`   | O   |
+|  A7 | `/WR1`   | O   |  B7 | `GND`    |     |
+|  A8 | `GND`    |     |  B8 | `SYSCLK` | O   |
 |  A9 | `GND`    |     |  B9 | `GND`    |     |
-| A10 | `/RESET` | W   | B10 | `/RESET` | W   |
+| A10 | `/RESET` | O   | B10 | `/RESET` | O   |
 | A11 | `GND`    |     | B11 | `GND`    |     |
-| A12 | `/EXP1`  | W   | B12 | `DMARQ5` | R   |
+| A12 | `/CS1`   | O   | B12 | `DMARQ5` | I   |
 | A13 | `GND`    |     | B13 | `GND`    |     |
-| A14 | `DMARQ5` | R   | B14 | `/EXP1`  | W   |
-| A15 | `/EXP2`  | W   | B15 | `NC`     |     |
-| A16 | `/IRQ10` | R   | B16 | `/IRQ10` | R   |
-| A17 | `A22`    | W   | B17 | `A23`    | W   |
-| A18 | `A20`    | W   | B18 | `A21`    | W   |
-| A19 | `A14`    | W   | B19 | `A15`    | W   |
-| A20 | `A12`    | W   | B20 | `A13`    | W   |
-| A21 | `A6`     | W   | B21 | `A7`     | W   |
-| A22 | `A4`     | W   | B22 | `A5`     | W   |
-| A23 | `A2`     | W   | B23 | `A3`     | W   |
-| A24 | `A0`     | W   | B24 | `A1`     | W   |
-| A25 | `D14`    | RW  | B25 | `D15`    | RW  |
-| A26 | `D12`    | RW  | B26 | `D13`    | RW  |
-| A27 | `D10`    | RW  | B27 | `D11`    | RW  |
-| A28 | `D8`     | RW  | B28 | `D9`     | RW  |
-| A29 | `D6`     | RW  | B29 | `D7`     | RW  |
-| A30 | `D4`     | RW  | B30 | `D5`     | RW  |
-| A31 | `D2`     | RW  | B31 | `D3`     | RW  |
-| A32 | `D0`     | RW  | B32 | `D1`     | RW  |
+| A14 | `DMARQ5` | I   | B14 | `/CS1`   | O   |
+| A15 | `/CS2`   | O   | B15 | `NC`     |     |
+| A16 | `/IRQ10` | I   | B16 | `/IRQ10` | I   |
+| A17 | `A22`    | O   | B17 | `A23`    | O   |
+| A18 | `A20`    | O   | B18 | `A21`    | O   |
+| A19 | `A14`    | O   | B19 | `A15`    | O   |
+| A20 | `A12`    | O   | B20 | `A13`    | O   |
+| A21 | `A6`     | O   | B21 | `A7`     | O   |
+| A22 | `A4`     | O   | B22 | `A5`     | O   |
+| A23 | `A2`     | O   | B23 | `A3`     | O   |
+| A24 | `A0`     | O   | B24 | `A1`     | O   |
+| A25 | `D14`    | IO  | B25 | `D15`    | IO  |
+| A26 | `D12`    | IO  | B26 | `D13`    | IO  |
+| A27 | `D10`    | IO  | B27 | `D11`    | IO  |
+| A28 | `D8`     | IO  | B28 | `D9`     | IO  |
+| A29 | `D6`     | IO  | B29 | `D7`     | IO  |
+| A30 | `D4`     | IO  | B30 | `D5`     | IO  |
+| A31 | `D2`     | IO  | B31 | `D3`     | IO  |
+| A32 | `D0`     | IO  | B32 | `D1`     | IO  |
 | A33 | `GND`    |     | B33 | `GND`    |     |
 | A34 | `GND`    |     | B34 | `GND`    |     |
 | A35 | `GND`    |     | B35 | `GND`    |     |
@@ -1951,138 +2359,586 @@ while all other signals are 5V as they go through the CPLD.
 | A39 | `3.3V`   |     | B39 | `3.3V`   |     |
 | A40 | `3.3V`   |     | B40 | `3.3V`   |     |
 
-### Secondary I/O board connector (`CN21`)
+#### Analog CD-DA/MP3 audio input (`CD-DA IN`, `CN12`)
 
-This connector exposes the address lines not wired to `CN10` as well as the SPI
-bus pins normally used for controllers and memory cards, which go unused on the
-573 as no known I/O board ever used this connector. All signals are 3.3V.
+Connected to either the CD-ROM drive's audio output or to `CN16` on the digital
+I/O board on systems equipped with a drive.
 
-| Pin | Name   | Dir | Pin | Name    | Dir |
-| --: | :----- | :-- | --: | :------ | :-- |
-|  A1 | `A8`   | W   |  B1 | `A9`    | W   |
-|  A2 | `A10`  | W   |  B2 | `A11`   | W   |
-|  A3 | `A16`  | W   |  B3 | `A17`   | W   |
-|  A4 | `A18`  | W   |  B4 | `A19`   | W   |
-|  A5 | `GND`  |     |  B5 | `?`     |     |
-|  A6 | `GND`  |     |  B6 | `?`     |     |
-|  A7 | `GND`  |     |  B7 | `GND`   |     |
-|  A8 | `GND`  |     |  B8 | `DOTCK` | W   |
-|  A9 | `GND`  |     |  B9 | `GND`   |     |
-| A10 | `GND`  |     | B10 | `/ACK`  | R   |
-| A11 | `GND`  |     | B11 | `/JOY2` | W   |
-| A12 | `GND`  |     | B12 | `/JOY1` | W   |
-| A13 | `GND`  |     | B13 | `MISO`  | R   |
-| A14 | `GND`  |     | B14 | `MOSI`  | W   |
-| A15 | `GND`  |     | B15 | `SCK`   | W   |
+| Pin | Name   | Dir |
+| --: | :----- | :-- |
+|   1 | `LIN`  | I   |
+|   2 | `AGND` |     |
+|   3 | `AGND` |     |
+|   4 | `RIN`  | I   |
 
-### Security cartridge slot (`CN14`)
+#### Security cartridge slot (`CN14`)
 
 All signals are 5V as they go through level shifters.
 
-| Pin | Name     | Dir | Notes                           | Pin | Name    | Dir | Notes                                 |
-| --: | :------- | :-- | :------------------------------ | --: | :------ | :-- | :------------------------------------ |
-|   1 | `GND`    |     |                                 |  23 | `GND`   |     |                                       |
-|   2 | `GND`    |     |                                 |  24 | `GND`   |     |                                       |
-|   3 | `/DSR`   | R   | Usually shorted to ground       |  25 | `EXCLK` | W   | 7.3728 MHz clock (also goes into H8)  |
-|   4 | `NC`     |     | May have been DTR at some point |  26 | `GND`   |     |                                       |
-|   5 | `TX`     | W   |                                 |  27 | `DSIG`  | W   | Goes high when 573 updates `D0-D7`    |
-|   6 | `RX`     | R   |                                 |  28 | `SDA`   | RW  | Can be tristated and read as an input |
-|   7 | `/RESET` | RW  | System reset (from watchdog)    |  29 | `/IREQ` | R   | Sets `ISIG` when pulsed low           |
-|   8 | `GND`    |     |                                 |  30 | `/DACK` | R   | Clears `DSIG` when pulsed low         |
-|   9 | `GND`    |     |                                 |  31 | `ISIG`  | W   | Goes low when 573 reads `I0-I7`       |
-|  10 | -        |     | Key (missing pin)               |  32 | -       |     | Key (missing pin)                     |
-|  11 | `?`      |     | Not connected?                  |  33 | `I7`    | R   |                                       |
-|  12 | `?`      |     | Not connected?                  |  34 | `I6`    | R   |                                       |
-|  13 | `D7`     | W   |                                 |  35 | `I5`    | R   |                                       |
-|  14 | `D6`     | W   |                                 |  36 | `I4`    | R   |                                       |
-|  15 | `D5`     | W   |                                 |  37 | `I3`    | R   |                                       |
-|  16 | `D4`     | W   |                                 |  38 | `I2`    | R   |                                       |
-|  17 | `D3`     | W   |                                 |  39 | `I1`    | R   |                                       |
-|  18 | `D2`     | W   |                                 |  40 | `I0`    | R   |                                       |
-|  19 | `D1`     | W   |                                 |  41 | `5V`    |     |                                       |
-|  20 | `D0`     | W   |                                 |  42 | `5V`    |     |                                       |
-|  21 | `5V`     |     |                                 |  43 | `/RTS`  | W   | Shorted to `/CTS` on some cartridges  |
-|  22 | `5V`     |     |                                 |  44 | `/CTS`  | R   | Shorted to `/RTS` on some cartridges  |
+| Pin | Name     | Dir | Notes                        | Pin | Name     | Dir | Notes                              |
+| --: | :------- | :-- | :--------------------------- | --: | :------- | :-- | :--------------------------------- |
+|   1 | `GND`    |     |                              |  23 | `GND`    |     |                                    |
+|   2 | `GND`    |     |                              |  24 | `GND`    |     |                                    |
+|   3 | `/DSR`   | I   | Usually shorted to ground    |  25 | `MCUCLK` | O   | 7.3728 MHz JVS MCU clock           |
+|   4 | `NC`     |     | May actually be `/DTR`?      |  26 | `GND`    |     |                                    |
+|   5 | `TX`     | O   |                              |  27 | `DRDY`   | O   | Goes high when 573 updates `D0-D7` |
+|   6 | `RX`     | I   |                              |  28 | `SDA`    | IO  |                                    |
+|   7 | `/RESET` | IO  | System reset (from watchdog) |  29 | `/IREQ`  | I   | Sets `IRDY` when pulsed low        |
+|   8 | `GND`    |     |                              |  30 | `/DACK`  | I   | Clears `DRDY` when pulsed low      |
+|   9 | `GND`    |     |                              |  31 | `IRDY`   | O   | Goes low when 573 reads `I0-I7`    |
+|  10 |          |     | Key (missing pin)            |  32 |          |     | Key (missing pin)                  |
+|  11 | `?`      |     | Not connected?               |  33 | `I7`     | I   |                                    |
+|  12 | `?`      |     | Not connected?               |  34 | `I6`     | I   |                                    |
+|  13 | `D7`     | O   |                              |  35 | `I5`     | I   |                                    |
+|  14 | `D6`     | O   |                              |  36 | `I4`     | I   |                                    |
+|  15 | `D5`     | O   |                              |  37 | `I3`     | I   |                                    |
+|  16 | `D4`     | O   |                              |  38 | `I2`     | I   |                                    |
+|  17 | `D3`     | O   |                              |  39 | `I1`     | I   |                                    |
+|  18 | `D2`     | O   |                              |  40 | `I0`     | I   |                                    |
+|  19 | `D1`     | O   |                              |  41 | `5V`     |     |                                    |
+|  20 | `D0`     | O   |                              |  42 | `5V`     |     |                                    |
+|  21 | `5V`     |     |                              |  43 | `/RTS`   | O   | Usually shorted to `/CTS`          |
+|  22 | `5V`     |     |                              |  44 | `/CTS`   | I   | Usually shorted to `/RTS`          |
 
-### Serial port (`CN24`, unpopulated)
+#### Power input or output (`CN17`)
 
-Only present on later revisions of the main board. It exposes the exact same
-serial port signals as the security cartridge slot.
+Commonly used to distribute the 12V rail to security cartridges with built-in
+light drivers or external modules, but it can also used instead of the JAMMA
+connector to supply power to the 573. The pinout is silkscreened on the board.
 
-| Pin | Name   | Dir | Cart |
-| --: | :----- | :-- | ---: |
-|   1 | `TX`   | W   |    5 |
-|   2 | `RX`   | R   |    6 |
-|   3 | `GND`  |     |      |
-|   4 | `GND`  |     |      |
-|   5 | `/RTS` | W   |   43 |
-|   6 | `/CTS` | R   |   44 |
+| Pin | Name  |
+| --: | :---- |
+|   1 | `12V` |
+|   2 | `12V` |
+|   3 | `GND` |
+|   4 | `GND` |
+|   5 | `5V`  |
+|   6 | `5V`  |
 
-### I2S digital audio output (`CN19`, unpopulated)
+#### I2S digital SPU audio output (`DIGITAL-AUDIO`, `CN19`)
 
-Pin 4 outputs a 16.9344 MHz master clock (system clock divided by 2, or
-sampling rate multiplied by 384).
+Always unpopulated. Pin 4 outputs a 16.9344 MHz master clock (system clock
+divided by 2, or 44100 Hz sampling rate multiplied by 384). This port does *not*
+output audio from the CD-DA/MP3 input, which is not routed through the SPU.
 
 | Pin | Name    | Dir |
 | --: | :------ | :-- |
-|   1 | `BCLK`  | W   |
-|   2 | `SDOUT` | W   |
+|   1 | `BCLK`  | O   |
+|   2 | `SDOUT` | O   |
 |   3 | `GND`   |     |
-|   4 | `MCLK`  | W   |
-|   5 | `LRCK`  | W   |
+|   4 | `MCLK`  | O   |
+|   5 | `LRCK`  | O   |
 
-### Watchdog check header (`CN22`, unpopulated)
+#### Secondary I/O board connector (`CN21`)
 
-This header exposes the watchdog's clear input (pulsed whenever the CPU writes
-to the watchdog clear register) as well as the reset output. Injecting pulses
-to forcefully clear the watchdog should work, although it's much easier to
-simply disable the watchdog by placing a jumper on `S86`.
+The address lines not wired to `CN10`, as well as the otherwise unused SIO0
+controller and memory card bus, are broken out to this connector. No currently
+known I/O board uses it. All signals are 3.3V.
+
+| Pin | Name   | Dir | Pin | Name     | Dir |
+| --: | :----- | :-- | --: | :------- | :-- |
+|  A1 | `A8`   | O   |  B1 | `A9`     | O   |
+|  A2 | `A10`  | O   |  B2 | `A11`    | O   |
+|  A3 | `A16`  | O   |  B3 | `A17`    | O   |
+|  A4 | `A18`  | O   |  B4 | `A19`    | O   |
+|  A5 | `GND`  |     |  B5 | `?`      |     |
+|  A6 | `GND`  |     |  B6 | `?`      |     |
+|  A7 | `GND`  |     |  B7 | `GND`    |     |
+|  A8 | `GND`  |     |  B8 | `DOTCLK` | O   |
+|  A9 | `GND`  |     |  B9 | `GND`    |     |
+| A10 | `GND`  |     | B10 | `/DSR`   | I   |
+| A11 | `GND`  |     | B11 | `/DTR2`  | O   |
+| A12 | `GND`  |     | B12 | `/DTR1`  | O   |
+| A13 | `GND`  |     | B13 | `RX`     | I   |
+| A14 | `GND`  |     | B14 | `TX`     | O   |
+| A15 | `GND`  |     | B15 | `SCK`    | O   |
+
+#### Watchdog test header (`WD-CHECK`, `CN22`)
+
+Always unpopulated. Exposes the watchdog's clear input (pulsed whenever the CPU
+writes to the watchdog clear register) as well as the reset output. Injecting
+pulses to forcefully clear the watchdog should work, although it's much easier
+to simply disable it by placing a jumper on `S86`.
 
 | Pin | Name     | Dir |
 | --: | :------- | :-- |
-|   1 | `WDCLR`  | RW  |
-|   2 | `/RESET` | RW  |
+|   1 | `WDCLR`  | IO  |
+|   2 | `/RESET` | O   |
 |   3 | `5V`     |     |
 |   4 | `GND`    |     |
 
-### Watchdog configuration jumper (`S86`, unpopulated)
+#### GPU clock and compositing output (`CN23`)
 
-Shorting pin 1 and 2 will disable the watchdog while keeping power-on reset
-functional. Pin 3 is an active-high reset output, unused on the 573.
+Only present on later revisions of the main board and only populated on DDR
+Karaoke Mix, which uses the semitransparency plane of the currently displayed
+framebuffer as an alpha mask in order to composite the 573's output on top of
+the incoming karaoke video feed.
+
+| Pin | Name    | Dir | GPU pin |
+| --: | :------ | :-- | ------: |
+|   1 | `FSC`   | O   |     153 |
+|   2 | `DMASK` | O   |     202 |
+|   3 | `GND`   |     |         |
+
+#### Security cartridge serial port (`CN24`)
+
+Only present on later revisions of the main board and always unpopulated.
+Exposes the same 5V SIO1 signals as the security cartridge slot.
+
+| Pin | Name   | Dir | Cart pin |
+| --: | :----- | :-- | -------: |
+|   1 | `TX`   | O   |        5 |
+|   2 | `RX`   | I   |        6 |
+|   3 | `GND`  |     |          |
+|   4 | `GND`  |     |          |
+|   5 | `/RTS` | O   |       43 |
+|   6 | `/CTS` | I   |       44 |
+
+#### RGB video output (`CN25`)
+
+Only present on later revisions of the main board and only populated on GunMania
+and DDR Karaoke Mix, whose I/O boards feature RGB to S-video and composite
+converters respectively. Exposes the same RGB signals as the JAMMA and DB15
+connectors.
+
+| Pin | Name    | Dir | JAMMA pin |
+| --: | :------ | :-- | --------: |
+|   1 | `GND`   | O   |           |
+|   2 | `CSYNC` | O   |         P |
+|   3 | `BOUT`  | O   |        13 |
+|   4 | `GOUT`  | O   |         N |
+|   5 | `ROUT`  | O   |        12 |
+
+#### Watchdog configuration jumper (`S86`)
+
+Always unpopulated. Shorting pin 1 and 2 will disable the watchdog while keeping
+power-on reset functional. Pin 3 is an active-high reset output, unused by the
+573.
 
 | Pin | Name    | Dir |
 | --: | :------ | :-- |
-|   1 | `WDEN`  | R   |
+|   1 | `WDEN`  | I   |
 |   2 | `GND`   |     |
-|   3 | `RESET` | W   |
+|   3 | `RESET` | O   |
 
-### H8/3644 microcontroller pin mapping
+#### JVS MCU pin mapping
 
-| Pin   | H8 GPIO   | Dir | Connected to           | Usage                              |
-| ----: | :-------- | :-- | :--------------------- | :--------------------------------- |
-|    11 | `P9_0`    | R   |                        | _Unused_                           |
-|    12 | `P9_1-4`  | W   | I/O ASIC               | Status output bus                  |
-|    16 | `IRQ0`    | R   |                        | _Unused_                           |
-| 17-24 | `P6_0-7`  | W   | I/O ASIC               | 16-bit JVS output bus (low byte?)  |
-| 25-32 | `P5_0-7`  | W   | I/O ASIC               | 16-bit JVS output bus (high byte?) |
-|    34 | `P7_3`    | R   | Unknown                |                                    |
-|    35 | `P7_4`    | R   | Unknown                |                                    |
-|    36 | `P7_5`    | R   |                        | _Unused_                           |
-|    37 | `P7_6`    | R   |                        | _Unused_                           |
-|    38 | `P7_7`    | R   |                        | _Unused_                           |
-| 39-46 | `P8_0-7`  | R   | System bus (via latch) | 16-bit JVS write bus (low byte)    |
-|    47 | `P2_0`    | W   | Unknown                |                                    |
-|    48 | `P2_1/RX` | R   | RS485 transceiver      | JVS serial port receive            |
-|    49 | `P2_2/TX` | W   | RS485 transceiver      | JVS serial port transmit           |
-|    50 | `P3_2`    | R   |                        | _Unused_                           |
-|    51 | `P3_1`    | R   |                        | _Unused_                           |
-|    52 | `P3_0`    | R   |                        | _Unused_                           |
-|    53 | `P1_0`    | W   | Unknown                |                                    |
-|    54 | `P1_4`    | W   | Unknown                |                                    |
-|    55 | `P1_5`    | R   |                        | _Unused_                           |
-|    56 | `P1_6`    | R   |                        | _Unused_                           |
-|    57 | `P1_7`    | R   |                        | _Unused_                           |
-|  59-2 | `PB_7-0`  | R   | System bus (via latch) | 16-bit JVS write bus (high byte)   |
+| Pin   | H8 GPIO   | Dir | Connected to       | Usage                                         |
+| ----: | :-------- | :-- | :----------------- | :-------------------------------------------- |
+|    11 | `P9_0`    | I   |                    | _Unused_                                      |
+|    12 | `P9_1-2`  | O   | Konami ASIC        | Status code (readable from `0x1f400004`)      |
+|    12 | `P9_3-4`  | O   | Konami ASIC        | Error code (readable from `0x1f400004`)       |
+|    16 | `IRQ0`    | I   |                    | _Unused_                                      |
+| 17-24 | `P6_0-7`  | O   | Konami ASIC        | Low byte of value readable from `0x1f40000a`  |
+| 25-32 | `P5_0-7`  | O   | Konami ASIC        | High byte of value readable from `0x1f40000a` |
+|    34 | `P7_3`    | I   | Handshaking logic  | Current `JVSDRDY` status                      |
+|    35 | `P7_4`    | I   | Handshaking logic  | Current `JVSIRDY` status                      |
+|    36 | `P7_5`    | I   |                    | _Unused_                                      |
+|    37 | `P7_6`    | I   |                    | _Unused_                                      |
+|    38 | `P7_7`    | I   |                    | _Unused_                                      |
+| 39-46 | `P8_0-7`  | I   | Bus (via latch)    | High byte of value written to `0x1f680000`    |
+|    47 | `P2_0`    | O   | RS-485 transceiver | JVS driver output enable                      |
+|    48 | `P2_1`    | I   | RS-485 transceiver | JVS serial port RX                            |
+|    49 | `P2_2`    | O   | RS-485 transceiver | JVS serial port TX                            |
+|    50 | `P3_2`    | I   |                    | _Unused_                                      |
+|    51 | `P3_1`    | I   |                    | _Unused_                                      |
+|    52 | `P3_0`    | I   |                    | _Unused_                                      |
+|    53 | `P1_0`    | O   | Handshaking logic  | `/JVSDACK` (clears `JVSDRDY` when pulsed low) |
+|    54 | `P1_4`    | O   | Handshaking logic  | `JVSIREQ` (sets `JVSIRDY` when pulsed high)   |
+|    55 | `P1_5`    | I   |                    | _Unused_                                      |
+|    56 | `P1_6`    | I   |                    | _Unused_                                      |
+|    57 | `P1_7`    | I   |                    | _Unused_                                      |
+|  59-2 | `PB_7-0`  | I   | Bus (via latch)    | Low byte of value written to `0x1f680000`     |
+
+### Analog I/O board pinouts (`GX700-PWB(F)`)
+
+#### Output banks A, B (`CN33`, `CN34` respectively)
+
+All outputs are open-drain. Pins 1 and 10 are tied together and connected to the
+optocouplers' emitters.
+
+| Pin | Name          | Dir |
+| --: | :------------ | :-- |
+|   1 | `ACOM`/`BCOM` |     |
+|   2 | `A0`/`B0`     | O   |
+|   3 | `A1`/`B1`     | O   |
+|   4 | `A2`/`B2`     | O   |
+|   5 | `A3`/`B3`     | O   |
+|   6 | `A4`/`B4`     | O   |
+|   7 | `A5`/`B5`     | O   |
+|   8 | `A6`/`B6`     | O   |
+|   9 | `A7`/`B7`     | O   |
+|  10 | `ACOM`/`BCOM` |     |
+
+#### Output bank C (`CN35`)
+
+All outputs are open-drain. Unlike banks A and B, pin 10 is not tied to pin 1
+but is instead connected to the EMI filters' ground (`FGND`), isolated from the
+system ground but shared across all output banks.
+
+| Pin | Name   | Dir |
+| --: | :----- | :-- |
+|   1 | `CCOM` |     |
+|   2 | `C0`   | O   |
+|   3 | `C1`   | O   |
+|   4 | `C2`   | O   |
+|   5 | `C3`   | O   |
+|   6 | `C4`   | O   |
+|   7 | `C5`   | O   |
+|   8 | `C6`   | O   |
+|   9 | `C7`   | O   |
+|  10 | `FGND` |     |
+
+#### Output bank D (`CN36`)
+
+All outputs are open-drain.
+
+| Pin | Name   | Dir |
+| --: | :----- | :-- |
+|   1 | `DCOM` |     |
+|   2 | `D0`   | O   |
+|   3 | `D1`   | O   |
+|   4 | `D2`   | O   |
+|   5 | `D3`   | O   |
+|   6 | `FGND` |     |
+
+### Digital I/O board pinouts (`GX894-PWB(B)A`)
+
+#### Output bank C (`CN10`)
+
+All outputs are open-drain. The optocouplers driving `C0-C3` have their emitters
+wired to `CCOM0`, while those driving `C4-C7` have their emitters wired to
+`CCOM1`.
+
+| Pin | Name    | Dir |
+| --: | :------ | :-- |
+|   1 | `CCOM0` |     |
+|   2 | `C0`    | O   |
+|   3 | `C1`    | O   |
+|   4 | `C2`    | O   |
+|   5 | `C3`    | O   |
+|   6 | `CCOM1` |     |
+|   7 | `C4`    | O   |
+|   8 | `C5`    | O   |
+|   9 | `C6`    | O   |
+|  10 | `C7`    | O   |
+
+#### Output bank B (`CN11`)
+
+All outputs are open-drain. The optocouplers driving `B0-B3` have their emitters
+wired to `BCOM0`, while those driving `B4-B7` have their emitters wired to
+`BCOM1`.
+
+| Pin | Name    | Dir |
+| --: | :------ | :-- |
+|   1 | `BCOM0` |     |
+|   2 | `B0`    | O   |
+|   3 | `B1`    | O   |
+|   4 | `B2`    | O   |
+|   5 | `B3`    | O   |
+|   6 | `BCOM1` |     |
+|   7 | `B4`    | O   |
+|   8 | `B5`    | O   |
+|   9 | `B6`    | O   |
+|  10 | `B7`    | O   |
+|  11 | `NC`    |     |
+|  12 | `NC`    |     |
+
+#### Output bank A (`CN12`)
+
+All outputs are open-drain. The optocouplers driving `A0-A3` have their emitters
+wired to `ACOM0`, while those driving `A4-A7` have their emitters wired to
+`ACOM1`.
+
+| Pin | Name    | Dir |
+| --: | :------ | :-- |
+|   1 | `ACOM0` |     |
+|   2 | `A0`    | O   |
+|   3 | `A1`    | O   |
+|   4 | `A2`    | O   |
+|   5 | `A3`    | O   |
+|   6 | `ACOM1` |     |
+|   7 | `A4`    | O   |
+|   8 | `A5`    | O   |
+|   9 | `A6`    | O   |
+|  10 | `A7`    | O   |
+|  11 | `NC`    |     |
+|  12 | `NC`    |     |
+|  13 | `NC`    |     |
+
+#### Output bank D (`CN13`)
+
+All outputs are open-drain.
+
+| Pin | Name   | Dir |
+| --: | :----- | :-- |
+|   1 | `DCOM` |     |
+|   2 | `D0`   | O   |
+|   3 | `D1`   | O   |
+|   4 | `D2`   | O   |
+|   5 | `D3`   | O   |
+
+#### Input bank (`CN14`)
+
+The pinout of this connector is currently unknown.
+
+#### RS-232 serial port (`CN15`)
+
+| Pin | Name   | Dir |
+| --: | :----- | :-- |
+|   1 | `TX`   | O   |
+|   2 | `RX`   | O   |
+|   3 | `GND`  |     |
+|   4 | `GND`  |     |
+|   5 | `RTS`  | O   |
+|   6 | `CTS`  | O   |
+|   7 | `DTR`  | O   |
+|   8 | `DSR`  | O   |
+
+#### Analog MP3 audio output (`CN16`)
+
+Usually connected to `CN12` on the main board. GuitarFreaks routes this output
+to a separate set of RCA jacks on the sub-panel instead.
+
+| Pin | Name   | Dir |
+| --: | :----- | :-- |
+|   1 | `LOUT` | O   |
+|   2 | `AGND` |     |
+|   3 | `AGND` |     |
+|   4 | `ROUT` | O   |
+
+#### Unknown (`CN17`)
+
+The pinout of this connector is currently unknown.
+
+#### I2S digital MP3 audio output (`CN18`)
+
+| Pin | Name    | Dir | FPGA pin |
+| --: | :------ | :-- | -------: |
+|   1 | `MCLK`  | O   |       97 |
+|   2 | `BCLK`  | O   |       94 |
+|   3 | `SDOUT` | O   |       96 |
+|   4 | `LRCK`  | O   |       95 |
+|   5 | `?`     |     |          |
+|   6 | `?`     |     |          |
+
+#### XCS40XL FPGA pin mapping
+
+| Pin   | JTAG | FPGA alt.     | Dir | Connected to         | Usage                            |
+| ----: | ---: | :------------ | :-- | :------------------- | :------------------------------- |
+|     2 |  170 | `GCK1`        | IO  | DRAM                 | Data bus bit 4                   |
+|     3 |  173 |               | IO  | DRAM                 | Data bus bit 8                   |
+|     4 |  176 |               | IO  | DRAM                 | Data bus bit 9                   |
+|     5 |  179 |               | IO  | DRAM                 | Data bus bit 10                  |
+|     6 |  182 | `TDI`         |     |                      | _Unused_                         |
+|     7 |  185 | `TCK`         |     |                      | _Unused_                         |
+|     8 |  194 |               | IO  | DRAM                 | Data bus bit 3                   |
+|     9 |  197 |               | IO  | DRAM                 | Data bus bit 11                  |
+|    10 |  200 |               | IO  | DRAM                 | Data bus bit 2                   |
+|    11 |  203 |               | IO  | DRAM                 | Data bus bit 12                  |
+|    12 |  206 |               |     |                      | _Unused_                         |
+|    14 |  212 |               | IO  | DRAM                 | Data bus bit 1                   |
+|    15 |  215 |               | IO  | DRAM                 | Data bus bit 0                   |
+|    16 |  218 | `TMS`         |     |                      | _Unused_                         |
+|    17 |  221 |               | IO  | DRAM                 | Data bus bit 13                  |
+|    19 |  236 |               | IO  | DRAM                 | Data bus bit 14                  |
+|    20 |  239 |               | IO  | DRAM                 | Data bus bit 15                  |
+|    21 |  242 |               | IO  | SRAM                 | Data bus bit 3                   |
+|    22 |  245 |               | IO  | SRAM                 | Data bus bit 2                   |
+|    23 |  248 |               | IO  | SRAM                 | Data bus bit 4                   |
+|    24 |  251 |               | IO  | SRAM                 | Data bus bit 1                   |
+|    27 |  254 |               | IO  | SRAM                 | Data bus bit 5                   |
+|    28 |  257 |               | IO  | SRAM                 | Data bus bit 0                   |
+|    29 |  260 |               | IO  | SRAM                 | Data bus bit 6                   |
+|    30 |  263 |               | O   | SRAM                 | Address bus bit 0                |
+|    31 |  266 |               | IO  | SRAM                 | Data bus bit 7                   |
+|    32 |  269 |               | O   | SRAM                 | Address bus bit 1                |
+|    34 |  284 |               | O   | SRAM                 | Chip select                      |
+|    35 |  287 |               | O   | SRAM                 | Address bus bit 2                |
+|    36 |  290 |               | O   | SRAM                 | Address bus bit 10               |
+|    37 |  293 |               | O   | SRAM                 | Address bus bit 3                |
+|    39 |  299 |               |     |                      | _Unused_                         |
+|    40 |  302 |               | O   | SRAM                 | Output enable                    |
+|    41 |  305 |               | O   | SRAM                 | Address bus bit 4                |
+|    42 |  308 |               | O   | SRAM                 | Address bus bit 11               |
+|    43 |  311 |               | O   | SRAM                 | Address bus bit 5                |
+|    44 |  320 |               | O   | SRAM                 | Address bus bit 9                |
+|    45 |  323 |               | O   | SRAM                 | Address bus bit 6                |
+|    46 |  326 |               | O   | SRAM                 | Address bus bit 8                |
+|    47 |  329 |               | O   | SRAM                 | Address bus bit 7                |
+|    48 |  332 |               | O   | SRAM                 | Address bus bit 13               |
+|    49 |  335 | `GCK2`        | O   | SRAM                 | Address bus bit 12               |
+|    55 |  342 | `GCK3`        | O   | SRAM                 | Write enable                     |
+|    56 |  345 | `/HDC`        | O   | SRAM                 | Address bus bit 14               |
+|    57 |  348 |               | O   | SRAM                 | Address bus bit 16               |
+|    58 |  351 |               | O   | SRAM                 | Address bus bit 15               |
+|    59 |  354 |               | O   | Light bank D         | Output D3                        |
+|    60 |  357 | `LDC`         | O   | Light bank D         | Output D2                        |
+|    61 |  366 |               | I   | Input bank           | Unknown input                    |
+|    62 |  369 |               | I   | Input bank           | Unknown input                    |
+|    63 |  372 |               | I   | Input bank           | Unknown input                    |
+|    64 |  375 |               | I   | Input bank           | Unknown input                    |
+|    65 |  378 |               |     |                      |                                  |
+|    67 |  384 |               | O   | Light bank D         | Output D1                        |
+|    68 |  387 |               | O   | Light bank D         | Output D0                        |
+|    69 |  390 |               | O   | Light bank ?         | Unknown output                   |
+|    70 |  393 |               | O   | Light bank ?         | Unknown output                   |
+|    72 |  396 |               | O   | Light bank ?         | Unknown output                   |
+|    73 |  399 |               | O   | Light bank ?         | Unknown output                   |
+|    74 |  414 |               | O   | Light bank ?         | Unknown output                   |
+|    75 |  417 |               | O   | Light bank ?         | Unknown output                   |
+|    76 |  420 |               | O   | Light bank ?         | Unknown output                   |
+|    77 |  423 | `/INIT`       | IO  | CPLD                 | FPGA reset/status                |
+|    80 |  426 |               | O   | Light bank ?         | Unknown output                   |
+|    81 |  429 |               | O   | Light bank ?         | Unknown output                   |
+|    82 |  432 |               | O   | Light bank ?         | Unknown output                   |
+|    83 |  435 |               | O   | Light bank ?         | Unknown output                   |
+|    84 |  438 |               | O   | Light bank ?         | Unknown output                   |
+|    85 |  441 |               | I   | RS-232 transceiver   | Unknown pin                      |
+|    87 |  456 |               | O   | RS-232 transceiver   | Unknown pin                      |
+|    88 |  459 |               | I   | RS-232 transceiver   | Unknown pin                      |
+|    89 |  462 |               | O   | RS-232 transceiver   | Unknown pin                      |
+|    90 |  465 |               | I   | RS-232 transceiver   | Unknown pin                      |
+|    92 |  471 |               |     |                      |                                  |
+|    93 |  474 |               | O   | RS-232 transceiver   | Unknown pin                      |
+|    94 |  477 |               | O   | Audio DAC            | I2S bit clock (`BCLK`)           |
+|    95 |  480 |               | O   | Audio DAC            | I2S frame clock (`LRCK`)         |
+|    96 |  483 |               | O   | Audio DAC            | I2S data input (`SDIN`)          |
+|    97 |  492 |               | O   | Audio DAC            | I2S master clock (`MCLK`)        |
+|    98 |  495 |               | O   | ARCnet transceiver   | Network TX enable?               |
+|    99 |  498 |               | O   | ARCnet transceiver   | Network TX?                      |
+|   100 |  501 |               | I   | ARCnet transceiver   | Network RX                       |
+|   101 |  504 |               |     |                      |                                  |
+|   102 |  507 | `GCK4`        |     |                      |                                  |
+|   104 |      | `DONE`        | IO  | CPLD                 | FPGA configuration status        |
+|   106 |      | `/PROGRAM`    | I   | CPLD                 | FPGA configuration reset         |
+|   107 |  510 | `D7`          | IO  | DS2433 (unpopulated) | Unused 1-wire bus (open drain)   |
+|   108 |  513 | `GCK5`        |     |                      | _Unused_                         |
+|   109 |  516 |               | IO  | DS2401               | 1-wire bus (open drain)          |
+|   110 |  519 |               | I   | 573 bus              | Address bus bit 7                |
+|   111 |  525 |               |     |                      | _Unused_                         |
+|   112 |  534 | `D6`          | I   | 573 bus              | Address bus bit 6                |
+|   113 |  537 |               | I   | 573 bus              | Address bus bit 5                |
+|   114 |  540 |               | I   | 573 bus              | Address bus bit 4                |
+|   115 |  543 |               | I   | 573 bus              | Address bus bit 3                |
+|   116 |  546 |               | I   | 573 bus              | Address bus bit 2                |
+|   117 |  549 |               | I   | 573 bus              | Address bus bit 1                |
+|   119 |  558 |               | O   |                      | Unused?                          |
+|   120 |  561 |               | IO  | 573 bus              | Data bus bit 15                  |
+|   122 |  564 | `D5`          | IO  | 573 bus              | Data bus bit 14                  |
+|   123 |  567 |               | IO  | 573 bus              | Data bus bit 13                  |
+|   124 |  576 |               | IO  | 573 bus              | Data bus bit 12                  |
+|   125 |  579 |               | IO  | 573 bus              | Data bus bit 11                  |
+|   126 |  582 |               | IO  | 573 bus              | Data bus bit 10                  |
+|   127 |  585 |               | IO  | 573 bus              | Data bus bit 9                   |
+|   128 |  588 | `D4`          | IO  | 573 bus              | Data bus bit 8                   |
+|   129 |  591 |               | IO  | 573 bus              | Data bus bit 7                   |
+|   132 |  594 | `D3`          | IO  | 573 bus              | Data bus bit 6                   |
+|   133 |  597 |               | IO  | 573 bus              | Data bus bit 5                   |
+|   134 |  600 |               | IO  | 573 bus              | Data bus bit 4                   |
+|   135 |  603 |               | IO  | 573 bus              | Data bus bit 3                   |
+|   136 |  606 |               | IO  | 573 bus              | Data bus bit 2                   |
+|   137 |  609 |               | IO  | 573 bus              | Data bus bit 1                   |
+|   138 |  618 | `D2`          | IO  | 573 bus              | Data bus bit 0                   |
+|   139 |  621 |               |     |                      |                                  |
+|   141 |  624 |               |     |                      |                                  |
+|   142 |  627 |               | I   | 573 bus              | I/O board chip select            |
+|   144 |  639 |               |     |                      |                                  |
+|   145 |  642 |               | I   | 573 bus              | Write strobe (`/WR0`)            |
+|   146 |  645 |               | I   | 573 bus              | Read strobe (`/RD`)              |
+|   147 |  648 |               |     |                      |                                  |
+|   148 |  651 |               | I   | MAS3507D             | MP3 data request flag (`PI19`)   |
+|   149 |  654 | `D1`          | O   | MAS3507D             | PIO chip select (`/PCS`)         |
+|   150 |  657 |               | IO  | MAS3507D             | I2C SDA                          |
+|   151 |  666 |               | IO  | MAS3507D             | I2C SCL                          |
+|   152 |  669 |               | O   | MAS3507D             | Chip reset (`/POR`)              |
+|   153 |  672 | `D0`/`DIN`    | I   | CPLD                 | FPGA configuration data          |
+|   154 |  675 | `GCK6`/`DOUT` |     |                      | _Unused_                         |
+|   155 |      | `CCLK`        | I   | CPLD                 | FPGA configuration clock         |
+|   157 |    0 | `TDO`         |     |                      | _Unused_                         |
+|   159 |    2 |               | I   | MAS3507D             | Master clock ready flag (`WRDY`) |
+|   160 |    5 | `GCK7`        | I   | Crystal oscillator   | 29.45 MHz clock                  |
+|   161 |    8 |               | I   | MAS3507D             | MP3 frame sync flag (`PI4`)      |
+|   162 |   11 |               | I   | MAS3507D             | I2S master clock (`CLKO`/`MCLK`) |
+|   163 |   14 | `CS1`         | O   | MAS3507D             | Main clock input (`CLKI`)        |
+|   164 |   17 |               | O   | MAS3507D             | MP3 stream bit clock (`SIC`)     |
+|   165 |   26 |               |     |                      |                                  |
+|   166 |   32 |               | O   | MAS3507D             | MP3 stream frame clock (`SII`)   |
+|   167 |   35 |               | O   | MAS3507D             | MP3 stream data input (`SID`)    |
+|   168 |   38 |               | I   | MAS3507D             | MP3 error flag (`PI8`)           |
+|   169 |   41 |               | I   | MAS3507D             | I2S bit clock (`SOC`/`BCLK`)     |
+|   171 |   44 |               | I   | MAS3507D             | I2S frame clock (`SOI`/`LRCK`)   |
+|   172 |   47 |               | I   | MAS3507D             | I2S data output (`SOD`/`SDOUT`)  |
+|   174 |   62 |               | O   | DRAM                 | Address bus bit 5                |
+|   175 |   65 |               | O   | DRAM                 | Address bus bit 6                |
+|   176 |   68 |               | O   | DRAM                 | Address bus bit 4                |
+|   177 |   71 |               | O   | DRAM                 | Address bus bit 7                |
+|   178 |   74 |               | O   | DRAM                 | Address bus bit 3                |
+|   179 |   77 |               | O   | DRAM                 | Address bus bit 8                |
+|   180 |   80 |               | O   | DRAM                 | Address bus bit 2                |
+|   181 |   83 |               | O   | DRAM                 | Address bus bit 9                |
+|   184 |   86 |               | O   | DRAM                 | Address bus bit 1                |
+|   185 |   89 |               | O   | DRAM                 | Address bus bit 10               |
+|   186 |   92 |               | O   | DRAM                 | Address bus bit 0                |
+|   187 |   95 |               | O   | DRAM                 | Address bus bit 11               |
+|   188 |   98 |               | O   | DRAM                 | Unknown (22J?) pin               |
+|   189 |  101 |               | O   | DRAM                 | Unknown (22J?) pin               |
+|   190 |  104 |               | O   | DRAM                 | Unknown (22H?) pin               |
+|   191 |  107 |               | O   | DRAM                 | Unknown (22H?) pin               |
+|   193 |  122 |               | O   | DRAM                 | Unknown (22G?) pin               |
+|   194 |  125 |               | O   | DRAM                 | 22G CAS                          |
+|   196 |  128 |               | O   | DRAM                 | Write strobe                     |
+|   197 |  131 |               | O   | DRAM                 | 22G output enable                |
+|   198 |  134 |               | O   | DRAM                 | 22H CAS                          |
+|   199 |  137 |               | O   | DRAM                 | 22H output enable                |
+|   200 |  140 |               | O   | DRAM                 | 22J CAS                          |
+|   201 |  143 |               | O   | DRAM                 | 22J output enable                |
+|   202 |  152 |               |     |                      | _Unused_                         |
+|   203 |  155 |               |     |                      | _Unused_                         |
+|   204 |  158 |               | IO  | DRAM                 | Data bus bit 7                   |
+|   205 |  161 |               | IO  | DRAM                 | Data bus bit 6                   |
+|   206 |  164 |               | IO  | DRAM                 | Data bus bit 5                   |
+|   207 |  167 | `GCK8`        | I   | Crystal oscillator   | 19.6608 MHz clock                |
+
+The 1-wire pins have external pullup resistors, so enabling the FPGA's built-in
+pullups is not necessary. The FPGA's `M0`, `M1` and `/PWRDWN` pins are hardwired
+to 3.3V.
+
+### Security cartridge pinouts
+
+#### RS-232 "network" connector
+
+Present on `GX700-PWB(E)`, `GX896-PWB(A)A`, `GX883-PWB(D)` and `GE949-PWB(D)A`
+cartridges. All signals use RS-232 voltage levels. Note that DTR and DSR are
+*not* wired to the respective SIO1 pins but to the security cartridge I/O pins.
+
+On the `GX700-PWB(E)` cartridge the signals are referenced to the 573's ground
+and not isolated. On all other cartridge types, the RS-232 transceiver is
+powered through an isolated DC-DC module and fully eletrically isolated from the
+573; the `GND` pin is the transceiver's isolated ground.
+
+| Pin | Name  | Dir |
+| --: | :---- | :-- |
+|   1 | `TX`  | O   |
+|   2 | `RX`  | I   |
+|   3 | `DTR` | O   |
+|   4 | `DSR` | I   |
+|   5 | `GND` |     |
+
+#### "Control" or "amp box" connector
+
+Present on `GX896-PWB(A)A`, `GX883-PWB(D)` and `GE949-PWB(D)A` cartridges.
+Unlike the RS-232 connector these are unisolated 5V logic level signals driven
+through open-drain buffers, with pullup resistors to 5V.
+
+| Pin | Name    | Dir |
+| --: | :------ | :-- |
+|   1 | `GND`   |     |
+|   2 | `CTRL0` | O   |
+|   3 | `GND`   |     |
+|   4 | `CTRL1` | O   |
+|   5 | `CTRL2` | O   |
+|   6 | `5V`    |     |
 
 ## Credits, sources and links
 
