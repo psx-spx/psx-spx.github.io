@@ -13,7 +13,7 @@ other titles from the Bemani series of rhythm games.
 - [External modules](#external-modules)
 - [BIOS](#bios)
 - [Game-specific information](#game-specific-information)
-- [Misc. notes](#misc-notes)
+- [Notes](#notes)
 - [Pinouts](#pinouts)
 - [Credits, sources and links](#credits-sources-and-links)
 
@@ -25,6 +25,8 @@ things that need more research:
   initialization fails with most drives.
 - The fishing controls I/O board has been fully reverse engineered, but
   documentation for it is missing.
+- The digital I/O board's FPGA and some security cartridges have not been fully
+  mapped out yet.
 - The DDR stage I/O board's communication protocol is largely unknown. More
   tests need to be done on real hardware and its CPLD shall be dumped if
   possible.
@@ -39,12 +41,12 @@ things that need more research:
   RAM is still 512 KB.
 - **The CD-ROM drive is completely different**. While the PS1's drive is fully
   integrated into the motherboard and uses a custom protocol, the 573 employs a
-  standard ATAPI drive. This means there is no provision for playing XA-ADPCM,
-  even though CD audio can still be played (as long as the 4-pin audio cable
-  between the drive and the 573 motherboard is present). There is no wobble
-  groove to worry about, but some drives the system shipped with are reportedly
-  unable to read CD-Rs. Most 573 units have had their drive replaced (usually
-  with a DVD drive) at least once, so this should not be an issue.
+  standard ATAPI drive. It can thus boot from burned CD-Rs or even CD-RWs just
+  fine (as long as the drive itself is capable of reading them in the first
+  place), with no modifications needed to the stock hardware. There is no
+  provision for playing XA-ADPCM, however CD-DA playback through the drive's own
+  audio output (fed into the 573 motherboard via a 4-pin audio cable) is
+  supported and used by some games.
 - **The SIO0 bus for controllers and memory cards is unused**. It is broken out
   to a connector, however no known I/O board uses it. Some games supported PS1
   controllers and memory cards through an adapter connected over JVS (see the
@@ -72,7 +74,7 @@ things that need more research:
   connectors on the system's case.
 - **Internal 16 MB flash memory**: the 573's BIOS is capable of booting either
   from the CD drive or from an array of flash memory chips soldered to the
-  motherboard, which are also memory-mapped. Most Konami games are designed to
+  motherboard, which are also memory mapped. Most Konami games are designed to
   run from flash: when attempting to run them from CD without also having them
   installed, the executable on the disc will erase the flash and install the
   game before starting. Most games still require the CD, in some cases a
@@ -81,8 +83,8 @@ things that need more research:
 - **PCMCIA memory card**: some games shipped with additional flash memory in the
   form of one or more 16 or 32 MB PCMCIA cards. Note that these are "linear"
   memory mapped flash cards without any built-in controller, not CF or
-  ATA-compatible cards (which would be incompatible with the 573's PCMCIA
-  wiring).
+  ATA-compatible cards. See the BIOS section for more details on why CF cards
+  are not supported.
 - **RTC and battery-backed 8 KB RAM**: used by games to store settings, save
   data and installation info (possibly including serial numbers). Unfortunately
   the RTC chip is one of those all-in-one things with a battery sealed inside,
@@ -121,6 +123,7 @@ intended.
 | `0x1f4c0000-0x1f4c000f` | [IDE register bank 1](#ide-registers)                  |
 | `0x1f620000-0x1f623fff` | [RTC registers](#rtc-registers) and battery-backed RAM |
 | `0x1f640000-0x1f6400ff` | [I/O board registers](#io-boards)                      |
+| `0x1f500000-0x1f6a0001` | [Other registers](#other-registers)                    |
 
 ### Konami ASIC registers
 
@@ -128,7 +131,7 @@ Registers in the `0x1f400000-0x1f40000f` region are handled by the Konami 056879
 I/O ASIC, consisting of a single 8-bit output port and at least six 16-bit input
 ports. The same chip was used in other Konami arcade boards of the time.
 
-#### `0x1f400000` (ASIC register 0): **ADC SPI, coin counters, audio**
+#### `0x1f400000` (ASIC register 0): **ADC** / **Coin counters** / **Audio control**
 
 | Bits | RW | Description                                   |
 | ---: | :- | :-------------------------------------------- |
@@ -157,8 +160,8 @@ Bit 6 is used by games to mute audio from the CD-ROM drive or digital I/O board.
 However, testing on real hardware seems to suggest it is actually some sort of
 attenuation control, as the audio is still audible (albeit at a very low volume)
 when the bit is cleared. Note that some games, such as GuitarFreaks, break the
-CD/MP3 output to separate jacks on the sub-panel rather than routing it through
-the motherboard, making bit 6 meaningless.
+CD/MP3 output to separate jacks on the front I/O panel rather than routing it
+through the motherboard, making bit 6 meaningless.
 
 Bit 8 resets the JVS MCU. Since the reset pin is active-low, resetting is done
 by writing 0, waiting at least 10 H8 clock cycles (the BIOS waits 2 hblanks)
@@ -168,14 +171,14 @@ handled by a discrete flip-flop on the motherboard.
 
 Unknown what reading from this port does.
 
-#### `0x1f400004` (ASIC register 2): **Misc. inputs**
+#### `0x1f400004` (ASIC register 2): **DIP switches** / **JVS status** / **Security cartridge**
 
-| Bits  | RW | Description                     |
-| ----: | :- | :------------------------------ |
-|   0-3 | R  | DIP switch status               |
-|   4-5 | R  | Current JVS MCU status code     |
-|   6-7 | R  | Current JVS MCU error code      |
-|  8-15 | R  | `I0-I7` from security cartridge |
+| Bits  | RW | Description                             |
+| ----: | :- | :-------------------------------------- |
+|   0-3 | R  | DIP switch 1-4 status (0 = on, 1 = off) |
+|   4-5 | R  | Current JVS MCU status code             |
+|   6-7 | R  | Current JVS MCU error code              |
+|  8-15 | R  | `I0-I7` from security cartridge         |
 
 The MCU status code can be one of the following values:
 
@@ -470,7 +473,7 @@ be acknowledged at the interrupt controller side in order for it to fire again.
 Read-only mirror of the status register at `0x1f48000e` that returns the same
 flags, but does not acknowledge any pending IRQ when read.
 
-### IDE DMA and quirks
+#### IDE DMA and quirks
 
 DMA channel 5, normally reserved for the expansion port on a PS1, can be used to
 transfer data to/from the IDE bus... with some caveats. The "correct" way to
@@ -790,8 +793,6 @@ The System 573 was designed to be expanded with game-specific hardware using I/O
 expansion boards mounted on top of the main board, and/or custom security
 cartridges. I/O boards have access to the 16-bit system bus and are accessible
 through the `0x1f640000-0x1f6400ff` region.
-
-The following boards are currently known to exist:
 
 - [Analog I/O board (`GX700-PWB(F)`)](#analog-io-board-gx700-pwbf)
 - [Digital I/O board (`GX894-PWB(B)A`)](#digital-io-board-gx894-pwbba)
@@ -1216,36 +1217,36 @@ integrated into the 573 main board at some point.
 
 ## Security cartridges
 
-All known System 573 games use cartridges that plug into the slot on the right
-side of the main board as an anti-piracy measure and/or to add game specific I/O
+Most System 573 games use cartridges that plug into the slot on the right side
+of the main board as an anti-piracy measure and/or to add game specific I/O
 functionality (particularly for games that do not otherwise require any I/O
 board). Cartridges typically contain a password protected EEPROM, used to store
 game and installation information, and in some cases a DS2401 unique serial
 number chip.
 
-Konami's security cartridge driver supports the following EEPROMs:
+- [Electrical interface](#electrical-interface)
+- [Cartridge EEPROM types](#cartridge-eeprom-types)
+- [EEPROM-less cartridge variants](#eeprom-less-cartridge-variants)
+- [X76F041 cartridge variants](#x76f041-cartridge-variants)
+- [ZS01 cartridge variants](#zs01-cartridge-variants)
 
-| Manufacturer     | Chip                                          | "Response to reset" ID    | Capacity  |
-| :--------------- | :-------------------------------------------- | :------------------------ | --------: |
-| Xicor            | [X76F041](#x76f041-cartridge-variants)        | `19 55 aa 55` (LSB first) | 512 bytes |
-| Xicor            | X76F100                                       | `19 00 aa 55` (LSB first) | 112 bytes |
-| Konami/Microchip | [ZS01 (PIC16CE625)](#zs01-cartridge-variants) | `5a 53 00 01` (MSB first) | 112 bytes |
+### Electrical interface
 
-**NOTE**: Konami seems to have never manufactured X76F100 cartridges, however
-most games that expect an X76F041 can also use the X76F100 interchangeably. ZS01
-support was only added in later versions of the driver.
+All communication with the cartridge is performed through the following means:
 
-### Cartridge interface
-
-All communication with the cartridge is performed through the following pins:
-
-- an 8-bit input port (`I0-I7`), readable through register `0x1f400004`;
-- a latched 8-bit output port (`D0-D7`), controlled by register `0x1f6a0000`;
+- an 8-bit parallel input port (`I0-I7`), readable via register `0x1f400004`;
+- a latched 8-bit parallel output port (`D0-D7`), controlled by register
+  `0x1f6a0000`;
 - a single tristate I/O pin (`SDA`), which can be either configured as a
   floating input or set to output the same logic level as `D0` through register
   `0x1f500000`;
 - the CPU's SIO1 interface (`TX`, `RX`, `/RTS`, `/CTS`, `/DTR`, `/DSR`);
 - four bus handshaking lines (`IRDY`, `DRDY`, `/IREQ`, `/DACK`).
+
+As all EEPROMs used in cartridges have an I2C interface rather than a parallel
+one, `SDA` is used in combination with individual bits of the parallel I/O ports
+to bitbang I2C. The SIO1 interface either goes unused or is translated to RS-232
+voltage levels and broken out to a connector on the cartridge.
 
 See the pinouts section for more information on the security cartridge slot.
 
@@ -1288,6 +1289,237 @@ Sony SDK) if CTS and RTS are shorted on startup. On later 573 motherboard
 revisions, the SIO1 pins are additionally broken out to a separate connector
 (`CN24`) and made accessible even when a cartridge without a network port is
 inserted.
+
+### Cartridge EEPROM types
+
+Konami's security cartridge driver supports the following EEPROMs:
+
+| Manufacturer     | Chip                                          | "Response to reset" ID    | Capacity  |
+| :--------------- | :-------------------------------------------- | :------------------------ | --------: |
+| Xicor            | [X76F041](#x76f041-cartridge-variants)        | `19 55 aa 55` (LSB first) | 512 bytes |
+| Xicor            | X76F100                                       | `19 00 aa 55` (LSB first) | 112 bytes |
+| Konami/Microchip | [ZS01 (PIC16CE625)](#zs01-cartridge-variants) | `5a 53 00 01` (MSB first) | 112 bytes |
+
+**NOTE**: Konami seems to have never manufactured X76F100 cartridges, however
+most games that expect an X76F041 can also use the X76F100 interchangeably. ZS01
+support was only added in later versions of the driver.
+
+#### ZS01 protocol
+
+The "ZS01" EEPROM is actually a PIC16 microcontroller that mostly replicates the
+X76F100's functionality, allowing the 573 to store up to 112 bytes of data
+protected by a 64-bit password. Unlike the X76F041 and X76F100, which use
+plaintext commands, all communication with the ZS01 is obfuscated using a
+rudimentary scrambling algorithm. A CRC16 is attached to each packet and used to
+detect attempts to tamper with the obfuscation. Attempting to send too many
+requests with an invalid CRC16 will cause the ZS01 to self-erase and reset the
+password.
+
+A ZS01 transaction can be broken down into the following steps:
+
+1. The 573 prepares a 12-byte packet to be sent to the ZS01, containing a
+   command, address and payload:
+
+   | Bytes | Description                                       |
+   | ----: | :------------------------------------------------ |
+   |     0 | Command flags                                     |
+   |     1 | Address bits 0-7                                  |
+   |   2-9 | Payload (data for writes, response key for reads) |
+   | 10-11 | CRC16 of bytes 0-9, big endian                    |
+
+   The first byte is a 3-bit bitfield encoding the command and access type:
+
+   | Bits | Description                                    |
+   | ---: | :--------------------------------------------- |
+   |    0 | Command (0 = write/erase, 1 = read)            |
+   |    1 | Address bit 8 (unused, should be 0)            |
+   |    2 | Access type (0 = unprivileged, 1 = privileged) |
+   |  3-7 | Unused? (should be 0)                          |
+
+   The access type bit specifies whether the command is privileged. Privileged
+   commands require the ZS01's current password, while unprivileged commands do
+   not.
+
+   The address must be one of the following values:
+
+   | Address     | Length   | Privileged | Description                                |
+   | :---------- | -------: | :--------- | :----------------------------------------- |
+   | `0x00-0x03` | 32 bytes | No         | Unprivileged data area                     |
+   | `0x04-0x0e` | 80 bytes | Yes        | Privileged data area                       |
+   | `0xfc`      |  8 bytes | No         | Internal ZS01 serial number                |
+   | `0xfd`      |  8 bytes | No         | External DS2401 serial number              |
+   | `0xfd`      |  8 bytes | Yes        | Erases data area when written (write-only) |
+   | `0xfe`      |  8 bytes | Yes        | Configuration registers                    |
+   | `0xff`      |  8 bytes | Yes        | New password (write-only)                  |
+
+   Data is always read or written in aligned 8 byte blocks. Unprivileged areas
+   can be read using either a privileged or unprivileged read command, but
+   writing to them still requires a privileged write command.
+
+2. If the command is a read command, a random 8-byte "response key" is generated
+   (typically as an MD5 hash of the current time from the RTC) and written to
+   the payload field; the ZS01 will later use it to encrypt the returned data
+   as a replay attack prevention measure. For write commands, the payload field
+   is populated with the 8 bytes to be written.
+
+3. A CRC16 is calculated over the first 10 bytes of the packet and stored in the
+   last 2 bytes in big endian format. The CRC is computed as follows:
+
+   ```c
+   #define ZS01_CRC16_POLYNOMIAL 0x1021
+
+   uint16_t zs01_crc16(const uint8_t *data, size_t length) {
+       uint16_t crc = 0xffff;
+
+       for (; length; length--) {
+           crc ^= *(data++) << 8;
+
+           for (int bit = 8; bit; bit--) {
+               uint16_t temp = crc;
+
+               crc <<= 1;
+               if (temp & (1 << 15))
+                   crc ^= ZS01_CRC16_POLYNOMIAL;
+           }
+       }
+
+       return (~crc) & 0xffff;
+   }
+   ```
+
+4. If the command is privileged, the 573 scrambles the payload field with the
+   chip's currently set password, using the following algorithm:
+
+   ```c
+   // Note that this state is preserved across calls to zs01_scramble_payload()
+   // and must be updated when a response is received (see step 8).
+   uint8_t zs01_scrambler_state = 0;
+
+   void zs01_scramble_payload(
+       uint8_t *output, const uint8_t *input, size_t length,
+       const uint8_t *password
+   ) {
+       for (; length; length--) {
+           int value = *(input++) ^ zs01_scrambler_state;
+           value     = (value + password[0]) & 0xff;
+
+           for (int i = 1; i < 8; i++) {
+               int add   = password[i] & 0x1f;
+               int shift = password[i] >> 5;
+
+               int shifted = value << shift;
+               shifted    |= value >> (8 - shift);
+               shifted    &= 0xff;
+
+               value = (shifted + add) & 0xff;
+           }
+
+           zs01_scrambler_state = value;
+           *(output++)          = value;
+       }
+   }
+   ```
+
+   The CRC16 is *not* updated to reflect the new data. This step is skipped for
+   unprivileged read commands.
+
+5. All 12 bytes of the packet are scrambled with a fixed "command key", using
+   the following algorithm:
+
+   ```c
+   static const uint8_t ZS01_COMMAND_ADD[]   = { 237, 8, 16, 11, 6, 4, 8, 30 };
+   static const uint8_t ZS01_COMMAND_SHIFT[] = {   0, 3,  2,  2, 6, 2, 2,  1 };
+
+   void zs01_scramble_packet(
+       uint8_t *output, const uint8_t *input, size_t length
+   ) {
+       // Unlike zs01_scramble_payload(), this state is *not* preserved across
+       // calls.
+       uint8_t state = 0xff;
+
+       output += length;
+       input  += length;
+
+       for (; length; length--) {
+           int value = *(--input) ^ state;
+           value     = (value + ZS01_COMMAND_ADD[0]) & 0xff;
+
+           for (int i = 1; i < 8; i++) {
+               int shifted = value << ZS01_COMMAND_SHIFT[i];
+               shifted    |= value >> (8 - ZS01_COMMAND_SHIFT[i]);
+               shifted    &= 0xff;
+
+               value = (shifted + ZS01_COMMAND_ADD[i]) & 0xff;
+           }
+
+           state       = value;
+           *(--output) = value;
+       }
+   }
+   ```
+
+6. The scrambled packet is sent to the ZS01, which will respond to the first 11
+   bytes immediately with an I2C ACK and to the last byte with an ACK after a
+   short delay. The 573 then proceeds to read 12 bytes from the ZS01, issuing an
+   I2C ACK for each byte received up until the last one.
+
+7. The 573 uses the response key generated in step 2 to unscramble the packet
+   returned by the ZS01. The unscrambling algorithm is the same one used in step
+   5, applied in reverse:
+
+   ```c
+   void zs01_unscramble_packet(
+       uint8_t *output, const uint8_t *input, size_t length,
+       const uint8_t *response_key
+   ) {
+       uint8_t state = 0xff;
+
+       output += length;
+       input  += length;
+
+       for (; length; length--) {
+           int value      = *(--input);
+           int last_state = state;
+           state          = value;
+
+           for (int i = 1; i < 8; i++) {
+               int add   = response_key[i] & 0x1f;
+               int shift = response_key[i] >> 5;
+
+               int subtracted = (value - add) & 0xff;
+
+               value  = subtracted >> shift;
+               value |= subtracted << (8 - shift);
+               value &= 0xff;
+           }
+
+           value       = (value - response_key[0]) & 0xff;
+           *(--output) = value ^ last_state;
+       }
+   }
+   ```
+
+   For write commands, the response key required to unscramble the packet is the
+   one sent as part of the last read command issued. For read commands, the ZS01
+   may either use the key provided in the payload field or the one from the last
+   read command issued; Konami's code tries unscrambling responses with both.
+
+8. The unscrambled packet will contain the following fields:
+
+   | Bytes | Description                                |
+   | ----: | :----------------------------------------- |
+   |     0 | Status code (0 = success, 1-5 = error)     |
+   |     1 | New payload scrambler state                |
+   |   2-9 | Payload (empty for writes, data for reads) |
+   | 10-11 | CRC16 of bytes 0-9, big endian             |
+
+   The 573 proceeds to compute the CRC16 of the first 10 bytes. If it does not
+   match the one in the packet, it will try unscrambling the packet with a
+   different response key (see step 7) before giving up. Otherwise, the global
+   `zs01_scrambler_state` variable from step 4 is set to the value of byte 1,
+   regardless of whether the status code is zero or not.
+
+   The exact meaning of non-zero status codes is currently unknown.
 
 ### EEPROM-less cartridge variants
 
@@ -1520,220 +1752,6 @@ T-shaped cartridge that uses the same PCB as `GE949-PWB(D)A` but only has the
 ZS01, DS2401 and supporting parts are populated. Used by games that do not need
 the RS-232 interface.
 
-### ZS01 protocol
-
-The "ZS01" EEPROM is actually a PIC16 microcontroller that mostly replicates the
-X76F100's functionality, allowing the 573 to store up to 112 bytes of data
-protected by a 64-bit password. Unlike the X76F041 and X76F100, which use
-plaintext commands, all communication with the ZS01 is obfuscated using a
-rudimentary scrambling algorithm. A CRC16 is attached to each packet and used to
-detect attempts to tamper with the obfuscation. Attempting to send too many
-requests with an invalid CRC16 will cause the ZS01 to self-erase and reset the
-password.
-
-A ZS01 transaction can be broken down into the following steps:
-
-1. The 573 prepares a 12-byte packet to be sent to the ZS01, containing a
-   command, address and payload:
-
-   | Bytes | Description                                       |
-   | ----: | :------------------------------------------------ |
-   |     0 | Command flags                                     |
-   |     1 | Address bits 0-7                                  |
-   |   2-9 | Payload (data for writes, response key for reads) |
-   | 10-11 | CRC16 of bytes 0-9, big endian                    |
-
-   The first byte is a 3-bit bitfield encoding the command and access type:
-
-   | Bits | Description                                    |
-   | ---: | :--------------------------------------------- |
-   |    0 | Command (0 = write/erase, 1 = read)            |
-   |    1 | Address bit 8 (unused, should be 0)            |
-   |    2 | Access type (0 = unprivileged, 1 = privileged) |
-   |  3-7 | Unused? (should be 0)                          |
-
-   The access type bit specifies whether the command is privileged. Privileged
-   commands require the ZS01's current password, while unprivileged commands do
-   not.
-
-   The address must be one of the following values:
-
-   | Address     | Length   | Privileged | Description                                |
-   | :---------- | -------: | :--------- | :----------------------------------------- |
-   | `0x00-0x03` | 32 bytes | No         | Unprivileged data area                     |
-   | `0x04-0x0e` | 80 bytes | Yes        | Privileged data area                       |
-   | `0xfc`      |  8 bytes | No         | Internal ZS01 serial number                |
-   | `0xfd`      |  8 bytes | No         | External DS2401 serial number              |
-   | `0xfd`      |  8 bytes | Yes        | Erases data area when written (write-only) |
-   | `0xfe`      |  8 bytes | Yes        | Configuration registers                    |
-   | `0xff`      |  8 bytes | Yes        | New password (write-only)                  |
-
-   Data is always read or written in aligned 8 byte blocks. Unprivileged areas
-   can be read using either a privileged or unprivileged read command, but
-   writing to them still requires a privileged write command.
-
-2. If the command is a read command, a random 8-byte "response key" is generated
-   (typically as an MD5 hash of the current time from the RTC) and written to
-   the payload field; the ZS01 will later use it to encrypt the returned data
-   as a replay attack prevention measure. For write commands, the payload field
-   is populated with the 8 bytes to be written.
-
-3. A CRC16 is calculated over the first 10 bytes of the packet and stored in the
-   last 2 bytes in big endian format. The CRC is computed as follows:
-
-   ```c
-   #define CRC16_POLYNOMIAL 0x1021
-
-   uint16_t zs01_crc16(const uint8_t *data, size_t length) {
-       uint16_t crc = 0xffff;
-
-       for (; length; length--) {
-           crc ^= *(data++) << 8;
-
-           for (int bit = 8; bit; bit--) {
-               uint16_t temp = crc;
-
-               crc <<= 1;
-               if (temp & (1 << 15))
-                   crc ^= CRC16_POLYNOMIAL;
-           }
-       }
-
-       return (crc ^ 0xffff) & 0xffff;
-   }
-   ```
-
-4. If the command is privileged, the 573 scrambles the payload field with the
-   chip's currently set password, using the following algorithm:
-
-   ```c
-   // Note that this state is preserved across calls to scramble_payload() and
-   // must be updated when a response is received (see step 8).
-   uint8_t scrambler_state = 0;
-
-   void scramble_payload(
-       uint8_t *output, const uint8_t *input, size_t length,
-       const uint8_t *password
-   ) {
-       for (; length; length--) {
-           int value = *(input++) ^ scrambler_state;
-           value     = (value + password[0]) & 0xff;
-
-           for (int i = 1; i < 8; i++) {
-               int add   = password[i] & 0x1f;
-               int shift = password[i] >> 5;
-
-               int shifted = value << shift;
-               shifted    |= value >> (8 - shift);
-               shifted    &= 0xff;
-
-               value = (shifted + add) & 0xff;
-           }
-
-           scrambler_state = value;
-           *(output++)     = value;
-       }
-   }
-   ```
-
-   The CRC16 is *not* updated to reflect the new data. This step is skipped for
-   unprivileged read commands.
-
-5. All 12 bytes of the packet are scrambled with a fixed "command key", using
-   the following algorithm:
-
-   ```c
-   static const uint8_t COMMAND_ADD[]   = { 237, 8, 16, 11, 6, 4, 8, 30 };
-   static const uint8_t COMMAND_SHIFT[] = {   0, 3,  2,  2, 6, 2, 2,  1 };
-
-   void scramble_packet(uint8_t *output, const uint8_t *input, size_t length) {
-       // Unlike scramble_payload(), this state is *not* preserved across calls.
-       uint8_t state = 0xff;
-
-       output += length;
-       input  += length;
-
-       for (; length; length--) {
-           int value = *(--input) ^ state;
-           value     = (value + COMMAND_ADD[0]) & 0xff;
-
-           for (int i = 1; i < 8; i++) {
-               int shifted = value << COMMAND_SHIFT[i];
-               shifted    |= value >> (8 - COMMAND_SHIFT[i]);
-               shifted    &= 0xff;
-
-               value = (shifted + COMMAND_ADD[i]) & 0xff;
-           }
-
-           state       = value;
-           *(--output) = value;
-       }
-   }
-   ```
-
-6. The scrambled packet is sent to the ZS01, which will respond to the first 11
-   bytes immediately with an I2C ACK and to the last byte with an ACK after a
-   short delay. The 573 then proceeds to read 12 bytes from the ZS01, issuing an
-   I2C ACK for each byte received up until the last one.
-
-7. The 573 uses the response key generated in step 2 to unscramble the packet
-   returned by the ZS01. The unscrambling algorithm is the same one used in step
-   5, applied in reverse:
-
-   ```c
-   void unscramble_packet(
-       uint8_t *output, const uint8_t *input, size_t length,
-       const uint8_t *response_key
-   ) {
-       uint8_t state = 0xff;
-
-       output += length;
-       input  += length;
-
-       for (; length; length--) {
-           int value      = *(--input);
-           int last_state = state;
-           state          = value;
-
-           for (int i = 1; i < 8; i++) {
-               int add   = response_key[i] & 0x1f;
-               int shift = response_key[i] >> 5;
-
-               int subtracted = (value - add) & 0xff;
-
-               value  = subtracted >> shift;
-               value |= subtracted << (8 - shift);
-               value &= 0xff;
-           }
-
-           value       = (value - response_key[0]) & 0xff;
-           *(--output) = value ^ last_state;
-       }
-   }
-   ```
-
-   For write commands, the response key required to unscramble the packet is the
-   one sent as part of the last read command issued. For read commands, the ZS01
-   may either use the key provided in the payload field or the one from the last
-   read command issued; Konami's code tries unscrambling responses with both.
-
-8. The unscrambled packet will contain the following fields:
-
-   | Bytes | Description                                |
-   | ----: | :----------------------------------------- |
-   |     0 | Status code (0 = success, 1-5 = error)     |
-   |     1 | New payload scrambler state                |
-   |   2-9 | Payload (empty for writes, data for reads) |
-   | 10-11 | CRC16 of bytes 0-9, big endian             |
-
-   The 573 proceeds to compute the CRC16 of the first 10 bytes. If it does not
-   match the one in the packet, it will try unscrambling the packet with a
-   different response key (see step 7) before giving up. Otherwise, the global
-   `scrambler_state` variable from step 4 is set to the value of byte 1,
-   regardless of whether the status code is zero or not.
-
-   The exact meaning of non-zero status codes is currently unknown.
-
 ## External modules
 
 Over the 573's lifetime Konami introduced several add-ons that extended its
@@ -1775,213 +1793,383 @@ The initialization protocol is currently unknown. The protocol used after
 initialization is partially known (see links) but needs to be verified and
 documented properly.
 
-### PS1 controller and memory card adapter ("White I/O", `GE885-PWB(A)`)
+### PS1 controller and memory card adapter (`GE885-PWB(A)`)
 
 A ridiculously overengineered JVS board providing support for accessing PS1
 controllers and memory cards plugged into ports on the front of the cabinet.
-This device is more or less self-contained as it contains a Toshiba TMPR3904
-CPU, 512 KB of RAM and a boot ROM; however, the ROM is only a small bootloader
-and the actual firmware is downloaded from the 573 into RAM. There are also
-connectors for security dongles.
+Contains a Toshiba TMPR3904 CPU, a Xilinx XCS10XL Spartan-XL FPGA, 512 KB of RAM
+and a 512 KB boot ROM; the ROM is only a small bootloader and the actual
+firmware is downloaded from the 573 into RAM. There are also two connectors for
+security dongles. Returns the following JVS identifier string:
+
+```
+KONAMI CO.,LTD.;White I/O;Ver1.0;White I/O PCB
+```
 
 Memory card support became common in later Bemani games, allowing players to
 save their scores and play custom charts. GuitarFreaks is the only game known
 to support external controllers through this board.
 
+### PunchMania 2 PCMCIA splitter (`PWB0000085445`)
+
+Combines two 32 MB PCMCIA flash cards into the same address space, allowing them
+to be accessed as if they were a single 64 MB card. Connects to the 573 through
+a cable that plugs into a passive PCMCIA slot adapter. Only used by PunchMania
+2.
+
 ### e-Amusement network unit (`PWB0000100991`)
 
-Provides online connectivity to some Bemani games. It connects to the 573 via
-PCMCIA, using a cable that ends in a dummy card. The board has a Toshiba
-TMPR3927 CPU running at 133 MHz with 8 MB of RAM (far more powerful than the
-573 itself!) as well as an internal 2.5-inch IDE drive and a PCI Ethernet chip.
-Appears to run a proprietary kernel provided by Toshiba known as UDEOS.
+Used by some Bemani games, in particular later GuitarFreaks and DrumMania
+releases. Provides networking functionality (DHCP and TCP/UDP sockets) as well
+as a 10 or 20 GB IDE hard drive for storage of downloaded content. The module
+contains a Toshiba TMPR3927 CPU, a Xilinx XC2S100 Spartan-2 FPGA, 16 MB of RAM,
+a 512 KB boot ROM and a DP83815 PCI Ethernet MAC. As with the controller and
+memory card adapter, the bulk of the firmware seems to be loaded from the 573.
+Connects through PCMCIA slot 2, using the same cable and adapter as the
+PunchMania PCMCIA splitter.
 
 ### Multisession unit (`GXA25-PWB(A)`)
 
-Probably the most overengineered piece of hardware Konami ever made: a fairly
-large box containing yet another TMPR3927 CPU, an FPGA and 4 MPEG decoders. It
-comes with 3 or 4 daughterboards installed, each of which hosts a stereo DAC
-and has RCA jacks for audio input and output. The box also has its own CD drive
-and power supply.
+A fairly large box containing a Toshiba TMPR3927 CPU, a Xilinx XC2S200 Spartan-2
+FPGA and four (!) hardware MP3 decoders. It comes with up to four daughterboards
+installed, each of which hosts a stereo DAC and has RCA jacks for audio input
+and output plus a mini-DIN connector for RS-232 communication with a cabinet.
+The box also has its own ATAPI CD-ROM drive and power supply.
 
 Its purpose is to enable "session mode" in later Bemani games, which allows for
-the same song to be played on multiple games at the same time, with the box
-playing the backing track and routing audio between the cabinets. It connects
+the same song to be played on multiple games at the same time with the box
+playing the backing tracks and routing audio between the machines. It connects
 to each cabinet's 573 using RS-232, through the "network" port on the security
 cartridge.
 
 ### Master calendar
 
-A JVS device used by Konami to program security cartridges at the factory. All
-games that use a security cartridge search the JVS bus on startup and enter a
-"factory test" mode if a device identifying as a master calendar is connected.
-The game will then proceed to initialize the cartridge (and in some cases RTC
-RAM) after an authentication handshake with the master calendar.
+A JVS device used internally by Konami to initialize motherboards and security
+cartridges during manufacturing. The exact hardware Konami used is unknown, but
+the protocol can be inferred from game code. All games search the JVS bus on
+startup and enter a "factory test" mode if any device with the following
+identifier string is present:
 
-Even though nothing is known about the actual hardware Konami used, this device
-has been successfully replicated using an Arduino (see the links section).
+```
+KONAMI CO.,LTD.;Master Calendar;<any value>;<any value>
+```
+
+The game will then proceed to request the current date, time, game and region
+information from the master calendar, initialize the RTC and program the
+security cartridge. The master calendar also returns a unique "trace ID" for
+each 573, used for identification purposes on cartridges that lack a DS2401.
+
+#### `0x70`: **Get date and time**
+
+#### `0x71`: **Get game region or initialization data**
+
+#### `0x7c, 0x7f, 0x00`: **Get trace ID prefix**
+
+#### `0x7c, 0x80, 0x00`: **Get trace ID suffix**
+
+#### `0x7d, 0x80, 0x10`: **Get next ID**
+
+#### `0x7e`: **Set DS2401 identifiers**
+
+#### `0x7f`: **Unknown**
+
+#### `0xf0`: **Reset master calendar**
 
 ## BIOS
 
-The 573's BIOS is based on a slightly modified version of Sony's standard PS1
-kernel, plus a custom shell executable that replaces the Sony one. The kernel
-identifies itself as "Konami OS by T.H." and seems to have been used across all
-Konami PS1-based arcade boards. The main difference from the PS1 kernel is that
-most CD drive APIs and the ISO9660 filesystem driver have been removed. Other
-than that there are no significant changes (e.g. controller and memory card
-drivers are still present and functional, even though the controller port was
-never used).
+The System 573's BIOS is based on a slightly modified version of Sony's standard
+PS1 kernel, plus a custom shell executable. The kernel identifies itself as
+`Konami OS by T.H.` and seems to have been used across all Konami PS1-based
+arcade boards. The kernels used by other manufacturers' arcade boards also
+contain the same `T.H.` initials, possibly hinting at the fact there was a
+single Sony employee in charge of providing customized kernels to all arcade
+system manufacturers.
 
-Contrary to popular belief, **the BIOS is NOT involved in copy protection**.
-All security cartridge checks are implemented by the games themselves rather
-than by the shell.
+The only meaningful difference from the PS1 kernel is that most CD-ROM APIs, the
+ISO9660 driver and the `cdrom:` device are missing, as the 573 lacks the PS1's
+CD-ROM hardware. All other functionality, such as controller and memory card
+drivers, is still present and no new functionality was added (drivers for
+573-specific hardware are simply statically linked into the shell and game
+executables instead).
 
-### Revisions
+- [Shell revisions](#shell-revisions)
+- [Boot sequence](#boot-sequence)
+- [Command-line arguments](#command-line-arguments)
+- [JVS MCU test sequence](#jvs-mcu-test-sequence)
+- [DVD-ROM support](#dvd-rom-support)
+- [Scrapped CF card support](#scrapped-cf-card-support)
+- [BIOS mod boards](#bios-mod-boards)
 
-There seem to be at least three different versions of the BIOS:
+### Shell revisions
 
-| Chip marking | MAME ROM              | SHA-1                                      | Used by                       |
-| :----------- | :-------------------- | :----------------------------------------- | :---------------------------- |
-| `700A01`     | `700a01.22g`          | `e1284add4aaddd5337bd7f4e27614460d52b5b48` | Most games                    |
-| `700A01`     | `700a01,gchgchmp.22g` | `9aab8c637dd2be84d79007e52f108abe92bf29dd` | Gachagachamp                  |
-| `700A01`     |                       |                                            | Unknown (undumped, see below) |
-| `700B01`     | `700b01.22g`          | `a2421d0a494892c0e71003c96995ce8f945064dd` | Dancing Stage EuroMIX 2       |
+There seem to be either three or four different versions of the BIOS, all of
+which share the same kernel but feature different shells:
 
-700A01 is the most common version. The only differences between the two known
-variants of it are minor code improvements in the shell, with the kernel being
-identical. There reportedly is a third variant that shipped on systems that
-came with the H8/3644 microcontroller unpopulated (presumably it would not
-check for it on startup), however no evidence of its existence has ever been
-found. Old versions of MAME also used to reference a ROM named `700_a01.22g`,
-but it seems to be the same as `700a01,gchgchmp.22g`.
+| ROM marking | MAME ROM name         | SHA-1                                      | Used by                       |
+| :---------- | :-------------------- | :----------------------------------------- | :---------------------------- |
+| `700A01`    | `700a01.22g`          | `e1284add4aaddd5337bd7f4e27614460d52b5b48` | Most games                    |
+| `700A01`    | `700a01,gchgchmp.22g` | `9aab8c637dd2be84d79007e52f108abe92bf29dd` | Gachagachamp                  |
+| `700A01`    |                       |                                            | Unknown (undumped, see below) |
+| `700B01`    | `700b01.22g`          | `a2421d0a494892c0e71003c96995ce8f945064dd` | Dancing Stage EuroMIX 2       |
 
-700B01 shares the same kernel, but its shell is an entirely different beast. It
-is split up into two separate executables, one in charge of running self-tests
-and the other actually handling the boot sequence. The exact practical
-differences other than the UI/font and some bugfixes in the tests are currently
-unknown, but the 700B01 shell seems to be more advanced than the 700A01 one
-from a cursory glance at the code.
+`700A01` is the earliest and most common version. The only difference between
+the two known variants of it is that they were linked to slightly different Sony
+SDK releases; Konami's own code is identical across the two. There reportedly is
+a third variant that shipped on systems that came with the JVS MCU unpopulated
+(presumably it would skip the check for it), however no evidence of its
+existence has ever been found. The shell is stored in ROM in both variants at
+`0xbfc40000`, in the form of a standard PS1 executable (including the header)
+that gets loaded at `0x803c0000` by the kernel.
+
+`700B01` has a more complicated structure: it is split up into two separate
+executables, one (at `0xbfc28000`, loaded at `0x80010000`) in charge of running
+the self-test sequence and the other (at `0xbfc60000`, loaded at `0x80380000`)
+handling CD-ROM or flash booting. The overall coding style suggests that it was
+developed alongside the installers/launchers used by later Bemani games, but
+dropped as the main feature it would have introduced over the `700A01` shell -
+CF card support - was broken due to a PCB wiring mistake.
 
 ### Boot sequence
 
-Both the 700A01 and 700B01 shells are far simpler than their PS1 counterparts.
-Once launched by the kernel, they start by configuring the bus (by writing
-`0x24173f47` to the EXP1 configuration register) and proceed to run a hardware
-self-test. The outcome of all tests is displayed on screen, with the following
-chips being listed:
+All variants of the shell are far simpler than their PS1 counterparts, as they
+lack any kind of UI (aside from a non-interactive status screen) and have *no*
+*copy protection or anti-piracy checks* of any kind. Once loaded by the kernel,
+they start by initializing the system bus and proceed to run a hardware
+self-test. The outcome of all checks is displayed on screen, with the following
+ones being performed:
 
-- `22G`: BIOS ROM (the shell and kernel are verified against a hardcoded
-  checksum)
-- `16H`, `16G`, `14H`, `14G`: main RAM (first row of chips)
-- `12H`, `12G`, `9H`, `9G`: main RAM (second row of chips)
-- `4L`, `4P`: VRAM (framebuffers are temporarily overwritten with pseudorandom
-  noise, the self-test screen is redrawn afterwards)
-- `10Q`: SPU RAM
-- `18E`: H8/3644 microcontroller
-- `CDR`: ATAPI CD drive
+- `22G`: BIOS ROM integrity check. A checksum is calculated and compared to the
+  one stored at the end of the ROM;
+- `16H`, `16G`, `14H`, `14G`: main RAM read/write test (first row of chips on
+  the board, closest to the CPU);
+- `12H`, `12G`, `9H`, `9G`: main RAM read/write test (second row of chips on the
+  board, closest to the JAMMA connector);
+- `4L`, `4P`: VRAM read/write test. This causes the 573 to briefly display
+  random pixels as framebuffers are overwritten during the check;
+- `10Q`: SPU RAM read/write test;
+- `18E`: JVS MCU reset and status check;
+- `CDR`: ATAPI CD-ROM drive initialization and executable loading.
 
-**NOTE**: the 700A01 shell does not actually test `4P`! It only tests the first
-megabyte of VRAM and always reports `4P` as working due to a bug, which was
-fixed in 700B01. A side effect of this is that the 700A01 BIOS will run and
-pass all RAM and ROM checks in a regular PS1 emulator (as long as the emulator
-is set up for 4 or 8 MB main RAM). The ROM checksum test fails on emulators
-that patch the kernel on-the-fly to enable TTY output, such as DuckStation.
+**NOTE**: `700A01` shells do not actually test `4P`! The GPU starts up in 1 MB
+VRAM mode by default and the shell does not enable the chip select for the
+second bank, so the first VRAM chip is tested twice instead. This bug was fixed
+in the `700B01` shell, which initializes the GPU correctly.
 
-If any of these checks fails the shell locks up, shows a blinking "HARDWARE
-ERROR... RESET" prompt and stops resetting the watchdog after a few seconds,
-causing the 573 to reboot. Otherwise the shell attempts to load an executable
-from four different sources, in the following order:
+If any check fails the shell locks up, shows a blinking "HARDWARE ERROR...
+RESET" prompt and stops clearing the watchdog after a few seconds, causing the
+573 to reboot. Otherwise, the state of DIP switch 4 is checked and the shell
+attempts to load an executable from four different sources in the following
+order:
 
-- PCMCIA flash card in slot 2 (if inserted and DIP switch 4 is on)
-- PCMCIA flash card in slot 1 (if inserted and DIP switch 4 is on)
-- Internal flash (if DIP switch 4 is on)
-- `PSX.EXE` in the root directory of the CD
+- PCMCIA flash card in slot 2 (if inserted and DIP switch 4 is on);
+- PCMCIA flash card in slot 1 (if inserted and DIP switch 4 is on);
+- Internal flash memory (if DIP switch 4 is on);
+- `PSX.EXE` in the root directory of the disc inserted in the CD-ROM drive. The
+  drive is only initialized after booting from flash or PCMCIA fails or if DIP
+  switch 4 is off, thus the shell will not error out if a drive is not connected
+  but a boot executable is present on the flash. Note that the drive must be set
+  up as an IDE primary/master device using the appropriate jumpers.
 
-Like Sony's shell, the 573 shell's ISO9660 filesystem driver does not support
-any extension, nor does it support non-8.3 file names. It also **only**
-**allocates 2 KB for the path table**, so the number of directories on the disc
-must be kept to a minimum to prevent the shell from crashing.
+As with Sony's PS1 shell, the 573 shell's ISO9660 filesystem driver only
+implements a minimal subset of the specification and may not properly support
+non-8.3 file names. It also **only allocates 2 KB for the disc's path table**,
+so the total number of directories on the disc must be kept to a minimum in
+order to prevent the shell from crashing. Unlike the PS1, however, the 573
+ignores `SYSTEM.CNF` completely regardless of whether or not it is present on
+the disc; the shell is hardcoded to always load `PSX.EXE`. Homebrew discs can
+take advantage of this behavior to provide separate PS1 and 573 executables
+instead of detecting the system type at runtime.
 
-Unlike a regular PS1, the 573 ignores `SYSTEM.CNF` completely even if present
-on the disc. Homebrew discs can take advantage of this behavior to provide
-separate PS1 and 573 executables on the same disc. All official discs use Mode
-1 sectors, unlike PS1 discs, but the 573 can also read Mode 2 Form 1 sectors
-without issues since the BIOS only requests the 2048-byte data area from the
-ATAPI drive.
-
-If DIP switch 4 is on, the shell expects to find an executable at offset `0x24`
-on either the built-in flash or one of the two flash cards, preceded by a CRC32
-of it at offset `0x20`. The CRC32 is *not* calculated on the whole executable,
-instead it is only calculated on bytes from the executable whose offsets are a
-power of 2 (i.e. on bytes 0, 1, 2, 4, 8 and so on). The CRC variant used is the
-Ethernet/"zlib" one, with polynomial `0x04c11db7`. The check is implemented in
-the shell as follows:
+If DIP switch 4 is on, the shell expects to find a standard PS1 executable
+(including the full 2048-byte header) at offset `0x24` on either the built-in
+flash memory or one of the two PCMCIA flash cards, preceded by a CRC32 checksum
+of it at offset `0x20`. The CRC is stored in little endian format and is *not*
+calculated on the whole executable, but rather only on bytes whose offsets are a
+power of two (i.e. on bytes at `0x24 + 0`, `0x24 + 1`, `0x24 + 2`, `0x24 + 4`
+and so on). The check is implemented as follows:
 
 ```c
-#define EXE_CRC32 ((const uint32_t *) 0x1f000020)
-#define EXE_DATA  ((const uint8_t *)  0x1f000024)
+#define EXE_CRC32_POLYNOMIAL 0xedb88320 // 0x04c11db7 bit-reversed
 
-const uint32_t crc32_table[256] = { /* ... */ };
-uint32_t crc = 0xffffffff;
+uint32_t exe_crc32(const uint8_t *data, size_t length) {
+    size_t   offset = 0;
+    uint32_t crc    = 0xffffffff;
 
-crc = (crc >> 8) ^ crc32_table[(crc & 0xff) ^ EXE_DATA[0]];
-for (size_t i = 1; i < exe_size; i <<= 1)
-    crc = (crc >> 8) ^ crc32_table[(crc & 0xff) ^ EXE_DATA[i]];
+    while (offset < length) {
+        crc ^= data[offset];
 
-if ((~crc) == *EXE_CRC32)
-    load_exe((void *) EXE_DATA);
+        for (int bit = 8; bit; bit--) {
+            uint16_t temp = crc;
+
+            crc >>= 1;
+            if (temp & 1)
+                crc ^= EXE_CRC32_POLYNOMIAL;
+
+            if (offset)
+                offset <<= 1;
+            else
+                offset = 1;
+        }
+    }
+
+    return ~crc;
+}
+
+#define DIP_SWITCH_PTR    ((const uint32_t *) 0x1f400004)
+#define EXE_CRC32_PTR     ((const uint32_t *) 0x1f000020)
+#define EXE_HEADER_PTR    ((const uint8_t  *) 0x1f000024)
+// Offset of the "text section size" field within the executable header
+#define EXE_TEXT_SIZE_PTR ((const uint32_t *) 0x1f000040)
+
+bool is_exe_valid(void) {
+    if (*DIP_SWITCH_PTR & (1 << 3)) // 1 = DIP switch off
+        return false;
+    if (memcmp(EXE_HEADER_PTR, "PS-X EXE", 8))
+        return false;
+
+    size_t   length = 2048 + *EXE_TEXT_SIZE_PTR;
+    uint32_t crc    = exe_crc32(EXE_HEADER_PTR, length);
+
+    return (crc == *EXE_DATA_PTR);
+}
 ```
 
-DIP switch 4 can be turned off to force the shell to ignore any executables on
-the flash. This is used when upgrading cabinets to a new game to run the
-installer from the new CD, rather than the currently installed game from flash.
+Installing a new game usually involves inserting the installation disc and
+turning off DIP switch 4 in order to prevent the shell from booting the game
+currently installed on the internal flash.
 
-### Accidental DVD support
+### Command-line arguments
 
-Even though neither the 573 nor its BIOS were designed with support for DVDs in
-mind, it is possible to boot from a DVD (assuming the installed drive is a DVD
-drive in the first place) thanks to the fact that the ATAPI command used by the
-BIOS to read data sectors also works on DVDs. In order for this to work, the
-DVD must be formatted as ISO9660 (not UDF) with no extensions, as if it were a
-CD, and must of course contain a `PSX.EXE` file in the root directory.
+PS1 executables are generally launched with CPU registers `$a0` and `$a1` set to
+zero, in order to make sure programs that interpret them as `argc` and `argv`
+respectively will not crash by trying to parse invalid data. The `700A01` shell
+follows this convention.
 
-This accidental capability was greatly abused by bootleg "superdiscs" (nothing
-to do with the SNES CD attachment!) that bundled multiple games on a single
-DVD and allowed the user to pick a game to install. Each game on these discs
-was patched to load its files from a subdirectory rather than the root of the
-disc, basically "namespacing" the assets. Obviously games that make use of CD
-audio can't be put on a DVD, so superdiscs were limited to games that used the
-digital I/O board for MP3 playback.
+The `700B01` shell, however, does pass two arguments to the executable it loads.
+`$a0` is thus set to 2, while `$a1` is set to point to an array containing
+pointers to the following strings:
 
-Homebrew games willing to sacrifice PS1 compatibility and CD-DA support can be
-distributed on a DVD. In that case the game's disc image shall be an .iso file
-with 2048-byte sectors, rather than the typical .bin and .cue pair for PS1 or
-PS1/573 hybrid games with Mode 2 sectors.
+- `boot.rom=700B01`
+- `boot.from=<device>`, where `<device>` is one of the following:
+  - `flash.0` (internal flash memory)
+  - `flash.1` (PCMCIA flash card in slot 1)
+  - `flash.2` (PCMCIA flash card in slot 2)
+  - `ata.2` (CF card in slot 2)
+  - `cdrom`
 
-### BIOS "modchips"
+The launchers used by later Bemani games use these arguments if present to
+determine where to load the main game executable from, and fall back to
+autodetecting the game's installation location otherwise.
 
-It is not uncommon to find "modchipped" 573 units out in the wild. These
-"modchips" (sometimes more properly called "mod boards") were bundled back in
-the day alongside bootleg game discs and are nothing more than a simple PCB
-that plugs in place of the BIOS ROM (which happens to be the only chip that
-comes socketed from the factory) on the motherboard. They were apparently
-required to "skip the anti-piracy checks in the BIOS" and allow the 573 to read
-burned discs.
+### JVS MCU test sequence
 
-Of course, since the 573 BIOS does no copy protection checks whatsoever, these
-claims were misleading. The actual purpose of these boards was not to tamper
-with the BIOS, but rather to piggyback on the system bus and provide a few
-rudimentary challenge-response authentication registers as a way for bootleg
-executables to verify that they were running on a modded 573. In other words
-*the "modchips" were actually the bootleggers' implementation of a security*
-*cartridge*, meant to stop people from simply burning copies of bootleg discs
-and force them to buy the discs with their respective "modchips" from whoever
-produced them instead. Oh the irony.
+The JVS MCU check is implemented in a different way between the two shell
+revisions. While the `700A01` shell simply resets the MCU and validates the
+status and error codes, the `700B01` self-test sequence performs 35 (!)
+different checks, each validating the codes returned under different conditions.
+The following tests are done:
 
-Although the added circuitry will not create any issues with official or
-homebrew games, most of these boards also ship with a modified version of the
-700A01 BIOS altered to load a differently named executable from the disc rather
-than `PSX.EXE`. The following names have been found so far (more might exist):
+1. Reset MCU, clear `JVSIRDY`, ensure that:
+   - status code = 0
+   - error code = 3
+   - `JVSIRDY` = 0
+   - `JVSDRDY` = 0
+   - incoming JVS data = `0x0000`
+2. Reset MCU, write valid dummy packet header (`0x00e0`), ensure that:
+   - status code = 2
+   - error code = 3
+3. Reset MCU, write invalid dummy packet header (`0x001f`), ensure that:
+   - status code = 2
+   - error code = 2
+4. Reset MCU, write 16 dummy packets (`0x1fe0`, `0x0004`, `1 << i`, checksum),
+   for each packet ensure that:
+   - status code = 1
+   - error code = 3
+5. Reset MCU, write 16 dummy packets (same as above) with an invalid checksum,
+   for each packet ensure that:
+   - status code = 1
+   - error code = 1
+
+It is currently unclear if any data is actually sent to the JVS bus during step
+4, as the shell may reset the MCU it before it starts sending the packet.
+
+### DVD-ROM support
+
+Even though neither of the shell versions was explicitly designed with DVD-ROM
+support in mind, it *is* possible to run games from a DVD-ROM thanks to the fact
+that the ATAPI commands used by the shell and games to read sectors from the
+disc are medium-agnostic. Games that rely on CD-DA playback obviously cannot be
+put on a DVD, however all other games (including ones that rely on the digital
+I/O board for MP3 playback) will work as long as the disc is formatted as if it
+were a typical 573 CD-ROM (ISO9660 with no extensions, no UDF, 8.3 file names
+and a path table smaller than 2 KB).
+
+**NOTE**: due to ATAPI incompatibility issues only a very limited number of
+DVD-ROM drives will actually be recognized and work properly with the shells and
+games. This is unrelated to the DVD format itself and is purely due to the fact
+that, unlike CD-ROM drives, most DVD drives were manufactured after the ATAPI
+specification got updated in a way that broke the 573's compatibility.
+
+This accidental capability was greatly abused by bootleg Bemani "superdiscs"
+that bundled multiple games on a single DVD-ROM and shipped with a modified
+installation menu, allowing the user to pick which game to install. Each game on
+a superdisc is patched to load its files from a subdirectory rather than from
+the DVD's root.
+
+Homebrew 573 software can be distributed as an ISO9660 image larger than 650 MB
+meant to be burned to a DVD-R, if sacrificing PS1 compatibility and CD-DA
+support is an option. In such case the image shall be distributed as an `.iso`
+file with 2048-byte sectors, rather than the typical `.bin` and `.cue` file pair
+used for PS1 games with 2352-byte Mode 2 sectors.
+
+### Scrapped CF card support
+
+In addition to booting from "linear" memory mapped PCMCIA flash cards, the
+`700B01` shell features a driver for CF cards and a FAT filesystem parser that
+allows it to mount a CF card inserted in PCMCIA slot 2 (via a passive
+CF-to-PCMCIA adapter), search for a flash card image file and interpret its
+contents as if it were an actual flash card, loading the executable directly
+from it. Or at least, that *would* allow it to do so, had Konami not screwed up
+the wiring of the PCMCIA slots.
+
+CF cards can operate in three different interfacing modes: memory mapped, I/O
+mapped and IDE compatibility mode. On the 573 only memory mapped mode is
+accessible as the other modes require usage of I/O chip select pins that are not
+connected. This mode, however, requires the host to issue 8-bit writes to the
+card's 16-bit bus through the use of individual chip select lines for each byte
+(`/CE1` and `/CE2`). While the PS1's CPU *does* have separate lower (`/WR0`) and
+upper (`/WR1`) byte write strobes that could have been easily adapted to the
+appropriate signals, Konami decided to cut this specific corner and shorted
+`/CE1` and `/CE2` on each PCMCIA slot together, making it impossible to issue a
+single-byte write.
+
+**NOTE**: later revisions of the 573 main board seem to have unpopulated jumpers
+next to the PCMCIA slots that can be used to rewire the chip select signals. It
+is currently unclear if these jumpers are actually sufficient to enable CF card
+booting without any additional hardware or BIOS modifications.
+
+### BIOS mod boards
+
+It is not uncommon to find 573s fitted with a bootleg BIOS "mod board" in place
+of the stock `700A01` or `700B01` mask ROM. These boards used to be bundled
+alongside bootleg game CD-ROMs and were apparently required in order to bypass
+the "anti-piracy checks" in Konami's BIOS.
+
+Of course, since neither version of the shell has any such checks, the claims
+were completely misleading. The actual purpose of these boards was not to tamper
+with the BIOS, but rather to piggyback on the system bus and provide a crude
+authentication mechanism to the bootleg game, allowing it to verify that it was
+indeed running on a 573 equipped with an appropriate mod board. In other words,
+**mod boards were actually the bootleggers' implementation of Konami's**
+**security cartridge system**, meant to prevent people from simply burning
+copies of a bootleg CD-ROM and forcing them to buy bootleg kits from whoever
+produced them instead. *Oh the irony.*
+
+The added authentication circuitry will not create any issues with official nor
+homebrew software, however most of these boards feature an additional party
+trick: *the shell executable is altered to load a differently named executable*,
+making bootleg discs unable to boot on a stock 573 and vice versa. The following
+names have been found so far in modified BIOS ROMs:
 
 - `QSY.DXD`
 - `SSW.BXF`
@@ -1989,48 +2177,70 @@ than `PSX.EXE`. The following names have been found so far (more might exist):
 - `GSE.NXX`
 - `NSE.GXX`
 
-Homebrew games should thus place multiple copies of the boot executable on the
-disc to improve compatibility with "modchipped" systems. An interesting side
-note is that, for any of these names, summing the ASCII codes of each character
-will always yield the same result. Presumably bootleggers were unable to find
-the code in charge of BIOS ROM checksum validation and found it easier to just
-turn the string into random nonsense whose checksum collided with the original
-one...
+The following names have been found on unofficial game discs, but are not
+confirmed to have ever been used in modified BIOS ROMs:
+
+- `OSE.FXX`
+- `QSU.DXH`
+- `QSX.DXE`
+- `QSZ.DXC`
+- `RSU.CXH`
+- `RSV.CXG`
+- `RSW.CXF`
+- `RSZ.CXC`
+- `SSX.BXE`
+- `SSY.BXD`
+- `TSW.AXF`
+- `TSX.AXE`
+- `TSY.AXD`
+- `TSZ.AXC`
+
+Homebrew software should thus place multiple copies of the boot executable on
+the CD-ROM to ensure any BIOS, modded or not, can successfully load it. An
+interesting side note is that, for any of these names, summing the ASCII codes
+of each character will always yield the same result. Presumably bootleggers were
+unable to find the code in charge of BIOS ROM checksum validation and found it
+easier to just turn the string into random nonsense whose checksum collided with
+the original one.
 
 ## Game-specific information
 
-### Sub-panels
+### Black case I/O connectors
 
-Black/blue case models, most commonly used in Fisherman's Bait and in a few
-non-Bemani games that do not require I/O boards, have no sub-panel cutouts and
-instead expose some of the built-in ports through a handful of connectors:
+Fisherman's Bait and a few other non-Bemani games use a 573 housed in a black
+case with blue front and back panels. Unlike the gray metal cases used by other
+games, this case model has no cutouts for removable front and back panels that
+hold game-specific connectors and instead has a fixed set of ports exposed:
 
-- **Power**: a hefty 2x4 Molex connector for powering the board, wired to the
-  motherboard's power connector.
-- **Option 1**: DE9 connector providing 4 analog inputs, wired to the
-  `ANALOG` connector on the motherboard. These inputs seem to go directly
-  into the 573's ADC chip *with no protection whatsoever*.
-- **Option 2**: DE9 connector providing 6 button (digital) inputs, wired to the
-  `EXT-IN` connector on the motherboard. 4 of these inputs are also broken out
-  to the JAMMA connector (see the pinouts section for details).
-- **Reel connector** (back side): 3x3 Molex connector wired to the fishing
-  controls I/O board. The cutout seems to actually be only present on systems
-  that came with Fisherman's Bait.
+- **Power**: 2x4 Molex connector that can be used as a power input or output,
+  wired to `CN17`.
+- **Option 1**: DE9 connector providing four analog inputs, wired to `CN3` on
+  the main board.
+- **Option 2**: DE9 connector providing six button (digital) inputs, of which
+  four are also exposed on the JAMMA connector. Wired to `CN5` on the
+  motherboard.
+- **Reel connector** (back side): 3x3 Molex connector wired to the
+  `GE765-PWB(B)A` fishing controller I/O board. Probably missing on systems that
+  that did not come with Fisherman's Bait.
 
-Gray case models that came with Dance Dance Revolution, regardless of whether
-they contain an analog or digital I/O board, have 4 connectors mounted to the
-front sub-panel which break out the board's light outputs:
+### DDR I/O connectors
+
+Dance Dance Revolution uses a 573 enclosed in a gray metal case, with either an
+analog or digital I/O board installed. The front panel has a cutout covered by a
+metal plate, which in turn holds the following connectors:
 
 - **1P** (10-pin white, only 7 pins used): connects to the left stage and
-  controls arrow lights. Two of the signals are additionally misused as a
-  bitbanged SPI-like bus for communication with the pad.
+  controls arrow lights, in addition to being used for bitbanged communication
+  with the stage PCB. Wired to light bank A on the I/O board.
 - **2P** (10-pin orange, only 7 pins used): same as above for the right stage.
+  Wired to light bank B on the I/O board.
 - Unlabeled (10-pin red, only 7 pins used): connects to cabinet button and
-  marquee lights.
-- Unlabeled (6-pin white, only 2 pins used): goes to the inverter that drives
-  the neon rings around the speakers.
+  marquee lights. Wired to light bank C.
+- Unlabeled (6-pin white, only 2 pins used): controls the inverter that drives
+  the neon rings around the speakers. Wired to light bank D.
 
-There are several other sub-panel variants which are currently undocumented.
+The back panel has a similar cutout, covered by a plate with holes for the
+digital I/O board's RCA networking jacks.
 
 ### DDR light mapping
 
@@ -2102,8 +2312,8 @@ to their 2-player counterparts (e.g. arrow panel lamps are missing).
 
 ### DrumMania light mapping
 
-First-generation DrumMania cabinets (*unofficially* called "1st Mix") have
-lights wired up to the I/O board as follows:
+First-generation DrumMania cabinets have lights wired up to the I/O board as
+follows:
 
 | Output | Connected to  |
 | -----: | :------------ |
@@ -2122,8 +2332,8 @@ lights wired up to the I/O board as follows:
 |     D2 | _Unused_      |
 |     D3 | Bottom neon   |
 
-The wiring was changed in 2nd Mix and later cabinets, which use the following
-mapping instead:
+The wiring was changed in later cabinets, which use the following mapping
+instead:
 
 | Output | Connected to  |
 | -----: | :------------ |
@@ -2143,7 +2353,7 @@ mapping instead:
 |  C0-C7 | _Unused_      |
 |  D0-D3 | _Unused_      |
 
-## Misc. notes
+## Notes
 
 ### Homebrew guidelines
 
@@ -2170,7 +2380,9 @@ guidelines:
   executables, one named `PSX.EXE` (which will be launched on a 573) and the
   other (which will run on a PS1) referenced by `SYSTEM.CNF`. This makes it
   easier to have two separate builds of the game rather than having to detect
-  system type at runtime.
+  system type at runtime. Additional copies of `PSX.EXE` with the file names
+  commonly used by BIOS mod boards (`QSY.DXD`, `TSV.AXG` and so on) shall also
+  be present.
 - **Do not rely on the RTC.** Most 573 boards have a dead RTC battery by now.
   As the battery is sealed inside the RTC it is basically impossible to replace
   without replacing the entire chip, which is something not all 573 owners can
@@ -2196,55 +2408,71 @@ page for more details.
 
 ### Known working replacement drives
 
-This is an incomplete list of drives that are known to work (or to be
-incompatible) with Konami's ATAPI driver, used by both the BIOS and games. Note
-that CD-DA support is problematic due to the way Konami's code reads the disc's
-table of contents. Thus, very few drives are confirmed to work with games that
-use CD-DA (i.e. pretty much all games that don't use the digital I/O board).
+This is an incomplete list of drives that are known to work, or to be
+incompatible, with the ATAPI driver Konami used in the BIOS shell and games. The
+driver was likely written using an old version of the ATAPI specification as a
+reference; CD-ROM drives manufactured in the late 1990s and very early 2000s
+have a higher chance of being compatible than drives manufactured later,
+possibly due to changes introduced in later revisions of the ATAPI specification
+that broke the assumptions Konami's driver makes.
 
-| Manufacturer | Model          | Type | BIOS    | CD-DA   | Notes                        |
-| :----------- | :------------- | :--- | :------ | :------ | :--------------------------- |
-| ASUSTeK      | DVD-E616P3     | DVD  | **Yes** | Unknown |                              |
-| Compaq       | CRN-8241B      | CD   | **Yes** | **Yes** | Laptop drive                 |
-| Creative     | CD4832E        | CD   | **Yes** | No      |                              |
-| Hitachi      | CDR-7930       | CD   | **Yes** | No      |                              |
-| LG           | GCE-8160B      | CD   | **Yes** | No      |                              |
-| LG           | GCR-8523B      | CD   | **Yes** | Unknown |                              |
-| LG           | GDR-8163B      | DVD  | **Yes** | **Yes** |                              |
-| LG           | GDR-8164B      | DVD  | **Yes** | **Yes** |                              |
-| LG           | GH22LP20       | DVD  | **Yes** | Unknown |                              |
-| LG           | GH22NP20       | DVD  | **Yes** | Unknown |                              |
-| LG           | GSA-4165B      | DVD  | No      |         |                              |
-| Lite-On      | LH-18A1H       | DVD  | **Yes** | **Yes** |                              |
-| Lite-On      | LTD-163        | DVD  | **Yes** | Unknown |                              |
-| Lite-On      | LTD-165H       | DVD  | **Yes** | Unknown |                              |
-| Lite-On      | LTR-40125S     | CD   | **Yes** | Unknown |                              |
-| Lite-On      | XJ-HD166S      | DVD  | **Yes** | Unknown |                              |
-| Matsushita   | CR-583         | CD   | **Yes** | **Yes** | Stock drive                  |
-| Matsushita   | CR-587         | CD   | **Yes** | **Yes** | Stock drive, can't read CD-R |
-| Matsushita   | CR-589B        | CD   | **Yes** | **Yes** | Stock drive                  |
-| Matsushita   | SR8589B        | DVD  | **Yes** | Unknown |                              |
-| Mitsumi      | CRMC-FX4830T   | CD   | **Yes** | Unknown |                              |
-| NEC          | CDR-1900A      | CD   | **Yes** | Unknown |                              |
-| NEC          | ND-2510A       | DVD  | No      |         |                              |
-| Panasonic    | CR-594C        | CD   | **Yes** | Unknown |                              |
-| Panasonic    | UJDA770        | CD?  | **Yes** | Unknown | Laptop drive                 |
-| Sony         | DRU-510A       | DVD  | **Yes** | Unknown |                              |
-| Sony         | DRU-810A       | DVD  | **Yes** | Unknown |                              |
-| TDK          | AI-CDRW241040B | CD   | **Yes** | Unknown |                              |
-| TDK          | AI-481648B     | CD   | **Yes** | Unknown |                              |
-| TEAC         | CD-W552E       | CD   | **Yes** | Unknown |                              |
-| Toshiba      | XM-5702B       | CD   | **Yes** | Unknown |                              |
-| Toshiba      | XM-6102B       | CD   | **Yes** | No      | Has issues with homebrew     |
-| Toshiba      | XM-7002B       | CD   | **Yes** | Unknown | Stock drive, laptop drive    |
+CD-DA playback is particularly problematic as Konami's code seems to be unable
+to handle the subtle implementation differences across different drives. To add
+insult to injury, some of the few drives that *do* work have bugs in their
+subchannel handling that result in incorrect playback status data being reported
+to the 573, completely breaking pre-digital-I/O Bemani titles that rely heavily
+on audio timing.
+
+| Manufacturer | Model          | Type | BIOS    | CD-DA   | Notes                               |
+| :----------- | :------------- | :--- | :------ | :------ | :---------------------------------- |
+| ASUSTeK      | DVD-E616P3     | DVD  | **Yes** | Unknown |                                     |
+| Compaq       | CRN-8241B      | CD   | **Yes** | **Yes** | Laptop drive, has CD-DA sync issues |
+| Creative     | CD4832E        | CD   | **Yes** | No      |                                     |
+| Hitachi      | CDR-7930       | CD   | **Yes** | No      |                                     |
+| LG           | GCE-8160B      | CD   | **Yes** | No      |                                     |
+| LG           | GCR-8523B      | CD   | **Yes** | Unknown |                                     |
+| LG           | GDR-8163B      | DVD  | **Yes** | **Yes** |                                     |
+| LG           | GDR-8164B      | DVD  | **Yes** | **Yes** |                                     |
+| LG           | GH22LP20       | DVD  | **Yes** | Unknown |                                     |
+| LG           | GH22NP20       | DVD  | **Yes** | Unknown |                                     |
+| LG           | GSA-4165B      | DVD  | No      |         |                                     |
+| Lite-On      | LH-18A1H       | DVD  | **Yes** | **Yes** |                                     |
+| Lite-On      | LTD-163        | DVD  | **Yes** | Unknown |                                     |
+| Lite-On      | LTD-165H       | DVD  | **Yes** | Unknown |                                     |
+| Lite-On      | LTR-40125S     | CD   | **Yes** | Unknown |                                     |
+| Lite-On      | SHW-160P6S     | DVD  | **Yes** | Unknown |                                     |
+| Lite-On      | XJ-HD166S      | DVD  | **Yes** | Unknown |                                     |
+| Matsushita   | CR-583         | CD   | **Yes** | **Yes** | Stock drive                         |
+| Matsushita   | CR-587         | CD   | **Yes** | **Yes** | Stock drive, can't read CD-R        |
+| Matsushita   | CR-589B        | CD   | **Yes** | **Yes** | Stock drive                         |
+| Matsushita   | SR8589B        | DVD  | **Yes** | Unknown |                                     |
+| Mitsumi      | CRMC-FX4830T   | CD   | **Yes** | Unknown |                                     |
+| NEC          | CDR-1900A      | CD   | **Yes** | Unknown |                                     |
+| NEC          | ND-2510A       | DVD  | No      |         |                                     |
+| Panasonic    | CR-594C        | CD   | **Yes** | Unknown |                                     |
+| Panasonic    | UJDA770        | CD?  | **Yes** | Unknown | Laptop drive                        |
+| Sony         | CRX217E        | CD   | **Yes** | Unknown |                                     |
+| Sony         | DRU-510A       | DVD  | **Yes** | Unknown |                                     |
+| Sony         | DRU-810A       | DVD  | **Yes** | Unknown |                                     |
+| TDK          | AI-CDRW241040B | CD   | **Yes** | Unknown |                                     |
+| TDK          | AI-481648B     | CD   | **Yes** | Unknown |                                     |
+| TEAC         | CD-W552E       | CD   | **Yes** | Unknown |                                     |
+| Toshiba      | TS-H292C       | CD   | **Yes** | Unknown |                                     |
+| Toshiba      | XM-5702B       | CD   | **Yes** | Unknown |                                     |
+| Toshiba      | XM-6102B       | CD   | **Yes** | No      | Has issues with homebrew            |
+| Toshiba      | XM-7002B       | CD   | **Yes** | Unknown | Stock drive, laptop drive           |
 
 **NOTE**: Konami shipped some units with a Toshiba XM-7002B laptop drive and a
 passive adapter board (`GX874-PWB(B)`) to break out the drive's signals to a
-regular 40-pin IDE connector, possibly due to newer full size drives at the
-time being incompatible with the ATAPI driver. Laptop drives seem to have been
-first used by Konami in the multisession unit.
+regular 40-pin IDE connector. Laptop drives seem to have been first used by
+Konami in the `GXA25-PWB(A)` multisession unit.
 
 ## Pinouts
+
+- [Main board pinouts (`GX700-PWB(A)`)](#main-board-pinouts-gx700-pwba)
+- [Analog I/O board pinouts (`GX700-PWB(F)`)](#analog-io-board-pinouts-gx700-pwbf)
+- [Digital I/O board pinouts (`GX894-PWB(B)A`)](#digital-io-board-pinouts-gx894-pwbba)
+- [Security cartridge pinouts](#security-cartridge-pinouts)
 
 ### Main board pinouts (`GX700-PWB(A)`)
 
@@ -2698,7 +2926,7 @@ The pinout of this connector is currently unknown.
 #### Analog MP3 audio output (`CN16`)
 
 Usually connected to `CN12` on the main board. GuitarFreaks routes this output
-to a separate set of RCA jacks on the sub-panel instead.
+to a separate set of RCA jacks on the front I/O panel instead.
 
 | Pin | Name   | Dir |
 | --: | :----- | :-- |
