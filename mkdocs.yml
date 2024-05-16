@@ -6,7 +6,6 @@ edit_uri: edit/master/docs/
 theme:
   name: material
   palette:
-
     # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -31,35 +30,42 @@ plugins:
       output_path: psx-spx.pdf
 
 extra_css:
-    - css/extra.css
+  - css/extra.css
+
+markdown_extensions:
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
 
 nav:
-    - 'index.md'
-    - 'memorymap.md'
-    - 'iomap.md'
-    - 'graphicsprocessingunitgpu.md'
-    - 'geometrytransformationenginegte.md'
-    - 'macroblockdecodermdec.md'
-    - 'soundprocessingunitspu.md'
-    - 'interrupts.md'
-    - 'dmachannels.md'
-    - 'timers.md'
-    - 'cdromdrive.md'
-    - 'cdromfileformats.md'
-    - 'controllersandmemorycards.md'
-    - 'pocketstation.md'
-    - 'serialinterfacessio.md'
-    - 'expansionportpio.md'
-    - 'memorycontrol.md'
-    - 'unpredictablethings.md'
-    - 'cpuspecifications.md'
-    - 'kernelbios.md'
-    - 'arcadecabinets.md'
-    - 'konamisystem573.md'
-    - 'cheatdevices.md'
-    - 'psxdevboardchipsets.md'
-    - 'hardwarenumbers.md'
-    - 'pinouts.md'
-    - 'aboutcredits.md'
-    - 'cdromvideocdsvcd.md'
-    - 'cdrominternalinfoonpsxcdromcontroller.md'
+  - index.md
+  - memorymap.md
+  - iomap.md
+  - graphicsprocessingunitgpu.md
+  - geometrytransformationenginegte.md
+  - macroblockdecodermdec.md
+  - soundprocessingunitspu.md
+  - interrupts.md
+  - dmachannels.md
+  - timers.md
+  - cdromdrive.md
+  - cdromfileformats.md
+  - controllersandmemorycards.md
+  - pocketstation.md
+  - serialinterfacessio.md
+  - expansionportpio.md
+  - memorycontrol.md
+  - unpredictablethings.md
+  - cpuspecifications.md
+  - kernelbios.md
+  - arcadecabinets.md
+  - konamisystem573.md
+  - cheatdevices.md
+  - psxdevboardchipsets.md
+  - hardwarenumbers.md
+  - pinouts.md
+  - aboutcredits.md
+  - cdromvideocdsvcd.md
+  - cdrominternalinfoonpsxcdromcontroller.md
