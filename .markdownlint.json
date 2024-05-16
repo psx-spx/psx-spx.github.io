@@ -1,0 +1,15 @@
+{
+  "blanks-around-fences": false,
+  "blanks-around-headings": false,
+  "blanks-around-lists": false,
+  "emphasis-style": false,
+  "fenced-code-language": false,
+  "heading-increment": false,
+  "line-length": false,
+  "list-marker-space": false,
+  "no-hard-tabs": true,
+  "no-inline-html": false,
+  "no-multiple-blanks": false,
+  "no-multiple-space-atx": false,
+  "no-trailing-punctuation": false
+}
