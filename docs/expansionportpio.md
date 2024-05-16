@@ -336,7 +336,7 @@ Unknown if the Interrupt signal is connected to the PSX... there seems to be no
 spare IRQ for it, though it \<might\> share an IRQ with whatever other
 hardware...?<br/>
 The BIOS seems to use only one of the two channels; for the std\_io functions:<br/>
-[BIOS TTY Console (std_io)](kernelbios.md#bios-tty-console-stdio)<br/>
+[BIOS TTY Console (std_io)](kernelbios.md#bios-tty-console-std_io)<br/>
 Aside from the external DUART, the PSX additionally contains an internal UART,<br/>
 [Serial Interfaces (SIO)](serialinterfacessio.md)<br/>
 The DTL-H2000 devboard uses a non-serial "ATCONS" channel for TTY stuff,<br/>

@@ -12,7 +12,7 @@
 [SPU Reverb Formula](soundprocessingunitspu.md#spu-reverb-formula)<br/>
 [SPU Reverb Examples](soundprocessingunitspu.md#spu-reverb-examples)<br/>
 [SPU Unknown Registers](soundprocessingunitspu.md#spu-unknown-registers)<br/>
-[SPU Internal Timing](soundprocessingunitspu.md#spu-internal-timing)<br/>
+[SPU Internal State Machine from SPU RAM Timing](soundprocessingunitspu.md#spu-internal-state-machine-from-spu-ram-timing)<br/>
 
 
 ##   SPU Overview
@@ -707,7 +707,7 @@ Legend of Mana
 Hercules: the memory card loading screen's lip sync.
 Tokimeki Memorial 2
 Crash Team Racing: Lip sync, requires capture buffers.
-The Misadventures of Tron Bonne: Dialogues. 
+The Misadventures of Tron Bonne: Dialogues.
 Need For Speed 3: (somewhat?).<br/>
 
 
@@ -1050,7 +1050,7 @@ As written earlier, each Voice is 3x RAM access (one unrelated), reverb is 14x R
 - We also understand how reverb is using 22 Khz because of the lack of bandwidth to do everything in 768 cycles if done at 44.1 Khz.
 - Even when voices are not active, they always read something. It is possible to guess that the sample is simply ignored at some point in the data path (volume set to zero internally or mux not selecting the value). Interestingly, it may be possible if garbage is introduced in those read, to know how it is cancelled (enabling suddenly the channel and reading the sample out of the channel 1 or 3) -> DSP keeps history of sample for Gaussian Interpolation.
 
-### Reverb Computation Order ####
+### Reverb Computation Order
 ```
              [Left Side]        [Right Side]
 READ REVERB   dLSame            dRSame

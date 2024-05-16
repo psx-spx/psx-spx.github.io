@@ -1,5 +1,4 @@
 #   Pocketstation
-#### Pocketstation
 [Pocketstation Overview](pocketstation.md#pocketstation-overview)<br/>
 [Pocketstation I/O Map](pocketstation.md#pocketstation-io-map)<br/>
 [Pocketstation Memory Map](pocketstation.md#pocketstation-memory-map)<br/>
@@ -69,7 +68,7 @@ time inaccuracies.<br/>
 
 #### CPU Specs
 For details on the ARM7TDMI CPUs opcodes and exceptions, check GBATEK at,<br/>
-http://problemkaputt.de/gbatek.htm (or .txt)<br/>
+<http://problemkaputt.de/gbatek.htm> (or .txt)<br/>
 The GBA uses an ARM7TDMI CPU, too.<br/>
 
 Thanks to Exophase, Orion, Fezzik, Dr.Hell for Pocketstation info.<br/>

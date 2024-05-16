@@ -666,10 +666,10 @@ using the BIOS).<br/>
 Of course, the above exeption handling won't work in branch delays (where BD
 gets set to indicate that EPC was modified) (best workaround is not to use GTE
 commands in branch delays).<br/>
-Several games are known to rely on this, notably including the Crash Bandicoot trilogy, 
+Several games are known to rely on this, notably including the Crash Bandicoot trilogy,
 Jinx and Spyro the Dragon, all of which will render broken geometry
-if running on an emulator which doesn't emulate this, 
-or if the installed interrupt service routine doesn't account for it. 
+if running on an emulator which doesn't emulate this,
+or if the installed interrupt service routine doesn't account for it.
 
 #### cop0cmd=10h - RFE opcode - Prepare Return from Exception
 The RFE opcode moves some bits in cop0r12 (SR): bit2-3 are copied to bit0-1,

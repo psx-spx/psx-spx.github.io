@@ -1,3 +1,6 @@
+
+# Home
+
 ## **IMPORTANT UPDATE**
 
 On the 20th of August 2022, Martin surprisingly released a new version of this documentation. While this fork will try to incorporate the changes, one important footnote that got added is the following:

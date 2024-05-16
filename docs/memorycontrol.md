@@ -75,16 +75,16 @@ timing changes are between all the events inside the data read/write waveform. T
 whole formula for computing the total access time is fairly complex overall, and
 difficult to properly describe.
 
- - The pre-strobe period will add delays between the moment the data bus is set,
-and the moment !CS goes active.
- - The hold period will keep the data in the data bus for some more cycles after
-!WR goes inactive, and before !CS goes inactive. The accessed device is supposed
-to sample the data bus during this interval.
- - The floating period will keep the data bus floating for some more cycles after
-!RD goes inactive, and before !CS goes inactive. The accessed device is supposed
-to stop driving the data bus during this interval. The CPU will sample the data
-bus somewhere before or exactly when !CS goes inactive.
- - The recovery period will add delays between two operations.
+- The pre-strobe period will add delays between the moment the data bus is set,
+  and the moment !CS goes active.
+- The hold period will keep the data in the data bus for some more cycles after
+  !WR goes inactive, and before !CS goes inactive. The accessed device is supposed
+  to sample the data bus during this interval.
+- The floating period will keep the data bus floating for some more cycles after
+  !RD goes inactive, and before !CS goes inactive. The accessed device is supposed
+  to stop driving the data bus during this interval. The CPU will sample the data
+  bus somewhere before or exactly when !CS goes inactive.
+- The recovery period will add delays between two operations.
 
 The data bus width will influence if the CPU does full 16 bits reads, or only
 8 bits. When doing 32 bits operations, the CPU will issue 2 16-bits operations,
