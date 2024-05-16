@@ -404,11 +404,11 @@ register first, followed by bits 16-23.
 
 | Bits | RW | Description (ATA)                         | Description (ATAPI)                       |
 | ---: | :- | :---------------------------------------- | :---------------------------------------- |
-|  0-3 | W  | CHS head index or 28-bit LBA bits 24-27   | Reserved (should be 0)                    |
+|  0-3 | W  | CHS head index or 28-bit LBA bits 24-27   | _Reserved_ (should be 0)                  |
 |    4 | RW | Drive select (0 = primary, 1 = secondary) | Drive select (0 = primary, 1 = secondary) |
-|    5 |    | Reserved (should be 1?)                   | Reserved (should be 1?)                   |
-|    6 | W  | Sector addressing mode (0 = CHS, 1 = LBA) | Reserved (should be 0)                    |
-|    7 |    | Reserved (should be 1?)                   | Reserved (should be 1?)                   |
+|    5 |    | _Reserved_ (should be 1?)                 | _Reserved_ (should be 1?)                 |
+|    6 | W  | Sector addressing mode (0 = CHS, 1 = LBA) | _Reserved_ (should be 0)                  |
+|    7 |    | _Reserved_ (should be 1?)                 | _Reserved_ (should be 1?)                 |
 | 8-15 |    | _Unused_                                  | _Unused_                                  |
 
 Bits 0-3 are not used in ATA 48-bit LBA mode.
@@ -539,12 +539,12 @@ registers' values being copied back to the clock counters.
 
 #### `0x1f623ff4` (M48T58 register `0x1ffa`): **Minute**
 
-| Bits | RW | Buffered | Description          |
-| ---: | :- | :------- | :------------------- |
-|  0-3 | RW | Yes      | Minute units (0-9)   |
-|  4-6 | RW | Yes      | Minute tens (0-5)    |
-|    7 |    |          | Reserved (must be 0) |
-| 8-15 |    |          | _Unused_             |
+| Bits | RW | Buffered | Description            |
+| ---: | :- | :------- | :--------------------- |
+|  0-3 | RW | Yes      | Minute units (0-9)     |
+|  4-6 | RW | Yes      | Minute tens (0-5)      |
+|    7 |    |          | _Reserved_ (must be 0) |
+| 8-15 |    |          | _Unused_               |
 
 #### `0x1f623ff6` (M48T58 register `0x1ffb`): **Hour**
 
@@ -552,7 +552,7 @@ registers' values being copied back to the clock counters.
 | ---: | :- | :------- | :----------------------------------- |
 |  0-3 | RW | Yes      | Hour units (0-9, or 0-3 if tens = 2) |
 |  4-5 | RW | Yes      | Hour tens (0-2)                      |
-|  6-7 |    |          | Reserved (must be 0)                 |
+|  6-7 |    |          | _Reserved_ (must be 0)               |
 | 8-15 |    |          | _Unused_                             |
 
 Hours are always returned in 24-hour format, as there is no way to switch to
@@ -563,11 +563,11 @@ Hours are always returned in 24-hour format, as there is no way to switch to
 | Bits | RW | Buffered | Description                                |
 | ---: | :- | :------- | :----------------------------------------- |
 |  0-2 | RW | Yes      | Day of week (1-7)                          |
-|    3 |    |          | Reserved (must be 0)                       |
+|    3 |    |          | _Reserved_ (must be 0)                     |
 |    4 | RW | Yes      | Century flag                               |
 |    5 | RW | Unknown  | Century flag toggling enable (1 = enabled) |
 |    6 | RW | Unknown  | Enable 512 Hz clock signal output on pin 1 |
-|    7 |    |          | Reserved (must be 0)                       |
+|    7 |    |          | _Reserved_ (must be 0)                     |
 | 8-15 |    |          | _Unused_                                   |
 
 The day of week register is a free-running counter incremented alongside the day
@@ -599,7 +599,7 @@ set.
 | ---: | :- | :------- | :------------------------------------ |
 |  0-3 | RW | Yes      | Month units (1-9, or 0-2 if tens = 1) |
 |    4 | RW | Yes      | Month tens (0-1)                      |
-|  5-7 |    |          | Reserved (must be 0)                  |
+|  5-7 |    |          | _Reserved_ (must be 0)                |
 | 8-15 |    |          | _Unused_                              |
 
 #### `0x1f623ffe` (M48T58 register `0x1fff`): **Year**
@@ -1229,6 +1229,7 @@ number chip.
 - [EEPROM-less cartridge variants](#eeprom-less-cartridge-variants)
 - [X76F041 cartridge variants](#x76f041-cartridge-variants)
 - [ZS01 cartridge variants](#zs01-cartridge-variants)
+- [Cartridge identifiers](#cartridge-identifiers)
 
 ### Electrical interface
 
@@ -1752,6 +1753,162 @@ T-shaped cartridge that uses the same PCB as `GE949-PWB(D)A` but only has the
 ZS01, DS2401 and supporting parts are populated. Used by games that do not need
 the RS-232 interface.
 
+### Cartridge identifiers
+
+Most games use the security cartride's EEPROM to store, among other data such as
+the game code and region, a set of up to four 8-byte identifiers.
+
+#### SID (silicon/serial ID?)
+
+The serial number of the cartridge's DS2401, always present in cartridges that
+have one. As per the 1-wire specification it has the following format:
+
+| Bytes | Description                                     |
+| ----: | :---------------------------------------------- |
+|     0 | 1-wire family code (`0x01` for DS2401)          |
+|   1-6 | 48-bit progressive serial number, little endian |
+|     7 | CRC8 of bytes 0-6                               |
+
+The CRC is computed as follows:
+
+```c
+#define DS2401_CRC8_POLYNOMIAL 0x8c
+
+uint8_t ds2401_crc8(const uint8_t *data, size_t length) {
+    uint8_t crc = 0;
+
+    for (; length; length--) {
+        uint8_t value = *(data++);
+
+        for (int bit = 8; bit; bit--) {
+            uint8_t temp = crc ^ value;
+
+            value >>= 1;
+            crc   >>= 1;
+            if (temp & 1)
+                crc ^= DS2401_CRC8_POLYNOMIAL;
+        }
+    }
+
+    return crc & 0xff;
+}
+```
+
+Refer to the DS2401 datasheet and Maxim 1-wire documentation for more details.
+
+#### TID (trace ID)
+
+Seems to be a cartridge-type-agnostic serial number. On cartridges without a
+DS2401 the trace ID is assigned by Konami at manufacture time (see the master
+calendar section) and has the following format:
+
+| Bytes | Description                                   |
+| ----: | :-------------------------------------------- |
+|     0 | Trace ID type (`0x81`)                        |
+|   1-2 | 16-bit "main" serial number, big endian       |
+|   3-6 | 32-bit "sub" serial number, big endian        |
+|     7 | Checksum (sum of bytes 0-6 xor'd with `0xff`) |
+
+On cartridges with a DS2401 the trace ID is instead derived from the SID:
+
+| Bytes | Description                                                       |
+| ----: | :---------------------------------------------------------------- |
+|     0 | Trace ID type (`0x82`)                                            |
+|   1-2 | DS2401 serial number hash, big or little endian depending on game |
+|   3-6 | _Reserved_ (must be 0)                                            |
+|     7 | Checksum (sum of bytes 0-6 xor'd with `0xff`)                     |
+
+The hash is calculated over bytes 1-6 of the SID (excluding the family code and
+CRC8) using the following algorithm:
+
+```c
+// Note that some games set this to 14 instead of 16.
+#define TRACE_ID_HASH_BIT_WIDTH 16
+
+uint16_t trace_id_hash(const uint8_t *data, size_t length) {
+    uint16_t hash = 0;
+
+    for (size_t i = 0; i < (length * 8); i += 8) {
+        uint8_t value = *(data++);
+
+        for (size_t j = i; j < (i + 8); j++, value >>= 1) {
+            if (value & 1)
+                hash ^= 1 << (j % TRACE_ID_HASH_BIT_WIDTH);
+        }
+    }
+
+    return hash;
+}
+```
+
+#### MID (medium ID?)
+
+Seems to be some kind of cartridge type flag, possibly indicating whether the
+cartridge shall be used during or after game installation, or if it was used
+when performing a game upgrade and shall no longer be usable to run the game it
+initially shipped with.
+
+| Bytes | Description                                       |
+| ----: | :------------------------------------------------ |
+|     0 | Cartridge type? (always `0x00`, `0x01` or `0x02`) |
+|   1-6 | _Reserved_ (must be 0)                            |
+|     7 | Checksum (sum of bytes 0-6 xor'd with `0xff`)     |
+
+**NOTE**: `00 00 00 00 00 00 00 00` seems to be a valid MID value, despite
+having an otherwise invalid checksum, and to have a different meaning from
+`00 00 00 00 00 00 00 ff`.
+
+#### XID (external ID?)
+
+The serial number of the digital I/O board's DS2401, written to the cartridge
+during installation by most games that use it in order to prevent reinstallation
+on a different system. Has the same format as the SID. On a cartridge that has
+not yet been paired to a 573 the XID is set to `00 00 00 00 00 00 00 00`.
+
+When finishing installation or attempting to use a cartridge with a mismatching
+XID the game will display the digital I/O board's serial number as an 8-digit
+value (`XXXX-YYYY`), generated as follows:
+
+```c
+// Some games seem to only use the lower 32 bits of the DS2401's serial number,
+// while others use all 48 bits.
+size_t xid_to_string_32(char *output, const uint8_t *xid) {
+    uint32_t value = 0
+        | (xid[1] <<  0)
+        | (xid[2] <<  8)
+        | (xid[3] << 16)
+        | (xid[4] << 24);
+
+    int high = (value / 10000) % 10000;
+    int low  = value % 10000;
+
+    return sprintf(output, "%04d-%04d", high, low);
+}
+
+size_t xid_to_string_48(char *output, const uint8_t *xid) {
+    uint64_t value = 0
+        | (xid[1] <<  0)
+        | (xid[2] <<  8)
+        | (xid[3] << 16)
+        | (xid[4] << 24)
+        | (xid[5] << 32)
+        | (xid[6] << 40);
+
+    int high = (int) ((value / 10000) % 10000);
+    int low  = (int) (value % 10000);
+
+    return sprintf(output, "%04d-%04d", high, low);
+}
+```
+
+Cartridges for games that use the digital I/O board typically come with a blank
+label onto which the 8-digit ID can be written by the operator, to help keep
+track of which cartridge goes into which system after installation.
+
+Note that games that use other I/O boards with a DS2401, such as Kick &amp; Kick
+and DDR Karaoke Mix, do not seem to write those boards' serial numbers to the
+cartridge; they are stored in the internal flash memory instead.
+
 ## External modules
 
 Over the 573's lifetime Konami introduced several add-ons that extended its
@@ -1856,16 +2013,17 @@ KONAMI CO.,LTD.;Master Calendar;<any value>;<any value>
 
 The game will then proceed to request the current date, time, game and region
 information from the master calendar, initialize the RTC and program the
-security cartridge. The master calendar also returns a unique "trace ID" for
-each 573, used for identification purposes on cartridges that lack a DS2401.
+security cartridge. The master calendar also returns a unique trace ID (see the
+cartridge data formats section) for each 573, used for identification purposes
+on cartridges that lack a DS2401.
 
 #### `0x70`: **Get date and time**
 
 #### `0x71`: **Get game region or initialization data**
 
-#### `0x7c, 0x7f, 0x00`: **Get trace ID prefix**
+#### `0x7c, 0x7f, 0x00`: **Get trace ID "main" serial number**
 
-#### `0x7c, 0x80, 0x00`: **Get trace ID suffix**
+#### `0x7c, 0x80, 0x00`: **Get trace ID "sub" serial number**
 
 #### `0x7d, 0x80, 0x10`: **Get next ID**
 
@@ -2406,6 +2564,66 @@ Support for 50 Hz can be added back by shorting pins 192 and 196 on the GPU
 oscillator tuned to generate a PAL clock. See the timings section of the GPU
 page for more details.
 
+### Flash chips and PCMCIA cards
+
+The PCMCIA flash cards required by most 573 games are "linear" (memory mapped)
+cards consisting of one or more parallel flash memory chips wired directly to
+the bus, rather than CF or ATA-compatible cards. As neither linear cards nor
+parallel flash command sets are fully standardized, working with these cards may
+be difficult without some prior knowledge.
+
+There are two main variants of such cards:
+
+- **8-bit**: these contain one or more pairs of flash chips with an 8-bit data
+  bus each. Each pair has one chip wired to the lower byte of the data bus and
+  the other wired to the upper byte. Commands must thus be issued to both chips
+  at once by repeating the command byte (e.g. writing `0x9090` to issue the
+  `0x90` JEDEC ID command). Issuing 8-bit writes to a single chip is *not*
+  supported on the 573 due to the way chip select lines are wired up; see the
+  BIOS CF card support section for more details.
+- **16-bit**: these contain flash chips with a native 16-bit bus. The chips are
+  simply mapped next to each other within the card's address space.
+
+Konami's flash driver only supports 8-bit cards that use one of the following
+chips:
+
+| Manufacturer | Chip       | Capacity | Manuf. ID | Device ID |
+| :----------- | :--------- | -------: | :-------- | :-------- |
+| Fujitsu      | MBM29F016A |     2 MB | `0x04`    | `0xad`    |
+| Fujitsu      | MBM29F017A |     2 MB | `0x04`    | `0x3d`    |
+| Fujitsu      | MBM29F040A |   512 KB | `0x04`    | `0xa4`    |
+| Intel        | 28F016S5   |     2 MB | `0x89`    | `0xaa`    |
+| Sharp        | LH28F016S  |     2 MB | `0x89`    | `0xaa`    |
+
+Most games, including the launchers used by later Bemani games, will check the
+JEDEC IDs of the cards' chips on startup and **reject any unsupported chip,**
+**even if valid game data is otherwise present on the card**. This makes it
+impossible to manually install a game onto an unsupported card (e.g. through
+homebrew tools) without also patching the launcher in order to skip the check.
+
+The 573 main board seems to always be fitted with either MBM29F016A or LH28F016S
+chips. The internal flash memory is accessed using the same driver as the flash
+cards and has the same caveats (having to issue commands to two chips at once
+and so on).
+
+### Known working replacement PCMCIA cards
+
+This is an incomplete list of PCMCIA flash cards that are known to work, or not
+to work, with Konami's flash driver. Due to the JEDEC ID checks, only cards that
+contain flash chips listed in the previous section will work.
+
+| Manufacturer   | Model                               | Flash chips    | Capacity | Bus type | Manuf. ID | Device ID | Working | Notes                                                                  |
+| :------------- | :---------------------------------- | :------------- | -------: | -------: | :-------- | :-------- | :------ | :--------------------------------------------------------------------- |
+| Centennial     | PM24265, FL32M-20-\*-67             | 16x 28F016S5   |    32 MB |    8-bit | `0x8989`  | `0xaaaa`  | **Yes** |                                                                        |
+| ~~Centennial~~ | ~~PM24276, FL32M-20-\*-J5-03~~      | 4x 28F640J5    |    32 MB |   16-bit | `0x0089`  | `0x0015`  | No      |                                                                        |
+| ~~Centennial~~ | ~~PM24282, FL32M-20-\*-S5-03~~      | 16x AM29F016   |    32 MB |    8-bit | `0x0101`  | `0xadad`  | No      | Same command set as Fujitsu cards, may work with minimal game patching |
+| Fujitsu        | "32MB Flash Card" (no model number) | 16x MBM29F016A |    32 MB |    8-bit | `0x0404`  | `0xadad`  | **Yes** | Stock card (Konami "FLASH CARD" sticker covers Fujitsu logo)           |
+| Fujitsu        | "32MB Flash Card" (no model number) | 16x MBM29F017A |    32 MB |    8-bit | `0x0404`  | `0x3d3d`  | **Yes** | Stock card (Konami "FLASH CARD" sticker covers Fujitsu logo)           |
+| Sharp          | ID245P01                            | 16x LH28F016S  |    32 MB |    8-bit | `0x8989`  | `0xaaaa`  | **Yes** | Stock card (Konami "FLASH CARD" sticker covers Sharp logo)             |
+
+Note that all Centennial cards have identical labels and can only be told apart
+from the model number printed on the bottom side.
+
 ### Known working replacement drives
 
 This is an incomplete list of drives that are known to work, or to be
@@ -2435,7 +2653,7 @@ on audio timing.
 | LG           | GDR-8164B      | DVD  | **Yes** | **Yes** |                                     |
 | LG           | GH22LP20       | DVD  | **Yes** | Unknown |                                     |
 | LG           | GH22NP20       | DVD  | **Yes** | Unknown |                                     |
-| LG           | GSA-4165B      | DVD  | No      |         |                                     |
+| ~~LG~~       | ~~GSA-4165B~~  | DVD  | No      |         |                                     |
 | Lite-On      | LH-18A1H       | DVD  | **Yes** | **Yes** |                                     |
 | Lite-On      | LTD-163        | DVD  | **Yes** | Unknown |                                     |
 | Lite-On      | LTD-165H       | DVD  | **Yes** | Unknown |                                     |
@@ -2448,7 +2666,7 @@ on audio timing.
 | Matsushita   | SR8589B        | DVD  | **Yes** | Unknown |                                     |
 | Mitsumi      | CRMC-FX4830T   | CD   | **Yes** | Unknown |                                     |
 | NEC          | CDR-1900A      | CD   | **Yes** | Unknown |                                     |
-| NEC          | ND-2510A       | DVD  | No      |         |                                     |
+| ~~NEC~~      | ~~ND-2510A~~   | DVD  | No      |         |                                     |
 | Panasonic    | CR-594C        | CD   | **Yes** | Unknown |                                     |
 | Panasonic    | UJDA770        | CD?  | **Yes** | Unknown | Laptop drive                        |
 | Sony         | CRX217E        | CD   | **Yes** | Unknown |                                     |
@@ -2466,6 +2684,122 @@ on audio timing.
 passive adapter board (`GX874-PWB(B)`) to break out the drive's signals to a
 regular 40-pin IDE connector. Laptop drives seem to have been first used by
 Konami in the `GXA25-PWB(A)` multisession unit.
+
+### Bemani launcher error and status codes
+
+The installers and launchers used by Bemani titles that require the digital I/O
+board have an extensive error and status reporting system. Launcher messages are
+easily recognizable as they are always displayed in a blue window and have a
+3-digit status code, however Japanese versions of the games will show them in
+Japanese with no way to switch language (short of patching the launcher; all
+launcher variants contain both English and Japanese strings).
+
+Below is a list of all messages in both English and Japanese, along with the
+respective status codes and indices in the launcher's internal message array.
+
+| Index | Type  | Status codes  | Description (English)                                                                                                                                                                                                                                                | Description (Japanese) |
+| ----: | :---- | :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------- |
+|     0 | Error | 100           | <pre>Boot is not available from this device.<br />DEVICE=%s1</pre>                                                                                                                                                                                                   | <pre lang="ja">このデバイスからのブートはできません.<br />DEVICE=%s1</pre> |
+|     1 | Error | 101           | <pre>Digital Sound PCB intialization failed.</pre>                                                                                                                                                                                                                   | <pre lang="ja">デジタルサウンド基板の初期化に失敗しました.</pre> |
+|     2 | Error | 102           | <pre>Digital Sound PCB ROM error.</pre>                                                                                                                                                                                                                              | <pre lang="ja">デジタルサウンド基板ROMエラー.</pre> |
+|     4 | Error | 104           | <pre>CD-ROM initialization failed.</pre>                                                                                                                                                                                                                             | <pre lang="ja">CD-ROMドライブの初期化に失敗しました.</pre> |
+|     7 | Error | 107           | <pre>File system mounting failed.<br />Please check that correct CD-ROM is in use.</pre>                                                                                                                                                                             | <pre lang="ja">ファイルシステムのマウントに失敗しました.<br />CD-ROMが間違っていないか確認してください.</pre> |
+|     9 | Error | 109           | <pre>File system mounting failed.<br />Please check that correct CD-ROM is in use.</pre>                                                                                                                                                                             | <pre lang="ja">ファイルシステムのマウントに失敗しました.<br />CD-ROMが間違っていないか確認してください.</pre> |
+|    10 | Error | 110           | <pre>File system mounting failed.<br />Please check that correct CD-ROM is in use.</pre>                                                                                                                                                                             | <pre lang="ja">ファイルシステムのマウントに失敗しました.<br />CD-ROMが間違っていないか確認してください.</pre> |
+|    11 | Error | 111           | <pre>File system mounting failed.<br />Please check that correct CD-ROM is in use.</pre>                                                                                                                                                                             | <pre lang="ja">ファイルシステムのマウントに失敗しました.<br />CD-ROMが間違っていないか確認してください.</pre> |
+|    12 | Error | 112           | <pre>File system mounting failed.<br />Please check that correct CD-ROM is in use.</pre>                                                                                                                                                                             | <pre lang="ja">ファイルシステムのマウントに失敗しました.<br />CD-ROMが間違っていないか確認してください.</pre> |
+|    13 | Error | 113           | <pre>Disc device initialization failed.</pre>                                                                                                                                                                                                                        | <pre lang="ja">ディスクデバイスの初期化に失敗しました.</pre> |
+|    14 | Error | 114           | <pre>You are using an incorrect CD-ROM.<br />Replace CD-ROM to %s1 and<br />turn on the main power.</pre>                                                                                                                                                            | <pre lang="ja">CD-ROMが違います.<br />CD-ROMを%s1に交換し,電源を<br />入れ直してください.</pre> |
+|    15 | Error | 115           | <pre>Disc device initialization failed.</pre>                                                                                                                                                                                                                        | <pre lang="ja">ディスクデバイスの初期化に失敗しました.</pre> |
+|    16 | Error | 116           | <pre>Disc device initialization failed.</pre>                                                                                                                                                                                                                        | <pre lang="ja">ディスクデバイスの初期化に失敗しました.</pre> |
+|    17 | Error | 117           | <pre>Config file error.<br />FILE=%s1<br />ERROR=%d2, LINE=%d3, COLUMN=%d4</pre>                                                                                                                                                                                     | <pre lang="ja">コンフィグファイルエラー.<br />FILE=%s1<br />ERROR=%d2, LINE=%d3, COLUMN=%d4</pre> |
+|    19 | Error | 119           | <pre>You are using an incorrect CD-ROM.<br />Replace CD-ROM to %s1 and<br />turn on the main power.</pre>                                                                                                                                                            | <pre lang="ja">CD-ROMが違います.<br />CD-ROMを%s1に交換し,電源を<br />入れ直してください.</pre> |
+|    20 | Error | 120           | <pre>Cassette is not installed.<br />Turn off the main power and install the<br />correct cassette then turn the power on.</pre>                                                                                                                                     | <pre lang="ja">カセットがセットされていません.<br />電源を切り,正しいカセットをセットして<br />再度電源を入れてください.</pre> |
+|    21 | Error | 121           | <pre>Cassette error. (%d1)<br />Cassette does not match this game.<br />Check if the cassette is for this<br />game (%s2)<br />Refer to manual for more information.</pre>                                                                                           | <pre lang="ja">カセットエラー (%d1)<br />ゲームとカセットが対応していません.<br />カセットがこのゲーム(%s2)用のものか<br />確認してください.<br />詳しくは取り扱い説明書を参照してください.</pre> |
+|    25 | Error | 125           | <pre>Boot is not available from this device.<br />DEVICE=%s1</pre>                                                                                                                                                                                                   | <pre lang="ja">このデバイスからゲームのブートはできません.<br />DEVICE=%s1</pre> |
+|    26 | Error | 126           | <pre>Cassette error (%d1)</pre>                                                                                                                                                                                                                                      | <pre lang="ja">カセットエラー (%d1)</pre> |
+|    27 | Error | 127           | <pre>Master Calendar network error.</pre>                                                                                                                                                                                                                            | <pre lang="ja">マスターカレンダー通信エラー.</pre> |
+|    28 | Error | 128           | <pre>Master Calendar network error.</pre>                                                                                                                                                                                                                            | <pre lang="ja">マスターカレンダー通信エラー.</pre> |
+|    29 | Error | 129           | <pre>Master Calendar network error.</pre>                                                                                                                                                                                                                            | <pre lang="ja">マスターカレンダー通信エラー.</pre> |
+|    30 | Error | 130           | <pre>Installation boot device error.<br />Installation cassette is inserted.<br />Turn off the power.  Before turning the<br />power on:  1. Change the cassette to the<br />Operating Cassette to enter the game or<br />2. Set DIP-SW4 to "OFF" to install.</pre>  | <pre lang="ja">インストールブートデバイスエラー.<br />インストールカセットがセットされています.<br />電源を切り,ゲームを行うには運用カセットに<br />交換, インストールするにはDIP-SW4をOFFに<br />し,再度電源を入れてください.</pre> |
+|    31 | Error | 131           | <pre>Installation Cassette does not correspond<br />to the machine.<br />Please use Installation Cassette marked<br />%s1 for installation.</pre>                                                                                                                    | <pre lang="ja">インストールカセットと本体との対応がとれて<br />いません. 認証番号%s1が記入された<br />インストールカセットを用いてインストール<br />してください.</pre> |
+|    32 | Error | 132           | <pre>Cassette error (%d1)</pre>                                                                                                                                                                                                                                      | <pre lang="ja">カセットエラー (%d1)</pre> |
+|    35 | Error | 135           | <pre>This cassette is used to convert another<br />game. This can not be used as an operating<br />cassette.</pre>                                                                                                                                                   | <pre lang="ja">このカセットはいちど次機種への<br />コンバージョンに使用されたものです.<br />運用カセットとして使用することはできません.</pre> |
+|    36 | Error | 136           | <pre>Cassette error (%d1)</pre>                                                                                                                                                                                                                                      | <pre lang="ja">カセットエラー (%d1)</pre> |
+|    38 | Error | 138           | <pre>File not found.<br />FILE=%s1</pre>                                                                                                                                                                                                                             | <pre lang="ja">ファイルが見つかりません.<br />FILE=%s1</pre> |
+|    39 | Error | 139           | <pre>File reading error.<br />FILE=%s1</pre>                                                                                                                                                                                                                         | <pre lang="ja">ファイルリードエラー.<br />FILE=%s1</pre> |
+|    40 | Error | 140           | <pre>File not found.<br />FILE=%s1</pre>                                                                                                                                                                                                                             | <pre lang="ja">ファイルが見つかりません.<br />FILE=%s1</pre> |
+|    41 | Error | 141           | <pre>File reading error.<br />FILE=%s1</pre>                                                                                                                                                                                                                         | <pre lang="ja">ファイルリードエラー.<br />FILE=%s1</pre> |
+|    42 | Error | 142           | <pre>File reading error.<br />FILE=%s1</pre>                                                                                                                                                                                                                         | <pre lang="ja">ファイルリードエラー.<br />FILE=%s1</pre> |
+|    43 | Error | 143           | <pre>File reading error.<br />FILE=%s1</pre>                                                                                                                                                                                                                         | <pre lang="ja">ファイルリードエラー.<br />FILE=%s1</pre> |
+|    44 | Error | 144           | <pre>File data error.<br />FILE=%s1</pre>                                                                                                                                                                                                                            | <pre lang="ja">ファイルデータエラー.<br />FILE=%s1</pre> |
+|    45 | Error | 145           | <pre>File data error.<br />FILE=%s1</pre>                                                                                                                                                                                                                            | <pre lang="ja">ファイルデータエラー.<br />FILE=%s1</pre> |
+|    46 | Error | 146           | <pre>Turn off the power and check if the Flash<br />Card is inserted properly.<br />Please turn the power on after checking.<br />DEVICE=%s1</pre>                                                                                                                   | <pre lang="ja">電源を切り, フラッシュカードが正しくセット<br />されているか確認してください. 準備が整って<br />から再び電源を入れてください.<br />DEVICE=%s1</pre> |
+|    47 | Error | 147           | <pre>Checksum error.  If you have the latest<br />CD-ROM, please replace.  Turn off the<br />power and insert installation cassette.<br />Set DIP-SW4 to "OFF", then turn on the<br />power and reinstall CD-ROM.</pre>                                              | <pre lang="ja">チェックサムエラー. 最新のCD-ROMがあれば,<br />それに交換してください. 電源を切り,インス<br />トールカセットに交換,DIP-SW4をOFFにして<br />電源を入れ,再インストールしてください.</pre> |
+|    48 | Error | 148           | <pre>Area specification error.<br />Only area specification below is available.<br /> %s1<br />Check the DIP-SW of Master Calendar.</pre>                                                                                                                            | <pre lang="ja">仕向地指定エラー.<br />本タイトルは次の仕向地のみ指定できます.<br /> %s1<br />マスターカレンダーのDIP-SWを確認して<br />ください.</pre> |
+|    49 | Error | 149           | <pre>Cassette initialization error.<br />The cassette is already initialized as<br />Operating Cassette (%s1)<br />Reinitialization can not be completed.</pre>                                                                                                      | <pre lang="ja">カセット初期化エラー.<br />カセットはすでに運用カセット(%s1)<br />として初期化されています.<br />再初期化はできません.</pre> |
+|    50 | Error | 150           | <pre>Cassette initialization error.<br />The cassette is already initialized as<br />Installation Cassette (%s1)<br />Reinitialization can not be completed.</pre>                                                                                                   | <pre lang="ja">カセット初期化エラー.<br />カセットはすでにインストールカセット<br />(%s1)として初期化されています.<br />再初期化はできません.</pre> |
+|    51 | Error | 151           | <pre>File not found.<br />FILE=%s1</pre>                                                                                                                                                                                                                             | <pre lang="ja">ファイルが見つかりません.<br />FILE=%s1</pre> |
+|    52 | Error | 152           | <pre>Turn off the power and check if the Flash<br />Card is inserted properly.<br />Please turn the power on after checking.<br />DEVICE=%s1</pre>                                                                                                                   | <pre lang="ja">電源を切り, フラッシュカードが正しくセット<br />されているか確認してください. 準備が整って<br />から再び電源を入れてください.<br />DEVICE=%s1</pre> |
+|    53 | Error | 153           | <pre>Installation failed. (%d1)</pre>                                                                                                                                                                                                                                | <pre lang="ja">インストールに失敗しました (%d1)</pre> |
+|    54 | Error | 154           | <pre>Assertion failed.<br />FILE=%s1<br />LINE=%d2</pre>                                                                                                                                                                                                             | <pre lang="ja">アサーションフェイル.<br />FILE=%s1<br />LINE=%d2</pre> |
+|    55 | Error | 155           | <pre>Argument buffer overflow.</pre>                                                                                                                                                                                                                                 | <pre lang="ja">引数バッファオーバーフロー.</pre> |
+|    56 | Error | 156           | <pre>File not found.<br />FILE=%s1</pre>                                                                                                                                                                                                                             | <pre lang="ja">ファイルが見つかりません.<br />FILE=%s1</pre> |
+|    57 | Error | 157           | <pre>File data error.<br />FILE=%s1</pre>                                                                                                                                                                                                                            | <pre lang="ja">ファイルデータエラー.<br />FILE=%s1</pre> |
+|    58 | Error | 158           | <pre>File reading error.<br />FILE=%s1</pre>                                                                                                                                                                                                                         | <pre lang="ja">ファイルリードエラー.<br />FILE=%s1</pre> |
+|    59 | Error | 159           | <pre>Security Chip error. (%d1)<br />This Security Chip was initialized for<br />another title.</pre>                                                                                                                                                                | <pre lang="ja">セキュリティチップエラー.(%d1)<br />このセキュリティチップは他のタイトル用に<br />初期化されています.</pre> |
+|    60 | Error | 160           | <pre>CD-ROM drive error</pre>                                                                                                                                                                                                                                        | <pre lang="ja">CD-ROMドライブエラー.</pre> |
+|    61 | Error | 161           | <pre>RTC error</pre>                                                                                                                                                                                                                                                 | <pre lang="ja">RTCエラー.</pre> |
+|    62 | Error | 162           | <pre>Specification selection error<br />Only specification below can be<br />selected for this title.<br /> %s1<br />Check the DIP-SW of machine.</pre>                                                                                                              | <pre lang="ja">商品仕様指定エラー.<br />本タイトルは次の商品仕様のみ指定できます.<br /> %s1<br />本体のDIP-SWを確認してください.</pre> |
+|    64 | Error | 164           | <pre>Operating Cassette is not corresponding<br />with the machine.  Turn off the power and<br />replace it with Operating Cassette<br />No.%s1 then reboot.</pre>                                                                                                   | <pre lang="ja">運用カセットと本体との対応がとれていません.<br />電源を切り,認証番号%s1が記入された<br />運用カセットに交換して再起動してください.</pre> |
+|    66 | Error | 166           | <pre>Incorrect cassette installed.</pre>                                                                                                                                                                                                                             | <pre lang="ja">不当なカセットです.</pre> |
+|    67 | Error | 167           | <pre>Security Chip initialization failed. (%d1)</pre>                                                                                                                                                                                                                | <pre lang="ja">セキュリティチップ初期化エラー. (%d1)</pre> |
+|    69 | Error | 169           | <pre>Cannot use this security cassette<br />as Installation Cassette.</pre>                                                                                                                                                                                          | <pre lang="ja">このセキュリティカセットはインストール<br />カセットとして使用することはできません.</pre> |
+|    70 | Error | 170           | <pre>Cannot use this security cassette<br />as Installation Cassette.</pre>                                                                                                                                                                                          | <pre lang="ja">このセキュリティカセットはインストール<br />カセットとして使用することはできません.</pre> |
+|    71 | Error | 171           | <pre>This version cannot initialize a cassette.<br />Please replace CD-ROM to %s1<br />for initialize, and turn off the power.<br />Set DIP-SW4 to "OFF", then turn on<br />the power.</pre>                                                                         | <pre lang="ja">このバージョンはカセットを初期化できません.<br />初期化するにはCD-ROMを%s1に<br />交換して電源を切り,DIP-SW4をOFFにして<br />再起動してください.</pre> |
+|    72 | Error | 172           | <pre>You are using an incorrect CD-ROM.<br />Replace CD-ROM to %s1 and<br />turn on the main power.</pre>                                                                                                                                                            | <pre lang="ja">CD-ROMが違います.<br />CD-ROMを%s1に交換し,電源を<br />入れ直してください.</pre> |
+|    73 | Error | 173           | <pre>Cannot use this security cassette.</pre>                                                                                                                                                                                                                        | <pre lang="ja">このセキュリティカセットは使用できません.</pre> |
+|    74 | Error | 174           | <pre>Cannot use this security cassette.</pre>                                                                                                                                                                                                                        | <pre lang="ja">このセキュリティカセットは使用できません.</pre> |
+|    75 | Error | 175           | <pre>Cassette is not corresponding with the<br />machine.  Turn off the power and<br />replace it with Cassette No.%s1<br />then reboot.</pre>                                                                                                                       | <pre lang="ja">カセットと本体との対応がとれていません.<br />電源を切り,認証番号%s1が記入された<br />カセットに交換して再起動してください.</pre> |
+|    76 | Error | 176           | <pre>Cassette is not corresponding with the<br />machine.  Turn off the power and<br />replace it with Cassette No.%s1<br />then reboot.</pre>                                                                                                                       | <pre lang="ja">カセットと本体との対応がとれていません.<br />電源を切り,認証番号%s1が記入された<br />カセットに交換して再起動してください.</pre> |
+|    77 | Error | 177           | <pre>Checksum error.<br />If you have the latest CD-ROM, please<br />replace.  Turn off the power and set<br />DIP-SW4 to "OFF", then turn on<br />the power and reinstall CD-ROM.</pre>                                                                             | <pre lang="ja">チェックサムエラー.<br />最新のCD-ROMがあればそれに交換してください.<br />電源を切ってDIP-SW4をOFFにしたあと,<br />電源を入れて再インストールしてください.</pre> |
+|    78 | Error | 178           | <pre>This cassette is used to convert another<br />game. This can not be used to this game.</pre>                                                                                                                                                                    | <pre lang="ja">このカセットは次機種へのコンバージョンに<br />使用されたものです.<br />この機種で再び使用することはできません.</pre> |
+|    79 | Error | 179           | <pre>Boot is not available from this device.<br />DEVICE=%s1</pre>                                                                                                                                                                                                   | <pre lang="ja">このデバイスからゲームのブートはできません.<br />DEVICE=%s1</pre> |
+|    80 | Error | 180           | <pre>You are using an incorrect CD-ROM.<br />Replace CD-ROM to %s1 and<br />turn on the main power.</pre>                                                                                                                                                            | <pre lang="ja">CD-ROMが違います.<br />CD-ROMを%s1に交換し,電源を<br />入れ直してください.</pre> |
+|    81 | Error | 181           | <pre>File system mounting failed.<br />Please check that correct CD-ROM is in use.</pre>                                                                                                                                                                             | <pre lang="ja">ファイルシステムのマウントに失敗しました.<br />CD-ROMが間違っていないか確認してください.</pre> |
+|    82 | Error | 182           | <pre>File system mounting failed.<br />Please check that correct CD-ROM is in use.</pre>                                                                                                                                                                             | <pre lang="ja">ファイルシステムのマウントに失敗しました.<br />CD-ROMが間違っていないか確認してください.</pre> |
+|    83 | Error | 183           | <pre>Installation boot device error.<br />Please turn off the power for installation,<br />and set DIP-SW4 to "OFF", then turn on<br />the power.</pre>                                                                                                              | <pre lang="ja">インストールブートデバイスエラー.<br />インストールするには電源を切り,DIP-SW4を<br />OFFにして再起動してください.</pre> |
+|    84 | Error | 184           | <pre>CD-ROM drive error</pre>                                                                                                                                                                                                                                        | <pre lang="ja">CD-ROMドライブエラー.</pre> |
+|    85 | Error | 185           | <pre>CD-ROM drive version update failed. (%d1)<br />Please call a dealer near you.</pre>                                                                                                                                                                             | <pre lang="ja">CD-ROMドライブのバージョンアップに失敗<br />しました. (%d1)<br />最寄りのサービスセンターにお問い合わせ<br />下さい.</pre> |
+|    86 | Error | 186           | <pre>Cassette error (%d1)</pre>                                                                                                                                                                                                                                      | <pre lang="ja">カセットエラー (%d1)</pre> |
+|    87 | Error | 187           | <pre>You are using the cassette of another<br />cabinet. Please use the correct cassette.<br />Please see details in operator's manual.</pre>                                                                                                                        | <pre lang="ja">異なる本体向けのカセットを使用しています.<br />正しい本体との組み合わせで使用してください.<br />詳しくは取り扱い説明書を参照してください.</pre> |
+|    88 | Error | 188           | <pre>You are using the cassette of another<br />cabinet. Please use the correct cassette.<br />Please see details in operator's manual.</pre>                                                                                                                        | <pre lang="ja">異なる本体向けのカセットを使用しています.<br />正しい本体との組み合わせで使用してください.<br />詳しくは取り扱い説明書を参照してください.</pre> |
+|    89 | Error | 189           | <pre>You are using unknown cabinet.<br />Check all connectors.<br />Please see details in operator's manual.</pre>                                                                                                                                                   | <pre lang="ja">不明な本体を使用しています.<br />各コネクタが外れていないか確認してください.<br />詳しくは取り扱い説明書を参照してください.</pre> |
+|    90 | Error | 190           | <pre>You are using unknown cabinet.<br />Check all connectors.<br />Please see details in operator's manual.</pre>                                                                                                                                                   | <pre lang="ja">不明な本体を使用しています.<br />各コネクタが外れていないか確認してください.<br />詳しくは取り扱い説明書を参照してください.</pre> |
+|    91 | Error | 191           | <pre>Non-applicable game installed.<br />To install this game,<br /> %s1<br />shall be installed first.</pre>                                                                                                                                                        | <pre lang="ja">異なるゲームがインストールされています.<br />このゲームをインストールするにはあらかじめ<br /> %s1<br />がインストールされている必要があります.</pre> |
+|    92 | Error | 192           | <pre>This software is for the e-Amusement<br />system.<br />The game will only work on the e-Amusement<br />cabinet.</pre>                                                                                                                                           | <pre lang="ja">このゲームソフトはe-Amusement(レンタル)用<br />ソフトです.<br />e-Amusement用筐体でのみ動作します.</pre> |
+|    93 | Error | 193           | <pre>This software is not for the e-Amusement<br />system.<br />The game doesn't work on the e-Amusement<br />cabinet.</pre>                                                                                                                                         | <pre lang="ja">このゲームソフトはe-Amusement(レンタル)用<br />ソフトではありません.<br />e-Amusement用筐体では動作しません.</pre> |
+|    94 | Error | 194           | <pre>Non-applicable game installed.<br />To install this game,<br /> %s1<br />shall be installed first.</pre>                                                                                                                                                        | <pre lang="ja">異なるゲームがインストールされています.<br />このゲームをインストールするにはあらかじめ<br /> %s1<br />がインストールされている必要があります.</pre> |
+|    95 | Error | 195           | <pre>Cassette initialization error.<br />The cassette is already initialized as<br />%s1<br />Reinitialization can not be completed.</pre>                                                                                                                           | <pre lang="ja">カセット初期化エラー.<br />カセットはすでに%s1として初期化<br />されています. 再初期化はできません.</pre> |
+|    96 | Error | 196           | <pre>Cassette initialization error.<br />The cassette is already initialized as<br />%s1<br />Reinitialization can not be completed.</pre>                                                                                                                           | <pre lang="ja">カセット初期化エラー.<br />カセットはすでに%s1として初期化<br />されています. 再初期化はできません.</pre> |
+|    97 | Error | 197           | <pre>Cassette initialization error.<br />The cassette is already initialized as<br />%s1<br />Reinitialization can not be completed.</pre>                                                                                                                           | <pre lang="ja">カセット初期化エラー.<br />カセットはすでに%s1として初期化<br />されています. 再初期化はできません.</pre> |
+|    98 | Info  | 198, 500      | <pre>Installation completed.<br />Please write down the No.%s2<br />on cassette and machine.  Turn off the<br />power and replace cassette to<br />%s1 then turn on the power.</pre>                                                                                 | <pre lang="ja">インストール完了.<br />カセットと本体に認証番号%s2を記入<br />してください.電源を切ってカセットを<br />%s1に交換し,再度電源を入れて<br />ください.</pre> |
+|    99 | Info  | 199, 501      | <pre>Installation complete.  Please write down<br />the No.%s3 on cassette and machine.<br />Replace CD-ROM to %s1 and turn off<br />the power then replace cassette to<br />%s2.  Set DIP-SW4 to "ON",<br />then turn on the power.</pre>                           | <pre lang="ja">インストール完了. カセットと本体に認証番号<br />%s3を記入してください.<br />CD-ROMを%s1に交換して電源を切り,<br />カセットを%s2に交換し,<br />DIP-SW4をONにして再度電源を入れてください.</pre> |
+|   100 | Info  | 200, 502      | <pre>Operating cassette initialized.<br />The cassette was initialized as Operating<br />Cassette (%s1)</pre>                                                                                                                                                        | <pre lang="ja">運用カセット初期化完了.<br />カセットを運用カセット(%s1)として<br />初期化しました.</pre> |
+|   101 | Info  | 201, 503      | <pre>Installation cassette initialized.<br />The cassette was initialized as<br />Installation Cassette (%s1)</pre>                                                                                                                                                  | <pre lang="ja">インストールカセット初期化完了.<br />カセットをインストールカセット(%s1)<br />として初期化しました.</pre> |
+|   102 | Info  | 202, 504      | <pre>Initialized Operating Cassette<br />The cassette is already initialized as<br />Operating Cassette (%s1)<br />Reinitialization is not necessary.</pre>                                                                                                          | <pre lang="ja">初期化済み運用カセット.<br />カセットはすでに運用カセット(%s1)<br />として初期化されています. <br />再初期化の必要はありません.</pre> |
+|   103 | Info  | 203, 505      | <pre>Initialized Installation Cassette<br />The cassette is already initialized as<br />Installation Cassette (%s1)<br />Reinitialization is not necessary.</pre>                                                                                                    | <pre lang="ja">初期化済みインストールカセット.<br />カセットはすでにインストールカセット<br />(%s1)として初期化されています.<br />再初期化の必要はありません.</pre> |
+|   104 | Info  | 204, 506      | <pre>Installation completed.<br />Please write down the No.%s2<br />on cassette and machine.  Turn off the<br />power and replace cassette to<br />%s1 then turn on the power.</pre>                                                                                 | <pre lang="ja">インストール完了.<br />カセットと本体に認証番号%s2を記入<br />してください.電源を切ってカセットを<br />%s1に交換し,再度電源を入れて<br />ください.</pre> |
+|   105 | Info  | 205, 507      | <pre>Installation complete.  Please write down<br />the No.%s3 on cassette and machine.<br />Replace CD-ROM to %s1 and turn off<br />the power then replace cassette to<br />%s2.  Set DIP-SW4 to "ON",<br />then turn on the power.</pre>                           | <pre lang="ja">インストール完了. カセットと本体に認証番号<br />%s3を記入してください.<br />CD-ROMを%s1に交換して電源を切り,<br />カセットを%s2に交換し,<br />DIP-SW4をONにして再度電源を入れてください.</pre> |
+|   106 | Info  | 206, 508      | <pre>Installation completed.<br />Please write down the No.%s1<br />on cassette and machine.<br />Turn off the power, then reboot.</pre>                                                                                                                             | <pre lang="ja">インストール完了.<br />カセットと本体に認証番号%s1を記入<br />してください.<br />電源を切って再起動してください.</pre> |
+|   107 | Info  | 207, 509      | <pre>Installation complete.<br />Please write down the No.%s2<br />on cassette and machine.<br />Replace CD-ROM to %s1 and turn off<br />the power.<br />Set DIP-SW4 to "ON", then reboot.</pre>                                                                     | <pre lang="ja">インストール完了.<br />カセットと本体に認証番号%s2を<br />記入してください.<br />CD-ROMを%s1に交換して電源を切り,<br />DIP-SW4をONにして再起動してください.</pre> |
+|   108 | Info  | 208, 510      | <pre>Security cassette initialized.<br />The cassette was initialized for<br />%s1.</pre>                                                                                                                                                                            | <pre lang="ja">セキュリティカセット初期化完了.<br />カセットを%s1に初期化しました.</pre> |
+|   109 | Info  | 209, 511      | <pre>Initialized Security Cassette<br />The cassette is already initialized for<br />%s1.<br />Reinitialization is not necessary.</pre>                                                                                                                              | <pre lang="ja">初期化済みセキュリティカセット.<br />カセットはすでに%s1に初期化<br />されています. 再初期化の必要はありません.</pre> |
+|   110 | Info  | 210, 512      | <pre>SERVICE button is pressed.<br />To force installation, turn off the power,<br />change the cassette to the Installation<br />Cassette, and turn on the power with<br />pressing SERVICE switch.</pre>                                                           | <pre lang="ja">サービスボタンが押されています.<br />強制インストールを行うには電源を切り,<br />インストールカセットに交換して, サービス<br />ボタンを押しながら電源を入れてください.</pre> |
+|   111 | Note  | 211, 513, 602 | <pre>CD-ROM drive version update in progress.<br />Please do not shut off power.<br />This will take a few moments.</pre>                                                                                                                                            | <pre lang="ja">現在CD-ROMドライブのバージョンアップを<br />実行しています.<br />電源を切らずにそのままお待ち下さい.</pre> |
+|   112 | Note  | 212, 514, 603 | <pre>CD-ROM drive version update completed.</pre>                                                                                                                                                                                                                    | <pre lang="ja">CD-ROMドライブのバージョンアップが完了<br />しました.</pre> |
+|   113 | Note  | 213, 515, 604 | <pre>Starting CD-ROM drive version update.<br />Please do not turn off the power while<br />updating.<br />Press TEST button to begin updating.</pre>                                                                                                                | <pre lang="ja">CD-ROMドライブのバージョンアップを行います.<br />バージョンアップ中は絶対に電源を切らないで<br />下さい.<br />テストボタンを押すとバージョンアップを開始<br />します.</pre> |
+|   114 | Note  | 214, 516, 605 | <pre>Cleared RTC-RAM.<br />At Game Demo screen, press the test button<br />for the Test Mode and re-do the settings.<br /><br />Press the Test Button for the next screen.</pre>                                                                                     | <pre lang="ja">RTC-RAMをクリアしました.<br />ゲームデモが始まったらテストボタンを押して<br />テストモードに入り設定をやり直してください.<br /><br />テストボタンを押すと次に進みます.</pre> |
 
 ## Pinouts
 
