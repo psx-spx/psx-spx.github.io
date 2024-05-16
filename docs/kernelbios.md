@@ -2645,6 +2645,8 @@ all consoles; without any PAL/NTSC related customizations).<br/>
   28-Jul-1994  "DTL-H2000"                   ;v0.x (pre-retail devboard)
   22-Sep-1994  "CEX-1000 KT-3  by S.O."      ;v1.0 through v2.0
   no-new-date  "CEX-3000 KT-3  by K.S."      ;v2.1 only (old Port 1F801060h)
+  27-Jul-1995  "Konami OS by T.H."           ;Twinkle System
+  01-Sep-1995  "Konami OS by T.H."           ;Konami GV, GQ, System 573
   04-Dec-1995  "CEX-3000/1001/1002 by K.S."  ;v2.2 through v4.5 (except v4.0)
   29-May-1997  "CEX-7000/-7001 by K.S.    "  ;v4.0 only (new Port 1F801010h)
   17-Jan-2000  "PS compatible mode by M.T."  ;v5.0 (Playstation 2)

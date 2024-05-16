@@ -108,10 +108,13 @@ only seen in some demos, and never in actual games.<br/>
 Fills the area in the frame buffer with the value in RGB. Horizontally the
 filling is done in 16-pixel (32-bytes) units (see below masking/rounding).<br/>
 The "Color" parameter is a 24bit RGB value, however, the actual fill data is
-16bit: The hardware linearly converts the 24bit RGB value to 15bit RGB by dropping the lower 3 bits of each color value and additionally sets the mask bit (bit15) to 0.<br/>
-Rectangle filling is not affected by the GP0(E6h) mask setting, acting as if GP0(E6h).0 and GP0(E6h).1 are both zero.<br/>
+16bit: The hardware linearly converts the 24bit RGB value to 15bit RGB by
+dropping the lower 3 bits of each color value and additionally sets the mask bit
+(bit15) to 0.<br/>
+Rectangle filling is not affected by the GP0(E6h) mask setting, acting as if
+GP0(E6h).0 and GP0(E6h).1 are both zero.<br/>
 This command is typically used to do a quick clear, as it'll be faster to run
-than an equivalent Render Rectangle command.
+than an equivalent Render Rectangle command.<br/>
 
 #### VRAM Overview / VRAM Addressing
 VRAM can be 1 MB or 2 MB (not mapped to the CPU bus) (it can be read/written
@@ -204,7 +207,9 @@ the rendering.
 #### Notes
 Polygons are displayed up to \<excluding\> their lower-right coordinates.<br/>
 Quads are internally processed as two triangles, the
-first consisting of vertices 1,2,3, and the second of vertices 2,3,4. This is an important detail, as splitting the quad into triangles affects the way colours are interpolated.<br/>
+first consisting of vertices 1,2,3, and the second of vertices 2,3,4. This is an
+important detail, as splitting the quad into triangles affects the way colours
+are interpolated.<br/>
 Within the triangle, the ordering of the vertices doesn't matter on
 the GPU side (a front-back check, based on clockwise or anti-clockwise
 ordering, can be implemented at the GTE side).<br/>
@@ -234,7 +239,8 @@ The vertex list is terminated by the bits 12-15 and 28-31 equaling `0x5`, or
 `(word & 0xF000F000) == 0x50005000`. The terminator value occurs on the first
 word of the vertex (i.e. the color word if it's a gouraud shaded).<br/>
 
-If the 2 vertices in a line overlap, then the GPU will draw a 1x1 rectangle in the location of the 2 vertices using the colour of the first vertex.<br/>
+If the 2 vertices in a line overlap, then the GPU will draw a 1x1 rectangle in
+the location of the 2 vertices using the colour of the first vertex.<br/>
 
 #### Note
 Lines are displayed up to \<including\> their lower-right coordinates (ie.
@@ -510,7 +516,9 @@ Fill does NOT occur when Xsiz=0 or Ysiz=0 (unlike as for Copy commands).
 Xsiz=400h works only indirectly: Param=400h is handled as Xsiz=0, however,
 Param=3F1h..3FFh is rounded-up and handled as Xsiz=400h.<br/>
 
-Note that because of the height (Ysiz) masking, a maximum of 511 rows can be filled in a single command. Calling a fill with a full VRAM height of 512 rows will be ineffective as the height will be masked to 0.
+Note that because of the height (Ysiz) masking, a maximum of 511 rows can be
+filled in a single command. Calling a fill with a full VRAM height of 512 rows
+will be ineffective as the height will be masked to 0.
 
 #### Masking for COPY Commands parameters
 ```
@@ -671,7 +679,9 @@ due to programming bugs). Pandemonium 2 is using a bigger "overscan" width
 The 260h value is the first visible pixel on normal TV Sets, this value is used
 by MOST NTSC games, and SOME PAL games (see below notes on Mis-Centered PAL
 games).<br/>
-Video clock unit used depends on console region, regardless of NTSC/PAL video mode set by GP1(08h).3; see section on [nominal video clocks](#nominal-video-clock) for values.<br/>
+Video clock unit used depends on console region, regardless of NTSC/PAL video
+mode set by GP1(08h).3; see section on [nominal video clocks](#nominal-video-clock)
+for values.<br/>
 
 #### GP1(07h) - Vertical Display range (on Screen)
 ```
@@ -687,8 +697,12 @@ The 88h/A3h values are the middle-scanlines on normal TV Sets, these values are
 used by MOST NTSC games, and SOME PAL games (see below notes on Mis-Centered
 PAL games).<br/>
 The 240/288 values are for fullscreen pictures. Many NTSC games display 240
-lines, but on most analog television sets, only 224 lines are visible (8 lines of overscan on top and 8 lines of overscan on bottom). Many PAL games display only 256 lines (underscan with black borders).<br/>
-Some games such as Chrono Cross will occasionally adjust these values to create a screen shake effect, so proper emulation of this command is necessary for those particular cases.<br/>
+lines, but on most analog television sets, only 224 lines are visible (8 lines
+of overscan on top and 8 lines of overscan on bottom). Many PAL games display
+only 256 lines (underscan with black borders).<br/>
+Some games such as Chrono Cross will occasionally adjust these values to create
+a screen shake effect, so proper emulation of this command is necessary for
+those particular cases.<br/>
 
 #### GP1(08h) - Display mode
 ```
@@ -925,7 +939,7 @@ maintaining compatiblity with older PSX consoles).<br/>
 Some PSone consoles seem to be fitted with 2 MB VRAM chips (maybe because
 smaller chips had not been in production anymore), but only the first 1 MB
 region is accessible. However, as all PSone models use a v2 GPU which supports
-2 MB VRAM, it should be possible to rewire the chip selects to make the uppper
+2 MB VRAM, it should be possible to rewire the chip selects to make the upper
 half accessible.<br/>
 
 #### GPU Detection (and optional VRAM size switching)
@@ -1149,8 +1163,9 @@ than black.<br/>
 
 ##   GPU Texture Caching
 The GPU has 2 Kbyte Texture Cache<br/>
-There is also a CLUT cache that is preserved between GPU drawing commands. The CLUT cache is invalidated when different CLUT index values are used or when GP0(01h) is issued. It is unknown if the CLUT cache overlaps or is shared with the Texture Cache.
-
+There is also a CLUT cache that is preserved between GPU drawing commands. The
+CLUT cache is invalidated when different CLUT index values are used or when
+GP0(01h) is issued.<br/>
 If polygons with texture are displayed, the GPU needs to read these from the
 frame buffer. This slows down the drawing process, and as a result the number
 of polygons that can be drawn in a given timespan. To speed up this process the
@@ -1205,7 +1220,11 @@ but also on entry 9 of block 2, these cannot be in the cache at once.<br/>
   NTSC video clock = 53.693175 MHz
   PAL video clock  = 53.203425 MHz
 ```
-Consoles will always use the video clock for its region, regardless of the GPU being configured in NTSC or PAL output mode, because an NTSC console lacks a PAL reference clock and vice versa. Without modifications for an additional oscillator for the other region, consoles may experience drift over time when playing content from a different video region. See vertical refresh rates below.
+Consoles will always use the video clock for its region, regardless of the GPU
+being configured in NTSC or PAL output mode, because an NTSC console lacks a PAL
+reference clock and vice versa. Without modifications for an additional
+oscillator for the other region, consoles may experience drift over time when
+playing content from a different video region. See vertical refresh rates below.
 
 #### Vertical Video Timings
 ```
@@ -1215,7 +1234,9 @@ Consoles will always use the video clock for its region, regardless of the GPU b
   314 scanlines per field for PAL non-interlaced
   312.5 scanlines per field for PAL interlaced
 ```
-Horizontal blanking and vertical blanking signals occur on the video output side as expected for NTSC/PAL signals. These are not necessarily the same as the timer/interrupt HBLANK and VBLANK.
+Horizontal blanking and vertical blanking signals occur on the video output side
+as expected for NTSC/PAL signals. These are not necessarily the same as the
+timer/interrupt HBLANK and VBLANK.
 
 #### Vertical Refresh Rates
 ```
@@ -1235,7 +1256,9 @@ Horizontal blanking and vertical blanking signals occur on the video output side
   Interlaced:     50.460 Hz
   Non-interlaced: 50.219 Hz
 ```
-For emulation purposes, it's recommended to use an NTSC video clock when running NTSC content (or in NTSC mode) and a PAL clock when running PAL content (or in PAL mode).
+For emulation purposes, it's recommended to use an NTSC video clock when running
+NTSC content (or in NTSC mode) and a PAL clock when running PAL content (or in
+PAL mode).
 
 TODO: Derivations for vertical refresh rates; horizontal timing notes
 
@@ -1385,19 +1408,31 @@ There are 4 semi-transparency modes in the GPU.<br/>
   * 1.0 x B - 1.0 x F    ;aka B-F
   * 1.0 x B +0.25 x F    ;aka B+F/4
 ```
-For textured primitives using 4-bit or 8-bit textures, bit 15 of each CLUT entry acts as a semi-transparency flag and determines whether to apply semi-transparency to the pixel or not. If the semi-transparency flag is off, the new pixel is written to VRAM as-is.<br/>
-When using additive blending, if a channel's intensity is greater than 255, it gets clamped to 255 rather than being masked. Similarly, if using subtractive blending and a channel's intensity ends up being < 0, it's clamped to 0.<br/>
+For textured primitives using 4-bit or 8-bit textures, bit 15 of each CLUT entry
+acts as a semi-transparency flag and determines whether to apply semi-transparency
+to the pixel or not. If the semi-transparency flag is off, the new pixel is
+written to VRAM as-is.<br/>
+When using additive blending, if a channel's intensity is greater than 255, it
+gets clamped to 255 rather than being masked. Similarly, if using subtractive
+blending and a channel's intensity ends up being < 0, it's clamped to 0.<br/>
 
 #### Modulation (also known as Texture Blending)
 Modulation is a colour effect that can be applied to textured primitives.
-For each pixel of the primitive it combines every colour channel of the fetched texel with the corresponding channel of the interpolated vertex colour according to this formula (Assuming all channels are 8-bit).<br/> 
+For each pixel of the primitive it combines every colour channel of the fetched
+texel with the corresponding channel of the interpolated vertex colour according
+to this formula (Assuming all channels are 8-bit).<br/> 
 ```glsl
   finalChannel.rgb = (texel.rgb * vertexColour.rgb) / vec3(128.0)
 ```
-Using modulation, one can either decrease (if the vertex colour channel value is < 128) or increase (if it's > 128) the intensity of each colour channel of the texel, which is helpful for implementing things such as brightness effects.<br/>
-Using a vertex colour of 0x808080 (ie all channels set to 128) is equivalent to not applying modulation to the primitive, as shown by the above formula.<br/>
-"Texture blending" is not meant to be confused with normal blending, ie an operation that merges the backbuffer colour with the incoming pixel and draws the resulting colour to the backbuffer.
-The PS1 has this capability to an extent, using semi-transparency.<br/>
+Using modulation, one can either decrease (if the vertex colour channel value is
+< 128) or increase (if it's > 128) the intensity of each colour channel of the
+texel, which is helpful for implementing things such as brightness effects.<br/>
+Using a vertex colour of 0x808080 (ie all channels set to 128) is equivalent to
+not applying modulation to the primitive, as shown by the above formula.<br/>
+"Texture blending" is not meant to be confused with normal blending, ie an
+operation that merges the backbuffer colour with the incoming pixel and draws
+the resulting colour to the backbuffer. The PS1 has this capability to an extent,
+using semi-transparency.<br/>
 
 #### Draw to display enable
 This will enable/disable any drawing to the area that is currently displayed.
