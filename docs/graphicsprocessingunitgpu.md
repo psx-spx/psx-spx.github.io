@@ -411,7 +411,7 @@ for timing reasons...?<br/>
 Mask specifies the bits that are to be manipulated, and Offset contains the new
 values for these bits, ie. texture X/Y coordinates are adjusted as so:<br/>
 ```
-  Texcoord = (Texcoord AND (NOT (Mask*8))) OR ((Offset AND Mask)*8)
+  Texcoord = (Texcoord AND ((Mask*8)-1)) OR ((Offset AND Mask)*8)
 ```
 The area within a texture window is repeated throughout the texture page. The
 data is not actually stored all over the texture page but the GPU reads the
