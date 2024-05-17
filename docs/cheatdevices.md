@@ -26,10 +26,10 @@ DB25 connector can be directly connected to a PC parallel port.<br/>
 #### FLASH Chips (for both Xplorer and Datel)
 [Cheat Devices - FLASH/EEPROMs](cheatdevices.md#cheat-devices-flasheeproms)<br/>
 
-http://gamehacking.org/faqs/hackv500c.html - cheat code formats<br/>
-http://doc.kodewerx.org/hacking\_psx.html - cheat code formats<br/>
-http://xianaix.net/museum.htm - around 64 bios versions<br/>
-http://www.murraymoffatt.com/playstation-xplorer.html - xplorer bioses<br/>
+<http://gamehacking.org/faqs/hackv500c.html> - cheat code formats<br/>
+<http://doc.kodewerx.org/hacking_psx.html> - cheat code formats<br/>
+<http://xianaix.net/museum.htm> - around 64 bios versions<br/>
+<http://www.murraymoffatt.com/playstation-xplorer.html> - xplorer bioses<br/>
 
 #### Separating between Gameshark and Xplorer Codes
 ```
@@ -129,9 +129,9 @@ Command Handler at Pre-Boot time can also upload EXE code, but doesn't have
 Kernel installed).<br/>
 Original Datel commands for Menu/Game mode are unknown. The Caetla commands are
 documented in japanese, and there are also two english translations:<br/>
-http://www.psxdev.net/forum/viewtopic.php?f=49&t=370 - good (though
+<http://www.psxdev.net/forum/viewtopic.php?f=49&t=370> - good (though
 incomplete)<br/>
-http://www.psxdev.net/forum/viewtopic.php?f=53&t=462#p6849 - very bad
+<http://www.psxdev.net/forum/viewtopic.php?f=53&t=462#p6849> - very bad
 (beware)<br/>
 
 

@@ -33,10 +33,13 @@ extra_css:
   - css/extra.css
 
 markdown_extensions:
-  - pymdownx.critic
   - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.highlight
   - pymdownx.keys
   - pymdownx.mark
+  - pymdownx.superfences
+  - pymdownx.tasklist
   - pymdownx.tilde
 
 nav:

@@ -8,3 +8,7 @@
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace !important;
   }
 }
+
+.md-typeset table {
+  white-space: nowrap;
+}

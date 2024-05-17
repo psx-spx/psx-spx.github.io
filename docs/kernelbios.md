@@ -21,7 +21,7 @@
 [BIOS Internal Boot Functions](kernelbios.md#bios-internal-boot-functions)<br/>
 [BIOS More Internal Functions](kernelbios.md#bios-more-internal-functions)<br/>
 [BIOS PC File Server](kernelbios.md#bios-pc-file-server)<br/>
-[BIOS TTY Console (std_io)](kernelbios.md#bios-tty-console-stdio)<br/>
+[BIOS TTY Console (std_io)](kernelbios.md#bios-tty-console-std_io)<br/>
 [BIOS Character Sets](kernelbios.md#bios-character-sets)<br/>
 [BIOS Control Blocks](kernelbios.md#bios-control-blocks)<br/>
 [BIOS Versions](kernelbios.md#bios-versions)<br/>
@@ -838,7 +838,7 @@ being reserved for loading executables).<br/>
 
 #### Note
 For more info about EXE files and their headers, see<br/>
-[CDROM File Formats](cdromdrive.md#cdrom-file-formats)<br/>
+[CDROM File Formats](cdromfileformats.md)<br/>
 
 
 
@@ -2142,14 +2142,14 @@ That type of buffer can be used with "_ioabort", "longjmp", and also
 "HookEntryInt(addr)".<br/>
 The "setjmp" function returns 0 when called directly. However, it may return again -
 to the same return address, and the same stack pointer - with another return value (which should be usually
-non-zero, to indicate that the state has been restored (eg. _ioabort passes 1 as
+non-zero, to indicate that the state has been restored (eg. \_ioabort passes 1 as
 return value).<br/>
 Also noteworthy from what a compliant setjmp implementation should be doing
 is the absence of saving the state of cop0 and cop2, thus making this slightly
 unsuitable for a typical coroutine system implementation.<br/>
 
 #### A(14h) - longjmp(buf, param)
-Restores the R16-R23,GP,SP,FP,RA registers from a previously recorded 
+Restores the R16-R23,GP,SP,FP,RA registers from a previously recorded
 jmp_buf buffer, and "returns" to that new RA address (rather than to the caller of the
 longjmp function). The "param" value is passed as "return value" to the
 code at RA, ie. usually to the caller of the original setjmp call. Noteworthy difference
@@ -2160,8 +2160,8 @@ call and a rollback. See setjmp for further details.<br/>
 
 #### A(53h) - set\_ioabort\_handler(src)  ;PS2 only  ;PSX: SystemError
 Normally the _ioabort handler is changed only internally during booting, with
-this new function, games can install their own _ioabort handler. src is pointer
-to a 30h-byte "savestate" structure, which will be copied to the actual _ioabort
+this new function, games can install their own \_ioabort handler. src is pointer
+to a 30h-byte "savestate" structure, which will be copied to the actual \_ioabort
 structure.<br/>
 
 #### A(06h) or B(38h) - exit(exitcode)

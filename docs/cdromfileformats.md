@@ -85,7 +85,7 @@ MagDemoNN is short for "Official U.S. Playstation Magazine Demo Disc NN"<br/>
 
 ##   CDROM File Official Sony File Formats
 #### Official Sony File Formats
-[https://psx.arthus.net/sdk/Psy-Q/DOCS/Devrefs/Filefrmt.pdf] - Sony 1998<br/>
+<https://psx.arthus.net/sdk/Psy-Q/DOCS/Devrefs/Filefrmt.pdf> - Sony 1998<br/>
 ```
   File Formats
     (c) 1998 Sony Computer Entertainment Inc.
@@ -837,7 +837,7 @@ doesn't contain any bitmap/palette data for such blank regions.<br/>
 #### BMR Bitmaps
 These are 16bpp bitmaps, stored either in uncompressed .BMR files, or in
 compressed .RLE files:<br/>
-[CDROM File Compression RLE_16](cdromfileformats.md#cdrom-file-compression-rle16)<br/>
+[CDROM File Compression RLE_16](cdromfileformats.md#cdrom-file-compression-rle_16)<br/>
 ```
   Apocalypse (MagDemo16: APOC\CD.HED\*.RLE and *.BMR)
   Spider-Man 1 older version (MagDemo31: SPIDEY\CD.HED\*.RLE)
@@ -1040,7 +1040,7 @@ The whole .PSH file or the bitmap chunks can be compressed:<br/>
 [CDROM File Compression EA Methods](cdromfileformats.md#cdrom-file-compression-ea-methods)<br/>
 Variants of the .PSH format are also used on PC, PS2, PSP, XBOX (with other
 Chunk Types for other texture/palette formats, and for optional extra data).
-For details, see: [http://wiki.xentax.com/index.php/EA\_SSH\_FSH\_Image]
+For details, see: <http://wiki.xentax.com/index.php/EA_SSH_FSH_Image>
 
 
 #### Destruction Derby Raw (MagDemo35: DDRAW\\*.PCK,\*.FNT,\*.SPR)
@@ -1421,7 +1421,7 @@ offsets (for saving space when the file list contains fewer entries).<br/>
 The PCX filesize is next-curr offset (or total-curr for last file).<br/>
 
 #### References
-[https://www.fileformat.info/format/pcx/egff.htm]
+<https://www.fileformat.info/format/pcx/egff.htm>
 
 
 
@@ -1908,7 +1908,7 @@ pictures:<br/>
 
 #### Credits
 Thanks to Michael Sabin for info on various STR and BS variants:<br/>
-[https://github.com/m35/jpsxdec/]
+<https://github.com/m35/jpsxdec/>
 
 
 
@@ -3281,7 +3281,7 @@ color depth (although that may fit in with the game engine).<br/>
 #### MPEG1 (on VCD Video CDs)
 MPEG1 uses I/P/B-Frames, the I-Frames may reach similar compression as BS
 files. However, P-Frames and B-Frames do compress much better than BS files.<br/>
-[CDROM Video CDs (VCD)](cdromfileformats.md#cdrom-video-cds-vcd)<br/>
+[CDROM Video CDs (VCD)](cdromvideocdsvcd.md)<br/>
 MPEG1 isn't used in any PSX games, but VCDs can be viewed on SCPH-5903 consoles
 (or via software decoder in nocash PSX kernel clone).<br/>
 
@@ -4172,8 +4172,8 @@ file).<br/>
 ```
 
 #### See also
-[http://github.com/vgmstream/vgmstream/blob/master/src/meta/vag.c] ;very detailed<br/>
-[http://wiki.xentax.com/index.php/VAG_Audio] ;rather incomplete and perhaps wrong<br/>
+<http://github.com/vgmstream/vgmstream/blob/master/src/meta/vag.c> ;very detailed<br/>
+<http://wiki.xentax.com/index.php/VAG_Audio> ;rather incomplete and perhaps wrong<br/>
 
 
 
@@ -4416,7 +4416,7 @@ Alone in the Dark IV has MIDB and DSND chunks (which contain sound files).<br/>
 #### See also
 The page below does mention several PSX sound formats, plus some open source
 &amp; closed source tools for handling those files.<br/>
-[https://github.com/loveemu/vgmdocs/blob/master/Conversion_Tools_for_Video_Game_Music.md]<br/>
+<https://github.com/loveemu/vgmdocs/blob/master/Conversion_Tools_for_Video_Game_Music.md><br/>
 
 
 
@@ -5539,11 +5539,11 @@ This is reportedly also used for various other Electronic Arts games for PC,
 PSX, and PS2 (often with extension \*.BIG, \*.VIV).<br/>
 Reportedly also "BIGH" and "BIG4" exist:<br/>
 
-[http://wiki.xentax.com/index.php/EA_BIG_BIGF_Archive]
+<http://wiki.xentax.com/index.php/EA_BIG_BIGF_Archive>
 
 Other Electronic Arts file formats (used inside or alongside big archives):<br/>
 
-[https://wiki.multimedia.cx/index.php/Electronic_Arts_Formats_(2)] - BNK etc
+<https://wiki.multimedia.cx/index.php/Electronic_Arts_Formats_(2)> - BNK etc
 
 
 ##### Electronic Arts 24bit C0FB archives
@@ -7389,7 +7389,7 @@ including valid offsets for 0-byte files like F\_START, F\_END, ENDOFWAD).<br/>
 The game engine may insist on some files to be compressed or uncompressed (so
 compression may be required even if the uncompressed data would be smaller).<br/>
 
-More info: [http://doomwiki.org/wiki/WAD]
+More info: <http://doomwiki.org/wiki/WAD>
 
 
 
@@ -8038,7 +8038,7 @@ The file header, the first some Folder headers (those in first quarter or so),
 and (all?) File Data is unencrypted (aka XORed with 0000h).<br/>
 The Folder headers at higher offsets are encrypted with a 16bit XOR value. That
 XOR value is derived from Subchannel Q via LibCrypt:<br/>
-[CDROM Protection - LibCrypt](cdromfileformats.md#cdrom-protection-libcrypt)<br/>
+[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection-libcrypt)<br/>
 When not having the Subchannel data (or when not knowing which Folders are
 encrypted or unencrypted), one can simply obtain the encryption key from one of
 these entries (which will be key=0000h when unencrypted):<br/>
@@ -8177,9 +8177,9 @@ FF8 does reportedly also use GZIP (unknown in which files).<br/>
 ```
 
 #### See also
-[https://github.com/myst6re/deling/blob/master/FF8DiscArchive.cpp]
+<https://github.com/myst6re/deling/blob/master/FF8DiscArchive.cpp>
 
-[https://ff7-mods.github.io/ff7-flat-wiki/FF8/PlaystationMedia.html]
+<https://ff7-mods.github.io/ff7-flat-wiki/FF8/PlaystationMedia.html>
 
 
 
@@ -8271,9 +8271,9 @@ deep:<br/>
 ```
 
 #### See also
-[https://ninjatoes.blogspot.com/2020/07/]
+<https://ninjatoes.blogspot.com/2020/07/>
 
-[https://wiki.ffrtt.ru/index.php?title=Main_Page]
+<https://wiki.ffrtt.ru/index.php?title=Main_Page>
 
 
 
@@ -9234,9 +9234,9 @@ corresponding with the Types (although extension V,D are used for two different
 types each).<br/>
 
 ##### See also:
-[https://gist.github.com/ughman/3170834]
+<https://gist.github.com/ughman/3170834>
 
-[https://dl.dropbox.com/s/fu29g6xn97sa4pl/crash2fileformat.html]
+<https://dl.dropbox.com/s/fu29g6xn97sa4pl/crash2fileformat.html>
 
 
 ##### Weird Note
@@ -9984,7 +9984,7 @@ replaced by pointers after loading (the initial values seem to have no purpose;
 they are aften set to constants with value 002xxxxxh which could be useful for
 file type detection, but they vary in different game versions).<br/>
 See also:<br/>
-[https://github.com/vs49688/CrocUtils/] (for PC version, PSX support in progress)<br/>
+<https://github.com/vs49688/CrocUtils/> (for PC version, PSX support in progress)<br/>
 
 
 
@@ -10078,7 +10078,7 @@ Additional DEM files (always 1774h bytes) (if any, not all .WAD's have .DEM's):<
   004h N*8   Whatever entries... maybe data for demonstration mode?
 ```
 See also:<br/>
-[http://wiki.xentax.com/index.php/Argonaut\_WAD]
+<http://wiki.xentax.com/index.php/Argonaut_WAD>
 
 
 
@@ -10142,7 +10142,7 @@ nonzero values; though not always, eg. raw ADPCM or raw bitmaps).<br/>
 [CDROM File Compression BZZ](cdromfileformats.md#cdrom-file-compression-bzz)<br/>
 [CDROM File Compression RESOURCE (Star Wars Rebel Assault 2)](cdromfileformats.md#cdrom-file-compression-resource-star-wars-rebel-assault-2)<br/>
 [CDROM File Compression TIM-RLE4/RLE8](cdromfileformats.md#cdrom-file-compression-tim-rle4rle8)<br/>
-[CDROM File Compression RLE_16](cdromfileformats.md#cdrom-file-compression-rle16)<br/>
+[CDROM File Compression RLE_16](cdromfileformats.md#cdrom-file-compression-rle_16)<br/>
 [CDROM File Compression PIM/PRS (Legend of Mana)](cdromfileformats.md#cdrom-file-compression-pimprs-legend-of-mana)<br/>
 [CDROM File Compression BPE (Byte Pair Encoding)](cdromfileformats.md#cdrom-file-compression-bpe-byte-pair-encoding)<br/>
 [CDROM File Compression RNC (Rob Northen Compression)](cdromfileformats.md#cdrom-file-compression-rnc-rob-northen-compression)<br/>
@@ -10794,9 +10794,9 @@ apart from that, it does mainly use GZIP compressed files.<br/>
 
 ##   CDROM File Compression GT20 and PreGT20
 #### GT20 Compressed Files
-Used by Rollcage (MagDemo19: ROLLCAGE\SPEED.IMG\\*)<br/>
-Used by Rollcage Stage II (MagDemo31: ROLLCAGE\SPEED.IDX\\*)<br/>
-Used by Sydney 2000 (MagDemo37: OLY2000\DEMO.IDX\\* and OLY2000\GTO\\*.GTO)<br/>
+Used by Rollcage (MagDemo19: ROLLCAGE\SPEED.IMG\\\*)<br/>
+Used by Rollcage Stage II (MagDemo31: ROLLCAGE\SPEED.IDX\\\*)<br/>
+Used by Sydney 2000 (MagDemo37: OLY2000\DEMO.IDX\\\* and OLY2000\GTO\\\*.GTO)<br/>
 Reportedly also Chill (PS1) (\*.GTO)<br/>
 Reportedly also Ducati World: Racing Challenge<br/>
 Reportedly also Martian Gothic: Unification (PS1) (\*.GT20)<br/>
@@ -10843,8 +10843,8 @@ to load it to the end of the decompression buffer).<br/>
 Note: Uncompressed files can reportedly contain "NOGT" in the header, however,
 Rollcage does have compressed files (with GT20 header), and raw uncompressed
 files (without any NOGT header).<br/>
-[https://zenhax.com/viewtopic.php?t=13175] (specs)<br/>
-See also: [http://wiki.xentax.com/index.php/GT20\_Archive] (blurp)<br/>
+<https://zenhax.com/viewtopic.php?t=13175> (specs)<br/>
+See also: <http://wiki.xentax.com/index.php/GT20_Archive> (blurp)<br/>
 
 #### Pre-GT20 Compressed Files
 Used by Bloody Roar 1 (MagDemo06: BL\\*.DAT\\*)<br/>
@@ -11400,8 +11400,8 @@ decompressed data is max 3000h bytes per chunk. Unknown if the next chunk may
 copy data from previous chunk.<br/>
 
 #### Links
-[http://aminet.net/package/util/pack/RNC_ProPack] - official tool &amp; source code<br/>
-[https://segaretro.org/Rob_Northen_compression] - description (contains bugs)<br/>
+<http://aminet.net/package/util/pack/RNC_ProPack> - official tool &amp; source code<br/>
+<https://segaretro.org/Rob_Northen_compression> - description (contains bugs)<br/>
 
 
 RNC is used in a number of games by UK developers (notably Bullfrog and
@@ -11705,7 +11705,7 @@ filesizes for PGA Tour 96, 97, 98 COURSES\\*\\*.VIV\\*.mis are compressed=58h,
 uncompressed=50h).<br/>
 
 #### See also
-[http://wiki.niotso.org/RefPack] - LZ method<br/>
+<http://wiki.niotso.org/RefPack> - LZ method<br/>
 
 
 
@@ -12356,9 +12356,7 @@ is including a MacBinary header in the compressed files).<br/>
 #### See also
 The site below has useful links with info about headers (see LHA Notes), source
 code, and test archives:<br/>
-```
-  http://fileformats.archiveteam.org/wiki/LHA
-```
+<http://fileformats.archiveteam.org/wiki/LHA>
 
 
 
@@ -12443,9 +12441,7 @@ decompression (one must either decompress the whole file to detect the size, or
 one could try to find the Footer at end of file; which requires weird
 heuristics because the LZIP manual is explicitely stating that it's valid to
 append extra data after the Footer).<br/>
-```
-  http://www.nongnu.org/lzip/manual/lzip_manual.html#File-format
-```
+<http://www.nongnu.org/lzip/manual/lzip_manual.html#File-format>
 
 #### .chd (MAME compressed CDROM and HDD images)
 The CHD format has its own headers and supports several compression methods
@@ -12468,7 +12464,7 @@ filters.<br/>
 The 7z format defines many compression methods. The ones normally used are
 LZMA2 (default for 7-Zip 9.30 alpha +), LZMA (default for 7-Zip prior to 9.30
 alpha), PPMd, and bzip2.<br/>
-[http://fileformats.archiveteam.org/wiki/7z]
+<http://fileformats.archiveteam.org/wiki/7z>
 
 
 #### LZMA2 (used in .7z and .xz files)
@@ -12521,7 +12517,7 @@ Apart from the chunks, LZMA2 does usually contain a Dictionary Size byte:<br/>
 #### LZMA Source code
 Compact LZMA decompression ASM code can be found here:<br/>
 
-[https://github.com/ilyakurdyukov/micro-lzmadec]
+<https://github.com/ilyakurdyukov/micro-lzmadec>
 
 Above code is for self-decompressing executables (for plain LZMA, ignore the
 stuff about EXE/ELF headers). The two "static" versions are size-optimized
@@ -12739,13 +12735,13 @@ error about missing MSVCRT.DLL:\_\_\_mb\_cur\_max\_func). XZ Utils for DOS does 
 on Win98.<br/>
 Official XZ file format specs for can be found at:<br/>
 
-[https://tukaani.org/xz/format.html]
+<https://tukaani.org/xz/format.html>
 
 The BCJ filters aren't documented in XZ specs, but are defined in XZ source
 code, see src\liblzma\simple\\*.c). There's also this mail thread about
 semi-official ARM64 filters:<br/>
 
-[https://www.mail-archive.com/xz-devel@tukaani.org/msg00537.html]
+<https://www.mail-archive.com/xz-devel@tukaani.org/msg00537.html>
 
 
 
@@ -12796,13 +12792,12 @@ Metadata Block Types:<br/>
 
 #### More info
 The FLAC file format is documented here:<br/>
-```
-  https://xiph.org/flac/format.html
-```
+
+<https://xiph.org/flac/format.html>
+
 Source code for a compact FLAC decoder can be found here:<br/>
-```
-  https://www.nayuki.io/page/simple-flac-implementation
-```
+
+<https://www.nayuki.io/page/simple-flac-implementation>
 
 
 
@@ -13176,7 +13171,7 @@ cannot compress repeating 90h-bytes).<br/>
   return
  empty_tree dw FEFFh,FEFFh   ;upen empty tree, ARC defines two 1bit END codes
 ```
-[http://fileformats.archiveteam.org/wiki/Squeeze]
+<http://fileformats.archiveteam.org/wiki/Squeeze>
 
 
 #### Randomized LZW
@@ -13259,17 +13254,17 @@ additional information from third-party tools:<br/>
 ```
 
 #### See also
-[http://fileformats.archiveteam.org/wiki/ARC_(compression_format)]
+<http://fileformats.archiveteam.org/wiki/ARC_(compression_format)>
 
-[https://www.fileformat.info/format/arc/corion.htm]
+<https://www.fileformat.info/format/arc/corion.htm>
 
-[http://cd.textfiles.com/pcmedic/utils/compress/arc520s.zip] - source code<br/>
+<http://cd.textfiles.com/pcmedic/utils/compress/arc520s.zip> - source code<br/>
 
-[https://github.com/ani6al/arc] - source code, upgraded with method 9 and 4<br/>
+<https://github.com/ani6al/arc> - source code, upgraded with method 9 and 4<br/>
 
-[https://entropymine.wordpress.com/2021/05/11/arcs-trimmed-compression-scheme/]<br/>
+<https://entropymine.wordpress.com/2021/05/11/arcs-trimmed-compression-scheme/><br/>
 
-[http://www.textfiles.com/programming/FORMATS/arc-lbr.pro] - benchmarks<br/>
+<http://www.textfiles.com/programming/FORMATS/arc-lbr.pro> - benchmarks<br/>
 
 
 
@@ -13698,7 +13693,7 @@ look as so (with "." meaning 00h end-byte):<br/>
   "  123 . "  <-- extra weird, leading/trailing spaces, mis-placed end-byte
   "   123  "  <-- extra weird, leading/trailing spaces, without end-byte
 ```
-See also: [https://www.gnu.org/software/tar/manual/html_node/Standard.html]
+See also: <https://www.gnu.org/software/tar/manual/html_node/Standard.html>
 
 
 #### CPIO Format (1977) (and MAC .PAX files)
@@ -13774,7 +13769,7 @@ Ascii/hex CPIO Chunk format:<br/>
 ```
 CPIO numeric values are weird octal ASCII strings (eg. 6-byte "000123"), but,
 unlike TAR, without extra oddities like spaces or end-bytes.<br/>
-[https://www.systutorials.com/docs/linux/man/5-cpio/]
+<https://www.systutorials.com/docs/linux/man/5-cpio/>
 
 
 #### RPM Format (1997) (BIG-ENDIAN)
@@ -13905,7 +13900,7 @@ compressed files (eg. LZH archives created with LHA MAC version).<br/>
   ...  ..  Padding to 80h-byte boundary
   ...  ..  Get Info comment (if any, usually none)
 ```
-CRC16-XMODEM: [http://www.sunshine2k.de/coding/javascript/crc/crc_js.html]
+CRC16-XMODEM: <http://www.sunshine2k.de/coding/javascript/crc/crc_js.html>
 
 
 #### BinHex 4.0 (.hqx) (ASCII, RLE90, big-endian)
@@ -14046,7 +14041,7 @@ MAC File Type,Creator IDs = "PIT ","UPIT" \<-- other (=compressed?)<br/>
     [tree+index*4+1*2] = GetTreeEntry  ;-recursive call for node1
     return index
 ```
-[http://www.network172.com/early-mac-software/packit-source-code/] - official<br/>
+<http://www.network172.com/early-mac-software/packit-source-code/> - official<br/>
 
 #### StuffIt (.sit) (Macintosh) (old format) (1987) (big-endian)
 MAC File Type,Creator IDs = "SIT!","SIT!" (version=01h).<br/>
@@ -14229,7 +14224,7 @@ descriptions of the algorithms.<br/>
 ```
 The StuffIt X headers are somehow compressed/compacted (there are very few 00h
 bytes even when filesize entries should have zeroes in MSBs).<br/>
-[https://github.com/incbee/Unarchiver/blob/master/XADMaster/XADStuffItXParser.m]
+<https://github.com/incbee/Unarchiver/blob/master/XADMaster/XADStuffItXParser.m>
 
 
 #### Compact Pro aka Compactor (.cpt) (Macintosh) (1990s) (big-endian)
@@ -14374,8 +14369,8 @@ End of Last Block<br/>
   2000h leading bytes to avoid page faults (not just the 3 initialized bytes).
 ```
 See also:<br/>
-[https://github.com/dgilman/macutils/blob/master/macunpack/cpt.c] - source code<br/>
-[https://github.com/MacPaw/XADMaster/wiki/CompactProSpecs] - confused anti-specs<br/>
+<https://github.com/dgilman/macutils/blob/master/macunpack/cpt.c> - source code<br/>
+<https://github.com/MacPaw/XADMaster/wiki/CompactProSpecs> - confused anti-specs<br/>
 
 #### Self-Extracting Archives (SEA)
 The abbreviation SEA (and extension .sea) is used for several self-extracting
@@ -14481,11 +14476,11 @@ Compressed Resources (when Attributes.bit0=1)<br/>
   00Eh 4      For Type9: decompressor_specific_parameters_with_io  ;/
   012h ..     Compressed Resource Data
 ```
-[http://formats.kaitai.io/compressed_resource/]
+<http://formats.kaitai.io/compressed_resource/>
 
 Owned Resources (with Resource ID=C000h..FFFFh):<br/>
 
-[https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format]
+<https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format>
 
 The upper 5bit (mask F800h) indicate the resource type of the owner, the middle
 6bit (mask 07E0h) indicate the resource id of the owner, and the lower 5bit
@@ -16154,19 +16149,19 @@ renamed to CHDMAN (V3/V4/V5).<br/>
 ##### References
 CHD source code (see files cdrom.\*, chd\*.\*, etc):<br/>
 
-[https://github.com/mamedev/mame/tree/master/src/lib/util]
+<https://github.com/mamedev/mame/tree/master/src/lib/util>
 
 CHDMAN commandline tool for generating chd files:<br/>
 
-[https://github.com/mamedev/mame/blob/master/src/tools/chdman.cpp]
+<https://github.com/mamedev/mame/blob/master/src/tools/chdman.cpp>
 
 CHD decompression clone with useful comments:<br/>
 
-[https://github.com/SnowflakePowered/chd-rs/tree/master/chd-rs/src]
+<https://github.com/SnowflakePowered/chd-rs/tree/master/chd-rs/src>
 
 CHD format reverse-engineering thread:<br/>
 
-[http://www.psxdev.net/forum/viewtopic.php?f=70&t=3980]
+<http://www.psxdev.net/forum/viewtopic.php?f=70&t=3980>
 
 
 
@@ -16194,7 +16189,7 @@ Some info on (uncompressed) .C2D files can be found in libmirage source code.<br
 This contains a compressed ISO filesystem, without supporting any CD-specific
 features like Tracks, FORM2 sectors, or CD-DA Audio.<br/>
 
-[http://www.ezbsystems.com/isz/iszspec.txt]
+<http://www.ezbsystems.com/isz/iszspec.txt>
 
 The format might be suitable for PC CDROMs, but it's useless for PSX CDROMs.<br/>
 

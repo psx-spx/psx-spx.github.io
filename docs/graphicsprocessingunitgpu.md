@@ -1420,7 +1420,7 @@ blending and a channel's intensity ends up being < 0, it's clamped to 0.<br/>
 Modulation is a colour effect that can be applied to textured primitives.
 For each pixel of the primitive it combines every colour channel of the fetched
 texel with the corresponding channel of the interpolated vertex colour according
-to this formula (Assuming all channels are 8-bit).<br/> 
+to this formula (Assuming all channels are 8-bit).<br/>
 ```glsl
   finalChannel.rgb = (texel.rgb * vertexColour.rgb) / vec3(128.0)
 ```

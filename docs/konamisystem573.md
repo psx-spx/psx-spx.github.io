@@ -763,23 +763,23 @@ sends it, waits for a response to be received and lets the 573 read it.
 
 In order to perform a JVS transaction the 573 must:
 
-1. Reset the MCU through register `0x1f400000`, clear `JVSIRDY` by writing to
-   `0x1f520000` then wait for the status and error codes in register
-   `0x1f400004` to be set to 0 and 3 respectively.
-2. Write the packet two bytes at a time to `0x1f680000`, waiting for `JVSDRDY`
-   to go low before each write. Words are little endian, so for instance the
-   first word of a packet with destination address `0x01` would be `0x01e0`. If
-   the total length of the packet is odd, the last byte shall still be written
-   as a word (with the upper byte zeroed out).
-3. Wait for the status code to become 1. At this point the MCU will send the
-   packet and wait for a response from a device on the bus.
-4. Wait for the status code to become 0, signalling a valid response has been
-   received and can be read out. A timeout should be implemented here, as the
-   MCU will wait for a response indefinitely even if no device is present.
-5. Read the packet, again two bytes at a time, from `0x1f40000a`, waiting for
-   `JVSIRDY` to go high before each read and clearing it by writing to
-   `0x1f520000` after each read. The status code will be set to 2 after the
-   first word is read and back to 0 once no more data is available to read.
+1.  Reset the MCU through register `0x1f400000`, clear `JVSIRDY` by writing to
+    `0x1f520000` then wait for the status and error codes in register
+    `0x1f400004` to be set to 0 and 3 respectively.
+2.  Write the packet two bytes at a time to `0x1f680000`, waiting for `JVSDRDY`
+    to go low before each write. Words are little endian, so for instance the
+    first word of a packet with destination address `0x01` would be `0x01e0`. If
+    the total length of the packet is odd, the last byte shall still be written
+    as a word (with the upper byte zeroed out).
+3.  Wait for the status code to become 1. At this point the MCU will send the
+    packet and wait for a response from a device on the bus.
+4.  Wait for the status code to become 0, signalling a valid response has been
+    received and can be read out. A timeout should be implemented here, as the
+    MCU will wait for a response indefinitely even if no device is present.
+5.  Read the packet, again two bytes at a time, from `0x1f40000a`, waiting for
+    `JVSIRDY` to go high before each read and clearing it by writing to
+    `0x1f520000` after each read. The status code will be set to 2 after the
+    first word is read and back to 0 once no more data is available to read.
 
 The MCU does not allow for non-JVS packets to be sent as it validates the sync
 byte, checksum and uses the length field to determine packet length. Responses
@@ -1318,209 +1318,210 @@ password.
 
 A ZS01 transaction can be broken down into the following steps:
 
-1. The 573 prepares a 12-byte packet to be sent to the ZS01, containing a
-   command, address and payload:
+1.  The 573 prepares a 12-byte packet to be sent to the ZS01, containing a
+    command, address and payload:
 
-   | Bytes | Description                                       |
-   | ----: | :------------------------------------------------ |
-   |     0 | Command flags                                     |
-   |     1 | Address bits 0-7                                  |
-   |   2-9 | Payload (data for writes, response key for reads) |
-   | 10-11 | CRC16 of bytes 0-9, big endian                    |
+    | Bytes | Description                                       |
+    | ----: | :------------------------------------------------ |
+    |     0 | Command flags                                     |
+    |     1 | Address bits 0-7                                  |
+    |   2-9 | Payload (data for writes, response key for reads) |
+    | 10-11 | CRC16 of bytes 0-9, big endian                    |
 
-   The first byte is a 3-bit bitfield encoding the command and access type:
+    The first byte is a 3-bit bitfield encoding the command and access type:
 
-   | Bits | Description                                    |
-   | ---: | :--------------------------------------------- |
-   |    0 | Command (0 = write/erase, 1 = read)            |
-   |    1 | Address bit 8 (unused, should be 0)            |
-   |    2 | Access type (0 = unprivileged, 1 = privileged) |
-   |  3-7 | Unused? (should be 0)                          |
+    | Bits | Description                                    |
+    | ---: | :--------------------------------------------- |
+    |    0 | Command (0 = write/erase, 1 = read)            |
+    |    1 | Address bit 8 (unused, should be 0)            |
+    |    2 | Access type (0 = unprivileged, 1 = privileged) |
+    |  3-7 | Unused? (should be 0)                          |
 
-   The access type bit specifies whether the command is privileged. Privileged
-   commands require the ZS01's current password, while unprivileged commands do
-   not.
+    The access type bit specifies whether the command is privileged. Privileged
+    commands require the ZS01's current password, while unprivileged commands do
+    not.
 
-   The address must be one of the following values:
+    The address must be one of the following values:
 
-   | Address     | Length   | Privileged | Description                                |
-   | :---------- | -------: | :--------- | :----------------------------------------- |
-   | `0x00-0x03` | 32 bytes | No         | Unprivileged data area                     |
-   | `0x04-0x0e` | 80 bytes | Yes        | Privileged data area                       |
-   | `0xfc`      |  8 bytes | No         | Internal ZS01 serial number                |
-   | `0xfd`      |  8 bytes | No         | External DS2401 serial number              |
-   | `0xfd`      |  8 bytes | Yes        | Erases data area when written (write-only) |
-   | `0xfe`      |  8 bytes | Yes        | Configuration registers                    |
-   | `0xff`      |  8 bytes | Yes        | New password (write-only)                  |
+    | Address     | Length   | Privileged | Description                                |
+    | :---------- | -------: | :--------- | :----------------------------------------- |
+    | `0x00-0x03` | 32 bytes | No         | Unprivileged data area                     |
+    | `0x04-0x0e` | 80 bytes | Yes        | Privileged data area                       |
+    | `0xfc`      |  8 bytes | No         | Internal ZS01 serial number                |
+    | `0xfd`      |  8 bytes | No         | External DS2401 serial number              |
+    | `0xfd`      |  8 bytes | Yes        | Erases data area when written (write-only) |
+    | `0xfe`      |  8 bytes | Yes        | Configuration registers                    |
+    | `0xff`      |  8 bytes | Yes        | New password (write-only)                  |
 
-   Data is always read or written in aligned 8 byte blocks. Unprivileged areas
-   can be read using either a privileged or unprivileged read command, but
-   writing to them still requires a privileged write command.
+    Data is always read or written in aligned 8 byte blocks. Unprivileged areas
+    can be read using either a privileged or unprivileged read command, but
+    writing to them still requires a privileged write command.
 
-2. If the command is a read command, a random 8-byte "response key" is generated
-   (typically as an MD5 hash of the current time from the RTC) and written to
-   the payload field; the ZS01 will later use it to encrypt the returned data
-   as a replay attack prevention measure. For write commands, the payload field
-   is populated with the 8 bytes to be written.
+2.  If the command is a read command, a random 8-byte "response key" is
+    generated (typically as an MD5 hash of the current time from the RTC) and
+    written to the payload field; the ZS01 will later use it to encrypt the
+    returned data as a replay attack prevention measure. For write commands, the
+    payload field is populated with the 8 bytes to be written.
 
-3. A CRC16 is calculated over the first 10 bytes of the packet and stored in the
-   last 2 bytes in big endian format. The CRC is computed as follows:
+3.  A CRC16 is calculated over the first 10 bytes of the packet and stored in
+    the last 2 bytes in big endian format. The CRC is computed as follows:
 
-   ```c
-   #define ZS01_CRC16_POLYNOMIAL 0x1021
+    ```c
+    #define ZS01_CRC16_POLYNOMIAL 0x1021
 
-   uint16_t zs01_crc16(const uint8_t *data, size_t length) {
-       uint16_t crc = 0xffff;
+    uint16_t zs01_crc16(const uint8_t *data, size_t length) {
+        uint16_t crc = 0xffff;
 
-       for (; length; length--) {
-           crc ^= *(data++) << 8;
+        for (; length; length--) {
+            crc ^= *(data++) << 8;
 
-           for (int bit = 8; bit; bit--) {
-               uint16_t temp = crc;
+            for (int bit = 8; bit; bit--) {
+                uint16_t temp = crc;
 
-               crc <<= 1;
-               if (temp & (1 << 15))
-                   crc ^= ZS01_CRC16_POLYNOMIAL;
-           }
-       }
+                crc <<= 1;
+                if (temp & (1 << 15))
+                    crc ^= ZS01_CRC16_POLYNOMIAL;
+            }
+        }
 
-       return (~crc) & 0xffff;
-   }
-   ```
+        return (~crc) & 0xffff;
+    }
+    ```
 
-4. If the command is privileged, the 573 scrambles the payload field with the
-   chip's currently set password, using the following algorithm:
+4.  If the command is privileged, the 573 scrambles the payload field with the
+    chip's currently set password, using the following algorithm:
 
-   ```c
-   // Note that this state is preserved across calls to zs01_scramble_payload()
-   // and must be updated when a response is received (see step 8).
-   uint8_t zs01_scrambler_state = 0;
+    ```c
+    // Note that this state is preserved across calls to zs01_scramble_payload()
+    // and must be updated when a response is received (see step 8).
+    uint8_t zs01_scrambler_state = 0;
 
-   void zs01_scramble_payload(
-       uint8_t *output, const uint8_t *input, size_t length,
-       const uint8_t *password
-   ) {
-       for (; length; length--) {
-           int value = *(input++) ^ zs01_scrambler_state;
-           value     = (value + password[0]) & 0xff;
+    void zs01_scramble_payload(
+        uint8_t *output, const uint8_t *input, size_t length,
+        const uint8_t *password
+    ) {
+        for (; length; length--) {
+            int value = *(input++) ^ zs01_scrambler_state;
+            value     = (value + password[0]) & 0xff;
 
-           for (int i = 1; i < 8; i++) {
-               int add   = password[i] & 0x1f;
-               int shift = password[i] >> 5;
+            for (int i = 1; i < 8; i++) {
+                int add   = password[i] & 0x1f;
+                int shift = password[i] >> 5;
 
-               int shifted = value << shift;
-               shifted    |= value >> (8 - shift);
-               shifted    &= 0xff;
+                int shifted = value << shift;
+                shifted    |= value >> (8 - shift);
+                shifted    &= 0xff;
 
-               value = (shifted + add) & 0xff;
-           }
+                value = (shifted + add) & 0xff;
+            }
 
-           zs01_scrambler_state = value;
-           *(output++)          = value;
-       }
-   }
-   ```
+            zs01_scrambler_state = value;
+            *(output++)          = value;
+        }
+    }
+    ```
 
-   The CRC16 is *not* updated to reflect the new data. This step is skipped for
-   unprivileged read commands.
+    The CRC16 is *not* updated to reflect the new data. This step is skipped for
+    unprivileged read commands.
 
-5. All 12 bytes of the packet are scrambled with a fixed "command key", using
-   the following algorithm:
+5.  All 12 bytes of the packet are scrambled with a fixed "command key", using
+    the following algorithm:
 
-   ```c
-   static const uint8_t ZS01_COMMAND_ADD[]   = { 237, 8, 16, 11, 6, 4, 8, 30 };
-   static const uint8_t ZS01_COMMAND_SHIFT[] = {   0, 3,  2,  2, 6, 2, 2,  1 };
+    ```c
+    static const uint8_t ZS01_COMMAND_ADD[]   = { 237, 8, 16, 11, 6, 4, 8, 30 };
+    static const uint8_t ZS01_COMMAND_SHIFT[] = {   0, 3,  2,  2, 6, 2, 2,  1 };
 
-   void zs01_scramble_packet(
-       uint8_t *output, const uint8_t *input, size_t length
-   ) {
-       // Unlike zs01_scramble_payload(), this state is *not* preserved across
-       // calls.
-       uint8_t state = 0xff;
+    void zs01_scramble_packet(
+        uint8_t *output, const uint8_t *input, size_t length
+    ) {
+        // Unlike zs01_scramble_payload(), this state is *not* preserved across
+        // calls.
+        uint8_t state = 0xff;
 
-       output += length;
-       input  += length;
+        output += length;
+        input  += length;
 
-       for (; length; length--) {
-           int value = *(--input) ^ state;
-           value     = (value + ZS01_COMMAND_ADD[0]) & 0xff;
+        for (; length; length--) {
+            int value = *(--input) ^ state;
+            value     = (value + ZS01_COMMAND_ADD[0]) & 0xff;
 
-           for (int i = 1; i < 8; i++) {
-               int shifted = value << ZS01_COMMAND_SHIFT[i];
-               shifted    |= value >> (8 - ZS01_COMMAND_SHIFT[i]);
-               shifted    &= 0xff;
+            for (int i = 1; i < 8; i++) {
+                int shifted = value << ZS01_COMMAND_SHIFT[i];
+                shifted    |= value >> (8 - ZS01_COMMAND_SHIFT[i]);
+                shifted    &= 0xff;
 
-               value = (shifted + ZS01_COMMAND_ADD[i]) & 0xff;
-           }
+                value = (shifted + ZS01_COMMAND_ADD[i]) & 0xff;
+            }
 
-           state       = value;
-           *(--output) = value;
-       }
-   }
-   ```
+            state       = value;
+            *(--output) = value;
+        }
+    }
+    ```
 
-6. The scrambled packet is sent to the ZS01, which will respond to the first 11
-   bytes immediately with an I2C ACK and to the last byte with an ACK after a
-   short delay. The 573 then proceeds to read 12 bytes from the ZS01, issuing an
-   I2C ACK for each byte received up until the last one.
+6.  The scrambled packet is sent to the ZS01, which will respond to the first 11
+    bytes immediately with an I2C ACK and to the last byte with an ACK after a
+    short delay. The 573 then proceeds to read 12 bytes from the ZS01, issuing
+    an I2C ACK for each byte received up until the last one.
 
-7. The 573 uses the response key generated in step 2 to unscramble the packet
-   returned by the ZS01. The unscrambling algorithm is the same one used in step
-   5, applied in reverse:
+7.  The 573 uses the response key generated in step 2 to unscramble the packet
+    returned by the ZS01. The unscrambling algorithm is the same one used in
+    step 5, applied in reverse:
 
-   ```c
-   void zs01_unscramble_packet(
-       uint8_t *output, const uint8_t *input, size_t length,
-       const uint8_t *response_key
-   ) {
-       uint8_t state = 0xff;
+    ```c
+    void zs01_unscramble_packet(
+        uint8_t *output, const uint8_t *input, size_t length,
+        const uint8_t *response_key
+    ) {
+        uint8_t state = 0xff;
 
-       output += length;
-       input  += length;
+        output += length;
+        input  += length;
 
-       for (; length; length--) {
-           int value      = *(--input);
-           int last_state = state;
-           state          = value;
+        for (; length; length--) {
+            int value      = *(--input);
+            int last_state = state;
+            state          = value;
 
-           for (int i = 1; i < 8; i++) {
-               int add   = response_key[i] & 0x1f;
-               int shift = response_key[i] >> 5;
+            for (int i = 1; i < 8; i++) {
+                int add   = response_key[i] & 0x1f;
+                int shift = response_key[i] >> 5;
 
-               int subtracted = (value - add) & 0xff;
+                int subtracted = (value - add) & 0xff;
 
-               value  = subtracted >> shift;
-               value |= subtracted << (8 - shift);
-               value &= 0xff;
-           }
+                value  = subtracted >> shift;
+                value |= subtracted << (8 - shift);
+                value &= 0xff;
+            }
 
-           value       = (value - response_key[0]) & 0xff;
-           *(--output) = value ^ last_state;
-       }
-   }
-   ```
+            value       = (value - response_key[0]) & 0xff;
+            *(--output) = value ^ last_state;
+        }
+    }
+    ```
 
-   For write commands, the response key required to unscramble the packet is the
-   one sent as part of the last read command issued. For read commands, the ZS01
-   may either use the key provided in the payload field or the one from the last
-   read command issued; Konami's code tries unscrambling responses with both.
+    For write commands, the response key required to unscramble the packet is
+    the one sent as part of the last read command issued. For read commands, the
+    ZS01 may either use the key provided in the payload field or the one from
+    the last read command issued; Konami's code tries unscrambling responses
+    with both.
 
-8. The unscrambled packet will contain the following fields:
+8.  The unscrambled packet will contain the following fields:
 
-   | Bytes | Description                                |
-   | ----: | :----------------------------------------- |
-   |     0 | Status code (0 = success, 1-5 = error)     |
-   |     1 | New payload scrambler state                |
-   |   2-9 | Payload (empty for writes, data for reads) |
-   | 10-11 | CRC16 of bytes 0-9, big endian             |
+    | Bytes | Description                                |
+    | ----: | :----------------------------------------- |
+    |     0 | Status code (0 = success, 1-5 = error)     |
+    |     1 | New payload scrambler state                |
+    |   2-9 | Payload (empty for writes, data for reads) |
+    | 10-11 | CRC16 of bytes 0-9, big endian             |
 
-   The 573 proceeds to compute the CRC16 of the first 10 bytes. If it does not
-   match the one in the packet, it will try unscrambling the packet with a
-   different response key (see step 7) before giving up. Otherwise, the global
-   `zs01_scrambler_state` variable from step 4 is set to the value of byte 1,
-   regardless of whether the status code is zero or not.
+    The 573 proceeds to compute the CRC16 of the first 10 bytes. If it does not
+    match the one in the packet, it will try unscrambling the packet with a
+    different response key (see step 7) before giving up. Otherwise, the global
+    `zs01_scrambler_state` variable from step 4 is set to the value of byte 1,
+    regardless of whether the status code is zero or not.
 
-   The exact meaning of non-zero status codes is currently unknown.
+    The exact meaning of non-zero status codes is currently unknown.
 
 ### EEPROM-less cartridge variants
 
@@ -2227,26 +2228,26 @@ status and error codes, the `700B01` self-test sequence performs 35 (!)
 different checks, each validating the codes returned under different conditions.
 The following tests are done:
 
-1. Reset MCU, clear `JVSIRDY`, ensure that:
-   - status code = 0
-   - error code = 3
-   - `JVSIRDY` = 0
-   - `JVSDRDY` = 0
-   - incoming JVS data = `0x0000`
-2. Reset MCU, write valid dummy packet header (`0x00e0`), ensure that:
-   - status code = 2
-   - error code = 3
-3. Reset MCU, write invalid dummy packet header (`0x001f`), ensure that:
-   - status code = 2
-   - error code = 2
-4. Reset MCU, write 16 dummy packets (`0x1fe0`, `0x0004`, `1 << i`, checksum),
-   for each packet ensure that:
-   - status code = 1
-   - error code = 3
-5. Reset MCU, write 16 dummy packets (same as above) with an invalid checksum,
-   for each packet ensure that:
-   - status code = 1
-   - error code = 1
+1.  Reset MCU, clear `JVSIRDY`, ensure that:
+    - status code = 0
+    - error code = 3
+    - `JVSIRDY` = 0
+    - `JVSDRDY` = 0
+    - incoming JVS data = `0x0000`
+2.  Reset MCU, write valid dummy packet header (`0x00e0`), ensure that:
+    - status code = 2
+    - error code = 3
+3.  Reset MCU, write invalid dummy packet header (`0x001f`), ensure that:
+    - status code = 2
+    - error code = 2
+4.  Reset MCU, write 16 dummy packets (`0x1fe0`, `0x0004`, `1 << i`, checksum),
+    for each packet ensure that:
+    - status code = 1
+    - error code = 3
+5.  Reset MCU, write 16 dummy packets (same as above) with an invalid checksum,
+    for each packet ensure that:
+    - status code = 1
+    - error code = 1
 
 It is currently unclear if any data is actually sent to the JVS bus during step
 4, as the shell may reset the MCU it before it starts sending the packet.
