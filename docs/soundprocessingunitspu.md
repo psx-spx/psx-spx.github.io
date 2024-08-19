@@ -397,15 +397,69 @@ ability to convert stereo CD output to mono, or to swap left/right channels).<br
 
 #### Envelope Operation depending on Shift/Step/Mode/Direction
 ```
-  AdsrCycles = 1 SHL Max(0,ShiftValue-11)
+  ; Precalculation, can be cached on phase begin.
+  AdsrStep = 7 - StepValue
+  IF Decreasing XOR PhaseNegative THEN
+    AdsrStep = NOT AdsrStep ; +7,+6,+5,+4 => -8,-7,-6,-5
   AdsrStep = StepValue SHL Max(0,11-ShiftValue)
-  IF exponential AND increase AND AdsrLevel>6000h THEN AdsrCycles=AdsrCycles*4
-  IF exponential AND decrease THEN AdsrStep=AdsrStep*AdsrLevel/8000h
-  Wait(AdsrCycles)              ;cycles counted at 44.1kHz clock
-  AdsrLevel=AdsrLevel+AdsrStep  ;saturated to 0..+7FFFh
+  CounterIncrement = 8000h SHR Max(0,ShiftValue-11) 
+  IF exponential AND increase AND AdsrLevel>6000h THEN
+    IF ShiftValue < 10 THEN
+      AdsrStep /= 4 ; SHR 2
+    ELSE IF ShiftValue >= 11 THEN
+      CounterIncrement /= 4 ; SHR 2
+    ELSE
+      AdsrStep /= 4 ; SHR 2
+      CounterIncrement /= 4 ; SHR 2
+  ELSE IF exponential AND decrease THEN
+    AdsrStep=AdsrStep*AdsrLevel/8000h
+
+  IF (StepValue | (StepValue SHL 2)) != ALL_BITS THEN
+    CounterIncrement = MAX(CounterIncrement, 1)
+
+  ; Runs once per 44.1kHz clock.
+  Counter += CounterIncrement
+  IF (Counter & 8000h) == 0 THEN
+    RETURN ; No step this cycle.
+
+  ; Saturate depending on mode.
+  AdsrLevel = AdsrLevel + AdsrStep
+  IF NOT decreasing THEN
+    AdsrLevel = CLAMP(AdsrLevel, -8000h..+7FFFh)
+  ELSE IF PhaseNegative THEN
+    AdsrLevel = CLAMP(AdsrLevel, -8000h..0h)
+  ELSE ; decreasing
+    AdsrLevel = MAX(AdsrLevel, 0)
 ```
-Exponential Increase is a fake (simply changes to a slower linear increase rate
-at higher volume levels).<br/>
+
+Exponential Increase is a fake (simply changes to a slower linear increase
+rate at higher volume levels).
+
+Phase invert cause the step to be positive in decreasing mode, otherwise
+negative.
+
+Using a step value of all-ones causes the volume to never step, and
+additionally never saturate. i.e. 0x7f, or 0x1f for decay/release.
+
+The step counter has very strange behaviour. Initially this was documented
+as `AdsrCycles = 1 SHL Max(0,ShiftValue-11)`, however, this is incorrect
+for shift values above 26. Hardware tests show that a rate of 0x76 behaves
+like 0x6A, seems it's dependent on the Bit15=1.
+
+Phase invert acts very strange. If the volume is positive, it will decrease
+to zero, then increase back to maximum negative (inverted) volume. Except
+when decrementing, then it snaps straight to zero. Simply clamping to int16
+range will be fine for incrementing, because the volume never decreases past
+zero. If the volume _was_ negative, and is incrementing, hardware tests show
+that it only clamps to max, not 0.
+
+Phase inversion is commonly used in "Dolby Surround" for simulating sound
+effects that should play through the rear speakers. There are also some cases
+where it is incorrectly used, such as Wipeout 3, where it sets a positive
+volume with an inverted sweep, but since all the rate bits are set to 1, the
+volume never steps, and it stays positive. If the rate had any bits clear,
+then the volume would slowly decrease to zero, then up to -8000h, growing
+louder but with phase inversion.
 
 #### 1F801C0Ch+N\*10h - Voice 0..23 Current ADSR volume (R/W)
 ```
