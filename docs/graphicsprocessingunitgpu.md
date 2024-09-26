@@ -1055,7 +1055,7 @@ will be processed first (ie. it will appear "behind" of the old entry).<br/>
 Not sure if the packet size must be limited to max N=16 words (ie. as for the
 DMA2-continous block size) (due to GP0 FIFO size limits)?<br/>
 
-#### Sending the OT to the CPU (via DMA2-linked-list mode)
+#### Sending the OT to the GPU (via DMA2-linked-list mode)
 ```
   1 - Wait until GPU is ready to receive commands ;GPUSTAT.28
   2 - Enable DMA channel 2                  ;DPCR
