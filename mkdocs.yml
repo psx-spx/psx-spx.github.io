@@ -23,6 +23,8 @@ theme:
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
+  icon:
+    logo: material/sony-playstation
 
 plugins:
   - search
