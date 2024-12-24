@@ -411,11 +411,24 @@ for timing reasons...?<br/>
 Mask specifies the bits that are to be manipulated, and Offset contains the new
 values for these bits, ie. texture X/Y coordinates are adjusted as so:<br/>
 ```
-  Texcoord = (Texcoord AND ((Mask*8)-1)) OR ((Offset AND Mask)*8)
+  Texcoord = (Texcoord AND (NOT (Mask * 8))) OR ((Offset AND Mask) * 8)
 ```
 The area within a texture window is repeated throughout the texture page. The
 data is not actually stored all over the texture page but the GPU reads the
-repeated patterns as if they were there.<br/>
+repeated patterns as if they were there. Considering all possible regular
+tilings of UV coordinates for powers of two, the texture window primitive can
+be constructed as follows using a desired set of parameters of `tiling_x`,
+`tiling_y`, `window_pos_x`, `window_pos_y`, `u`, `v` and `color_mode`:<br/>
+```
+x_tiling_factor = {8: 0b11111, 16: 0b11110, 32: 0b11100, 64: 0b11000, 128: 0b10000, 256: 0b00000}[tiling_x]
+y_tiling_factor = {8: 0b11111, 16: 0b11110, 32: 0b11100, 64: 0b11000, 128: 0b10000, 256: 0b00000}[tiling_y]
+x_offset = u & 0b11111
+x_offset <<= {15: 0, 8: 1, 4: 2}[color_mode]
+x_offset >>= 3;
+y_offset = v & 0b11111
+y_offset >>= 3
+texture_window_prim = (0xE20 << 20) | (y_offset << 15) | (x_offset << 10) | (y_tiling_factor << 5) | x_tiling_factor
+```
 
 #### GP0(E3h) - Set Drawing Area top left (X1,Y1)
 #### GP0(E4h) - Set Drawing Area bottom right (X2,Y2)
