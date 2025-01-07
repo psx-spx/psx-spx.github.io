@@ -200,7 +200,7 @@ Assault 2 does actually use the "8MB" space (with stacktop in mirrored RAM at
 Clearing bit7 causes many games to hang during CDROM loading on both EARLY-PU-8
 and LATE-PU-8 (but works on PU-18 through PM-41).<br/>
 
-#### FFFE0130h BCC, BIU/Cache Configuration Register (R/W)
+#### FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)
 ```
   0     LOCK   Enable cache lock mode              (when COP0_SR.IsC=1)
   1     INV    Enable cache invalidation mode      (when COP0_SR.IsC=1)
@@ -262,10 +262,13 @@ for (int i = 0; i < 0x1000; i += 16) // Clear tags (one for each 4-word line)
 BCC     = bcc;
 COP0_SR = sr;
 ```
-A usable version of this code [is available](https://github.com/pcsx-redux/nugget/blob/main/common/hardware/flushcache.s).<br/>
+A usable version of this code
+[is available](https://github.com/pcsx-redux/nugget/blob/main/common/hardware/flushcache.s).<br/>
 Bit 3 may be cleared to unmap the scratchpad from memory and use it as a data
 cache instead, however doing so will result in erratic behavior due to it not
-being equipped with tag memory; namely, data in the scratchpad will be updated
-during CPU loads but no cache hits will ever occur. Bits 4-5 seem to have no
-effect whatsoever in this mode (the CPU will only fetch individual words, not
-cache lines).<br/>
+being equipped with tag memory; each cache line's "tag" seems to be hardcoded to
+its respective scratchpad address instead. With bit 3 cleared, data in the
+scratchpad will be updated during CPU loads but no cache hits will ever occur.<br/>
+Bits 4-5 seem to have no effect whatsoever. The CPU will always fetch one word
+at a time from RAM, rather than attempting to prefetch an entire line using a
+burst read (as it does with the i-cache).<br/>
