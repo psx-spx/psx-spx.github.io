@@ -15,6 +15,7 @@
 [Controllers - Analog Buttons (Dualshock2)](controllersandmemorycards.md#controllers-analog-buttons-dualshock2)<br/>
 [Controllers - Dance Mats](controllersandmemorycards.md#controllers-dance-mats)<br/>
 [Controllers - Pop'n Controllers](controllersandmemorycards.md#controllers-popn-controllers)<br/>
+[Controllers - Taiko Controllers (Tatacon)](controllersandmemorycards.md#controllers-taiko-controllers-tatacon)<br/>
 [Controllers - Densha de Go! / Jet de Go! Controllers](controllersandmemorycards.md#controllers-densha-de-go-jet-de-go-controllers)<br/>
 [Controllers - Fishing Controllers](controllersandmemorycards.md#controllers-fishing-controllers)<br/>
 [Controllers - PS2 DVD Remote](controllersandmemorycards.md#controllers-ps2-dvd-remote)<br/>
@@ -1549,7 +1550,7 @@ enable/disable Reply bytes in the controller read command (Command 42h).<br/>
   5      LeftJoyY                (0=No, 1=Yes)             9th byte
   6      DPAD Right              (0=No, 1=Yes) button 00h  10th byte
   7      DPAD Left               (0=No, 1=Yes) button 01h  11th byte
-  8      DPAD Uup                (0=No, 1=Yes) button 02h  12th byte
+  8      DPAD Up                 (0=No, 1=Yes) button 02h  12th byte
   9      DPAD Down               (0=No, 1=Yes) button 03h  13th byte
   10     Button /\               (0=No, 1=Yes) button 04h  14th byte
   11     Button ()               (0=No, 1=Yes) button 05h  15th byte
@@ -1717,6 +1718,24 @@ right, and down d-pad controls are not connected to any physical buttons and are
 always reported as pressed (in the first transferred button byte, bits 5-7 are
 always 0). Pop'n Music games check these bits to determine if a Pop'n Controller
 is connected and will change the in-game controls accordingly if so.
+
+
+
+## Controllers - Taiko Controllers (Tatacon)
+Drum controllers made by Namco and used by the Taiko no Tatsujin series on the
+PS2 (but compatible with the PS1, even though no PS1 Taiko game was ever made).
+These controllers behave like standard digital pads (ID 41h) and contain four
+hit sensors mapped to the following buttons:<br/>
+
+| Sensor             | Button     | Bit |
+| :----------------- | :--------- | --: |
+| Left ka (rim)      | L1         |  10 |
+| Right ka (rim)     | R1         |  11 |
+| Left don (center)  | D-pad left |   7 |
+| Right don (center) | Circle     |  13 |
+
+Dedicated start and select buttons are also present. Unlike Pop'n Controllers,
+no additional buttons are hardcoded to be always pressed.<br/>
 
 
 
