@@ -8038,7 +8038,7 @@ The file header, the first some Folder headers (those in first quarter or so),
 and (all?) File Data is unencrypted (aka XORed with 0000h).<br/>
 The Folder headers at higher offsets are encrypted with a 16bit XOR value. That
 XOR value is derived from Subchannel Q via LibCrypt:<br/>
-[CDROM Protection - LibCrypt](cdromdrive.md#cdrom-protection-libcrypt)<br/>
+[CDROM Protection - LibCrypt](cdromformat.md#cdrom-protection-libcrypt)<br/>
 When not having the Subchannel data (or when not knowing which Folders are
 encrypted or unencrypted), one can simply obtain the encryption key from one of
 these entries (which will be key=0000h when unencrypted):<br/>
@@ -8489,7 +8489,7 @@ ISO data in Sector 10h-16h, followed by Hidden stuff in Sector 17h and up:<br/>
 Note: Like normal files, all hidden entries have their last sector flagged as
 SM=89h (that applies to all three Hidden ID, Directory, Unknown entries, and to
 all Hidden Files). For details, see:<br/>
-[CDROM XA Subheader, File, Channel, Interleave](cdromdrive.md#cdrom-xa-subheader-file-channel-interleave)<br/>
+[CDROM XA Subheader, File, Channel, Interleave](cdromformat.md#cdrom-xa-subheader-file-channel-interleave)<br/>
 
 #### Xenogears (2 discs, 1998)
 ```
@@ -8990,7 +8990,7 @@ As shown above, interval 1:2 and 1:4 are grouped as 4:8 and 2:8 (ie. 4 or 2
 continous sectors per 8 sectors).<br/>
 The Subheader's Channel number is specified in the above directory entries,
 Subheader's File number is fixed (0 for BPB, and 1 for SPB).<br/>
-[CDROM XA Subheader, File, Channel, Interleave](cdromdrive.md#cdrom-xa-subheader-file-channel-interleave)<br/>
+[CDROM XA Subheader, File, Channel, Interleave](cdromformat.md#cdrom-xa-subheader-file-channel-interleave)<br/>
 The SPB file is about 520Mbyte in both US and Japan, however, the Japanese
 version does reportedly contain more movies and some storyline that is missing
 in US/EU versions.<br/>

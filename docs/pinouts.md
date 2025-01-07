@@ -2791,7 +2791,7 @@ For the actual pin-outs of the cart-edge connector, see<br/>
 The nocash PSX bios outputs the "data" signal on the A20 address line, so
 (aside from the BIOS chip) one only needs to install a 1N4148 diode and two
 wires to unlock the CDROM. For more variants, see:<br/>
-[CDROM Protection - Chipless Modchips](cdromdrive.md#cdrom-protection-chipless-modchips)<br/>
+[CDROM Protection - Chipless Modchips](cdromformat.md#cdrom-protection-chipless-modchips)<br/>
 
 #### Composite NTSC/PAL Mod (optional)
 [Mods - PAL/NTSC Color Mods](pinouts.md#mods-palntsc-color-mods)<br/>
