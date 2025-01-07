@@ -18,6 +18,8 @@
 
 #### General CDROM Disk Format
 [CDROM Format](cdromformat.md)<br/>
+[CDROM File Formats](cdromfileformats.md)<br/>
+[CDROM Video CDs (VCD)](cdromvideocdsvcd.md)<br/>
 
 #### Playstation CDROM Coprocessor
 [CDROM Internal Info on PSX CDROM Controller](cdrominternalinfoonpsxcdromcontroller.md)<br/>

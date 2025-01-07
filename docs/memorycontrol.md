@@ -262,7 +262,7 @@ for (int i = 0; i < 0x1000; i += 16) // Clear tags (one for each 4-word line)
 BCC     = bcc;
 COP0_SR = sr;
 ```
-[is available](https://github.com/pcsx-redux/nugget/blob/main/common/hardware/flushcache.s).<br/>
+A usable version of this code [is available](https://github.com/pcsx-redux/nugget/blob/main/common/hardware/flushcache.s).<br/>
 Bit 3 may be cleared to unmap the scratchpad from memory and use it as a data
 cache instead, however doing so will result in erratic behavior due to it not
 being equipped with tag memory; namely, data in the scratchpad will be updated
