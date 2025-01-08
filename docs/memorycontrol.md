@@ -243,6 +243,7 @@ for (int i = 0; i < 0x1000; i += 4) // Clear cache lines
 for (int i = 0; i < 8; i++)         // Wait by reading dummy words from uncached RAM?
     *((volatile uint32_t *) 0xa0000000);
 
+COP0_SR = 0;
 BCC     = RAM | DS | IBLKSZ_4 | IS1 | RDPRI | NOPAD | BGNT | LDSCH;
 COP0_SR = sr;
 ```
@@ -259,6 +260,7 @@ COP0_SR = IsC;
 for (int i = 0; i < 0x1000; i += 16) // Clear tags (one for each 4-word line)
     *((volatile uint32_t *) i) = 0;
 
+COP0_SR = 0;
 BCC     = bcc;
 COP0_SR = sr;
 ```
