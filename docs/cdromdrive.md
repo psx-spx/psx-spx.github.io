@@ -35,140 +35,154 @@ of four banks of four 8-bit registers each.
 
 The following registers are available when reading:
 
-| Bank | `0x1f801800`                              | `0x1f801801`                                  | `0x1f801802`                                  | `0x1f801803`                                            |
-| ---: | :---------------------------------------- | :-------------------------------------------- | :-------------------------------------------- | :------------------------------------------------------ |
-| 0, 2 | [`HSTS`](#0x1f801800-read-all-banks-hsts) | [`RESULT`](#0x1f801801-read-all-banks-result) | [`RDDATA`](#0x1f801802-read-all-banks-rddata) | [`HINTMSK_R`](#0x1f801803-read-banks-0-and-2-hintmsk_r) |
-| 1, 3 | [`HSTS`](#0x1f801800-read-all-banks-hsts) | [`RESULT`](#0x1f801801-read-all-banks-result) | [`RDDATA`](#0x1f801802-read-all-banks-rddata) | [`HINTSTS`](#0x1f801803-read-banks-1-and-3-hintsts)     |
+| Bank | `0x1f801800`                              | `0x1f801801`                                  | `0x1f801802`                                  | `0x1f801803`                                        |
+| ---: | :---------------------------------------- | :-------------------------------------------- | :-------------------------------------------- | :-------------------------------------------------- |
+| 0, 2 | [`HSTS`](#0x1f801800-read-all-banks-hsts) | [`RESULT`](#0x1f801801-read-all-banks-result) | [`RDDATA`](#0x1f801802-read-all-banks-rddata) | [`HINTMSK`](#0x1f801803-read-banks-0-and-2-hintmsk) |
+| 1, 3 | [`HSTS`](#0x1f801800-read-all-banks-hsts) | [`RESULT`](#0x1f801801-read-all-banks-result) | [`RDDATA`](#0x1f801802-read-all-banks-rddata) | [`HINTSTS`](#0x1f801803-read-banks-1-and-3-hintsts) |
 
 The following registers are available when writing:
 
-| Bank | `0x1f801800`                                     | `0x1f801801`                                  | `0x1f801802`                                       | `0x1f801803`                                  |
-| ---: | :----------------------------------------------- | :-------------------------------------------- | :------------------------------------------------- | :-------------------------------------------- |
-|    0 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`COMMAND`](#0x1f801801-write-bank-0-command) | [`PARAMETER`](#0x1f801802-write-bank-0-parameter)  | [`HCHPCTL`](#0x1f801803-write-bank-0-hchpctl) |
-|    1 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`WRDATA`](#0x1f801801-write-bank-1-wrdata)   | [`HINTMSK_W`](#0x1f801802-write-bank-1-hintmsk_w)  | [`HCLRCTL`](#0x1f801803-write-bank-1-hclrctl) |
-|    2 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`CI`](#0x1f801801-write-bank-2-ci)           | [`ATV0`](#0x1f801802-write-bank-2-atv0)            | [`ATV1`](#0x1f801803-write-bank-2-atv1)       |
-|    3 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`ATV2`](#0x1f801801-write-bank-3-atv2)       | [`ATV3`](#0x1f801802-write-bank-3-atv3)            | [`ADPCTL`](#0x1f801803-write-bank-3-adpctl)   |
+| Bank | `0x1f801800`                                     | `0x1f801801`                                       | `0x1f801802`                                       | `0x1f801803`                                       |
+| ---: | :----------------------------------------------- | :------------------------------------------------- | :------------------------------------------------- | :------------------------------------------------- |
+|    0 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`COMMAND`](#0x1f801801-write-bank-0-command)      | [`PARAMETER`](#0x1f801802-write-bank-0-parameter)  | [`HCHPCTL`](#0x1f801803-write-bank-0-hchpctl)      |
+|    1 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`WRDATA`](#0x1f801801-write-bank-1-wrdata)        | [`HINTMSK`](#0x1f801802-write-bank-1-hintmsk)      | [`HCLRCTL`](#0x1f801803-write-bank-1-hclrctl)      |
+|    2 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`CI`](#0x1f801801-write-bank-2-ci)                | [`ATV0`](#0x1f801802-write-bank-2-atv0-l-l-volume) | [`ATV1`](#0x1f801803-write-bank-2-atv1-l-r-volume) |
+|    3 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`ATV2`](#0x1f801801-write-bank-3-atv2-r-r-volume) | [`ATV3`](#0x1f801802-write-bank-3-atv3-r-l-volume) | [`ADPCTL`](#0x1f801803-write-bank-3-adpctl)        |
 
 #### `0x1f801800` (read, all banks): `HSTS`
 #### `0x1f801800` (write, all banks): `ADDRESS`
 ```
-  0-1 Index   Port 1F801801h-1F801803h index (0..3 = Index0..Index3)   (R/W)
-  2   ADPBUSY XA-ADPCM fifo empty  (0=Empty) ;set when playing XA-ADPCM sound
-  3   PRMEMPT Parameter fifo empty (1=Empty) ;triggered before writing 1st byte
-  4   PRMWRDY Parameter fifo full  (0=Full)  ;triggered after writing 16 bytes
-  5   RSLRRDY Response fifo empty  (0=Empty) ;triggered after reading LAST byte
-  6   DRQSTS  Data fifo empty      (0=Empty) ;triggered after reading LAST byte
-  7   BUSYSTS Command/parameter transmission busy  (1=Busy)
+  0-1 RA       Current register bank (R/W)
+  2   ADPBUSY  ADPCM busy            (R, 1=playing XA-ADPCM)
+  3   PRMEMPT  Parameter empty       (R, 1=parameter FIFO empty)
+  4   PRMWRDY  Parameter write ready (R, 1=parameter FIFO not full)
+  5   RSLRRDY  Result read ready     (R, 1=result FIFO not empty)
+  6   DRQSTS   Data request          (R, 1=one or more RDDATA reads or WRDATA writes pending)
+  7   BUSYSTS  Busy status           (R, 1=HC05 busy acknowledging command)
 ```
-Bit3,4,5 are bound to 5bit counters; ie. the bits become true at specified
-amount of reads/writes, and thereafter once on every further 32 reads/writes.<br/>
 
 #### `0x1f801801` (write, bank 0): `COMMAND`
 ```
   0-7  Command Byte
 ```
-Writing to this address sends the command byte to the CDROM controller, which
-will then read-out any Parameter byte(s) which have been previously stored in
-the Parameter Fifo. It takes a while until the command/parameters are
-transferred to the controller, and until the response bytes are received; once
-when completed, interrupt INT3 is generated (or INT5 in case of invalid
-command/parameter values), and the response (or error code) can be then read
-from the Response Fifo. Some commands additionally have a second response,
-which is sent with another interrupt.<br/>
+Writing to this address sends the command byte to the HC05, which will proceed
+to drain the parameter FIFO, process the command, push any return values into
+the result FIFO and fire INT3 (or INT5 if an error occurs).<br/>
+Command/Parameter processing is indicated by BUSYSTS.<br/>
+When that bit gets zero, the response can be read immediately (immediately for
+MOST commands, but not ALL commands; so better wait for the IRQ).<br/>
+Alternately, you can wait for an IRQ (which seems to take place MUCH later),
+and then read the response.<br/>
+If there are any pending cdrom interrupts, these MUST be acknowledged before
+sending the command (otherwise BUSYSTS will stay set forever).<br/>
 
 #### `0x1f801802` (write, bank 0): `PARAMETER`
 ```
   0-7  Parameter Byte(s) to be used for next Command
 ```
-Before sending a command, write any parameter byte(s) to this address.<br/>
+Before sending a command, write any parameter byte(s) to this address. The FIFO
+can hold up to 16 bytes; once full, the decoder will clear the PRMWRDY flag.<br/>
+Note: the CXD1199 datasheet incorrectly states the parameter FIFO is 8 bytes
+deep, however the longest CD-ROM command has a 13-byte parameter.<br/>
 
 #### `0x1f801803` (write, bank 0): `HCHPCTL`
 ```
-  0-4 0    Not used (should be zero)
-  5   SMEN Want Command Start Interrupt on Next Command (0=No change, 1=Yes)
-  6   BFWR ...
-  7   BFRD Want Data         (0=No/Reset Data Fifo, 1=Yes/Load Data Fifo)
+  0-4 -    Reserved                                    (should be 0)
+  5   SMEN Sound map (manual XA-ADPCM playback) enable
+  6   BFWR Request sector buffer write                 (1=prepare for writes to WRDATA)
+  7   BFRD Request sector buffer read                  (1=prepare for reads from RDDATA)
 ```
+Note: in the original nocash documentation, SMEN is described as "Want Command
+Start Interrupt on Next Command". This is actually a side effect to the decoder
+firing the BFWRDY interrupt, not an intended feature.<br/>
 
 #### `0x1f801802` (read, all banks): `RDDATA`
-After ReadS/ReadN commands have generated INT1, software must set the Want Data
-bit (1F801803h.Index0.Bit7), then wait until Data Fifo becomes not empty
-(1F801800h.Bit6), the datablock (disk sector) can be then read from this
-register.<br/>
+After ReadS/ReadN commands have generated INT1, software must set the BFRD flag,
+then wait until DRQSTS is set, the datablock (disk sector) can be then read from
+this register.<br/>
 ```
   0-7  Data 8bit  (one byte), or alternately,
   0-15 Data 16bit (LSB=First byte, MSB=Second byte)
 ```
 The PSX hardware allows to read 800h-byte or 924h-byte sectors, indexed as
-[000h..7FFh] or [000h..923h], when trying to read further bytes, then the PSX
-will repeat the byte at index [800h-8] or [924h-4] as padding value.<br/>
-Port 1F801802h can be accessed with 8bit or 16bit reads (ie. to read a
+\[000h..7FFh\] or \[000h..923h\], when trying to read further bytes, then the PSX
+will repeat the byte at index \[800h-8\] or \[924h-4\] as padding value.<br/>
+RDDATA can be accessed with 8bit or 16bit reads (ie. to read a
 2048-byte sector, one can use 2048 load-byte opcodes, or 1024 load halfword
 opcodes, or, more conventionally, a 512 word DMA transfer; the actual CDROM
-databus is only 8bits wide, so CPU/DMA are apparently breaking 16bit/32bit
-reads into multiple 8bit reads from 1F801802h).<br/>
+databus is only 8bits wide, so the CPU's bus interface handles splitting the
+reads).<br/>
 
 #### `0x1f801801` (read, all banks): `RESULT`
 ```
   0-7  Response Byte(s) received after sending a Command
 ```
-The response Fifo is a 16-byte buffer, most or all responses are less than 16
-bytes, after reading the last used byte (or before reading anything when the
-response is 0-byte long), Bit5 of the Index/Status register becomes zero to
-indicate that the last byte was received.<br/>
+The result FIFO can hold up to 16 bytes (most or all responses are less than 16
+bytes). The decoder clears RSLRRDY after the last byte of the HC05's response is
+read from this register.<br/>
 When reading further bytes: The buffer is padded with 00h's to the end of the
 16-bytes, and does then restart at the first response byte (that, without
 receiving a new response, so it'll always return the same 16 bytes, until a new
 command/response has been sent/received).<br/>
 
-#### `0x1f801803` (read, banks 0 and 2): `HINTMSK_R`
-#### `0x1f801802` (write, bank 1): `HINTMSK_W`
-```
-  0-4  Interrupt Enable Bits (usually all set, ie. 1Fh=Enable All IRQs)
-  5-7  Unknown/unused (write: should be zero) (read: usually all bits set)
-```
-XXX WRITE: bit5-7 unused should be 0 // READ: bit5-7 unused<br/>
-
 #### `0x1f801803` (read, banks 1 and 3): `HINTSTS`
-#### `0x1f801803` (write, bank 1): `HCLRCTL`
 ```
-  0-2   Read: Response Received   Write: 7=Acknowledge   ;INT1..INT7
-  3     Read: Unknown (usually 0) Write: 1=Acknowledge   ;INT8  ;XXX CLRBFEMPT
-  4     Read: Command Start       Write: 1=Acknowledge   ;INT10h;XXX CLRBFWRDY
-  5     Read: Always 1 ;XXX "_"   Write: 1=Unknown              ;XXX SMADPCLR
-  6     Read: Always 1 ;XXX "_"   Write: 1=Reset Parameter Fifo ;XXX CLRPRM
-  7     Read: Always 1 ;XXX "_"   Write: 1=Unknown              ;XXX CHPRST
+  0-2 INTSTS Interrupt "flags" from HC05
+  3   BFEMPT Sound map XA-ADPCM buffer empty       (1=decoder ran out of sectors to play)
+  4   BFWRDY Sound map XA-ADPCM buffer write ready (1=decoder is ready for next sector)
+  5-7 -      Reserved                              (always 1)
 ```
-Writing "1" bits to bit0-4 resets the corresponding IRQ flags; normally one
-should write 07h to reset the response bits, or 1Fh to reset all IRQ bits.
-Writing values like 01h is possible (eg. that would change INT3 to INT2, but
-doing that would be total nonsense). After acknowledge, the Response Fifo is
-made empty, and if there's been a pending command, then that command gets send
-to the controller.<br/>
-The lower 3bit indicate the type of response received,<br/>
+Bits 0-2 are supposed to be used as three separate IRQ flags, however the HC05
+misuses them as a single 3-bit "interrupt type" value, which always assumes one
+of the following values:<br/>
 ```
-  INT0   No response received (no interrupt request)
-  INT1   Received SECOND (or further) response to ReadS/ReadN (and Play+Report)
-  INT2   Received SECOND response (to various commands)
-  INT3   Received FIRST response (to any command)
-  INT4   DataEnd (when Play/Forward reaches end of disk) (maybe also for Read?)
-  INT5   Received error-code (in FIRST or SECOND response)
-         INT5 also occurs on SECOND GetID response, on unlicensed disks
-         INT5 also occurs when opening the drive door (even if no command
-            was sent, ie. even if no read-command or other command is active)
-  INT6   N/A
-  INT7   N/A
-```
-The other 2bit indicate something else,<br/>
-```
-  INT8   Unknown (never seen that bit set yet)
-  INT10h Command Start (when INT10h requested via 1F801803h.Index0.Bit5)
+  INT0 NoIntr      No interrupt pending
+  INT1 DataReady   New sector (ReadN/ReadS) or report packet (Play) available
+  INT2 Complete    Command finished processing (some commands, after INT3 is fired)
+  INT3 Acknowledge Command received and acknowledged (all commands)
+  INT4 DataEnd     Reached end of disc (or end of track if auto-pause enabled)
+  INT5 DiskError   Command error, read error, license string error or lid opened
+  INT6 -
+  INT7 -
 ```
 The response interrupts are queued, for example, if the 1st response is INT3,
 and the second INT5, then INT3 is delivered first, and INT5 is not delivered
 until INT3 is acknowledged (ie. the response interrupts are NOT ORed together
-to produce INT7 or so). The upper bits however can be ORed with the lower bits
-(ie. Command Start INT10h and 1st Response INT3 would give INT13h).<br/>
+to produce INT7 or so). BFEMPT and BFWRDY however can be ORed with the lower
+bits (i.e. BFWRDY + INT3 would give 13h).<br/>
+All interrupts are always fired in response to a command with the exception of
+INT5, which may also be triggered at any time by opening the lid.<br/>
+
+#### `0x1f801803` (read, banks 0 and 2): `HINTMSK`
+#### `0x1f801802` (write, bank 1): `HINTMSK`
+```
+  0-2 ENINT    Enable IRQ on respective INTSTS bits
+  3   ENBFEMPT Enable IRQ on BFEMPT
+  4   ENBFWRDY Enable IRQ on BFWRDY
+  5-7 -        Reserved (should be 0 when written, always 1 when read)
+```
+The CD-ROM drive fires an interrupt whenever (HINTMSK & HINTSTS) is non-zero.
+This register is typically set to 1Fh, allowing any of the flags to trigger an
+IRQ (even though BFEMPT and BFWRDY are never used).<br/>
+
+#### `0x1f801803` (write, bank 1): `HCLRCTL`
+```
+  0-2 CLRINT     Acknowledge HC05 interrupt "flags" (0=no change, 1=clear)
+  3   CLRBFEMPT  Acknowledge BFEMPT                 (0=no change, 1=clear)
+  4   CLRBFWRDY  Acknowledge BFBFWRDY               (0=no change, 1=clear)
+  5   SMADPCLR   Clear sound map XA-ADPCM buffer    (0=no change, 1=clear/stop playback)
+  6   CLRPRM     Clear parameter FIFO               (0=no change, 1=clear)
+  7   CHPRST     Reset decoder chip                 (0=no change, 1=reset)
+```
+Setting bits 0-4 resets the corresponding flags in HINTSTS; normally one should
+write 07h to reset the HC05 interrupt flags, or 1Fh to acknowledge all IRQs.
+Acknowledging individual HC05 flags (e.g. writing 01h to change INT3 to INT2) is
+possible, if completely useless. After acknowledge, the result FIFO is drained
+and if there's been a pending command, then that command gets send to the
+controller.<br/>
+Setting CHPRST will result in a complete reset of the decoder. Unclear if this
+also reboots the HC05 and CD-ROM DSP (the decoder has an "external reset" pin
+which is pulled low when setting CHPRST).<br/>
 
 #### Caution - Unstable IRQ Flag polling
 IRQ flag changes aren't synced with the MIPS CPU clock. If more than one bit
@@ -195,10 +209,10 @@ IRQ10h followed by IRQ3 can also have unstable LSBs within the IRQ handler).<br/
 The problem occurs only on older consoles (like LATE-PU-8), not on newer
 consoles (like PSone).<br/>
 
-#### `0x1f801802` (write, bank 2): `ATV0`
-#### `0x1f801803` (write, bank 2): `ATV1`
-#### `0x1f801801` (write, bank 3): `ATV2`
-#### `0x1f801802` (write, bank 3): `ATV3`
+#### `0x1f801802` (write, bank 2): `ATV0` (L->L volume)
+#### `0x1f801803` (write, bank 2): `ATV1` (L->R volume)
+#### `0x1f801801` (write, bank 3): `ATV2` (R->R volume)
+#### `0x1f801802` (write, bank 3): `ATV3` (R->L volume)
 Allows to configure the CD for mono/stereo output (eg. values "80h,0,80h,0"
 produce normal stereo volume, values "40h,40h,40h,40h" produce mono output of
 equivalent volume).<br/>
@@ -210,48 +224,43 @@ quad-volume "FFh,FFh,FFh,FFh").<br/>
 ```
   0-7  Volume Level (00h..FFh) (00h=Off, FFh=Max/Double, 80h=Default/Normal)
 ```
-After changing these registers, write 20h to 1F801803h.Index3.<br/>
+After changing these registers, the CHNGATV flag in ADPCTL must be set.<br/>
 Unknown if any existing games are actually supporting mono output. Resident
 Evil 2 uses these ports to produce fade-in/fade-out effects (although, for that
 purpose, it should be much easier to use Port 1F801DB0h).<br/>
 
 #### `0x1f801803` (write, bank 3): `ADPCTL`
 ```
-  0    ADPMUTE Mute ADPCM                 (0=Normal, 1=Mute)
-  1-4  -       Unused (should be zero)
-  5    CHNGATV Apply Audio Volume changes (0=No change, 1=Apply)
-  6-7  -       Unused (should be zero)
+  0    ADPMUTE Mute XA-ADPCM           (1=mute)
+  1-4  -       Reserved                (should be 0)
+  5    CHNGATV Apply ATV0-ATV3 changes (0=no change, 1=apply)
+  6-7  -       Reserved                (should be 0)
 ```
 
 #### `0x1f801801` (write, bank 1): `WRDATA`
 ```
   0-7  Data
 ```
+Used to upload sectors to the decoder for sound map XA-ADPCM playback.<br/>
 This register seems to be restricted to 8bit bus, unknown if/how the PSX DMA
 controller can write to it (it might support only 16bit data for CDROM).<br/>
 
 #### `0x1f801801` (write, bank 2): `CI`
 ```
-  0    Mono/Stereo     (0=Mono, 1=Stereo)
-  1    Reserved        (0)
-  2    Sample Rate     (0=37800Hz, 1=18900Hz)
-  3    Reserved        (0)
-  4    Bits per Sample (0=4bit, 1=8bit)
-  5    Reserved        (0)
-  6    Emphasis        (0=Off, 1=Emphasis)
-  7    Reserved        (0)
+  0    S/M      Channel count   (0=mono, 1=stereo)
+  1    -        Reserved        (should be 0)
+  2    FS       Sample rate     (0=37800Hz, 1=18900Hz)
+  3    -        Reserved        (should be 0)
+  4    BITLNGTH Bits per sample (0=4bit, 1=8bit)
+  5    -        Reserved        (should be 0)
+  6    EMPHASIS Emphasis filter (0=off, 1=on)
+  7    -        Reserved        (should be 0)
 ```
+Used to configure the decoder for sound map XA-ADPCM playback (does not affect
+playback of XA-ADPCM sectors from the disc). Uses the same format as the
+"codinginfo" field in XA sector headers.<br/>
 
-#### Command Execution
-Command/Parameter transmission is indicated by bit7 of 1F801800h.<br/>
-When that bit gets zero, the response can be read immediately (immediately for
-MOST commands, but not ALL commands; so better wait for the IRQ).<br/>
-Alternately, you can wait for an IRQ (which seems to take place MUCH later),
-and then read the response.<br/>
-If there are any pending cdrom interrupts, these MUST be acknowledged before
-sending the command (otherwise bit7 of 1F801800h will stay set forever).<br/>
-
-#### Command Busy Flag - 1F801800h.Bit7
+#### BUSYSTS flag
 Indicates ready-to-send-new-command,<br/>
 ```
   0=Ready to send a new command
@@ -260,22 +269,22 @@ Indicates ready-to-send-new-command,<br/>
 Trying to send a new command in the Busy-phase causes malfunction (the older
 command seems to get lost, the newer command executes and returns its results
 and triggers an interrupt, but, thereafter, the controller seems to hang). So,
-always wait until the Busy-bit goes off before sending a command.<br/>
-When the Busy-flag goes off, a new command can be send immediately (even if the
+always wait until BUSYSTS goes off before sending a command.<br/>
+When BUSYSTS goes off, a new command can be send immediately (even if the
 response from the previous command wasn't received yet), however, the new
 command stays in the Busy-phase until the IRQ from the previous command is
 acknowledged, at that point the actual transmission of the new command starts,
-and the Busy-flag goes off (once when the transmission completes).<br/>
+and BUSYSTS goes off (once when the transmission completes).<br/>
 
 ```
-Pause -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to 1f801803h.0) -> SetMode/Pause/Stop/SetMode/SeekL/... <br/>
-ReadN/ReadS -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to 1f801803h.0) -> SetMode/SetLoc/... <br/>
+Pause -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/Pause/Stop/SetMode/SeekL/... <br/>
+ReadN/ReadS -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/SetLoc/... <br/>
 ```
 Will not drop any of the two commands, thus execute sequentially.<br/>
 <br/>
 
 ```
-Stop -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to 1f801803h.0) -> SetMode/Pause/...<br/>
+Stop -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/Pause/...<br/>
 ```
 Will drop the second response of Stop(), and then execute the next command.<br/>
 
@@ -283,16 +292,20 @@ Will drop the second response of Stop(), and then execute the next command.<br/>
 
 
 #### Misc
-Trying to do a 32bit read from 1F801800h returns the 8bit value at 1F801800h
-multiplied by 01010101h.<br/>
+Performing a 32-bit read from 1F801800h will return the HSTS register's value
+repeated four times, as the "auto increment" flag in the BIU configuration
+register for the CD-ROM (at 1F801018h) is disabled by default. Enabling it will
+restore the correct behavior but will also break CD-ROM DMA reads, which rely on
+the bus interface splitting each 32-bit word transfer into four sequential byte
+reads from RDDATA.<br/>
 
 #### To init the CD
 ```
   -Flush all IRQs
-  -1F801803h.Index0=0
+  -HCHPCTL=0
   -Com_Delay=4901 (=1325h) (Port 1F801020h) (means 16bit or 32bit write?)
      (the write seems to be 32bit, clearing the upper16bit of the register)
-  -Send two Getstat commands
+  -Send two Nop commands
   -Send Command 0Ah (Init)
   -Demute
 ```
@@ -301,14 +314,14 @@ multiplied by 01010101h.<br/>
 Warning: most or all of the info in the sentence below appear to incorrect
 (either that, or I didn't understand that rather confusing sentence).<br/>
 REPORTEDLY:<br/>
-"You should not send some commands while the CD is seeking (ie. Getstat returns
+"You should not send some commands while the CD is seeking (ie. Nop returns
 with bit6 set). Thing is that stat only gets updated after a new command. I
 haven't tested this for other command, but for the play command (03h) you can
-just keep repeating the [which?] command and checking stat returned by that,
+just keep repeating the \[which?\] command and checking stat returned by that,
 for bit6 to go low (and bit7 to go high in this case). If you don't and try to
-do a getloc [GetlocP and/or GetlocL?] directly after the play command reports
-it's done [what done? meaning sending start-to-play was "done"? or meaning play
-reached end-of-disc?], the CD will stop. (I guess the CD can't get it's current
+do a getloc \[GetlocP and/or GetlocL?\] directly after the play command reports
+it's done \[what done? meaning sending start-to-play was "done"? or meaning play
+reached end-of-disc?\], the CD will stop. (I guess the CD can't get it's current
 location while it's seeking, so the logic stops the seek to get an exact fix,
 but never restarts..)"<br/>
 
@@ -321,13 +334,12 @@ CDROM).<br/>
   SPU: Enable CD Audio (Port 1F801DAAh.Bit0=1)
   CDROM/CMD: send Stop command (probably better to avoid conflicts)
   CDROM/CMD: send Demute command (if muted) (but works only if disc inserted)
-  CDROM/HOST: init Codinginfo (Port 1F801801h.Index2)
-  CDROM/HOST: enable ADPCM (Port 1F801803h.Index3.Bit0=0)  ;probably needed?
+  CDROM/HOST: init CI register with XA-ADPCM coding info
+  CDROM/HOST: enable ADPCM (ADPMUTE=0)  ;probably needed?
   ... set dummy addr/len with DISHXFRC=1 ?  <-- NOT required !
   ... set SMEN ... and dummy BFWR?    <-- BOTH bits required ?
-  ... maybe SMADPCLR (1F801803h.Index1.bit5) does clear SoundMap ADPCM buf?
-  transfer 900h bytes (same format as ADPCM sectors) (Port 1F801801h.Index1)
-  Note: Before sending a byte, one should wait for DRQs (1F801801h.Bit6=1)
+  transfer 900h bytes (same format as ADPCM sectors) (WRDATA)
+  Note: Before sending a byte, one should wait for DRQSTS
   Note: ADPCM output doesn't start until the last (900h'th) byte is transferred
 ```
 Sound Map mode may be very useful for testing XA-ADPCM directly from within an
@@ -343,57 +355,62 @@ necessarily the slot that was updated most recently.<br/>
 
 ##   CDROM Controller Command Summary
 #### Command Summary
-```
-  Command          Parameters      Response(s)
-  00h -            -               INT5(11h,40h)  ;reportedly "Sync" uh?
-  01h Getstat      -               INT3(stat)
-  02h Setloc     E amm,ass,asect   INT3(stat)
-  03h Play       E (track)         INT3(stat), optional INT1(report bytes)
-  04h Forward    E -               INT3(stat), optional INT1(report bytes)
-  05h Backward   E -               INT3(stat), optional INT1(report bytes)
-  06h ReadN      E -               INT3(stat), INT1(stat), datablock
-  07h MotorOn    E -               INT3(stat), INT2(stat)
-  08h Stop       E -               INT3(stat), INT2(stat)
-  09h Pause      E -               INT3(stat), INT2(stat)
-  0Ah Init         -               INT3(late-stat), INT2(stat)
-  0Bh Mute       E -               INT3(stat)
-  0Ch Demute     E -               INT3(stat)
-  0Dh Setfilter  E file,channel    INT3(stat)
-  0Eh Setmode      mode            INT3(stat)
-  0Fh Getparam     -               INT3(stat,mode,null,file,channel)
-  10h GetlocL    E -               INT3(amm,ass,asect,mode,file,channel,sm,ci)
-  11h GetlocP    E -               INT3(track,index,mm,ss,sect,amm,ass,asect)
-  12h SetSession E session         INT3(stat), INT2(stat)
-  13h GetTN      E -               INT3(stat,first,last)  ;BCD
-  14h GetTD      E track (BCD)     INT3(stat,mm,ss)       ;BCD
-  15h SeekL      E -               INT3(stat), INT2(stat)  ;\use prior Setloc
-  16h SeekP      E -               INT3(stat), INT2(stat)  ;/to set target
-  17h -            -               INT5(11h,40h)  ;reportedly "SetClock" uh?
-  18h -            -               INT5(11h,40h)  ;reportedly "GetClock" uh?
-  19h Test         sub_function    depends on sub_function (see below)
-  1Ah GetID      E -               INT3(stat), INT2/5(stat,flg,typ,atip,"SCEx")
-  1Bh ReadS      E?-               INT3(stat), INT1(stat), datablock
-  1Ch Reset        -               INT3(stat), Delay            ;-not DTL-H2000
-  1Dh GetQ       E adr,point       INT3(stat), INT2(10bytesSubQ,peak_lo) ;\not
-  1Eh ReadTOC      -               INT3(late-stat), INT2(stat)           ;/vC0
-  1Fh VideoCD      sub,a,b,c,d,e   INT3(stat,a,b,c,d,e)   ;<-- SCPH-5903 only
-  1Fh..4Fh -       -               INT5(11h,40h)  ;-Unused/invalid
-  50h Secret 1     -               INT5(11h,40h)  ;\
-  51h Secret 2     "Licensed by"   INT5(11h,40h)  ;
-  52h Secret 3     "Sony"          INT5(11h,40h)  ; Secret Unlock Commands
-  53h Secret 4     "Computer"      INT5(11h,40h)  ; (not in version vC0, and,
-  54h Secret 5     "Entertainment" INT5(11h,40h)  ; nonfunctional in japan)
-  55h Secret 6     "<region>"      INT5(11h,40h)  ;
-  56h Secret 7     -               INT5(11h,40h)  ;/
-  57h SecretLock   -               INT5(11h,40h)  ;-Secret Lock Command
-  58h..5Fh Crash   -               Crashes the HC05 (jumps into a data area)
-  6Fh..FFh -       -               INT5(11h,40h)  ;-Unused/invalid
-```
-E = Error 80h appears on some commands (02h..09h, 0Bh..0Dh, 10h..16h, 1Ah,
-1Bh?, and 1Dh) when the disk is missing, or when the drive unit is disconnected
-from the mainboard.<br/>
-Some commands (04h,05h,10h,11h,1Dh) do also trigger Error 80h when the disk is
-stopped.<br/>
+| Opcode      | Command      | Parameters        | Acknowledge response                                    | Completion response                           | Notes                                            |
+| ----------: | :----------- | :---------------- | :------------------------------------------------------ | :-------------------------------------------- | :----------------------------------------------- |
+|      `0x00` | _Unused_     |                   | INT5: `0x11`, `0x40`                                    |                                               |                                                  |
+|      `0x01` | `Nop`        |                   | INT3: status                                            |                                               |                                                  |
+|      `0x02` | `Setloc`     | min, sec, frame   | INT3: status                                            |                                               |                                                  |
+|      `0x03` | `Play`       | track (optional)  | INT3: status                                            |                                               |                                                  |
+|      `0x04` | `Forward`    |                   | INT3: status                                            |                                               | Error if disc is spun down                       |
+|      `0x05` | `Backward`   |                   | INT3: status                                            |                                               | Error if disc is spun down                       |
+|      `0x06` | `ReadN`      |                   | INT3: status                                            |                                               |                                                  |
+|      `0x07` | `Standby`    |                   | INT3: status                                            | INT2: status                                  |                                                  |
+|      `0x08` | `Stop`       |                   | INT3: status                                            | INT2: status                                  |                                                  |
+|      `0x09` | `Pause`      |                   | INT3: status                                            | INT2: status                                  |                                                  |
+|      `0x0a` | `Init`       |                   | INT3: status (late)                                     | INT2: status                                  |                                                  |
+|      `0x0b` | `Mute`       |                   | INT3: status                                            |                                               |                                                  |
+|      `0x0c` | `Demute`     |                   | INT3: status                                            |                                               |                                                  |
+|      `0x0d` | `Setfilter`  | file, channel     | INT3: status                                            |                                               |                                                  |
+|      `0x0e` | `Setmode`    | mode              | INT3: status                                            |                                               |                                                  |
+|      `0x0f` | `Getparam`   |                   | INT3: status, mode, `0x00`, file, channel               |                                               |                                                  |
+|      `0x10` | `GetlocL`    |                   | INT3: min, sec, frame, mode, file, channel, sm, ci      |                                               | Error if disc is spun down                       |
+|      `0x11` | `GetlocP`    |                   | INT3: track, index, rmin, rsec, rframe, min, sec, frame |                                               | Error if disc is spun down                       |
+|      `0x12` | `Setsession` | session           | INT3: status                                            | INT2: status                                  |                                                  |
+|      `0x13` | `GetTN`      |                   | INT3: status, first, last                               |                                               |                                                  |
+|      `0x14` | `GetTD`      | track             | INT3: status, min, sec                                  |                                               |                                                  |
+|      `0x15` | `SeekL`      |                   | INT3: status                                            | INT2: status                                  |                                                  |
+|      `0x16` | `SeekP`      |                   | INT3: status                                            | INT2: status                                  |                                                  |
+| `0x17-0x18` | _Unused_     |                   | INT5: `0x11`, `0x40`                                    |                                               |                                                  |
+|      `0x19` | `Test` \*    | sub, ...          | INT3: ...                                               |                                               |                                                  |
+|      `0x1a` | `GetID` \*   |                   | INT3: status                                            | INT2/INT5: status, flag, type, atip, `"SCEx"` |                                                  |
+|      `0x1b` | `ReadS`      |                   | INT3: status                                            |                                               |                                                  |
+|      `0x1c` | `Reset`      |                   | INT3: status                                            |                                               | Reboots HC05, requires delay after sending       |
+|      `0x1d` | `GetQ` \*    | adr, point        | INT3: status                                            | INT2: subq\[10\], peakl                       | Version `0xc1`+, error if disc is spun down      |
+|      `0x1e` | `ReadTOC` \* |                   | INT3: status (late)                                     | INT2: status                                  | Version `0xc1`+                                  |
+|      `0x1f` | `VideoCD` \* | sub, ...          | INT3: status, ...                                       |                                               | SCPH-5903 only                                   |
+| `0x20-0x4f` | _Unused_     |                   | INT5: `0x11`, `0x40`                                    |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x50` | `Unlock0` \* |                   | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x51` | `Unlock1` \* | `"Licensed by"`   | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x52` | `Unlock2` \* | `"Sony"`          | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x53` | `Unlock3` \* | `"Computer"`      | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x54` | `Unlock4` \* | `"Entertainment"` | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x55` | `Unlock5` \* | `"<region>"`      | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x56` | `Unlock6` \* |                   | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x57` | `Lock` \*    |                   | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+| `0x58-0x5f` | _Unused_     |                   |                                                         |                                               | Crashes the HC05                                 |
+| `0x60-0xff` | _Unused_     |                   | INT5: `0x11`, `0x40`                                    |                                               |                                                  |
+
+The following commands generate additional responses while reading:
+
+| Opcode | Command    | Data responses                                                       |
+| -----: | :--------- | :------------------------------------------------------------------- |
+| `0x03` | `Play`     | INT1: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
+| `0x04` | `Forward`  | INT1: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
+| `0x05` | `Backward` | INT1: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
+| `0x06` | `ReadN`    | INT1: status (sector data must be read separately via RDDATA or DMA) |
+| `0x1b` | `ReadS`    | INT1: status (sector data must be read separately via RDDATA or DMA) |
+
+\* denotes commands that are not officially documented.
 
 #### sub\_function numbers (for command 19h)
 Test commands are invoked with command number 19h, followed by a sub\_function
@@ -455,8 +472,8 @@ number as first parameter byte. The Kernel seems to be using only sub\_function
 #### Unsupported GetQ,VCD,SecretUnlock (command 1Dh,1Fh,5xh)
 INT5 will be returned if the command is unsupported. That, WITHOUT removing the
 Parameters from the FIFO, so the parameters will be accidently passed to the
-NEXT command. To avoid that: clear the parameter FIFO via
-[1F801803h.Index1]=40h after receiving the INT5 error.<br/>
+NEXT command. To avoid that: clear the parameter FIFO by setting CLRPRM in
+HCLRCTL after receiving the INT5 error.<br/>
 
 
 
@@ -713,7 +730,7 @@ aren't causing lost sectors, unless the delay(s) are summing up too much. The
 relevant steps for receiving data are:<br/>
 ```
   Wait for Interrupt Request (INT1)          ;indicates that data is available
-  Send Data Request (1F801803h.Index0.Bit7=1);accept data
+  Send Data Request (BFRD=1)                 ;accept data
   Acknowledge INT1                           ;
   Copy Data to Main RAM (via I/O or DMA)     ;read data
 ```
@@ -765,7 +782,7 @@ returning that sector once another time).<br/>
 
 ##   CDROM - Status Commands
 #### Status code (stat)
-The 8bit status code is returned by Getstat command (and many other commands),
+The 8bit status code is returned by Nop command (and many other commands),
 the meaning of the separate stat bits is:<br/>
 ```
   7  Play          Playing CD-DA         ;\only ONE of these bits can be set
@@ -778,7 +795,7 @@ the meaning of the separate stat bits is:<br/>
   0  Error         Invalid Command/parameters (followed by Error Byte)
 ```
 If the shell is closed, then bit4 is automatically reset to zero after reading
-stat with the Getstat command (most or all other commands do not reset that bit
+stat with the Nop command (most or all other commands do not reset that bit
 after reading). If stat bit0 or bit2 is set, then the normal respons(es) and
 interrupt(s) are not send, and, instead, INT5 occurs, and an error-byte is send
 as second response byte, with the following values:<br/>
@@ -804,7 +821,7 @@ executing or not. When this happens, all bits except shell open and error are cl
 in the status register. The error byte in the INT5 is set to 08h.<br/>
 
 Some games send a Stop command before changing discs, but others just wait for the
-user to open the shell, causing the disc to stop. The game can then send GetStat commands,
+user to open the shell, causing the disc to stop. The game can then send Nop commands,
 looping until bit 4 is cleared to detect when the new disc has been inserted.<br/>
 
 #### Stat Seek/Play/Read bits
@@ -814,17 +831,17 @@ completion), that is important for Gran Turismo 1, which checks for seek
 completion by waiting for READ getting set (rather than waiting for SEEK
 getting cleared).<br/>
 
-#### Getstat - Command 01h --\> INT3(stat)
+#### Nop - Command 01h --\> INT3(stat)
 Returns stat (like many other commands), and additionally does reset the shell
 open flag (for the following commands; unless the shell is still opened). This
 is different as for most or all other commands (which may return stat, but
 which do not reset the shell open flag).<br/>
-In other docs, the command is eventually referred to as "Nop", believing that
+In official docs, the command is eventually referred to as "Nop", believing that
 it does nothing than returning stat (ignoring the fact that it's having the
 special shell open reset feature).<br/>
 
 #### Getparam - Command 0Fh --\> INT3(stat,mode,null,file,channel)
-Returns stat (see Getstat above), mode (see Setmode), a null byte (always 00h),
+Returns stat (see Nop above), mode (see Setmode), a null byte (always 00h),
 and file/channel filter values (see Setfilter).<br/>
 
 #### GetlocL - Command 10h --\> INT3(amm,ass,asect,mode,file,channel,sm,ci)
@@ -1360,9 +1377,9 @@ the preceeding bugged part may have smashed RAM or I/O ports.<br/>
 Returns a 4-byte value. In my early tests, on the first day it returned
 B1h,CEh,4Ch,01h, on the next day 2Ch,E4h,95h,D5h, and on all following days
 00h,C0h,00h,00h (no idea why/where the earlier values came from).<br/>
-The first byte seems to be always 00h; no matter of [1F0h].<br/>
-The second byte seems to be always C0h; no matter of [1F1h].<br/>
-The third,fourth bytes are [1F2h,1F3h].<br/>
+The first byte seems to be always 00h; no matter of \[1F0h\].<br/>
+The second byte seems to be always C0h; no matter of \[1F1h\].<br/>
+The third,fourth bytes are \[1F2h,1F3h\].<br/>
 That two bytes are 0Ch,08h after Read commands.<br/>
 ```
   The first bytes are NOT affected by:
@@ -1380,7 +1397,7 @@ After INT3, data can be read (same way as sector data after INT1).<br/>
 #### 19h,60h,addr\_lo,addr\_hi --\> INT3(data) ;Read one byte from Drive RAM or I/O
 Reads one byte from the controller's RAM or I/O area, see the memory map below
 for more info. Among others, the command allows to read Subchannel Q data, eg.
-at [200h..209h], including ADR=2/UPC/EAN and ADR=3/ISRC values (which are
+at \[200h..209h\], including ADR=2/UPC/EAN and ADR=3/ISRC values (which are
 suppressed by GetlocP). Eg. wait for ADR\<\>2, then for ADR=2, then read
 the remaining 9 bytes (because of the delayed IRQs, this works only at single
 speed) (at double speed one can read only 5 bytes before the values get
@@ -1439,7 +1456,7 @@ Next 200h bytes are RAM:<br/>
   0B7h 1        20         ;Bit6+7=MUTE          ;
   0B8h 3        DE 00 00                         ;/
   0BBh 1     SetMode setting (mode)
-  0BCh 1     GetStat setting (stat)
+  0BCh 1     \ setting (stat)
   0BDh 3     00h-filled
   0C0h 6     FFh-filled            ;stack...                    ;\
   0C6h 1     Usually DFh           ;sometimes [0EBh and up] are non-FFh, too
@@ -1824,11 +1841,11 @@ seeking).<br/>
 #### First Response
 The First Response interrupt is sent almost immediately after processing the
 command (that is, when the mainloop sees a new command without any old
-interrupt pending). For GetStat, timings are as so:<br/>
+interrupt pending). For Nop, timings are as so:<br/>
 ```
-  Command                Average   Min       Max
-  GetStat (normal)       000c4e1h  0004a73h..003115bh
-  GetStat (when stopped) 0005cf4h  000483bh..00093f2h
+  Command            Average   Min       Max
+  Nop (normal)       000c4e1h  0004a73h..003115bh
+  Nop (when stopped) 0005cf4h  000483bh..00093f2h
 ```
 Timings for most other commands should be similar as above. One exception is
 the Init command, which is doing some initialization before sending the 1st
@@ -1881,7 +1898,7 @@ exact values).<br/>
 
 
 ##   CDROM - Response/Data Queueing
-[Below are some older/outdated test cases]<br/>
+\[Below are some older/outdated test cases\]<br/>
 
 #### Sector Buffer
 The CDROM sector buffer is 32Kx8 SRAM (IC303). The buffer is apparently divided
