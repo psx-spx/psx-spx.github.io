@@ -49,6 +49,12 @@ The following registers are available when writing:
 |    2 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`CI`](#0x1f801801-write-bank-2-ci)                | [`ATV0`](#0x1f801802-write-bank-2-atv0-l-l-volume) | [`ATV1`](#0x1f801803-write-bank-2-atv1-l-r-volume) |
 |    3 | [`ADDRESS`](#0x1f801800-write-all-banks-address) | [`ATV2`](#0x1f801801-write-bank-3-atv2-r-r-volume) | [`ATV3`](#0x1f801802-write-bank-3-atv3-r-l-volume) | [`ADPCTL`](#0x1f801803-write-bank-3-adpctl)        |
 
+Official documentation for these registers is available in the "host interface"
+section of the CXD1199 decoder's datasheet. Later console revisions use
+different decoders, however they all seem to be variants of the CXD1199 (just
+merged with other CD-ROM chips, and possibly trimmed down by removing unused
+features such as the sound map functionality).
+
 #### `0x1f801800` (read, all banks): `HSTS`
 #### `0x1f801800` (write, all banks): `ADDRESS`
 ```
