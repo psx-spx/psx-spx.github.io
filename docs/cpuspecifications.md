@@ -789,37 +789,39 @@ causing Coprocessor Unusable Exceptions (excode=0Bh).<br/>
 
 
 ##   COP0 - Debug Registers
-The COP0 debug registers seem to be PSX specific, normal R30xx CPUs like IDT's
-R3041 and R3051 don't have anything similar.<br/>
+"Normal" R30xx CPUs like IDT's R3041 and R3051 don't have similar debug
+registers, however they are described in LSI's "L64360" datasheet, chapter 14,
+and in their LR33300/LR33310 datasheet, chapter 4.
 
-#### cop0r7 - DCIC - Breakpoint control (R/W)
-```
-  0      Automatically set by hardware upon Any break            (R/W)
-  1      Automatically set by hardware upon BPC Code break       (R/W)
-  2      Automatically set by hardware upon BDA Data break       (R/W)
-  3      Automatically set by hardware upon BDA Data-Read break  (R/W)
-  4      Automatically set by hardware upon BDA Data-Write break (R/W)
-  5      Automatically set by hardware upon any-jump break       (R/W)
-  6-11   Not used (always zero)
-  12-13  Jump Redirection (0=Disable, 1..3=Enable) (see note)    (R/W)
-  14-15  Unknown? (R/W)
-  16-22  Not used (always zero)
-  23     Super-Master Enable 1 for bit24-29
-  24     Execution breakpoint     (0=Disabled, 1=Enabled) (see BPC, BPCM)
-  25     Data access breakpoint   (0=Disabled, 1=Enabled) (see BDA, BDAM)
-  26     Break on Data-Read       (0=No, 1=Break/when Bit25=1)
-  27     Break on Data-Write      (0=No, 1=Break/when Bit25=1)
-  28     Break on any-jump        (0=No, 1=Break on branch/jump/call/etc.)
-  29     Master Enable for bit28 (..and/or exec-break at address>=80000000h?)
-  30     Master Enable for bit24-27
-  31     Super-Master Enable 2 for bit24-29
-```
-When a breakpoint address match occurs the PSX jumps to 80000040h (ie. unlike
+#### cop0r7 - DCIC - Debug and Cache Invalidate Control (R/W)
+|  Bit  | Mnemonic | Name | Description | R/W |
+|-------|----------|------|-------------|-----|
+| 0     | DB  | Debug | Automatically set upon Any break | R/W
+| 1     | PC  | Program Counter | Automatically set upon BPC Program Counter break | R/W
+| 2     | DA  | Data Address | Automatically set upon BDA Data Address break | R/W
+| 3     | R   | Read Reference | Automatically set upon BDA Data Read break | R/W
+| 4     | W   | Write Reference | Automatically set upon BDA Data Write break | R/W
+| 5     | T   | Trace | Automatically set upon Trace break | R/W
+| 6-11  |     | Not used | Always zero | R
+| 12-13 |     | Jump Redirection | 0=Disable, 1..3=Enable (see note) | R/W
+| 14-15 |     | Unknown? | | R/W
+| 16-22 |     | Not used | Always zero | R
+| 23    | DE  | Debug Enable | 0=Disabled, 1=Enable bits 24-31 | R/W
+| 24    | PCE | Program Counter Breakpoint Enable | 0=Disabled, 1=Enabled (see BPC, BPCM) | R/W
+| 25    | DAE | Data Address Breakpoint Enable | 0=Disabled, 1=Enabled (see BDA, BDAM) | R/W
+| 26    | DR  | Data Read Enable | 0=No, 1=Break/when Bit25=1 | R/W
+| 27    | DW  | Data Write Enable | 0=No, 1=Break/when Bit25=1 | R/W
+| 28    | TE  | Trace Enable | 0=No, 1=Break on branch/jump/call/etc. | R/W
+| 29    | KD  | Kernel Debug Enable | 0=Disabled, 1=Break in kernel mode | R/W
+| 30    | UD  | User Debug Enable | 0=Disabled, 1=Break in user mode | R/W
+| 31    | TR  | Trap Enable | 0=Only set status bits, 1=Jump to debug vector | R/W
+
+When a breakpoint address match occurs the PSX jumps to 80000040h (i.e. unlike
 normal exceptions, not to 80000080h). The Excode value in the CAUSE register is
 set to 09h (same as BREAK opcode), and EPC contains the return address, as
-usually. One of the first things to be done in the exception handler is to
-disable breakpoints (eg. if the any-jump break is enabled, then it must be
-disabled BEFORE jumping from 80000040h to the actual exception handler).<br/>
+usual. One of the first things to be done in the exception handler is to
+disable breakpoints (e.g. if "trace" break is enabled, then it must be
+disabled BEFORE jumping from 80000040h to the actual exception handler).
 
 #### cop0r7.bit12-13 - Jump Redirection Note
 If one or both of these bits are nonzero, then the PSX seems to check for the
@@ -837,25 +839,25 @@ could only guess which of them contains the target value; for "POP PC" code
 it'd be usually R31, but for "JMP [vector]" code it may be any register. So far
 the feature seems to be more or less unusable...?<br/>
 
-#### cop0r5 - BDA - Breakpoint on Data Access Address (R/W)
-#### cop0r9 - BDAM - Breakpoint on Data Access Mask (R/W)
-Break condition is "((addr XOR BDA) AND BDAM)=0".<br/>
+#### cop0r5 - BDA - Breakpoint Data Address (R/W)
+#### cop0r9 - BDAM - Breakpoint Data Address Mask (R/W)
+Break condition is "((addr XOR BDA) AND BDAM)=0".
 
-#### cop0r3 - BPC - Breakpoint on Execute Address (R/W)
-#### cop0r11 - BPCM - Breakpoint on Execute Mask (R/W)
-Break condition is "((PC XOR BPC) AND BPCM)=0".<br/>
+#### cop0r3 - BPC - Breakpoint Program Counter (R/W)
+#### cop0r11 - BPCM - Breakpoint Program Counter Mask (R/W)
+Break condition is "((PC XOR BPC) AND BPCM)=0".
 
 #### Note (BREAK Opcode)
 Additionally, the BREAK opcode can be used to create further breakpoints by
 patching the executable code. The BREAK opcode uses the same Excode value (09h)
 in CAUSE register. However, the BREAK opcode jumps to the normal exception
-handler at 80000080h (not 80000040h).<br/>
+handler at 80000080h (not 80000040h).
 
 #### Note (LibCrypt)
 The debug registers are mis-used by "Legacy of Kain: Soul Reaver" (and maybe
 also other games) for storing libcrypt copy-protection related values (ie. just
 as a "hidden" location for storing data, not for actual debugging purposes).<br/>
-[CDROM Protection - LibCrypt](cdromformat.md#cdrom-protection-libcrypt)<br/>
+[CDROM Protection - LibCrypt](cdromformat.md#cdrom-protection-libcrypt)
 
 #### Note (Cheat Devices/Expansion ROMs)
 The Expansion ROM header supports only Pre-Boot and Post-Boot vectors, but no
@@ -864,8 +866,4 @@ either with BPC=BFC06xxxh (break address in ROM, used in older cheat
 firmwares), or with BPC=80030000h (break address in RAM aka relocated GUI
 entrypoint, used in later cheat firmwares). Moreover, aside from the Mid-Boot
 Hook, the Xplorer cheat device is also supporting a special cheat code that
-uses the COP0 break feature.<br/>
-
-#### Note (Datasheet)
-Note: COP0 debug registers are described in LSI's "L64360" datasheet, chapter
-14. And in their LR33300/LR33310 datasheet, chapter 4.<br/>
+uses the COP0 break feature.
