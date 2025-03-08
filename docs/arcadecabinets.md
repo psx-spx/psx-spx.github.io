@@ -3,29 +3,48 @@
 
 The following arcade PCBs are known to be based on PlayStation hardware:
 
-| Manufacturer | Board                             | CPU clock | GPU       | RAM     | VRAM   | Additional CPUs        | Audio                                | Storage                                               |
-| :----------- | :-------------------------------- | --------: | :-------- | ------: | -----: | :--------------------- | :----------------------------------- | :---------------------------------------------------- |
-| Konami       | GV                                |    33 MHz | v0        |    2 MB |   1 MB |                        | SPU, CD-DA                           | SCSI CD-ROM, optional flash daughterboard             |
-| Konami       | GQ                                |    33 MHz | v1        |    4 MB |   2 MB | 68000, TMS57002        | 2x custom PCM chip                   | SCSI hard drive                                       |
-| Konami       | [System 573](konamisystem573.md)  |    33 MHz | v2        |    4 MB |   2 MB | H8/3644                | SPU, CD-DA, optional MP3 decoder     | 16 MB flash, optional ATAPI CD-ROM, PCMCIA cards      |
-| Konami       | Twinkle System                    |    33 MHz | v2        |    4 MB |   2 MB | 68000, DVD player      | SPU, Ricoh RF5C400                   | SCSI CD-ROM, IDE hard drive, VCD/DVD, optional floppy |
-| Namco        | System 11 (COH-100 CPU board)     |    33 MHz | v1        |    4 MB |   2 MB | Namco C76              | SPU (unpopulated), custom PCM chip   | Mask ROM daughterboard                                |
-| Namco        | System 11 (COH-110 CPU board)     |    33 MHz | v2        |    4 MB |   2 MB | Namco C76              | Custom PCM chip                      | Mask ROM daughterboard                                |
-| Namco        | System 12 (COH-700 CPU board)     |    50 MHz | v2b       |    4 MB |   2 MB | H8/3002, optional SH-2 | Custom PCM chip, optional XA-ADPCM   | Mask ROM/flash daughterboard, optional ATAPI CD-ROM   |
-| Namco        | System 12 (COH-716 CPU board)     |    50 MHz | v2        |   16 MB |   2 MB | H8/3002, optional SH-2 | Custom PCM chip, optional XA-ADPCM   | Mask ROM/flash daughterboard, optional ATAPI CD-ROM   |
-| Namco        | System 10                         |    50 MHz | v2        |   16 MB |   2 MB |                        | SPU, optional MP3 decoder            | Mask ROM/flash daughterboard, optional ATAPI CD-ROM   |
-| Sony         | ZN-1                              |    33 MHz | v2        |  4-8 MB | 1-2 MB | Optional game-specific | SPU, optional game-specific hardware | Mask ROM/flash daughterboard                          |
-| Sony         | ZN-2                              |    50 MHz | v2 or v2b | 4-16 MB |   2 MB | Optional game-specific | SPU, optional game-specific hardware | Mask ROM/flash daughterboard                          |
-| Taito        | FX-1A (ZN-1 + custom addon board) |    33 MHz | v2        |    4 MB |   1 MB | Z80                    | SPU, Yamaha YM2610B                  | Mask ROM daughterboard                                |
-| Taito        | FX-1B (ZN-1 + custom addon board) |    33 MHz | v2        |    4 MB |   1 MB |                        | SPU, custom Zoom DSP                 | Mask ROM daughterboard                                |
-| Taito        | G-NET (ZN-2 + custom addon board) |    50 MHz | v2b       |    4 MB |   2 MB | MN1020012A, TMS57002   | SPU, custom Zoom DSP                 | 8 MB flash, custom encrypted PCMCIA/CF card           |
+| Manufacturer | Board                            | CPU clock | GPU       | RAM     | VRAM   | Additional CPUs                            | Audio                                                         | Storage                                                    |
+| :----------- | :------------------------------- | --------: | :-------- | ------: | -----: | :----------------------------------------- | :------------------------------------------------------------ | :--------------------------------------------------------- |
+| Konami       | GV                               |    33 MHz | v0        |    2 MB |   1 MB |                                            | SPU, CD-DA                                                    | SCSI CD-ROM, optional flash module (`PWB402610`)           |
+| Konami       | GQ                               |    33 MHz | v1        |    4 MB |   2 MB | 68000, TMS57002                            | 2x Konami 054539 PCM (no SPU)                                 | SCSI hard drive                                            |
+| Konami       | [System 573](konamisystem573.md) |    33 MHz | v2        |    4 MB |   2 MB | H8/3644                                    | SPU, CD-DA, optional Micronas MAS3507D MP3 (`GX894-PWB(B)A`)  | Internal flash, optional ATAPI CD-ROM, PCMCIA cards        |
+| Konami       | Twinkle System                   |    33 MHz | v2        |    4 MB |   2 MB | Optional 68000 (`TWINKLE/SPU`), DVD player | SPU, optional Ricoh RF5C400 PCM (`TWINKLE/SPU`)               | SCSI CD-ROM, IDE hard drive, VCD/DVD, unused floppy        |
+| Namco        | System 10                        |    50 MHz | v2        |   16 MB |   2 MB |                                            | SPU, optional Sanyo LC82310 MP3 (`MEM(P3) PCB`)               | Game-specific mask ROM/flash module, optional ATAPI CD-ROM |
+| Sony         | COH-100                          |    33 MHz | v1        |    4 MB |   2 MB | Provided by manufacturer PCB (see below)   | Provided by manufacturer PCB (see below, has unpopulated SPU) | Provided by manufacturer PCB (see below)                   |
+| Sony         | COH-110                          |    33 MHz | v2        |    4 MB |   2 MB | Provided by manufacturer PCB (see below)   | Provided by manufacturer PCB (see below, no SPU)              | Provided by manufacturer PCB (see below)                   |
+| Sony         | COH-700                          |    50 MHz | v2b       |    4 MB |   2 MB | Provided by manufacturer PCB (see below)   | Provided by manufacturer PCB (see below, no SPU)              | Provided by manufacturer PCB (see below)                   |
+| Sony         | COH-716                          |    50 MHz | v2        |   16 MB |   2 MB | Provided by manufacturer PCB (see below)   | Provided by manufacturer PCB (see below, no SPU)              | Provided by manufacturer PCB (see below)                   |
+| Sony         | ZN-1                             |    33 MHz | v2        |  4-8 MB | 1-2 MB | Provided by manufacturer PCB (see below)   | SPU, extra hardware provided by manufacturer PCB (see below)  | Provided by manufacturer PCB (see below)                   |
+| Sony         | ZN-2                             |    50 MHz | v2 or v2b | 4-16 MB |   2 MB | Provided by manufacturer PCB (see below)   | SPU, extra hardware provided by manufacturer PCB (see below)  | Provided by manufacturer PCB (see below)                   |
 
-The following boards were mentioned in the original nocash page, but almost
-nothing is known about them:
+The following systems are based on a Sony CPU daughterboard mounted on top of a
+custom manufacturer-specific main board:
 
-- Atlus PSX
-- PS Arcade 95
-- Tecmo TPS
+| Manufacturer | Main board | CPU board | Additional CPUs                     | Audio                                    | Storage                                                    |
+| :----------- | :--------- | :-------- | :---------------------------------- | :--------------------------------------- | :--------------------------------------------------------- |
+| Namco        | System 11  | COH-100   | Namco C76 (custom H8)               | Namco C352 PCM                           | Game-specific mask ROM module                              |
+| Namco        | System 11  | COH-110   | Namco C76 (custom H8)               | Namco C352 PCM                           | Game-specific mask ROM module                              |
+| Namco        | System 12  | COH-700   | H8/3002, optional SH-2 (`CDXA PCB`) | Namco C352 PCM, XA-ADPCM decoded by SH-2 | Game-specific mask ROM/flash module, optional ATAPI CD-ROM |
+| Namco        | System 12  | COH-716   | H8/3002, optional SH-2 (`CDXA PCB`) | Namco C352 PCM, XA-ADPCM decoded by SH-2 | Game-specific mask ROM/flash module, optional ATAPI CD-ROM |
+
+The following systems are based on a Sony ZN-1 or ZN-2 motherboard with a
+manufacturer-specific daughterboard mounted on top:
+
+| Manufacturer            | Main board   | Daughterboard                   | Additional CPUs                   | Audio                             | Storage                                          |
+| :---------------------- | :----------- | :------------------------------ | :-------------------------------- | :-------------------------------- | :----------------------------------------------- |
+| Acclaim                 | ZN-1         | `PCB-100102`                    | Optional ADSP-2181 (`PCB-100095`) | PCM from ADSP-2181                | Mask ROMs, EPROMs                                |
+| Atari                   | ZN-1         | Primal Rage 2 (`PSXTRA`)        |                                   |                                   | EPROMs, IDE hard drive                           |
+| Atlus                   | ZN-1         | Heaven's Gate (`ATHG-01`)       | 68000                             | Yamaha YMZ280B PCM/ADPCM          | Mask ROMs, EPROMs                                |
+| Capcom                  | ZN-1 or ZN-2 | `95681-2`                       | Z80                               | Capcom Q-Sound PCM/ADPCM          | Mask ROMs, EPROMs                                |
+| Capcom                  | ZN-2         | `97695-1`                       | Z80                               | Capcom Q-Sound PCM/ADPCM          | Mask ROMs, EPROMs                                |
+| Eighting/Raizing        | ZN-1         | `RA9701 SUB`                    | 68000                             | Yamaha YMF271-F FM/PCM            | Mask ROMs, EPROMs                                |
+| Eighting/Raizing, Tecmo | ZN-1         | `PS9805`                        | 68000                             | Yamaha YMF271-F FM/PCM            | Mask ROMs, EPROMs, flash                         |
+| Eighting/Raizing        | ZN-1         | Bust-A-Move 2 (`MTR990601-(A)`) | H8/3644                           | PCM streamed by H8                | Mask ROMs, flash, IDE hard drive or ATAPI CD-ROM |
+| Taito                   | ZN-1         | FX-1 (`SROM PCB-A`)             | Z80                               | Yamaha YM2610 FM/ADPCM            | Mask ROMs, EPROMs                                |
+| Taito                   | ZN-1         | FX-1 (`ZROM PCB`)               | MN1020012A, TMS57002              | Zoom ZSG-2 PCM                    | Mask ROMs, EPROMs                                |
+| Taito                   | ZN-1 or ZN-2 | G-NET (`FC PCB`)                | MN1020012A, TMS57002              | Optional Zoom ZSG-2 PCM           | Custom PCMCIA or CF flash card                   |
+| Tecmo                   | ZN-1         | TPS System (`TPS1-7`)           | Optional Z80                      | Optional Yamaha YMZ280B PCM/ADPCM | Mask ROMs, EPROMs                                |
+| Video System            | ZN-1         | `VS34`                          |                                   |                                   | Mask ROMs                                        |
 
 Currently only documentation for the System 573 exists. More information about
 other arcade boards could be obtained from MAME source code.
@@ -33,32 +52,33 @@ other arcade boards could be obtained from MAME source code.
 ## CPU
 
 Most boards use the same CPUs as retail consoles and development units. The
-System 10, System 12 and ZN-2 feature a later CPU revision that allows for up
-to 16 MB main RAM (as opposed to 8 MB on the standard CPUs) and clock speeds of
-up to 50 MHz. The bus interface and memory control registers on these chips may
+System 10, COH-716 and ZN-2 feature a later CPU revision that allows for up to
+16 MB main RAM (as opposed to 8 MB on the standard CPUs) and clock speeds of up
+to 50 MHz. The bus interface and memory control registers on these chips may
 behave differently from the ones found on standard CPUs due to the extended
 address space.
 
 ## GPU
 
 Most systems have a regular v2 GPU but expand VRAM to 2 MB, arranged as a
-1024x1024 buffer rather than 1024x512. The Konami GQ and COH-100 (CPU + GPU
-daughterboard used in early System 11 units) have the v1 "prototype" GPU, which
-uses completely different commands from v0/v2 and is generally not compatible
-with any known version of Sony's development tools. Most System 11 games seem to
-support both GPU types.
+1024x1024 buffer rather than 1024x512. The Konami GQ and COH-100 use the v1
+"prototype" GPU, which uses completely different commands from v0/v2 and is
+generally not compatible with any known version of Sony's development tools.
+Most System 11 games seem to support both GPU types.
 
-Some System 12 and ZN-2 variants use a later revision of the v2 GPU (v2b). The
+Some ZN-2 variants and the COH-700 use a later revision of the v2 GPU (v2b). The
 differences between v2 and v2b GPUs are currently unknown.
 
 ## Audio
 
 Almost all boards extend the SPU's functionality with additional hardware,
-usually a custom fixed-function DSP and in some cases a separate sound CPU. The
-custom audio hardware is typically on a separate board, with some systems
-allowing it to be unplugged if the game does not require it. The Konami GQ,
-System 11 (both COH-100 and COH-110 variants) and System 12 omit the SPU
-entirely.
+usually a custom PCM mixer and in some cases a separate CPU driving it. The
+extra hardware is typically in charge of playing music, with the SPU still
+handling playback of all other audio.
+
+The Konami GQ and all Sony CPU daughterboards omit the SPU entirely. The Twinkle
+System has the SPU but all games that require its dedicated audio board will
+leave it unused.
 
 ## Controls
 
@@ -76,10 +96,11 @@ JVS I/O boards to be used if supported by games.
 ## Storage
 
 With the exception of Konami, all manufacturers used mask ROMs or flash memory
-for game storage. The wiring and layout of the ROMs varies for each board; on
-some systems the BIOS and game are part of the same ROM, while others have
-separate BIOS and game ROMs. Graphical and audio assets may also be stored
-separately or within the main game ROM.
+for game storage. The wiring and layout of the ROMs varies across boards; on
+some systems the BIOS, game binary and its assets are part of the same ROM,
+while others split the executable and/or assets into separate regions. Boards
+with custom sound hardware usually store samples and other audio data in
+dedicated ROMs accessed directly by the hardware in question.
 
 Konami systems store game executables and assets on standard SCSI/IDE hard
 drives or CD-ROMs. The System 573 can also boot from its built-in flash or a
@@ -90,30 +111,49 @@ System is particularly unusual as it has a CD-ROM drive accessed by the main
 CPU, a separate hard drive used by the audio board and an external DVD player
 unit for background videos.
 
-The System 10 and System 12 are the only known non-Konami boards with CD-ROM
+The System 10 and System 12 are the only known non-Konami PCBs with CD-ROM
 support. The former can be connected directly to an ATAPI drive, while the
 latter requires an expansion module that provides an IDE interface and XA-ADPCM
-decoding through an integrated SH-2 CPU. Whether these boards support CD-ROM
-booting without any game ROMs installed is currently unknown.
+decoding through an integrated SH-2 CPU. In either case the CD-ROM is only used
+for audio streaming and the boards are not otherwise capable of booting directly
+from it without a ROM board installed.
 
 ## Security
 
 The implementation of anti-piracy measures varies for each manufacturer.
 
-- Namco boards have their ROMs encrypted, with a CPLD ("KEYCUS" chip) wired
-  between the CPU and ROM performing on-the-fly decryption. Some KEYCUS chips
-  require the CPU to issue commands in order to unlock different sections of the
-  ROM.
+- Namco boards have their ROMs encrypted, with a CPLD or ASIC ("KEYCUS" chip)
+  wired between the CPU and ROM performing on-the-fly decryption. Some KEYCUS
+  chips require the CPU to issue commands in order to unlock different sections
+  of the ROM.
 - Sony's ZN-1 and ZN-2 are fitted by each manufacturer with a custom BIOS ROM
-  and security microcontroller, which are then verified by the games. This makes
-  it harder to convert a ZN-1 or ZN-2 game to a different one by simply swapping
-  out the game-specific daughterboard.
+  and security ASIC, which are then verified by the games. This makes it harder
+  to convert a ZN-1 or ZN-2 game to a different one by simply swapping out the
+  game-specific daughterboard.
 - CD-ROMs for Konami boards were typically shipped alongside a security dongle
   or cartridge that must be plugged in to boot the game. Some games write the
   system's serial number to the dongle during installation, preventing
   installation of the same game on more than one cabinet. The System 573's
   optional MP3 decoder board additionally features an FPGA used to decrypt MP3
   files on the disc during playback.
-- Taito G-NET games are stored on a custom manufactured PCMCIA card which is not
-  readable by any normal means. The contents of the card are presumably
-  encrypted as well.
+- Most Taito G-NET games are stored on a custom manufactured PCMCIA card which
+  does not use any known standard protocol.
+
+## Games
+
+Some of the most notable arcade titles to use the boards listed here include:
+
+- **Beatmania IIDX** up to 8th Style (Twinkle System)
+- **Dance Dance Revolution** up to EXTREME (System 573)
+- **DrumMania** up to 10thMIX (System 573)
+- **GuitarFreaks** up to 11thMIX (System 573)
+- **Point Blank 2** (System 11 or System 12)
+- **Point Blank 3** (System 10)
+- **Soul Calibur** (System 12)
+- **Soul Edge** (System 11)
+- **Street Fighter EX** (Capcom ZN-1)
+- **Street Fighter EX2** (Capcom ZN-2)
+- **Taiko no Tatsujin** up to 6 (System 10)
+- **Tekken** and **Tekken 2** (System 11)
+- **Tekken 3** (System 12)
+- **Tetris: The Grand Master** (Capcom ZN-2)
