@@ -7,8 +7,8 @@ The following arcade PCBs are known to be based on PlayStation hardware:
 | :----------- | :------------------------------- | --------: | :-------- | ------: | -----: | :----------------------------------------- | :------------------------------------------------------------ | :--------------------------------------------------------- |
 | Konami       | GV                               |    33 MHz | v0        |    2 MB |   1 MB |                                            | SPU, CD-DA                                                    | SCSI CD-ROM, optional flash module (`PWB402610`)           |
 | Konami       | GQ                               |    33 MHz | v1        |    4 MB |   2 MB | 68000, TMS57002                            | 2x Konami 054539 PCM (no SPU)                                 | SCSI hard drive                                            |
-| Konami       | [System 573](konamisystem573.md) |    33 MHz | v2        |    4 MB |   2 MB | H8/3644                                    | SPU, CD-DA, optional Micronas MAS3507D MP3 (`GX894-PWB(B)A`)  | Internal flash, optional ATAPI CD-ROM, PCMCIA cards        |
-| Konami       | Twinkle System                   |    33 MHz | v2        |    4 MB |   2 MB | Optional 68000 (`TWINKLE/SPU`), DVD player | SPU, optional Ricoh RF5C400 PCM (`TWINKLE/SPU`)               | SCSI CD-ROM, IDE hard drive, VCD/DVD, unused floppy        |
+| Konami       | [System 573](konamisystem573.md) |    33 MHz | v2        |    4 MB |   2 MB | H8/3644                                    | SPU, CD-DA, optional Micronas MAS3507D MP3 (`GX894-PWB(B)A`)  | Internal flash, optional ATAPI CD-ROM, PCMCIA flash cards  |
+| Konami       | Twinkle System                   |    33 MHz | v2        |    4 MB |   2 MB | Optional 68000 (`TWINKLE/SPU`), DVD player | SPU, optional Ricoh RF5C400 PCM (`TWINKLE/SPU`)               | SCSI CD-ROM, IDE hard drive (`TWINKLE/SPU`), unused floppy |
 | Namco        | System 10                        |    50 MHz | v2        |   16 MB |   2 MB |                                            | SPU, optional Sanyo LC82310 MP3 (`MEM(P3) PCB`)               | Game-specific mask ROM/flash module, optional ATAPI CD-ROM |
 | Sony         | COH-100                          |    33 MHz | v1        |    4 MB |   2 MB | Provided by manufacturer PCB (see below)   | Provided by manufacturer PCB (see below, has unpopulated SPU) | Provided by manufacturer PCB (see below)                   |
 | Sony         | COH-110                          |    33 MHz | v2        |    4 MB |   2 MB | Provided by manufacturer PCB (see below)   | Provided by manufacturer PCB (see below, no SPU)              | Provided by manufacturer PCB (see below)                   |
@@ -20,19 +20,17 @@ The following arcade PCBs are known to be based on PlayStation hardware:
 The following systems are based on a Sony CPU daughterboard mounted on top of a
 custom manufacturer-specific main board:
 
-| Manufacturer | Main board | CPU board | Additional CPUs                     | Audio                                    | Storage                                                    |
-| :----------- | :--------- | :-------- | :---------------------------------- | :--------------------------------------- | :--------------------------------------------------------- |
-| Namco        | System 11  | COH-100   | Namco C76 (custom H8)               | Namco C352 PCM                           | Game-specific mask ROM module                              |
-| Namco        | System 11  | COH-110   | Namco C76 (custom H8)               | Namco C352 PCM                           | Game-specific mask ROM module                              |
-| Namco        | System 12  | COH-700   | H8/3002, optional SH-2 (`CDXA PCB`) | Namco C352 PCM, XA-ADPCM decoded by SH-2 | Game-specific mask ROM/flash module, optional ATAPI CD-ROM |
-| Namco        | System 12  | COH-716   | H8/3002, optional SH-2 (`CDXA PCB`) | Namco C352 PCM, XA-ADPCM decoded by SH-2 | Game-specific mask ROM/flash module, optional ATAPI CD-ROM |
+| Manufacturer | Main board | CPU board          | Additional CPUs                     | Audio                                                 | Storage                                                    |
+| :----------- | :--------- | :----------------- | :---------------------------------- | :---------------------------------------------------- | :--------------------------------------------------------- |
+| Namco        | System 11  | COH-100 or COH-110 | Namco C76 (custom H8)               | Namco C352 PCM                                        | Game-specific mask ROM module                              |
+| Namco        | System 12  | COH-700 or COH-716 | H8/3002, optional SH-2 (`CDXA PCB`) | Namco C352 PCM, XA-ADPCM decoded by SH-2 (`CDXA PCB`) | Game-specific mask ROM/flash module, optional ATAPI CD-ROM |
 
 The following systems are based on a Sony ZN-1 or ZN-2 motherboard with a
 manufacturer-specific daughterboard mounted on top:
 
 | Manufacturer            | Main board   | Daughterboard                   | Additional CPUs                   | Audio                             | Storage                                          |
 | :---------------------- | :----------- | :------------------------------ | :-------------------------------- | :-------------------------------- | :----------------------------------------------- |
-| Acclaim                 | ZN-1         | `PCB-100102`                    | Optional ADSP-2181 (`PCB-100095`) | PCM from ADSP-2181                | Mask ROMs, EPROMs                                |
+| Acclaim                 | ZN-1         | `PCB-100102`                    | Optional ADSP-2181 (`PCB-100095`) | PCM from ADSP-2181 (`PCB-100095`) | Mask ROMs, EPROMs                                |
 | Atari                   | ZN-1         | Primal Rage 2 (`PSXTRA`)        |                                   |                                   | EPROMs, IDE hard drive                           |
 | Atlus                   | ZN-1         | Heaven's Gate (`ATHG-01`)       | 68000                             | Yamaha YMZ280B PCM/ADPCM          | Mask ROMs, EPROMs                                |
 | Capcom                  | ZN-1 or ZN-2 | `95681-2`                       | Z80                               | Capcom Q-Sound PCM/ADPCM          | Mask ROMs, EPROMs                                |
@@ -60,11 +58,11 @@ address space.
 
 ## GPU
 
-Most systems have a regular v2 GPU but expand VRAM to 2 MB, arranged as a
-1024x1024 buffer rather than 1024x512. The Konami GQ and COH-100 use the v1
-"prototype" GPU, which uses completely different commands from v0/v2 and is
-generally not compatible with any known version of Sony's development tools.
-Most System 11 games seem to support both GPU types.
+Most systems have a regular 208-pin v2 GPU but expand VRAM from 1 to 2 MB,
+arranged as a 1024x1024 buffer rather than 1024x512. The Konami GQ and COH-100
+instead use the v1 "prototype" GPU, which employs a different command format. As
+the System 11 could come fitted with either a COH-100 or COH-110, some System 11
+games support both formats.
 
 Some ZN-2 variants and the COH-700 use a later revision of the v2 GPU (v2b). The
 differences between v2 and v2b GPUs are currently unknown.
@@ -111,12 +109,12 @@ System is particularly unusual as it has a CD-ROM drive accessed by the main
 CPU, a separate hard drive used by the audio board and an external DVD player
 unit for background videos.
 
-The System 10 and System 12 are the only known non-Konami PCBs with CD-ROM
-support. The former can be connected directly to an ATAPI drive, while the
-latter requires an expansion module that provides an IDE interface and XA-ADPCM
-decoding through an integrated SH-2 CPU. In either case the CD-ROM is only used
-for audio streaming and the boards are not otherwise capable of booting directly
-from it without a ROM board installed.
+The System 12, System 10 and the ZN-1 with the Bust-A-Move 2 ROM board are the
+only known non-Konami PCBs with CD-ROM support. The former requires an expansion
+module that provides an IDE interface and XA-ADPCM decoding through an
+integrated SH-2 CPU, while the latter two can be connected directly to a drive.
+In all cases the CD-ROM is only used for audio streaming and the boards are not
+otherwise capable of booting directly from it without a ROM board installed.
 
 ## Security
 
