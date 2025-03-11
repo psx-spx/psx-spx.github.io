@@ -37,10 +37,10 @@ manufacturer-specific daughterboard mounted on top:
 | Capcom                  | ZN-2         | `97695-1`                       | Z80                               | Capcom Q-Sound PCM/ADPCM          | Mask ROMs, EPROMs                                |
 | Eighting/Raizing        | ZN-1         | `RA9701 SUB`                    | 68000                             | Yamaha YMF271-F FM/PCM            | Mask ROMs, EPROMs                                |
 | Eighting/Raizing, Tecmo | ZN-1         | `PS9805`                        | 68000                             | Yamaha YMF271-F FM/PCM            | Mask ROMs, EPROMs, flash                         |
-| Eighting/Raizing        | ZN-1         | Bust-A-Move 2 (`MTR990601-(A)`) | H8/3644                           | PCM streamed by H8                | Mask ROMs, flash, IDE hard drive or ATAPI CD-ROM |
+| Eighting/Raizing        | ZN-1         | Bust-A-Move 2 (`MTR990601-(A)`) | H8/3644                           | PCM streamed by H8/3644           | Mask ROMs, flash, IDE hard drive or ATAPI CD-ROM |
 | Taito                   | ZN-1         | FX-1 (`SROM PCB-A`)             | Z80                               | Yamaha YM2610 FM/ADPCM            | Mask ROMs, EPROMs                                |
 | Taito                   | ZN-1         | FX-1 (`ZROM PCB`)               | MN1020012A, TMS57002              | Zoom ZSG-2 PCM                    | Mask ROMs, EPROMs                                |
-| Taito                   | ZN-1 or ZN-2 | G-NET (`FC PCB`)                | MN1020012A, TMS57002              | Optional Zoom ZSG-2 PCM           | Custom PCMCIA or CF flash card                   |
+| Taito                   | ZN-1 or ZN-2 | G-NET (`FC PCB`)                | MN1020012A, TMS57002              | Optional Zoom ZSG-2 PCM           | Secure PCMCIA or CF-like flash card              |
 | Tecmo                   | ZN-1         | TPS System (`TPS1-7`)           | Optional Z80                      | Optional Yamaha YMZ280B PCM/ADPCM | Mask ROMs, EPROMs                                |
 | Video System            | ZN-1         | `VS34`                          |                                   |                                   | Mask ROMs                                        |
 
@@ -49,12 +49,11 @@ other arcade boards could be obtained from MAME source code.
 
 ## CPU
 
-Most boards use the same CPUs as retail consoles and development units. The
-System 10, COH-716 and ZN-2 feature a later CPU revision that allows for up to
-16 MB main RAM (as opposed to 8 MB on the standard CPUs) and clock speeds of up
-to 50 MHz. The bus interface and memory control registers on these chips may
-behave differently from the ones found on standard CPUs due to the extended
-address space.
+Most boards use the same CPUs as retail consoles and development units but
+extend main RAM to up to 16 MB, with 4 MB being the most common configuration.
+The System 10, COH-716 and ZN-2 run the CPU at 50 MHz instead of 33 and feature
+a different chip revision from any known stock console, presumably rated for the
+higher clock speed but otherwise functionally identical.
 
 ## GPU
 
@@ -64,18 +63,22 @@ instead use the v1 "prototype" GPU, which employs a different command format. As
 the System 11 could come fitted with either a COH-100 or COH-110, some System 11
 games support both formats.
 
-Some ZN-2 variants and the COH-700 use a later revision of the v2 GPU (v2b). The
-differences between v2 and v2b GPUs are currently unknown.
+As with CPUs, some ZN-2 variants and the COH-700 use a later arcade-only
+revision ("v2b") of the v2 GPU. This change may also be related to the clock
+speed increase, however not all systems running at 50 MHz seem to use the newer
+GPU.
 
 ## Audio
 
 Almost all boards extend the SPU's functionality with additional hardware,
-usually a custom PCM mixer and in some cases a separate CPU driving it. The
-extra hardware is typically in charge of playing music, with the SPU still
-handling playback of all other audio.
+usually consisting of a custom PCM mixer and in some cases a separate CPU
+driving it. The extra circuitry is typically in charge of playing music
+(fulfilling the same role as CD-DA and XA-ADPCM on retail consoles), with the
+SPU still handling playback of all other audio.
 
-The Konami GQ and all Sony CPU daughterboards omit the SPU entirely. The Twinkle
-System has the SPU but all games that require its dedicated audio board will
+The Konami GQ and all systems based on Sony's CPU daughterboards omit the SPU
+altogether and rely entirely on custom sound hardware. The Twinkle System has
+the SPU populated but all games that require its dedicated audio board will
 leave it unused.
 
 ## Controls
@@ -93,10 +96,10 @@ JVS I/O boards to be used if supported by games.
 
 ## Storage
 
-With the exception of Konami, all manufacturers used mask ROMs or flash memory
-for game storage. The wiring and layout of the ROMs varies across boards; on
-some systems the BIOS, game binary and its assets are part of the same ROM,
-while others split the executable and/or assets into separate regions. Boards
+With the exception of Konami, all manufacturers adopted solid state game storage
+(mask ROMs, EPROMs and/or flash memory). The wiring and layout of the ROMs
+varies across boards; on some systems the BIOS, game binary and its assets are
+part of the same ROM region, while others split them into separate areas. Boards
 with custom sound hardware usually store samples and other audio data in
 dedicated ROMs accessed directly by the hardware in question.
 
@@ -110,8 +113,8 @@ CPU, a separate hard drive used by the audio board and an external DVD player
 unit for background videos.
 
 The System 12, System 10 and the ZN-1 with the Bust-A-Move 2 ROM board are the
-only known non-Konami PCBs with CD-ROM support. The former requires an expansion
-module that provides an IDE interface and XA-ADPCM decoding through an
+only currently known non-Konami PCBs with CD-ROM support. The former requires an
+expansion module that provides an IDE interface and XA-ADPCM decoding through an
 integrated SH-2 CPU, while the latter two can be connected directly to a drive.
 In all cases the CD-ROM is only used for audio streaming and the boards are not
 otherwise capable of booting directly from it without a ROM board installed.
@@ -120,22 +123,26 @@ otherwise capable of booting directly from it without a ROM board installed.
 
 The implementation of anti-piracy measures varies for each manufacturer.
 
-- Namco boards have their ROMs encrypted, with a CPLD or ASIC ("KEYCUS" chip)
-  wired between the CPU and ROM performing on-the-fly decryption. Some KEYCUS
-  chips require the CPU to issue commands in order to unlock different sections
-  of the ROM.
+- Namco's System 11 and 12 employ a CPLD or ASIC ("KEYCUS" chip) on each ROM
+  module as a game-specific security coprocessor the CPU communicates with. In
+  the case of the System 12, the KEYCUS chip seems to double as a lockout device
+  and restrict access to the ROMs until the game issues an unlocking sequence.
+- Namco System 10 games also use a KEYCUS CPLD but wire it between the CPU and
+  ROMs, allowing it to perform on-the-fly unscrambling of their encrypted
+  contents in addition to the lockout functionality.
+- Similarly, most Taito G-NET games are stored on non-standard PCMCIA flash
+  cards that require unlock sequences specific to each game prior to being
+  accessed.
 - Sony's ZN-1 and ZN-2 are fitted by each manufacturer with a custom BIOS ROM
-  and security ASIC, which are then verified by the games. This makes it harder
-  to convert a ZN-1 or ZN-2 game to a different one by simply swapping out the
-  game-specific daughterboard.
+  and security/decryption ASIC, which the game-specific ROM daughterboard then
+  relies on. This makes it harder to convert ZN-1 or ZN-2 games by simply
+  swapping out the daughterboard.
 - CD-ROMs for Konami boards were typically shipped alongside a security dongle
   or cartridge that must be plugged in to boot the game. Some games write the
   system's serial number to the dongle during installation, preventing
   installation of the same game on more than one cabinet. The System 573's
   optional MP3 decoder board additionally features an FPGA used to decrypt MP3
   files on the disc during playback.
-- Most Taito G-NET games are stored on a custom manufactured PCMCIA card which
-  does not use any known standard protocol.
 
 ## Games
 
