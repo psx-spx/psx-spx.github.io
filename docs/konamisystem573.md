@@ -12,24 +12,28 @@ other titles from the Bemani series of rhythm games.
 - [Security cartridges](#security-cartridges)
 - [External modules](#external-modules)
 - [BIOS](#bios)
+- [Bootleg mod boards](#bootleg-mod-boards)
 - [Game-specific information](#game-specific-information)
 - [Notes](#notes)
 - [Pinouts](#pinouts)
 - [Credits, sources and links](#credits-sources-and-links)
 
 This document is currently work-in-progress. Here is an incomplete list of
-things that need more research:
+things the authors believe need more research:
 
-- The BIOS and games are notoriously picky about ATAPI drives. Konami's code
-  shall be disassembled and tested in order to find out where and why drive
-  initialization fails with most drives.
-- The fishing controls I/O board has been fully reverse engineered, but
-  documentation for it is missing.
-- The DDR stage I/O board's communication protocol is largely unknown. More
-  tests need to be done on real hardware and its CPLD shall be dumped if
+- The BIOS and games are notoriously picky about ATAPI drives due to Konami's
+  libraries not always respecting timings and polling registers in the way
+  suggested by the specifications. Such issues shall be documented more in
+  detail.
+- The `GE765-PWB(B)A` and `PWB0000073070` I/O boards have been fully and
+  partially reverse engineered respectively, but documentation for them is
+  missing.
+- The `GN845-PWB(B)` DDR stage PCB's communication protocol is largely unknown.
+  More tests need to be done on real hardware and its CPLD shall be dumped if
   possible.
-- The protocol used by the 573 to communicate with the e-Amusement network PCB
-  is only partially known currently.
+- The protocol used by the 573 to communicate with the `PWB0000100991` network
+  PCB has been reversed, however very little about the PCB's own hardware and
+  software stack is otherwise known.
 - Some revisions of the main board have two resistor footprints next to the
   Konami ASIC, one labeled `FJ` and the other `SH`. Only one of them is
   populated; it presumably sets or clears a bit in one of the ASIC input ports.
@@ -222,7 +226,7 @@ internal flash and both PCMCIA cards prior to falling back to the CD-ROM.
 | ----: | :- | :-------------------------------------------- |
 |     0 | R  | Data output from ADC (`DO`)                   |
 |     1 | R  | SAR status from ADC (`SARS`)                  |
-|     2 | R  | From `SDA` on security cartridge              |
+|     2 | R  | From `IO0` on security cartridge              |
 |     3 | R  | Sense input from JVS port                     |
 |     4 | R  | `JVSIRDY` status from JVS MCU                 |
 |     5 | R  | `JVSDRDY` status from JVS MCU                 |
@@ -236,7 +240,7 @@ internal flash and both PCMCIA cards prior to falling back to the CD-ROM.
 | 13-15 |    | Unused?                                       |
 
 See the security cartridge section for more details about `IRDY` and  `DRDY`. In
-order for bit 2 to be valid, `SDA` should be set as an input by clearing the
+order for bit 2 to be valid, `IO0` should be set as an input by clearing the
 respective bit in register `0x1f500000`.
 
 #### `0x1f400008` (ASIC register 4): **JAMMA controls**
@@ -631,12 +635,12 @@ XC9536 CPLD on the main board.
 | Bits | RW | Description                                              |
 | ---: | :- | :------------------------------------------------------- |
 |  0-5 | W  | Bank number (0-47, see below)                            |
-|    6 | W  | `SDA` direction on security cartridge (0 = input/high-z) |
+|    6 | W  | `IO0` direction on security cartridge (0 = input/high-z) |
 |    7 |    | Unknown (goes into CPLD)                                 |
 | 8-15 |    | _Unused_                                                 |
 
-Bit 6 controls whether `SDA` on the security cartridge is an input or an output.
-If set, `SDA` will output the same logic level as `D0`, otherwise the pin will
+Bit 6 controls whether `IO0` on the security cartridge is an input or an output.
+If set, `IO0` will output the same logic level as `D0`, otherwise the pin will
 be floating. Bits 0-5 are used to switch the device mapped to the 4 MB
 `0x1f000000-0x1f3fffff` region:
 
@@ -717,12 +721,9 @@ In order to prevent overruns, this register shall only be accessed when
 
 The lower 8 bits written to this register are latched on pins `D0-D7` of the
 cartridge slot. See the security cartridge section for an explanation of what
-each pin is wired to. Bit 0 additionally controls the `SDA` pin when configured
+each pin is wired to. Bit 0 additionally controls the `IO0` pin when configured
 as an output through the bank switch register. Writing to this register will set
 the `DRDY` flag, which can then be cleared by the cartridge.
-
-Some games may rely on reads from this register returning the last value written
-to it. This behavior is unconfirmed.
 
 ## JVS interface
 
@@ -792,7 +793,7 @@ In order to perform a JVS transaction the 573 must:
 The MCU does not allow for non-JVS packets to be sent as it validates the sync
 byte, checksum and uses the length field to determine packet length. Responses
 cannot be received without sending a packet first either. The MCU will also
-insert a 200 us minimum delay between the last byte of a received packet and the
+insert a 200 µs minimum delay between the last byte of a received packet and the
 first byte of the next packet.
 
 ## I/O boards
@@ -896,7 +897,7 @@ bitstream to be uploaded to it in order to work. Registers in the
 `0x1f6400f0-0x1f6400ff` region are handled by a CPLD and are functional even if
 no bitstream is loaded. There are several known versions of Konami's bitstream:
 
-| SHA-1 (LSB first)                          | First used by                          |
+| SHA-1 (41337 bytes, LSB first)             | First used by                          |
 | :----------------------------------------- | :------------------------------------- |
 | `32d455a25eb26fe4e4b577cb0f0e3bebd0f82959` | Dance Dance Revolution Solo Bass Mix   |
 | `a53b8906de95c34b6e3f053bd7488c888bc904b6` | Dance Dance Revolution 3rdMIX          |
@@ -908,35 +909,96 @@ no bitstream is loaded. There are several known versions of Konami's bitstream:
 
 The DDR and Mambo bitstreams all implement the same registers (listed below) and
 seem to only differ in the MP3 decryption algorithm, while the unused Martial
-Beat bitstreams seem to behave in a completely different way. Homebrew tools may
-also load custom bitstreams, which can be developed using the Xilinx ISE
-toolchain. See the pinouts section for a list of all devices connected to the
-FPGA.
+Beat bitstreams seem to behave in a completely different way.
 
-#### `0x1f640080` (FPGA, DDR/Mambo bitstream): **Magic number**
+Homebrew software may also load custom bitstreams developed using the Xilinx ISE
+4.2 toolchain (the last version to support Spartan-XL parts). The following
+custom bitstreams are known to exist so far:
 
-| Bits | RW | Description             |
-| ---: | :- | :---------------------- |
-| 0-15 | R  | Magic number (`0x1234`) |
+| SHA-1 (41337 bytes, LSB first)             | First used by               |
+| :----------------------------------------- | :-------------------------- |
+| `9d5acaae61f03f4d71831ebdb013af6189802ed2` | 573in1 1.0.0                |
+| `e9212e9ff24fa876158f510e3c17649a110f60a4` | 573in1 (development branch) |
+
+#### `0x1f640080` (FPGA, all bitstreams): **Magic number**
+
+| Bits | RW | Description                                                                   |
+| ---: | :- | :---------------------------------------------------------------------------- |
+| 0-15 | R  | Magic number (`0x1234` for Konami bitstreams, `0x573f` for 573in1 bitstreams) |
 
 This register is checked by some versions of Konami's digital I/O board driver
 to make sure the bitstream was properly loaded.
 
-#### `0x1f640090` (FPGA, DDR/Mambo bitstream): **Network board address**
+#### `0x1f640082` (FPGA, 573in1 bitstream): **Configuration**
 
-#### `0x1f640092` (FPGA, DDR/Mambo bitstream): **Unknown (network related)**
+| Bits | RW | Description                                                                                 |
+| ---: | :- | :------------------------------------------------------------------------------------------ |
+|  0-7 | R  | Bitstream version (currently `0x02`)                                                        |
+|    8 | RW | MP3 looping enable (1 = continue playing from start address when end address is reached)    |
+|    9 | RW | Automatically clear DAC sample counter registers when starting MP3 playback (1 = clear)     |
+|   10 | RW | Automatically clear register `0x1f6400cc` when DAC sample counter delta is read (1 = clear) |
+|   11 | RW | Automatically disable sample counter if cleared while MP3 playback is stopped (1 = disable) |
+|   12 | RW | Primary MP3 descrambler key (0 = `key1`, 1 = scrambled XOR of `key1` and `key2`)            |
+|   13 | RW | Secondary MP3 descrambler key (0 = none, 1 = scrambled counter initialized from `key3`)     |
+|   14 | RW | MP3 data feeder endianness (0 = read bits 15-8 then 7-0, 1 = read bits 7-0 then 15-8)       |
+|   15 | RW | Swap bits 14 and 15 of `key1` when mutating it (1 = swap)                                   |
 
-#### `0x1f6400a0` (FPGA, DDR/Mambo bitstream): **MP3 data start address high**
+Custom register only implemented by the 573in1 bitstream, in order to allow for
+emulation of quirks present in different versions of Konami's bitstreams as well
+as control some additional features.
 
-#### `0x1f6400a2` (FPGA, DDR/Mambo bitstream): **MP3 data start address low**
+Bits 9-11 tune the behavior of the DAC sample counter registers (`0x1f6400ca`,
+`0x1f6400cc` and `0x1f6400cf`). Setting all of them will make the registers
+replicate the behavior of those provided by the DDR 3rdMIX bitstream onwards,
+while clearing them will bring them closer to the earlier DDR Solo Bass Mix
+bitstream's behavior.
 
-#### `0x1f6400a4` (FPGA, DDR/Mambo bitstream): **MP3 data end address high**
+Bits 12, 13 and 15 control the MP3 decryption algorithm. All of them shall be
+set to decrypt MP3 files from DDR 3rdMIX onwards (scrambled with `key1`, `key2`
+and `key3`) or cleared to play DDR Solo Bass Mix files (scrambled with `key1`
+only). Bit 14 controls which byte of each 16-bit word in DRAM is fed to the
+MAS3507D first and should be cleared for encrypted MP3 playback.
 
-#### `0x1f6400a6` (FPGA, DDR/Mambo bitstream): **MP3 data end address low**
+The 573in1 bitstream's descrambler can be configured to play unencrypted data by
+performing the following steps:
 
-#### `0x1f6400a8` (FPGA, DDR/Mambo bitstream): **MP3 frame counter** / **Descrambler key 1**
+- clear bits 12, 13 and 15;
+- set bit 14 (encrypted MP3s are byte swapped as part of the scrambling process
+  but an unencrypted file will have to be swapped during playback);
+- clear `key1` by writing zero to register `0x1f6400a8`, which will render the
+  decryption step a no-op.
 
-#### `0x1f6400aa` (FPGA, DDR/Mambo bitstream): **MP3 playback status**
+#### `0x1f640090` (FPGA, all bitstreams): **Network board address**
+
+#### `0x1f640092` (FPGA, all bitstreams): **Unknown (network related)**
+
+#### `0x1f6400a0` (FPGA, all bitstreams): **MP3 data start address high**
+
+#### `0x1f6400a2` (FPGA, all bitstreams): **MP3 data start address low**
+
+#### `0x1f6400a4` (FPGA, all bitstreams): **MP3 data end address high**
+
+#### `0x1f6400a6` (FPGA, all bitstreams): **MP3 data end address low**
+
+#### `0x1f6400a8` (FPGA, all bitstreams): **MP3 frame counter** / **Descrambler key 1**
+
+When read:
+
+| Bits | RW | Description                                                     |
+| ---: | :- | :-------------------------------------------------------------- |
+| 0-15 | R  | Current MP3 frame count (number of MAS3507D `PI4` rising edges) |
+
+When written:
+
+| Bits | RW | Description          |
+| ---: | :- | :------------------- |
+| 0-15 | W  | Initial `key1` value |
+
+The frame counter is only active when bit 15 in register `0x1f6400ae` is set.
+Note that the MAS3507D also has an internal frame counter readable through I2C,
+independent of this register.
+
+#### `0x1f6400aa` (FPGA, all bitstreams): **MP3 playback status**
 
 When read:
 
@@ -961,9 +1023,20 @@ During normal operation the reset input should be high and the PIO chip select
 low. Setting the chip select high will result in the MAS3507D tristating `PI19`,
 `PI8` and `PI4`.
 
-#### `0x1f6400ac` (FPGA, DDR/Mambo bitstream): **MAS3507D I2C**
+#### `0x1f6400ac` (FPGA, all bitstreams): **MAS3507D I2C**
 
-#### `0x1f6400ae` (FPGA, DDR/Mambo bitstream): **MP3 data feeder control**
+| Bits  | RW | Description                         |
+| ----: | :- | :---------------------------------- |
+|  0-11 |    | _Unused_                            |
+|    12 | RW | MAS3507D `SDA` (write 0 = pull low) |
+|    13 | RW | MAS3507D `SCL` (write 0 = pull low) |
+| 14-15 | RW | _Unused_                            |
+
+Due to the MAS3507D relying heavily on I2C clock stretching (pulling `SCL` low
+to request the host to wait), both `SDA` and `SCL` are bidirectional open-drain
+signals.
+
+#### `0x1f6400ae` (FPGA, all bitstreams): **MP3 data feeder control**
 
 | Bits  | RW | Description                                                |
 | ----: | :- | :--------------------------------------------------------- |
@@ -981,37 +1054,48 @@ Bit 15 controls whether to increment register `0x1f6400a8` each time a rising
 edge is detected on the MAS3507D's `PI4` (frame sync) pin. The counter is
 automatically reset to zero when this bit is cleared.
 
-#### `0x1f6400b0` (FPGA, DDR/Mambo bitstream): **DRAM write address high**
+#### `0x1f6400b0` (FPGA, all bitstreams): **DRAM write address high**
 
-#### `0x1f6400b2` (FPGA, DDR/Mambo bitstream): **DRAM write address low**
+#### `0x1f6400b2` (FPGA, all bitstreams): **DRAM write address low**
 
-#### `0x1f6400b6` (FPGA, DDR/Mambo bitstream): **DRAM read address high**
+#### `0x1f6400b4` (FPGA, all bitstreams): **DRAM data**
 
-#### `0x1f6400b8` (FPGA, DDR/Mambo bitstream): **DRAM read address low**
+| Bits | RW | Description       |
+| ---: | :- | :---------------- |
+| 0-15 | RW | Current data word |
 
-#### `0x1f6400ba` (FPGA, DDR/Mambo bitstream): **Unknown**
+**NOTE**: on some bitstream versions, all registers in the
+`0x1f6400b0-0x1f6400bf` region seem to mirror this register when read (possibly
+due to incomplete address decoding), however only a read from `0x1f6400b4` will
+increment the current read pointer and kick off prefetching of the next word.
 
-#### `0x1f6400c0` (FPGA, DDR/Mambo bitstream): **Network data**
+#### `0x1f6400b6` (FPGA, all bitstreams): **DRAM read address high**
 
-#### `0x1f6400c2` (FPGA, DDR/Mambo bitstream): **Network TX FIFO length**
+#### `0x1f6400b8` (FPGA, all bitstreams): **DRAM read address low**
 
-#### `0x1f6400c4` (FPGA, DDR/Mambo bitstream): **Network RX FIFO length**
+#### `0x1f6400ba` (FPGA, all bitstreams): **Unknown**
 
-#### `0x1f6400c6` (FPGA, DDR/Mambo bitstream): **Unknown**
+#### `0x1f6400c0` (FPGA, all bitstreams): **Network data**
+
+#### `0x1f6400c2` (FPGA, all bitstreams): **Network TX FIFO length**
+
+#### `0x1f6400c4` (FPGA, all bitstreams): **Network RX FIFO length**
+
+#### `0x1f6400c6` (FPGA, all bitstreams): **Unknown**
 
 Seems to return `0x7654` on startup.
 
-#### `0x1f6400c8` (FPGA, DDR/Mambo bitstream): **Unknown (network related)**
+#### `0x1f6400c8` (FPGA, all bitstreams): **Unknown (network related)**
 
 Seems to also return `0x7654` on startup.
 
-#### `0x1f6400ca` (FPGA, DDR/Mambo bitstream): **DAC sample counter high**
+#### `0x1f6400ca` (FPGA, all bitstreams except Solo): **DAC sample counter high**
 
-#### `0x1f6400cc` (FPGA, DDR/Mambo bitstream): **DAC sample counter low**
+#### `0x1f6400cc` (FPGA, all bitstreams): **DAC sample counter low**
 
-#### `0x1f6400ce` (FPGA, DDR/Mambo bitstream): **DAC sample counter delta**
+#### `0x1f6400ce` (FPGA, all bitstreams): **DAC sample counter delta**
 
-#### `0x1f6400e0` (FPGA, DDR/Mambo bitstream): **Bank A**
+#### `0x1f6400e0` (FPGA, all bitstreams): **Bank A**
 
 | Bits | RW | Description                          |
 | ---: | :- | :----------------------------------- |
@@ -1021,7 +1105,7 @@ Seems to also return `0x7654` on startup.
 |   14 | W  | Output A6 (0 = grounded, 1 = high-z) |
 |   15 | W  | Output A7 (0 = grounded, 1 = high-z) |
 
-#### `0x1f6400e2` (FPGA, DDR/Mambo bitstream): **Bank A**
+#### `0x1f6400e2` (FPGA, all bitstreams): **Bank A**
 
 | Bits | RW | Description                          |
 | ---: | :- | :----------------------------------- |
@@ -1031,7 +1115,7 @@ Seems to also return `0x7654` on startup.
 |   14 | W  | Output A2 (0 = grounded, 1 = high-z) |
 |   15 | W  | Output A3 (0 = grounded, 1 = high-z) |
 
-#### `0x1f6400e4` (FPGA, DDR/Mambo bitstream): **Bank B**
+#### `0x1f6400e4` (FPGA, all bitstreams): **Bank B**
 
 | Bits | RW | Description                          |
 | ---: | :- | :----------------------------------- |
@@ -1041,7 +1125,7 @@ Seems to also return `0x7654` on startup.
 |   14 | W  | Output B6 (0 = grounded, 1 = high-z) |
 |   15 | W  | Output B7 (0 = grounded, 1 = high-z) |
 
-#### `0x1f6400e6` (FPGA, DDR/Mambo bitstream): **Bank D**
+#### `0x1f6400e6` (FPGA, all bitstreams): **Bank D**
 
 | Bits | RW | Description                          |
 | ---: | :- | :----------------------------------- |
@@ -1051,16 +1135,33 @@ Seems to also return `0x7654` on startup.
 |   14 | W  | Output D2 (0 = grounded, 1 = high-z) |
 |   15 | W  | Output D3 (0 = grounded, 1 = high-z) |
 
-#### `0x1f6400e8` (FPGA, DDR/Mambo bitstream): **Internal logic reset**
+#### `0x1f6400e8` (FPGA, all bitstreams): **Internal logic reset**
+
+| Bits | RW | Description                                                  |
+| ---: | :- | :----------------------------------------------------------- |
+| 0-11 |    | _Unused_                                                     |
+|   12 | W  | Unknown reset (0 = reset)                                    |
+|   13 | W  | Reset MP3 feeder and master clock divider to DAC (0 = reset) |
+|   14 | W  | Unknown reset (0 = reset)                                    |
+|   15 | W  | Unknown reset (0 = reset)                                    |
 
 Konami's code writes `0xf000`, followed by `0x0000`, a delay and `0xf000` again,
 to this register after uploading the bitstream.
 
-#### `0x1f6400ea` (FPGA, DDR/Mambo bitstream): **Descrambler key 2**
+#### `0x1f6400ea` (FPGA, all bitstreams): **Descrambler key 2**
 
-#### `0x1f6400ec` (FPGA, DDR/Mambo bitstream): **Descrambler key 3**
+| Bits | RW | Description          |
+| ---: | :- | :------------------- |
+| 0-15 | W  | Initial `key2` value |
 
-#### `0x1f6400ee` (FPGA, DDR/Mambo bitstream): **1-wire bus**
+#### `0x1f6400ec` (FPGA, all bitstreams): **Descrambler key 3**
+
+| Bits | RW | Description          |
+| ---: | :- | :------------------- |
+|  0-7 | W  | Initial `key3` value |
+| 8-15 |    | _Unused_             |
+
+#### `0x1f6400ee` (FPGA, all bitstreams): **1-wire bus**
 
 When read:
 
@@ -1074,13 +1175,13 @@ When read:
 
 When written:
 
-| Bits  | RW | Description                                                  |
-| ----: | :- | :----------------------------------------------------------- |
-|   0-7 |    | _Unused_                                                     |
-|     8 | W  | Drive DS2433 1-wire bus low (1 = pull to ground, 0 = high-z) |
-|  9-11 |    | _Unused_                                                     |
-|    12 | W  | Drive DS2401 1-wire bus low (1 = pull to ground, 0 = high-z) |
-| 13-15 |    | _Unused_                                                     |
+| Bits  | RW | Description                                            |
+| ----: | :- | :----------------------------------------------------- |
+|   0-7 |    | _Unused_                                               |
+|     8 | W  | Drive DS2433 1-wire bus low (1 = pull low, 0 = high-z) |
+|  9-11 |    | _Unused_                                               |
+|    12 | W  | Drive DS2401 1-wire bus low (1 = pull low, 0 = high-z) |
+| 13-15 |    | _Unused_                                               |
 
 In addition to the DS2401 the board has an unpopulated footprint for a DS2433
 1-wire EEPROM, connected to a separate FPGA pin.
@@ -1095,10 +1196,10 @@ Konami's code does not write to this CPLD register.
 
 #### `0x1f6400f4` (CPLD): **DAC reset**
 
-| Bits | RW | Description                                  |
-| ---: | :- | :------------------------------------------- |
-| 0-14 |    | _Unused_                                     |
-|   15 | W  | Audio DAC reset/disable (0 = pull reset low) |
+| Bits | RW | Description                         |
+| ---: | :- | :---------------------------------- |
+| 0-14 |    | _Unused_                            |
+|   15 | W  | Audio DAC reset/disable (0 = reset) |
 
 Konami's code uses this register to mute the DAC during FPGA and MAS3507D
 initialization.
@@ -1287,14 +1388,14 @@ All communication with the cartridge is performed through the following means:
 - an 8-bit parallel input port (`I0-I7`), readable via register `0x1f400004`;
 - a latched 8-bit parallel output port (`D0-D7`), controlled by register
   `0x1f6a0000`;
-- a single tristate I/O pin (`SDA`), which can be either configured as a
+- a single tristate I/O pin (`IO0`), which can be either configured as a
   floating input or set to output the same logic level as `D0` through register
   `0x1f500000`;
 - the CPU's SIO1 interface (`TX`, `RX`, `/RTS`, `/CTS`, `/DTR`, `/DSR`);
 - four bus handshaking lines (`IRDY`, `DRDY`, `/IREQ`, `/DACK`).
 
 As all EEPROMs used in cartridges have an I2C interface rather than a parallel
-one, `SDA` is used in combination with individual bits of the parallel I/O ports
+one, `IO0` is used in combination with individual bits of the parallel I/O ports
 to bitbang I2C. The SIO1 interface either goes unused or is translated to RS-232
 voltage levels and broken out to a connector on the cartridge.
 
@@ -1614,14 +1715,14 @@ This cartridge has three connectors:
 
 All X76F041 cartridges use the following pins:
 
-| Name   | Dir | Usage                                              |
-| :----- | :-- | :------------------------------------------------- |
-| `/DSR` | I   | Cartridge insertion detection (grounded)           |
-| `D0`   | O   | Drives X76F041 I2C SDA when `SDA` is set as output |
-| `D1`   | O   | X76F041 I2C SCL                                    |
-| `D2`   | O   | X76F041 chip select (`/CS`)                        |
-| `D3`   | O   | X76F041 reset (`RST`)                              |
-| `SDA`  | IO  | X76F041 I2C SDA readout                            |
+| Name   | Dir | Usage                                                |
+| :----- | :-- | :--------------------------------------------------- |
+| `/DSR` | I   | Cartridge insertion detection (grounded)             |
+| `D0`   | O   | Drives X76F041 I2C `SDA` when `IO0` is set as output |
+| `D1`   | O   | X76F041 I2C `SCL`                                    |
+| `D2`   | O   | X76F041 chip select (`/CS`)                          |
+| `D3`   | O   | X76F041 reset (`RST`)                                |
+| `IO0`  | IO  | X76F041 I2C `SDA` readout                            |
 
 X76F041 cartridges equipped with a DS2401 additionally use the following pins:
 
@@ -1700,13 +1801,13 @@ T-shaped cartridge used only by PunchMania/Fighting Mania series. Contains an
 X76F041, a DS2401 and an ADC0838 used to measure up to 8 analog inputs. The ADC
 uses the following pins:
 
-| Name | Dir | Usage                                               |
-| :--- | :-- | :-------------------------------------------------- |
-| `D0` | O   | Chip select to ADC (`/CS`), shared with X76F041 SDA |
-| `D1` | O   | Data clock to ADC (`CLK`), shared with X76F041 SCL  |
-| `D5` | O   | Data input to ADC (`DI`)                            |
-| `I0` | I   | Data output from ADC (`DO`)                         |
-| `I1` | I   | SAR status from ADC (`SARS`)                        |
+| Name | Dir | Usage                                                 |
+| :--- | :-- | :---------------------------------------------------- |
+| `D0` | O   | Chip select to ADC (`/CS`), shared with X76F041 `SDA` |
+| `D1` | O   | Data clock to ADC (`CLK`), shared with X76F041 `SCL`  |
+| `D5` | O   | Data input to ADC (`DI`)                              |
+| `I0` | I   | Data output from ADC (`DO`)                           |
+| `I1` | I   | SAR status from ADC (`SARS`)                          |
 
 This cartridge has two connectors:
 
@@ -1761,13 +1862,13 @@ This cartridge has two connectors:
 
 All ZS01 cartridges use the following pins:
 
-| Name   | Dir | Usage                                           |
-| :----- | :-- | :---------------------------------------------- |
-| `/DSR` | I   | Cartridge insertion detection (grounded)        |
-| `D0`   | O   | Drives ZS01 I2C SDA when `SDA` is set as output |
-| `D1`   | O   | ZS01 I2C SCL                                    |
-| `D3`   | O   | ZS01 reset                                      |
-| `SDA`  | IO  | ZS01 I2C SDA readout                            |
+| Name   | Dir | Usage                                             |
+| :----- | :-- | :------------------------------------------------ |
+| `/DSR` | I   | Cartridge insertion detection (grounded)          |
+| `D0`   | O   | Drives ZS01 I2C `SDA` when `IO0` is set as output |
+| `D1`   | O   | ZS01 I2C `SCL`                                    |
+| `D3`   | O   | ZS01 reset                                        |
+| `IO0`  | IO  | ZS01 I2C `SDA` readout                            |
 
 All cartridges are fitted with a DS2401, however it is connected to a GPIO pin
 on the ZS01 rather than being directly exposed to the 573. The ZS01 additionally
@@ -2095,7 +2196,6 @@ PS1 kernel, plus a custom shell executable.
 - [JVS MCU test sequence](#jvs-mcu-test-sequence)
 - [DVD-ROM support](#dvd-rom-support)
 - [Scrapped CF card support](#scrapped-cf-card-support)
-- [BIOS mod boards](#bios-mod-boards)
 
 ### Shell revisions
 
@@ -2143,7 +2243,7 @@ have been slightly tweaked to account for the hardware:
 - Most CD-ROM APIs and the ISO9660 filesystem driver seem to have been purged.
 - The code to parse `SYSTEM.CNF` and launch the boot executable from the CD-ROM
   has been made inaccessible. The shell handles executable loading and booting
-  executables on its own, without ever returning to the kernel.
+  on its own, without ever returning to the kernel.
 - The kernel initializes the EXP1 region and clears the watchdog periodically
   while booting. It does *not* keep clearing it in the background (e.g. from the
   exception handler) once the shell is loaded.
@@ -2155,8 +2255,8 @@ have been slightly tweaked to account for the hardware:
 - The GPU is reset and a series of color bars is displayed while the shell is
   being relocated to RAM. This feature is also present in other non-retail
   kernels such as the DTL-H2000's.
-- The shell executable is launched through a stub that contains a
-  `Lisenced by Sony Computer Entertainment Inc.(SCEI)` (sic) string, validated
+- The shell is launched through a stub that contains a
+  `Lisenced by Sony Computer Entertainment Inc.(SCEI)` \[sic\] string, validated
   by the kernel in a similar (but not identical) way to PS1 expansion port ROMs.
 
 ### Boot sequence
@@ -2168,8 +2268,8 @@ they start by initializing the system bus and proceed to run a hardware
 self-test. The outcome of all checks is displayed on screen, with the following
 ones being performed:
 
-- `22G`: BIOS ROM integrity check. A checksum is calculated and compared to the
-  one stored at the end of the ROM;
+- `22G`: BIOS ROM integrity check. A checksum is computed and verified against
+  the one present in the ROM at `0xbfc7fffc-0xbfc7ffff`;
 - `16H`, `16G`, `14H`, `14G`: main RAM read/write test (first row of chips on
   the board, closest to the CPU);
 - `12H`, `12G`, `9H`, `9G`: main RAM read/write test (second row of chips on the
@@ -2234,12 +2334,12 @@ uint32_t exe_crc32(const uint8_t *data, size_t length) {
             crc >>= 1;
             if (temp & 1)
                 crc ^= EXE_CRC32_POLYNOMIAL;
-
-            if (offset)
-                offset <<= 1;
-            else
-                offset = 1;
         }
+
+        if (offset)
+            offset <<= 1;
+        else
+            offset = 1;
     }
 
     return ~crc;
@@ -2257,8 +2357,11 @@ bool is_exe_valid(void) {
     if (memcmp(EXE_HEADER_PTR, "PS-X EXE", 8))
         return false;
 
-    size_t   length = 2048 + *EXE_TEXT_SIZE_PTR;
-    uint32_t crc    = exe_crc32(EXE_HEADER_PTR, length);
+    // BUG: the actual size of the executable including the header is
+    // (2048 + *EXE_TEXT_SIZE_PTR), however neither the 700A01 nor 700B01 shells
+    // take this into account and instead end up ignoring the executable's last
+    // 2048 bytes.
+    uint32_t crc = exe_crc32(EXE_HEADER_PTR, *EXE_TEXT_SIZE_PTR);
 
     return (crc == *EXE_DATA_PTR);
 }
@@ -2378,7 +2481,7 @@ next to the PCMCIA slots that can be used to rewire the chip select signals. It
 is currently unclear if these jumpers are actually sufficient to enable CF card
 booting without any additional hardware or BIOS modifications.
 
-### BIOS mod boards
+## Bootleg mod boards
 
 It is not uncommon to find 573s fitted with a bootleg BIOS "mod board" in place
 of the stock `700A01` or `700B01` mask ROM. These boards used to be bundled
@@ -2432,6 +2535,53 @@ of each character will always yield the same result. Presumably bootleggers were
 unable to find the code in charge of BIOS ROM checksum validation and found it
 easier to just turn the string into random nonsense whose checksum collided with
 the original one.
+
+### `DDRTURBO` mod board
+
+Board required by and specific to the DDR Extreme PLUS hack. Unlike all other
+currently known boards, this one actually adds new functionality to the system:
+the ability to speed up MP3 playback... *by taking the place of the 29.45 MHz*
+*main oscillator* on the digital I/O board, which is desoldered and replaced
+with a bodge wire. It features three crystal oscillators supplying the following
+clocks:
+
+- **29.5 MHz** (0.16% faster than stock, referred to as "Normal Speed" in
+  Extreme PLUS)
+- **33 MHz** (12.05% faster than stock, referred to as "Speed up 10%" in Extreme
+  PLUS)
+- **36 MHz** (22.24% faster than stock, referred to as "Speed up 20%" in Extreme
+  PLUS)
+
+The board listens for reads from the upper half of BIOS ROM
+(`0xbfc40000-0xbfc7ffff`) and latches bits 5-6 of the byte read to determine
+which clock to output to the digital I/O board:
+
+| Byte read    | Clock           |
+| -----------: | --------------: |
+| `0b*00*****` |          33 MHz |
+| `0b*01*****` |          36 MHz |
+| `0b*10*****` |        29.5 MHz |
+| `0b*11*****` | Unknown (none?) |
+
+**NOTE**: kernel code execution while the game is running will *not* affect the
+clock as the kernel is contained entirely within the ROM's first half. The
+second half is in fact only accessed on startup when relocating the shell
+executable to RAM and computing the ROM checksum.
+
+In order to switch clocks, Extreme PLUS always reads from one of the following
+addresses:
+
+| Address read | Byte read | Clock    |
+| -----------: | --------: | -------: |
+| `0xbfc40ebf` |    `0x55` | 29.5 MHz |
+| `0xbfc40810` |    `0x00` |   33 MHz |
+| `0xbfc41341` |    `0xaa` |   36 MHz |
+
+The board's EPROM holds a copy of the 700A01 BIOS with the last byte of the
+checksum at `0xbfc7ffff` modified from `0xf9` to `0x39`. Extreme PLUS uses this
+change to detect the mod board and will refuse to run if it is not present. The
+padding byte at `0xbfc7fffb` is also changed from `0xff` to `0x3f` in order for
+the contents of the ROM to match the new checksum.
 
 ## Game-specific information
 
@@ -2585,12 +2735,46 @@ instead:
 
 ## Notes
 
+- [Hard-to-install games](#hard-to-install-games)
 - [Homebrew guidelines](#homebrew-guidelines)
 - [Missing support for PAL mode](#missing-support-for-pal-mode)
 - [Flash chips and PCMCIA cards](#flash-chips-and-pcmcia-cards)
 - [Known working replacement PCMCIA cards](#known-working-replacement-pcmcia-cards)
 - [Known working replacement drives](#known-working-replacement-drives)
 - [Bemani launcher error and status codes](#bemani-launcher-error-and-status-codes)
+
+### Hard-to-install games
+
+While the vast majority of 573 games can be trivially installed by inserting the
+respective game disc (or sometimes a separate install disc) and a new security
+cartridge, there are a few ones that require more complex installation
+procedures:
+
+- **Games without a CD-ROM**: for what should be obvious reasons, such games
+  cannot be installed without either using homebrew flashing tools or injecting
+  a flash image into another game's CD-ROM installer. Konami's "official"
+  installation method was to boot the flash image from a PCMCIA card, which the
+  game will detect and copy over to the internal flash.
+- **Hyper Bishi Bashi Champ**, **Handle/Steering Champ**: RTC RAM is employed as
+  a "suicide battery" of sorts by pre-populating it with a header and other data
+  at the factory. If any of the data is corrupted or missing, the game will
+  display "HARDWARE UNMATCHED" and refuse to boot any further.
+- **Dance Dance Revolution (`JAB` version)**: also checks RTC RAM and will not
+  boot if its header is missing from the first 32 bytes (subsequent data can be
+  uninitialized and will be rebuilt automatically if needed). Additionally, even
+  though the game requires a CD-ROM, its disc only contains CD-DA tracks and
+  lacks an installer or flash image, requiring the same workarounds as
+  CD-ROM-less games in order to install it.
+- **Dance Dance Revolution 4thMIX PLUS** and **PLUS Solo**: as this game is an
+  upgrade to DDR 4thMIX, the installer will refuse to proceed unless 4thMIX's
+  header is present in the first 32 bytes of RTC RAM. This check is only
+  performed during installation; the game itself will rebuild the entire
+  contents of the RTC if the header is invalid.
+- **Dancing Stage feat. Dreams Come True** (both analog I/O and digital I/O
+  versions): notorious for requiring a lot of juggling with security cartridges.
+  The installer prompts for a cartridge from a previous game that is allowed to
+  be upgraded, which will be invalidated and made unusable as part of the
+  installation process.
 
 ### Homebrew guidelines
 
@@ -2693,9 +2877,10 @@ contain flash chips listed in the previous section will work.
 
 | Manufacturer   | Model                                | Flash chips    | Capacity | Bus type | Manuf. ID | Device ID | Working | Notes                                                                     |
 | :------------- | :----------------------------------- | :------------- | -------: | -------: | :-------- | :-------- | :------ | :------------------------------------------------------------------------ |
-| Centennial     | PM24265, FL32M-20-\*-67              | 16x 28F016S5   |    32 MB |    8-bit | `0x8989`  | `0xaaaa`  | **Yes** |                                                                           |
+| ~~Centennial~~ | ~~PM24265, FL32M-20-\*-67~~          | 16x 28F016S5   |    32 MB |    8-bit | `0x8989`  | `0xaaaa`  | Yes\*   | See note below on model numbers                                           |
+| ~~Centennial~~ | ~~PM24265, FL32M-20-\*-67~~          | 16x AM29F016   |    32 MB |    8-bit | `0x0101`  | `0xadad`  | No      | Same command set as Fujitsu cards, may work with ID check patching        |
 | ~~Centennial~~ | ~~PM24276, FL32M-20-\*-J5-03~~       | 4x 28F640J5    |    32 MB |   16-bit | `0x0089`  | `0x0015`  | No      |                                                                           |
-| ~~Centennial~~ | ~~PM24282, FL32M-20-\*-S5-03~~       | 16x AM29F016   |    32 MB |    8-bit | `0x0101`  | `0xadad`  | No      | Same command set as Fujitsu cards, may work with minimal game patching    |
+| ~~Centennial~~ | ~~PM24282, FL32M-20-\*-S5-03~~       | 16x AM29F016   |    32 MB |    8-bit | `0x0101`  | `0xadad`  | No      | Same command set as Fujitsu cards, may work with ID check patching        |
 | Fujitsu        | "32MB Flash Card" (no model number?) | 16x MBM29F016A |    32 MB |    8-bit | `0x0404`  | `0xadad`  | **Yes** | Stock card (Konami sticker covers Fujitsu logo)                           |
 | Fujitsu        | "32MB Flash Card" (no model number?) | 16x MBM29F017A |    32 MB |    8-bit | `0x0404`  | `0x3d3d`  | **Yes** | Stock card (Konami sticker covers Fujitsu logo)                           |
 | Sharp          | ID245G01                             | 4x LH28F016S   |     8 MB |    8-bit | `0x8989`  | `0xaaaa`  | **Yes** | Stock card (Konami sticker covers Sharp logo), used by GunMania Zone Plus |
@@ -2703,6 +2888,11 @@ contain flash chips listed in the previous section will work.
 
 Note that most of these cards have identical labels and can typically only be
 told apart from the model number printed on the bottom side or one of the edges.
+
+**IMPORTANT**: the model numbers on Centennial cards seem to be inconsistent and
+not necessarily related to which flash chips the card is fitted with. As such
+**buying these cards for use with 573 games is strongly discouraged**, even
+though some of them are known to use parts compatible with Konami's driver.
 
 ### Known working replacement drives
 
@@ -2724,10 +2914,10 @@ on audio timing.
 | Manufacturer         | Known rebrands | Model          | Type | BIOS    | CD-DA   | Notes                               |
 | :------------------- | :------------- | :------------- | :--- | :------ | :------ | :---------------------------------- |
 | ASUSTeK              |                | DVD-E616P3     | DVD  | **Yes** | Unknown |                                     |
-| Compaq               |                | CRN-8241B      | CD   | **Yes** | **Yes** | Laptop drive, has CD-DA sync issues |
 | Creative             |                | CD4832E        | CD   | **Yes** | No      |                                     |
 | Hitachi              |                | CDR-7930       | CD   | **Yes** | No      |                                     |
 | LG                   | Compaq         | CRD-8400B      |      | **Yes** | Unknown |                                     |
+| LG?                  | Compaq         | CRN-8241B      | CD   | **Yes** | **Yes** | Laptop drive, has CD-DA sync issues |
 | LG                   |                | GCE-8160B      | CD   | **Yes** | No      |                                     |
 | LG                   |                | GCR-8523B      | CD   | **Yes** | Unknown |                                     |
 | LG                   |                | GCR-8525B      | CD   | **Yes** | **Yes** | Has CD-DA sync issues               |
@@ -3034,7 +3224,7 @@ All signals are 5V as they go through level shifters.
 |   3 | `/DSR`   | I   | Usually shorted to ground    |  25 | `MCUCLK` | O   | 7.3728 MHz JVS MCU clock           |
 |   4 | `NC`     |     | May actually be `/DTR`?      |  26 | `GND`    |     |                                    |
 |   5 | `TX`     | O   |                              |  27 | `DRDY`   | O   | Goes high when 573 updates `D0-D7` |
-|   6 | `RX`     | I   |                              |  28 | `SDA`    | IO  |                                    |
+|   6 | `RX`     | I   |                              |  28 | `IO0`    | IO  |                                    |
 |   7 | `/RESET` | IO  | System reset (from watchdog) |  29 | `/IREQ`  | I   | Sets `IRDY` when pulsed low        |
 |   8 | `GND`    |     |                              |  30 | `/DACK`  | I   | Clears `DRDY` when pulsed low      |
 |   9 | `GND`    |     |                              |  31 | `IRDY`   | O   | Goes low when 573 reads `I0-I7`    |
@@ -3173,7 +3363,7 @@ output, unused by the 573.
 |   2 | `GND`   |     |
 |   3 | `WDEN`  | I   |
 
-#### JVS MCU pin mapping
+#### H8/3644 JVS MCU pin mapping
 
 | Pin   | H8 GPIO   | Dir | Connected to       | Usage                                         |
 | ----: | :-------- | :-- | :----------------- | :-------------------------------------------- |
@@ -3374,7 +3564,46 @@ The pinout of this connector is currently unknown.
 |   5 | `?`     |     |          |
 |   6 | `?`     |     |          |
 
-#### XCS40XL FPGA pin mapping
+#### Digital I/O XC9536 CPLD pin mapping
+
+| Pin | JTAG | CPLD alt. | Dir | Connected to | Usage                                |
+| --: | ---: | :-------- | :-- | :----------- | :----------------------------------- |
+|   1 |   51 |           | IO  | System bus   | Data bus bit 15                      |
+|   2 |  105 |           | IO  | System bus   | Data bus bit 14                      |
+|   3 |  102 |           | IO  | System bus   | Data bus bit 13                      |
+|   4 |   96 |           | IO  | System bus   | Data bus bit 12                      |
+|   5 |   99 | `GCK1`    |     | Unknown      | Unknown (system clock?)              |
+|   6 |   93 | `GCK2`    |     |              | _Unused_                             |
+|   7 |   87 | `GCK3`    | O   | Light bank B | Output B3                            |
+|   8 |   90 |           | O   | Light bank B | Output B2                            |
+|   9 |   84 |           | O   | Light bank B | Output B1                            |
+|  11 |   81 |           | O   | Light bank B | Output B0                            |
+|  12 |   78 |           | O   | Light bank C | Output C7                            |
+|  13 |   75 |           | O   | Light bank C | Output C6                            |
+|  14 |   72 |           | O   | Light bank C | Output C5                            |
+|  18 |   69 |           | O   | Light bank C | Output C4                            |
+|  19 |   66 |           | O   | Light bank C | Output C3                            |
+|  20 |   63 |           | O   | Light bank C | Output C2                            |
+|  22 |   60 |           | O   | Light bank C | Output C1                            |
+|  24 |   57 |           | O   | Light bank C | Output C0                            |
+|  25 |    3 |           | O   | Audio DAC    | Chip reset/mute                      |
+|  26 |    6 |           | ?   | FPGA         | Configuration status/reset (`/INIT`) |
+|  27 |    9 |           | ?   | FPGA         | Configuration status (`DONE`)        |
+|  28 |   12 |           | O   | FPGA         | Configuration reset (`/PROGRAM`)     |
+|  29 |   15 |           | O   | FPGA         | Configuration data (`DIN`)           |
+|  33 |   18 |           | O   | FPGA         | Configuration bit clock (`CCLK`)     |
+|  34 |   21 |           | I   | System bus   | I/O board chip select (`/CS?`)       |
+|  35 |   24 |           | I   | System bus   | Read/write strobe?                   |
+|  36 |   27 |           | I   | System bus   | Read/write strobe?                   |
+|  37 |   30 |           | I   | System bus   | Address bus bit 7                    |
+|  38 |   33 |           | I   | System bus   | Address bus bit 6                    |
+|  39 |   36 | `GSR`     | I   | System bus   | Address bus bit 5                    |
+|  40 |   39 | `GTS2`    | I   | System bus   | Address bus bit 4                    |
+|  42 |   45 | `GTS1`    | I   | System bus   | Address bus bit 3                    |
+|  43 |   42 |           | I   | System bus   | Address bus bit 2                    |
+|  44 |   48 |           | I   | System bus   | Address bus bit 1                    |
+
+#### Digital I/O XCS40XL FPGA pin mapping
 
 | Pin   | JTAG | FPGA alt.     | Dir | Delay | Slew | Connected to         | Usage                            |
 | ----: | ---: | :------------ | :-- | :---- | :--- | :------------------- | :------------------------------- |
@@ -3440,7 +3669,7 @@ The pinout of this connector is currently unknown.
 |    74 |  414 |               | O   |       | Slow | Light bank A         | Output A3                        |
 |    75 |  417 |               | O   |       | Slow | Light bank A         | Output A2                        |
 |    76 |  420 |               | O   |       | Slow | Light bank A         | Output A1                        |
-|    77 |  423 | `/INIT`       | IO  | -     | -    | CPLD                 | FPGA configuration status        |
+|    77 |  423 | `/INIT`       | IO  | -     | -    | CPLD                 | Configuration status/reset       |
 |    80 |  426 |               | O   |       | Slow | Light bank A         | Output A0                        |
 |    81 |  429 |               | O   |       | Slow | Light bank A         | Output A7                        |
 |    82 |  432 |               | O   |       | Slow | Light bank A         | Output A6                        |
@@ -3462,51 +3691,51 @@ The pinout of this connector is currently unknown.
 |   100 |  501 |               | I   | Yes   |      | ARCnet transceiver   | Network RX                       |
 |   101 |  504 |               |     |       |      |                      | _Unused_                         |
 |   102 |  507 | `GCK4`        |     |       |      |                      | _Unused_                         |
-|   104 |      | `DONE`        | IO  | -     | -    | CPLD                 | FPGA configuration status        |
-|   106 |      | `/PROGRAM`    | I   | -     | -    | CPLD                 | FPGA configuration reset         |
-|   107 |  510 | `D7`          | IO  | No    | Slow | DS2433 (unpopulated) | Unused 1-wire bus (open drain)   |
+|   104 |      | `DONE`        | IO  | -     | -    | CPLD                 | Configuration status             |
+|   106 |      | `/PROGRAM`    | I   | -     | -    | CPLD                 | Configuration reset              |
+|   107 |  510 | `D7`          | IO  | No    | Slow | DS2433 (unpopulated) | Unused 1-wire bus (open-drain)   |
 |   108 |  513 | `GCK5`        |     |       |      |                      | _Unused_                         |
-|   109 |  516 |               | IO  | No    | Slow | DS2401               | 1-wire bus (open drain)          |
-|   110 |  519 |               | I   | No    |      | 573 bus              | Address bus bit 7                |
+|   109 |  516 |               | IO  | No    | Slow | DS2401               | 1-wire bus (open-drain)          |
+|   110 |  519 |               | I   | No    |      | System bus           | Address bus bit 7                |
 |   111 |  525 |               |     |       |      |                      | _Unused_                         |
-|   112 |  534 | `D6`          | I   | No    |      | 573 bus              | Address bus bit 6                |
-|   113 |  537 |               | I   | No    |      | 573 bus              | Address bus bit 5                |
-|   114 |  540 |               | I   | No    |      | 573 bus              | Address bus bit 4                |
-|   115 |  543 |               | I   | No    |      | 573 bus              | Address bus bit 3                |
-|   116 |  546 |               | I   | No    |      | 573 bus              | Address bus bit 2                |
-|   117 |  549 |               | I   | No    |      | 573 bus              | Address bus bit 1                |
-|   119 |  558 |               | O   |       | Slow | Unknown              | Set up as AND of inputs 0-3 (?)  |
-|   120 |  561 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 15                  |
-|   122 |  564 | `D5`          | IO  | Yes   | Slow | 573 bus              | Data bus bit 14                  |
-|   123 |  567 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 13                  |
-|   124 |  576 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 12                  |
-|   125 |  579 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 11                  |
-|   126 |  582 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 10                  |
-|   127 |  585 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 9                   |
-|   128 |  588 | `D4`          | IO  | Yes   | Slow | 573 bus              | Data bus bit 8                   |
-|   129 |  591 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 7                   |
-|   132 |  594 | `D3`          | IO  | Yes   | Slow | 573 bus              | Data bus bit 6                   |
-|   133 |  597 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 5                   |
-|   134 |  600 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 4                   |
-|   135 |  603 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 3                   |
-|   136 |  606 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 2                   |
-|   137 |  609 |               | IO  | Yes   | Slow | 573 bus              | Data bus bit 1                   |
-|   138 |  618 | `D2`          | IO  | Yes   | Slow | 573 bus              | Data bus bit 0                   |
+|   112 |  534 | `D6`          | I   | No    |      | System bus           | Address bus bit 6                |
+|   113 |  537 |               | I   | No    |      | System bus           | Address bus bit 5                |
+|   114 |  540 |               | I   | No    |      | System bus           | Address bus bit 4                |
+|   115 |  543 |               | I   | No    |      | System bus           | Address bus bit 3                |
+|   116 |  546 |               | I   | No    |      | System bus           | Address bus bit 2                |
+|   117 |  549 |               | I   | No    |      | System bus           | Address bus bit 1                |
+|   119 |  558 |               | O   |       | Slow | Unknown              | Unknown                          |
+|   120 |  561 |               | IO  | Yes   | Slow | System bus           | Data bus bit 15                  |
+|   122 |  564 | `D5`          | IO  | Yes   | Slow | System bus           | Data bus bit 14                  |
+|   123 |  567 |               | IO  | Yes   | Slow | System bus           | Data bus bit 13                  |
+|   124 |  576 |               | IO  | Yes   | Slow | System bus           | Data bus bit 12                  |
+|   125 |  579 |               | IO  | Yes   | Slow | System bus           | Data bus bit 11                  |
+|   126 |  582 |               | IO  | Yes   | Slow | System bus           | Data bus bit 10                  |
+|   127 |  585 |               | IO  | Yes   | Slow | System bus           | Data bus bit 9                   |
+|   128 |  588 | `D4`          | IO  | Yes   | Slow | System bus           | Data bus bit 8                   |
+|   129 |  591 |               | IO  | Yes   | Slow | System bus           | Data bus bit 7                   |
+|   132 |  594 | `D3`          | IO  | Yes   | Slow | System bus           | Data bus bit 6                   |
+|   133 |  597 |               | IO  | Yes   | Slow | System bus           | Data bus bit 5                   |
+|   134 |  600 |               | IO  | Yes   | Slow | System bus           | Data bus bit 4                   |
+|   135 |  603 |               | IO  | Yes   | Slow | System bus           | Data bus bit 3                   |
+|   136 |  606 |               | IO  | Yes   | Slow | System bus           | Data bus bit 2                   |
+|   137 |  609 |               | IO  | Yes   | Slow | System bus           | Data bus bit 1                   |
+|   138 |  618 | `D2`          | IO  | Yes   | Slow | System bus           | Data bus bit 0                   |
 |   139 |  621 |               |     |       |      |                      | _Unused_                         |
 |   141 |  624 |               |     |       |      |                      | _Unused_                         |
-|   142 |  627 |               | I   | No    |      | 573 bus              | I/O board chip select            |
+|   142 |  627 |               | I   | No    |      | System bus           | I/O board chip select (`/CS?`)   |
 |   144 |  639 |               |     |       |      |                      | _Unused_                         |
-|   145 |  642 |               | I   | No    |      | 573 bus              | Write strobe (`/WR0`)            |
-|   146 |  645 |               | I   | No    |      | 573 bus              | Read strobe (`/RD`)              |
+|   145 |  642 |               | I   | No    |      | System bus           | Write strobe (`/WR0`)            |
+|   146 |  645 |               | I   | No    |      | System bus           | Read strobe (`/RD`)              |
 |   147 |  648 |               |     |       |      |                      | _Unused_                         |
 |   148 |  651 |               | I   | No    |      | MAS3507D             | MP3 data request flag (`PI19`)   |
 |   149 |  654 | `D1`          | O   |       | Slow | MAS3507D             | PIO chip select (`/PCS`)         |
-|   150 |  657 |               | IO  | No    | Slow | MAS3507D             | I2C SDA                          |
-|   151 |  666 |               | IO  | No    | Slow | MAS3507D             | I2C SCL                          |
+|   150 |  657 |               | IO  | No    | Slow | MAS3507D             | I2C `SDA`                        |
+|   151 |  666 |               | IO  | No    | Slow | MAS3507D             | I2C `SCL`                        |
 |   152 |  669 |               | O   |       | Slow | MAS3507D             | Chip reset (`/POR`)              |
-|   153 |  672 | `D0`/`DIN`    | I   | -     | -    | CPLD                 | FPGA configuration data          |
+|   153 |  672 | `D0`/`DIN`    | I   | -     | -    | CPLD                 | Configuration data               |
 |   154 |  675 | `GCK6`/`DOUT` |     |       |      |                      | _Unused_                         |
-|   155 |      | `CCLK`        | I   | -     | -    | CPLD                 | FPGA configuration clock         |
+|   155 |      | `CCLK`        | I   | -     | -    | CPLD                 | Configuration bit clock          |
 |   157 |    0 | `TDO`         |     |       |      |                      | _Unused_                         |
 |   159 |    2 |               | I   | No    |      | MAS3507D             | Master clock ready flag (`WRDY`) |
 |   160 |    5 | `GCK7`        | I   | No    |      | Crystal oscillator   | 29.45 MHz main clock             |
@@ -3565,13 +3794,13 @@ Notes:
   some point to make room for the other circuitry.
 - Most input pins have external pullup resistors, so enabling the FPGA's
   internal pullups is not necessary.
-- Light outputs must be configured as open drain in order to work properly. The
+- Light outputs must be configured as open-drain in order to work properly. The
   optocouplers' anodes are fed 5V rather than 3.3V; setting the outputs high
   instead of putting them into high-z will result in a voltage difference of
   ~1.7V across the optocouplers' LEDs, which is enough to trigger them.
 - The "5V tolerant I/O" option in Xilinx's bitstream generator **must** be
   enabled when building custom bitstreams. There are no level shifters between
-  the FPGA and the 573 bus.
+  the FPGA and the 573's system bus.
 - The FPGA's `M0`, `M1` and `/PWRDWN` pins seem to be hardwired to 3.3V.
 - The DAC's `CKS` pin is hardwired to ground, so the I2S master clock must
   always be 256 \* the sampling rate.

@@ -730,9 +730,11 @@ Pin 77..150 = Video RAM Bus. Pin 156..189 = Video Out Bus. Other = CPU Bus. Pin
 
 #### GPU Pinout Notes
 - `SGRAM./CS1` is only used on arcade boards with 2 MB VRAM (two 1 MB chips).
-- `HVHLD` has a 4.7k pullup to 3.5V.
+- `HVHLD` is a lightgun input (similar to `/IRQ10` but handled in hardware) used
+  only by some arcade boards. On retail consoles it has a 4.7k pullup to 3.5V.
 - `TEST0-TEST3` are tied to 3.5V. `PCKSL0-PCKSL2` (outputs possibly related to
-  the current resolution/pixel clock?) are left unconnected.
+  the current horizontal/vertical resolution and thus pixel clock?) are left
+  unconnected.
 - `MCLKIN` and `MCLKOUT` are tied together and wired to the DAC's clock input.
   `MCLKIN` could possibly be an external clock input for genlocking purposes.
 - On earlier motherboards and on most arcade boards only `VCLK_PAL` or
