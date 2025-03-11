@@ -1,0 +1,1740 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/macroblockdecodermdec/">
+      
+      
+        <link rel="prev" href="../geometrytransformationenginegte/">
+      
+      
+        <link rel="next" href="../soundprocessingunitspu/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>Macroblock Decoder (MDEC) - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#macroblock-decoder-mdec" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Macroblock Decoder (MDEC)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        I/O Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        Geometry Transformation Engine (GTE)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Macroblock Decoder (MDEC)
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Macroblock Decoder (MDEC)
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-io-ports" class="md-nav__link">
+    MDEC I/O Ports
+  </a>
+  
+    <nav class="md-nav" aria-label="MDEC I/O Ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801820h-mdec0-mdec-commandparameter-register-w" class="md-nav__link">
+    1F801820h - MDEC0 - MDEC Command/Parameter Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801820hread-mdec-dataresponse-register-r" class="md-nav__link">
+    1F801820h.Read - MDEC Data/Response Register (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801824h-mdec1-mdec-status-register-r" class="md-nav__link">
+    1F801824h - MDEC1 - MDEC Status Register (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801824h-mdec1-mdec-controlreset-register-w" class="md-nav__link">
+    1F801824h - MDEC1 - MDEC Control/Reset Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dma" class="md-nav__link">
+    DMA
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-commands" class="md-nav__link">
+    MDEC Commands
+  </a>
+  
+    <nav class="md-nav" aria-label="MDEC Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mdec1-decode-macroblocks" class="md-nav__link">
+    MDEC(1) - Decode Macroblock(s)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec2-set-quant-tables" class="md-nav__link">
+    MDEC(2) - Set Quant Table(s)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec3-set-scale-table" class="md-nav__link">
+    MDEC(3) - Set Scale Table
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec0-no-function" class="md-nav__link">
+    MDEC(0) - No function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec47-invalid" class="md-nav__link">
+    MDEC(4..7) - Invalid
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-decompression" class="md-nav__link">
+    MDEC Decompression
+  </a>
+  
+    <nav class="md-nav" aria-label="MDEC Decompression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decode_colored_macroblock-mdec1-command-at-15bpp-or-24bpp-depth" class="md-nav__link">
+    decode_colored_macroblock ;MDEC(1) command (at 15bpp or 24bpp depth)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decode_monochrome_macroblock-mdec1-command-at-4bpp-or-8bpp-depth" class="md-nav__link">
+    decode_monochrome_macroblock ;MDEC(1) command (at 4bpp or 8bpp depth)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rl_decode_blockblksrcqt" class="md-nav__link">
+    rl_decode_block(blk,src,qt)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fast_idct_coreblk-fast-idct_core-version" class="md-nav__link">
+    fast_idct_core(blk) ;fast "idct_core" version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real_idct_coreblk-low-level-idct_core-version" class="md-nav__link">
+    real_idct_core(blk) ;low level "idct_core" version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yuv_to_rgbxxyy" class="md-nav__link">
+    yuv_to_rgb(xx,yy)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#y_to_mono" class="md-nav__link">
+    y_to_mono
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_iqtab-mdec2-command" class="md-nav__link">
+    set_iqtab  ;MDEC(2) command
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iqtab_coreiqsrc-src-64-unsigned-paramter-bytes" class="md-nav__link">
+    iqtab_core(iq,src)  ;src = 64 unsigned paramter bytes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scalefactor07-cos07908-for-17-multiplied-by-sqrt2" class="md-nav__link">
+    scalefactor[0..7] = cos((0..7)*90'/8)  ;for [1..7]: multiplied by sqrt(2)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zigzag063" class="md-nav__link">
+    zigzag[0..63] =
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scalezag063-precalulated-factors-for-fast_idct_core" class="md-nav__link">
+    scalezag[0..63] (precalulated factors, for "fast_idct_core")
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zagzig063-reversed-zigzag-table" class="md-nav__link">
+    zagzig[0..63] (reversed zigzag table)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_scale_table-mdec3-command" class="md-nav__link">
+    set_scale_table:  ;MDEC(3) command
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-data-format" class="md-nav__link">
+    MDEC Data Format
+  </a>
+  
+    <nav class="md-nav" aria-label="MDEC Data Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#colored-macroblocks-16x16-pixels-in-15bpp-or-24bpp-depth-mode" class="md-nav__link">
+    Colored Macroblocks (16x16 pixels) (in 15bpp or 24bpp depth mode)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monochrome-macroblocks-8x8-pixel-in-4bpp-or-8bpp-depth-mode" class="md-nav__link">
+    Monochrome Macroblocks (8x8 pixel) (in 4bpp or 8bpp depth mode)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocks-8x8-pixels" class="md-nav__link">
+    Blocks (8x8 pixels)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#str-files" class="md-nav__link">
+    .STR Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec-vs-jpeg" class="md-nav__link">
+    MDEC vs JPEG
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-length-compressed-blocks" class="md-nav__link">
+    Run-Length compressed Blocks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dct-1st-value" class="md-nav__link">
+    DCT (1st value)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rle-run-length-data-for-2nd-through-64th-value" class="md-nav__link">
+    RLE (Run length data, for 2nd through 64th value)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eob-end-of-block" class="md-nav__link">
+    EOB (End Of Block)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dummy-halfwords" class="md-nav__link">
+    Dummy halfwords
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        Sound Processing Unit (SPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        Serial Interfaces (SIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        Expansion Port (PIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        Memory Control
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        CPU Specifications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        PSX Dev-Board Chipsets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-io-ports" class="md-nav__link">
+    MDEC I/O Ports
+  </a>
+  
+    <nav class="md-nav" aria-label="MDEC I/O Ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801820h-mdec0-mdec-commandparameter-register-w" class="md-nav__link">
+    1F801820h - MDEC0 - MDEC Command/Parameter Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801820hread-mdec-dataresponse-register-r" class="md-nav__link">
+    1F801820h.Read - MDEC Data/Response Register (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801824h-mdec1-mdec-status-register-r" class="md-nav__link">
+    1F801824h - MDEC1 - MDEC Status Register (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801824h-mdec1-mdec-controlreset-register-w" class="md-nav__link">
+    1F801824h - MDEC1 - MDEC Control/Reset Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dma" class="md-nav__link">
+    DMA
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-commands" class="md-nav__link">
+    MDEC Commands
+  </a>
+  
+    <nav class="md-nav" aria-label="MDEC Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mdec1-decode-macroblocks" class="md-nav__link">
+    MDEC(1) - Decode Macroblock(s)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec2-set-quant-tables" class="md-nav__link">
+    MDEC(2) - Set Quant Table(s)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec3-set-scale-table" class="md-nav__link">
+    MDEC(3) - Set Scale Table
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec0-no-function" class="md-nav__link">
+    MDEC(0) - No function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec47-invalid" class="md-nav__link">
+    MDEC(4..7) - Invalid
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-decompression" class="md-nav__link">
+    MDEC Decompression
+  </a>
+  
+    <nav class="md-nav" aria-label="MDEC Decompression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decode_colored_macroblock-mdec1-command-at-15bpp-or-24bpp-depth" class="md-nav__link">
+    decode_colored_macroblock ;MDEC(1) command (at 15bpp or 24bpp depth)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decode_monochrome_macroblock-mdec1-command-at-4bpp-or-8bpp-depth" class="md-nav__link">
+    decode_monochrome_macroblock ;MDEC(1) command (at 4bpp or 8bpp depth)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rl_decode_blockblksrcqt" class="md-nav__link">
+    rl_decode_block(blk,src,qt)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fast_idct_coreblk-fast-idct_core-version" class="md-nav__link">
+    fast_idct_core(blk) ;fast "idct_core" version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real_idct_coreblk-low-level-idct_core-version" class="md-nav__link">
+    real_idct_core(blk) ;low level "idct_core" version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yuv_to_rgbxxyy" class="md-nav__link">
+    yuv_to_rgb(xx,yy)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#y_to_mono" class="md-nav__link">
+    y_to_mono
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_iqtab-mdec2-command" class="md-nav__link">
+    set_iqtab  ;MDEC(2) command
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iqtab_coreiqsrc-src-64-unsigned-paramter-bytes" class="md-nav__link">
+    iqtab_core(iq,src)  ;src = 64 unsigned paramter bytes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scalefactor07-cos07908-for-17-multiplied-by-sqrt2" class="md-nav__link">
+    scalefactor[0..7] = cos((0..7)*90'/8)  ;for [1..7]: multiplied by sqrt(2)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zigzag063" class="md-nav__link">
+    zigzag[0..63] =
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scalezag063-precalulated-factors-for-fast_idct_core" class="md-nav__link">
+    scalezag[0..63] (precalulated factors, for "fast_idct_core")
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zagzig063-reversed-zigzag-table" class="md-nav__link">
+    zagzig[0..63] (reversed zigzag table)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set_scale_table-mdec3-command" class="md-nav__link">
+    set_scale_table:  ;MDEC(3) command
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-data-format" class="md-nav__link">
+    MDEC Data Format
+  </a>
+  
+    <nav class="md-nav" aria-label="MDEC Data Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#colored-macroblocks-16x16-pixels-in-15bpp-or-24bpp-depth-mode" class="md-nav__link">
+    Colored Macroblocks (16x16 pixels) (in 15bpp or 24bpp depth mode)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monochrome-macroblocks-8x8-pixel-in-4bpp-or-8bpp-depth-mode" class="md-nav__link">
+    Monochrome Macroblocks (8x8 pixel) (in 4bpp or 8bpp depth mode)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocks-8x8-pixels" class="md-nav__link">
+    Blocks (8x8 pixels)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#str-files" class="md-nav__link">
+    .STR Files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mdec-vs-jpeg" class="md-nav__link">
+    MDEC vs JPEG
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-length-compressed-blocks" class="md-nav__link">
+    Run-Length compressed Blocks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dct-1st-value" class="md-nav__link">
+    DCT (1st value)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rle-run-length-data-for-2nd-through-64th-value" class="md-nav__link">
+    RLE (Run length data, for 2nd through 64th value)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eob-end-of-block" class="md-nav__link">
+    EOB (End Of Block)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dummy-halfwords" class="md-nav__link">
+    Dummy halfwords
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="macroblock-decoder-mdec">Macroblock Decoder (MDEC)</h1>
+<p>The MDEC is a JPEG-style Macroblock Decoder, that can decompress pictures (or a
+series of pictures, for being displayed as a movie).<br/></p>
+<p><a href="./#mdec-io-ports">MDEC I/O Ports</a><br/>
+<a href="./#mdec-commands">MDEC Commands</a><br/>
+<a href="./#mdec-decompression">MDEC Decompression</a><br/>
+<a href="./#mdec-data-format">MDEC Data Format</a><br/></p>
+<h2 id="mdec-io-ports">MDEC I/O Ports</h2>
+<h4 id="1f801820h-mdec0-mdec-commandparameter-register-w">1F801820h - MDEC0 - MDEC Command/Parameter Register (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  31-0  Command or Parameters
+</code></pre></div>
+Used to send command word, followed by parameter words to the MDEC (usually,
+only the command word is written to this register, and the parameter words are
+transferred via DMA0).<br/></p>
+<h4 id="1f801820hread-mdec-dataresponse-register-r">1F801820h.Read - MDEC Data/Response Register (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  31-0  Macroblock Data (or Garbage if there&#39;s no data available)
+</code></pre></div>
+The data is always output as a 8x8 pixel bitmap, so, when manually reading from
+this register and using colored 16x16 pixel macroblocks, the data from four 8x8
+blocks must be re-ordered accordingly (usually, the data is received via DMA1,
+which is doing the re-ordering automatically). For monochrome 8x8 macroblocks,
+no re-ordering is needed (that works with DMA1 too).<br/></p>
+<h4 id="1f801824h-mdec1-mdec-status-register-r">1F801824h - MDEC1 - MDEC Status Register (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  31    Data-Out Fifo Empty (0=No, 1=Empty)
+  30    Data-In Fifo Full   (0=No, 1=Full, or Last word received)
+  29    Command Busy  (0=Ready, 1=Busy receiving or processing parameters)
+  28    Data-In Request  (set when DMA0 enabled and ready to receive data)
+  27    Data-Out Request (set when DMA1 enabled and ready to send data)
+  26-25 Data Output Depth  (0=4bit, 1=8bit, 2=24bit, 3=15bit)      ;CMD.28-27
+  24    Data Output Signed (0=Unsigned, 1=Signed)                  ;CMD.26
+  23    Data Output Bit15  (0=Clear, 1=Set) (for 15bit depth only) ;CMD.25
+  22-19 Not used (seems to be always zero)
+  18-16 Current Block (0..3=Y1..Y4, 4=Cr, 5=Cb) (or for mono: always 4=Y)
+  15-0  Number of Parameter Words remaining minus 1  (FFFFh=None)  ;CMD.Bit0-15
+</code></pre></div>
+If there's data in the output fifo, then the Current Block bits are always set
+to the current output block number (ie. Y1..Y4; or Y for mono) (this
+information is apparently passed to the DMA1 controller, so that it knows if
+and how it must re-order the data in RAM). If the output fifo is empty, then
+the bits indicate the currently processsed incoming block (ie. Cr,Cb,Y1..Y4; or
+Y for mono).<br/></p>
+<h4 id="1f801824h-mdec1-mdec-controlreset-register-w">1F801824h - MDEC1 - MDEC Control/Reset Register (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  31    Reset MDEC (0=No change, 1=Abort any command, and set status=80040000h)
+  30    Enable Data-In Request  (0=Disable, 1=Enable DMA0 and Status.bit28)
+  29    Enable Data-Out Request (0=Disable, 1=Enable DMA1 and Status.bit27)
+  28-0  Unknown/Not used - usually zero
+</code></pre></div>
+The data requests are required to be enabled for using DMA (and for reading the
+request status flags by software). The Data-Out request acts a bit strange: It
+gets set when a block is available, but, it gets cleared after reading the
+first some words of that block (nethertheless, one can keep reading the whole
+block, until the fifo-empty flag gets set).<br/></p>
+<h4 id="dma">DMA</h4>
+<p>MDEC decompression uses a lot of DMA channels,<br/>
+<div class="highlight"><pre><span></span><code>  1) DMA3 (CDROM)    to send compressed data from CDROM to RAM
+  2) DMA0 (MDEC.In)  to send compressed data from RAM to MDEC
+  3) DMA1 (MDEC.Out) to send uncompressed macroblocks from MDEC to RAM
+  4) DMA2 (GPU)      to send uncompressed macroblocks from RAM to GPU
+</code></pre></div>
+DMA0 and DMA1 should be usually used with a blocksize of 20h words. If
+necessary, the parameters for the MDEC(1) command should be padded with FE00h
+halfwords to match the 20h words (40h halfwords) DMA blocksize.<br/></p>
+<h2 id="mdec-commands">MDEC Commands</h2>
+<h4 id="mdec1-decode-macroblocks">MDEC(1) - Decode Macroblock(s)</h4>
+<p><div class="highlight"><pre><span></span><code>  31-29 Command (1=decode_macroblock)
+  28-27 Data Output Depth  (0=4bit, 1=8bit, 2=24bit, 3=15bit)      ;STAT.26-25
+  26    Data Output Signed (0=Unsigned, 1=Signed)                  ;STAT.24
+  25    Data Output Bit15  (0=Clear, 1=Set) (for 15bit depth only) ;STAT.23
+  24-16 Not used (should be zero)
+  15-0  Number of Parameter Words (size of compressed data)
+</code></pre></div>
+This command is followed by one or more Macroblock parameters (usually, all
+macroblocks for the whole image are sent at once).<br/></p>
+<h4 id="mdec2-set-quant-tables">MDEC(2) - Set Quant Table(s)</h4>
+<p><div class="highlight"><pre><span></span><code>  31-29 Command (2=set_iqtab)
+  28-1  Not used (should be zero)  ;Bit25-28 are copied to STAT.23-26 though
+  0     Color   (0=Luminance only, 1=Luminance and Color)
+</code></pre></div>
+The command word is followed by 64 unsigned parameter bytes for the Luminance
+Quant Table (used for Y1..Y4), and if Command.Bit0 was set, by another 64
+unsigned parameter bytes for the Color Quant Table (used for Cb and Cr).<br/></p>
+<h4 id="mdec3-set-scale-table">MDEC(3) - Set Scale Table</h4>
+<p><div class="highlight"><pre><span></span><code>  31-29 Command (3=set_scale)
+  28-0  Not used (should be zero)  ;Bit25-28 are copied to STAT.23-26 though
+</code></pre></div>
+The command is followed by 64 signed halfwords with 14bit fractional part, the
+values should be usually/always the same values (based on the standard JPEG
+constants, although, MDEC(3) allows to use other values than that constants).<br/></p>
+<h4 id="mdec0-no-function">MDEC(0) - No function</h4>
+<p>This command has no function. Command bits 25-28 are reflected to Status bits
+23-26 as usually. Command bits 0-15 are reflected to Status bits 0-15 (similar
+as the "number of parameter words" for MDEC(1), but without the "minus 1"
+effect, and without actually expecting any parameters).<br/></p>
+<h4 id="mdec47-invalid">MDEC(4..7) - Invalid</h4>
+<p>These commands act identical as MDEC(0).<br/></p>
+<h2 id="mdec-decompression">MDEC Decompression</h2>
+<h4 id="decode_colored_macroblock-mdec1-command-at-15bpp-or-24bpp-depth">decode_colored_macroblock ;MDEC(1) command (at 15bpp or 24bpp depth)</h4>
+<div class="highlight"><pre><span></span><code>  rl_decode_block(Crblk,src,iq_uv)                 ;Cr (low resolution)
+  rl_decode_block(Cbblk,src,iq_uv)                 ;Cb (low resolution)
+  rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(0,0)  ;Y1 (and upper-left Cr,Cb)
+  rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(0,8)  ;Y2 (and upper-right Cr,Cb)
+  rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(8,0)  ;Y3 (and lower-left Cr,Cb)
+  rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(8,8)  ;Y4 (and lower-right Cr,Cb)
+</code></pre></div>
+<h4 id="decode_monochrome_macroblock-mdec1-command-at-4bpp-or-8bpp-depth">decode_monochrome_macroblock ;MDEC(1) command (at 4bpp or 8bpp depth)</h4>
+<div class="highlight"><pre><span></span><code>  rl_decode_block(Yblk,src,iq_y), y_to_mono        ;Y
+</code></pre></div>
+<h4 id="rl_decode_blockblksrcqt">rl_decode_block(blk,src,qt)</h4>
+<div class="highlight"><pre><span></span><code>  for i=0 to 63, blk[i]=0, next i   ;initially zerofill all entries (for skip)
+ @@skip:
+  n=[src], src=src+2, k=0           ;get first entry, init dest addr k=0
+  if n=FE00h then @@skip            ;ignore padding (FE00h as first halfword)
+  q_scale=(n SHR 10) AND 3Fh        ;contains scale value (not &quot;skip&quot; value)
+  val=signed10bit(n AND 3FFh)*qt[k] ;calc first value (without q_scale/8) (?)
+ @@lop:
+  if q_scale=0 then val=signed10bit(n AND 3FFh)*2   ;special mode without qt[k]
+  val=minmax(val,-400h,+3FFh)            ;saturate to signed 11bit range
+  val=val*scalezag[i]                    ;&lt;-- for &quot;fast_idct_core&quot; only
+  if q_scale&gt;0 then blk[zagzig[k]]=val   ;store entry (normal case)
+  if q_scale=0 then blk[k]=val           ;store entry (special, no zigzag)
+  n=[src], src=src+2                     ;get next entry (or FE00h end code)
+  k=k+((n SHR 10) AND 3Fh)+1             ;skip zerofilled entries
+  val=(signed10bit(n AND 3FFh)*qt[k]*q_scale+4)/8  ;calc value for next entry
+  if k&lt;=63 then jump @@lop          ;should end with n=FE00h (that sets k&gt;63)
+  idct_core(blk)
+  return (with &quot;src&quot; address advanced)
+</code></pre></div>
+<h4 id="fast_idct_coreblk-fast-idct_core-version">fast_idct_core(blk) ;fast "idct_core" version</h4>
+<p>Fast code with only 80 multiplications, works only if the scaletable from
+MDEC(3) command contains standard values (which is the case for all known PSX
+games).<br/>
+<div class="highlight"><pre><span></span><code>  src=blk, dst=temp_buffer
+  for pass=0 to 1
+    for i=0 to 7
+      if src[(1..7)*8+i]=0 then      ;when src[(1..7)*8+i] are all zero:
+        dst[i*8+(0..7)]=src[0*8+i]   ;quick fill by src[0*8+i]
+      else
+        z10=src[0*8+i]+src[4*8+i], z11=src[0*8+i]-src[4*8+i]
+        z13=src[2*8+i]+src[6*8+i], z12=src[2*8+i]-src[6*8+i]
+        z12=(1.414213562*z12)-z13          ;=sqrt(2)
+        tmp0=z10+z13, tmp3=z10-z13, tmp1=z11+z12, tmp2=z11-z12
+        z13=src[3*8+i]+src[5*8+i], z10=src[3*8+i]-src[5*8+i]
+        z11=src[1*8+i]+src[7*8+i], z12=src[1*8+i]-src[7*8+i]
+        z5  =(1.847759065*(z12-z10))       ;=sqrt(2)*scalefactor[2]
+        tmp7=z11+z13
+        tmp6=(2.613125930*(z10))+z5-tmp7   ;=scalefactor[2]*2
+        tmp5=(1.414213562*(z11-z13))-tmp6  ;=sqrt(2)
+        tmp4=(1.082392200*(z12))-z5+tmp5   ;=sqrt(2)/scalefactor[2]
+        dst[i*8+0]=tmp0+tmp7, dst[i*8+7]=tmp0-tmp7
+        dst[i*8+1]=tmp1+tmp6, dst[i*8+6]=tmp1-tmp6
+        dst[i*8+2]=tmp2+tmp5, dst[i*8+5]=tmp2-tmp5
+        dst[i*8+4]=tmp3+tmp4, dst[i*8+3]=tmp3-tmp4
+      endif
+    next i
+    swap(src,dst)
+  next pass
+</code></pre></div></p>
+<h4 id="real_idct_coreblk-low-level-idct_core-version">real_idct_core(blk) ;low level "idct_core" version</h4>
+<p>Low level code with 1024 multiplications, using the scaletable from the MDEC(3)
+command. Computes dst=src*scaletable (using normal matrix maths, but with "src"
+being diagonally mirrored, ie. the matrices are processed column by column,
+instead of row by column), repeated with src/dst exchanged.<br/>
+<div class="highlight"><pre><span></span><code>  src=blk, dst=temp_buffer
+  for pass=0 to 1
+    for x=0 to 7
+      for y=0 to 7
+        sum=0
+        for z=0 to 7
+          sum=sum+src[y+z*8]*(scaletable[x+z*8]/8)
+        next z
+        dst[x+y*8]=(sum+0fffh)/2000h               ;&lt;-- or so?
+      next y
+    next x
+    swap(src,dst)
+  next pass
+</code></pre></div>
+The "(sum+0fffh)/2000h" part is meant to strip fractional bits, and to round-up
+the result if the fraction was BIGGER than 0.5. The hardware appears to be
+working roughly like that, still the results aren't perfect.<br/>
+Maybe the real hardware is doing further roundings in other places, possibly
+stripping some fractional bits before summing up "sum", possibly stripping
+different amounts of bits in the two "pass" cycles, and possibly keeping a
+final fraction passed on to the y_to_mono stage.<br/></p>
+<h4 id="yuv_to_rgbxxyy">yuv_to_rgb(xx,yy)</h4>
+<p><div class="highlight"><pre><span></span><code>  for y=0 to 7
+    for x=0 to 7
+      R=[Crblk+((x+xx)/2)+((y+yy)/2)*8], B=[Cbblk+((x+xx)/2)+((y+yy)/2)*8]
+      G=(-0.3437*B)+(-0.7143*R), R=(1.402*R), B=(1.772*B)
+      Y=[Yblk+(x)+(y)*8]
+      R=MinMax(-128,127,(Y+R))
+      G=MinMax(-128,127,(Y+G))
+      B=MinMax(-128,127,(Y+B))
+      if unsigned then BGR=BGR xor 808080h  ;aka add 128 to the R,G,B values
+      dst[(x+xx)+(y+yy)*16]=BGR
+    next x
+  next y
+</code></pre></div>
+Note: The exact fixed point resolution for "yuv_to_rgb" is unknown. And,
+there's probably also some 9bit limit (similar as in "y_to_mono").<br/></p>
+<h4 id="y_to_mono">y_to_mono</h4>
+<div class="highlight"><pre><span></span><code>  for i=0 to 63
+    Y=[Yblk+i]
+    Y=Y AND 1FFh                  ;clip to signed 9bit range
+    Y=MinMax(-128,127,Y)          ;saturate from 9bit to signed 8bit range
+    if unsigned then Y=Y xor 80h  ;aka add 128 to the Y value
+    dst[i]=Y
+  next i
+</code></pre></div>
+<h4 id="set_iqtab-mdec2-command">set_iqtab  ;MDEC(2) command</h4>
+<div class="highlight"><pre><span></span><code>  iqtab_core(iq_y,src), src=src+64       ;luminance quant table
+  if command_word.bit0=1
+    iqtab_core(iq_uv,src), src=src+64    ;color quant table (optional)
+  endif
+</code></pre></div>
+<h4 id="iqtab_coreiqsrc-src-64-unsigned-paramter-bytes">iqtab_core(iq,src)  ;src = 64 unsigned paramter bytes</h4>
+<p><div class="highlight"><pre><span></span><code>  for i=0 to 63, iq[i]=src[i], next i
+</code></pre></div>
+Note: For "fast_idct_core" one could precalc "iq[i]=src[i]*scalezag[i]", but
+that would conflict with the RLE saturation/rounding steps (though those steps
+aren't actually required, so a very-fast decoder could omit them).<br/></p>
+<h4 id="scalefactor07-cos07908-for-17-multiplied-by-sqrt2">scalefactor[0..7] = cos((0..7)*90'/8)  ;for [1..7]: multiplied by sqrt(2)</h4>
+<div class="highlight"><pre><span></span><code>  1.000000000, 1.387039845, 1.306562965, 1.175875602,
+  1.000000000, 0.785694958, 0.541196100, 0.275899379
+</code></pre></div>
+<h4 id="zigzag063">zigzag[0..63] =</h4>
+<div class="highlight"><pre><span></span><code>  0 ,1 ,5 ,6 ,14,15,27,28,
+  2 ,4 ,7 ,13,16,26,29,42,
+  3 ,8 ,12,17,25,30,41,43,
+  9 ,11,18,24,31,40,44,53,
+  10,19,23,32,39,45,52,54,
+  20,22,33,38,46,51,55,60,
+  21,34,37,47,50,56,59,61,
+  35,36,48,49,57,58,62,63
+</code></pre></div>
+<h4 id="scalezag063-precalulated-factors-for-fast_idct_core">scalezag[0..63] (precalulated factors, for "fast_idct_core")</h4>
+<div class="highlight"><pre><span></span><code>  for y=0 to 7
+   for x=0 to 7
+    scalezag[zigzag[x+y*8]] = scalefactor[x] * scalefactor[y] / 8
+   next x
+  next y
+</code></pre></div>
+<h4 id="zagzig063-reversed-zigzag-table">zagzig[0..63] (reversed zigzag table)</h4>
+<div class="highlight"><pre><span></span><code>  for i=0 to 63, zagzig[zigzag[i]]=i, next i
+</code></pre></div>
+<h4 id="set_scale_table-mdec3-command">set_scale_table:  ;MDEC(3) command</h4>
+<p>This command defines the IDCT scale matrix, which should be usually/always:<br/>
+<div class="highlight"><pre><span></span><code>  5A82 5A82 5A82 5A82 5A82 5A82 5A82 5A82
+  7D8A 6A6D 471C 18F8 E707 B8E3 9592 8275
+  7641 30FB CF04 89BE 89BE CF04 30FB 7641
+  6A6D E707 8275 B8E3 471C 7D8A 18F8 9592
+  5A82 A57D A57D 5A82 5A82 A57D A57D 5A82
+  471C 8275 18F8 6A6D 9592 E707 7D8A B8E3
+  30FB 89BE 7641 CF04 CF04 7641 89BE 30FB
+  18F8 B8E3 6A6D 8275 7D8A 9592 471C E707
+</code></pre></div>
+Note that the hardware does actually use only the upper 13bit of those 16bit
+values. The values are choosen like so,<br/>
+<div class="highlight"><pre><span></span><code>  +s0  +s0  +s0  +s0  +s0  +s0  +s0  +s0
+  +s1  +s3  +s5  +s7  -s7  -s5  -s3  -s1
+  +s2  +s6  -s6  -s2  -s2  -s6  +s6  +s2
+  +s3  -s7  -s1  -s5  +s5  +s1  +s7  -s3
+  +s4  -s4  -s4  +s4  +s4  -s4  -s4  +s4
+  +s5  -s1  +s7  +s3  -s3  -s7  +s1  -s5
+  +s6  -s2  +s2  -s6  -s6  +s2  -s2  +s6
+  +s7  -s5  +s3  -s1  +s1  -s3  +s5  -s7
+</code></pre></div>
+whereas, s0..s7 = scalefactor[0..7], multiplied by sqrt(2) (ie. by 1.414), and
+multiplied by 4000h (ie. with 14bit fractional part).<br/></p>
+<h2 id="mdec-data-format">MDEC Data Format</h2>
+<h4 id="colored-macroblocks-16x16-pixels-in-15bpp-or-24bpp-depth-mode">Colored Macroblocks (16x16 pixels) (in 15bpp or 24bpp depth mode)</h4>
+<p>Each macroblock consists of six blocks: Two low-resolution blocks with color
+information (Cr,Cb) and four full-resolution blocks with luminance (grayscale)
+information (Y1,Y2,Y3,Y4). The color blocks are zoomed from 8x8 to 16x16 pixel
+size, merged with the luminance blocks, and then converted from YUV to RGB
+format.<br/>
+<div class="highlight"><pre><span></span><code>   .-----.       .-----.       .-----.         .-----.
+   |     |       |     |       |Y1|Y2|         |     |
+   | Cr  |   +   | Cb  |   +   |--+--|  ----&gt;  | RGB |
+   |     |       |     |       |Y3|Y4|         |     |
+   &#39;-----&#39;       &#39;-----&#39;       &#39;-----&#39;         &#39;-----&#39;
+</code></pre></div>
+Native PSX files are usually containing vertically arranged Macroblocks (eg.
+allowing to send them to the GPU as 16x240 portion) (JPEG-style horizontally
+arranged Macroblocks would require to send the data in 16x16 pixel portions to
+the GPU) (something like 320x16 won't work, since that'd require to wrap from
+the bottom of the first macroblock to the top of the next macroblock).<br/></p>
+<h4 id="monochrome-macroblocks-8x8-pixel-in-4bpp-or-8bpp-depth-mode">Monochrome Macroblocks (8x8 pixel) (in 4bpp or 8bpp depth mode)</h4>
+<p>Each macroblock consist of only one block: with luminance (grayscale)
+information (Y), the data comes out as such (it isn't converted to RGB).<br/>
+<div class="highlight"><pre><span></span><code>   .--.         .--.
+   |Y |  ----&gt;  |Y |
+   &#39;--&#39;         &#39;--&#39;
+</code></pre></div>
+The output is an 8x8 bitmap (not 16x16), so it'd be send to the GPU as 8x8
+pixel rectangle, or multiple blocks at once as 8x240 pixel rectangle. Since the
+data isn't RGB, it should be written to Texture memory (and then it can be
+forwarded to the frame buffer in form of a texture with monochrome 15bit
+palette with 32 grayscales). Alternately, one could convert the 8bpp image to
+24bpp by software (this would allow to use 256 grayscales).<br/></p>
+<h4 id="blocks-8x8-pixels">Blocks (8x8 pixels)</h4>
+<p>An (uncompressed) block consists of 64 values, representing 8x8 pixels. The
+first (upper-left) value is an absolute value (called "DC" value), the
+remaining 63 values are relative to the DC value (called "AC" values). After
+decompression and zig-zag reordering, the data in unfiltered horizontally and
+vertically (IDCT conversion, ie. the relative "AC" values are converted to
+absolute "DC" values).<br/></p>
+<h4 id="str-files">.STR Files</h4>
+<p>PSX Video files are usually having file extension .STR (for "Streaming").<br/></p>
+<h4 id="mdec-vs-jpeg">MDEC vs JPEG</h4>
+<p>The MDEC data format is very similar to the JPEG file format, the main
+difference is that JPEG uses Huffman compressed blocks, whilst MDEC uses
+Run-Length (RL) compressed blocks.<br/>
+The (uncompressed) blocks are same as in JPEGs, using the same zigzag ordering,
+AC to DC conversion, and YUV to RGB conversion (ie. the MDEC hardware can be
+also used to decompress JPEGs, when handling the file header and huffman
+decompression by software).<br/>
+Some other differences are that MDEC has only 2 fixed-purpose quant tables,
+whilst JPEGs \&lt;can> use up to 4 general-purpose quant tables. Also, JPEGs
+\&lt;can> use other color resolutions than the 8x8 color info for 16x16
+pixels. Whereas, JPEGs \&lt;can> do that stuff, but most standard JPEG files
+aren't actually using 4 quant tables, nor higher color resolution.<br/></p>
+<h4 id="run-length-compressed-blocks">Run-Length compressed Blocks</h4>
+<p>Within each block the DCT information and RLE compressed data is stored:<br/>
+<div class="highlight"><pre><span></span><code>  DCT               ;1 halfword
+  RLE,RLE,RLE,etc.  ;0..63 halfwords
+  EOB               ;1 halfword
+</code></pre></div></p>
+<h4 id="dct-1st-value">DCT (1st value)</h4>
+<p>DCT data has the quantization factor and the Direct Current (DC) reference.<br/>
+<div class="highlight"><pre><span></span><code>  15-10 Q    Quantization factor (6 bits, unsigned)
+  9-0   DC   Direct Current reference (10 bits, signed)
+</code></pre></div>
+Contains the absolute DC value (the upper-left value of the 8x8 block).<br/></p>
+<h4 id="rle-run-length-data-for-2nd-through-64th-value">RLE (Run length data, for 2nd through 64th value)</h4>
+<p><div class="highlight"><pre><span></span><code>  15-10 LEN  Number of zero AC values to be inserted (6 bits, unsigned)
+  9-0   AC   Relative AC value (10 bits, signed)
+</code></pre></div>
+Example: AC values "000h,000h,123h" would be compressed as "(2 shl 10)+123h".<br/></p>
+<h4 id="eob-end-of-block">EOB (End Of Block)</h4>
+<p>Indicates the end of a 8x8 pixel block, causing the rest of the block to be
+padded with zero AC values.<br/>
+<div class="highlight"><pre><span></span><code>  15-0  End-code (Fixed, FE00h)
+</code></pre></div>
+EOB isn't required if the block was already fully defined (up to including
+blk[63]), however, most games seem to append EOB to all blocks (although it's
+just acting as dummy/padding value in case of fully defined blocks).<br/></p>
+<h4 id="dummy-halfwords">Dummy halfwords</h4>
+<p>Data is sent in units of words (or, when using DMA, even in units of 32-words),
+which is making it neccessary to send some dummy halfwords (unless the
+compressed data size should match up the transfer unit). The value FE00h can be
+used as dummy value: When FE00h appears at the begin of a new block, or after
+the end of block, then it is simply ignored by the hardware (if it occurs
+elsewhere, then it acts as EOB end code, as described above).<br/></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>
