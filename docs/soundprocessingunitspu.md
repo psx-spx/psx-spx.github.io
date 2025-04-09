@@ -414,7 +414,7 @@ ability to convert stereo CD output to mono, or to swap left/right channels).<br
   ELSE IF exponential AND decrease THEN
     AdsrStep=AdsrStep*AdsrLevel/8000h
 
-  IF (StepValue | (StepValue SHL 2)) != ALL_BITS THEN
+  IF (StepValue | (ShiftValue SHL 2)) != ALL_BITS THEN
     CounterIncrement = MAX(CounterIncrement, 1)
 
   ; Runs once per 44.1kHz clock.
