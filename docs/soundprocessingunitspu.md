@@ -401,7 +401,7 @@ ability to convert stereo CD output to mono, or to swap left/right channels).<br
   AdsrStep = 7 - StepValue
   IF Decreasing XOR PhaseNegative THEN
     AdsrStep = NOT AdsrStep ; +7,+6,+5,+4 => -8,-7,-6,-5
-  AdsrStep = StepValue SHL Max(0,11-ShiftValue)
+  AdsrStep = AdsrStep SHL Max(0,11-ShiftValue)
   CounterIncrement = 8000h SHR Max(0,ShiftValue-11) 
   IF exponential AND increase AND AdsrLevel>6000h THEN
     IF ShiftValue < 10 THEN
