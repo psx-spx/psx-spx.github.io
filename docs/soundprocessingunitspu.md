@@ -198,7 +198,7 @@ The pitch counter is adjusted at 44100Hz rate as follows:<br/>
   Counter = Counter + Step
 ```
 Counter.Bit12 and up indicates the current sample (within a ADPCM block).<br/>
-Counter.Bit3..11 are used as 8bit gaussian interpolation index.<br/>
+Counter.Bit4..11 are used as 8bit gaussian interpolation index.<br/>
 
 #### Maximum Sound Frequency
 The Mixer and DAC supports a 44.1kHz output rate (allowing to produce max
@@ -401,7 +401,7 @@ ability to convert stereo CD output to mono, or to swap left/right channels).<br
   AdsrStep = 7 - StepValue
   IF Decreasing XOR PhaseNegative THEN
     AdsrStep = NOT AdsrStep ; +7,+6,+5,+4 => -8,-7,-6,-5
-  AdsrStep = StepValue SHL Max(0,11-ShiftValue)
+  AdsrStep = AdsrStep SHL Max(0,11-ShiftValue)
   CounterIncrement = 8000h SHR Max(0,ShiftValue-11) 
   IF exponential AND increase AND AdsrLevel>6000h THEN
     IF ShiftValue < 10 THEN
