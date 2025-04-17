@@ -559,8 +559,8 @@ Used by Bloody Roar 2 (MagDemo22: ASC,CMN,EFT,LON,SND,ST5,STU\\*)<br/>
 
 #### CLT Format
 ```
-  000h 1  File ID  (always 11h=CLT) (although Sony's doc says 12h)
-  001h 1  Version  (always 00h)
+  000h 1  File ID  ( 11h=CLT) (although Sony's doc says 12h)
+  001h 1  Version  ( 00h)
   002h 2  Reserved (always 0000h)
   004h 4  Flags (bit0-1=Type=2; bit2-31=Reserved/zero)
   ...  .. Data Section for CLUT (Palette)
@@ -4322,13 +4322,30 @@ March, Omega Boost, PoPoLoCrois Monogatari II, The Legend of Dragoon, Wild Arms
 
 ##### Sequence Data (\*.SQ)
 ```
-  000h 2       Unknown (always 64h)
-  002h 2       Unknown (always 1E0h)
-  004h 1?      Unknown (varies)
-  005h 7       Zerofilled
+  000h 2       Sequence Volume (0 .. 127, Always 64??)
+  002h 2       Ticks per Quarter Note (always 1E0h)
+  004h 2       Tempo
+  005h 6       Zerofilled
   00Ch 4       ID "SSsq"
-  010h 10h*10h Unknown Table
-  110h ..      Unknown Data
+  010h 10h*10h Channels
+  110h ..      Sequence
+```
+
+###### Channel
+```
+  000h 1       UNKNOWN
+  001h 1       Channel Index
+  002h 1       Program Index
+  003h 1       Volume
+  004h 1       Pan (0 .. 127, 64 is center)
+  005h 4       UNKNOWN
+  009h 1       Modulation (Multiplier for "breath" control)
+  00Ah 1       Pitch Bend (0 .. 127, 64 is center)
+  00Bh 1       Priority
+  00Ch 1       Breath (0 .. 127 how quickly to loop over the breath wave)
+  00Dh 1       UNKNOWN
+  00Eh 1       Adjusted volume (combination of sequence volume and channel volume)
+  00Fh 1       UNKNOWN
 ```
 
 ##### Voice Header (\*.HD)
@@ -4339,6 +4356,71 @@ March, Omega Boost, PoPoLoCrois Monogatari II, The Legend of Dragoon, Wild Arms
   00Ch 4     ID "SShd"
   010h 1Ch*4 Offsets to data (or FFFFFFFFh=None)
   080h ..    Data
+```
+
+###### Data 0 - Programs
+```
+Header
+  000h 2     Program Upper bound (count - 1)
+  002h 2*n   Program offsets (FFFFh=None, yes the count can be higher than actual program count)
+  ...  ...   Program data
+```
+```
+ Program
+  000h 1     Type + Tone Upper bound (FF = SFX, if not, 1st bit allows the program to play multiple tones per one KeyOn, rest is upper bound)
+  001h 1     Volume (0 .. 127)
+  002h 1     Pan (0 .. 127, 64 is center)
+  003h 1     UNUSED
+  004h 1     Pitch Bend multiplier
+  005h 1     Breath wave index (7Fh=None)
+  006h 1     SFX - Starting note
+  007h 1     SFX - Tone count
+```
+```
+Tone
+  000h 1     Minimum note
+  001h 1     Maximum note
+  002h 1     Root key
+  003h 1     Fine pitch adjustment (in 1/16 of a semitone)
+  004h 2     ADPCM offset (*8)
+  006h 4     ADSR
+  00Ah 1     Volume override
+  00Bh 1     Volume (0 .. 127)
+  00Ch 1     Pan (0 .. 127, 64 is center)
+  00Dh 1     Pitch Bend multiplier
+  00Eh 1     Breath wave index (7Fh=None)
+  00Fh 1     Flags (High priority, Noise, UNKNOWN, UNKNOWN, Pitch Bend from Program, Modulation, Breath wave from Program, Reverb)
+```
+
+###### Data 1 - Velocity volumes
+```
+  000h 2     UNUSED
+  002h 1*80h Velocity volumes
+```
+
+###### Data 2 - Breath waves
+```
+  000h 2     Beath wave upper bound
+  002h 2*n   Breath wave offsets
+  ...  40h*n Breath waves (Only 60 out of the 64 values are used. And each represents 1 step in a 1 sec cycle at the lowest breath speed)
+```
+
+
+###### Data 3 - Sequence set (Used for SFX, uses a slightly altered subset of commands)
+```
+  000h 2     Sets upper bound
+  002h 2*n   Set Offsets
+  ...  2     Sequence upper bound (Set 0)
+  ...  2*m   Sequence offset (Set 0)
+  ... ...
+  ... ...    Sequences (Terminated with FF 2F 00 - End of Track command)
+```
+
+###### Data 4 - Embedded SSsq (Used for SFX)
+```
+  000h 10h     SSsq header with just the volume
+  010h 18h*10h Channels
+  190h ...     Programs 
 ```
 
 ##### Voice Binary (\*.BD) (same as .VB files)
