@@ -528,65 +528,59 @@ assembler?<br/>
 
 ##   COP0 - Register Summary
 #### COP0 Register Summary
-```
-  cop0r0-r2   - N/A
-  cop0r3      - BPC - Breakpoint on execute (R/W)
-  cop0r4      - N/A
-  cop0r5      - BDA - Breakpoint on data access (R/W)
-  cop0r6      - JUMPDEST - Randomly memorized jump address (R)
-  cop0r7      - DCIC - Breakpoint control (R/W)
-  cop0r8      - BadVaddr - Bad Virtual Address (R)
-  cop0r9      - BDAM - Data Access breakpoint mask (R/W)
-  cop0r10     - N/A
-  cop0r11     - BPCM - Execute breakpoint mask (R/W)
-  cop0r12     - SR - System status register (R/W)
-  cop0r13     - CAUSE - Describes the most recently recognised exception (R)
-  cop0r14     - EPC - Return Address from Trap (R)
-  cop0r15     - PRID - Processor ID (R)
-  cop0r16-r31 - Garbage
-  cop0r32-r63 - N/A - None such (Control regs)
-```
-
-
+|   Number    | Mnemonic | Name | R/W |
+|-------------|----------|------|-----|
+| cop0r0-r2   | N/A      | | |
+| cop0r3      | BPC      | Breakpoint Program Counter | R/W |
+| cop0r4      | N/A      | | |
+| cop0r5      | BDA      | Breakpoint Data Address | R/W |
+| cop0r6      | TAR      | Target Address | R |
+| cop0r7      | DCIC     | Debug and Cache Invalidate Control | R/W |
+| cop0r8      | BadA     | Bad Address | R |
+| cop0r9      | BDAM     | Breakpoint Data Address Mask | R/W |
+| cop0r10     | N/A      | | |
+| cop0r11     | BPCM     | Breakpoint Program Counter Mask | R/W |
+| cop0r12     | SR       | Status Register | R/W |
+| cop0r13     | CAUSE    | Cause of the last exception | R |
+| cop0r14     | EPC      | Exception Program Counter | R |
+| cop0r15     | PRID     | Processor Revision Identifier | R |
+| cop0r16-r31 |          | Garbage | |
+| cop0r32-r63 | N/A      | Control regs | |
 
 ##   COP0 - Exception Handling
 #### cop0r13 - CAUSE - (Read-only, except, Bit8-9 are R/W)
-Describes the most recently recognised exception<br/>
-```
-  0-1   -      Not used (zero)
-  2-6   Excode Describes what kind of exception occured:
-                 00h INT     Interrupt
-                 01h MOD     Tlb modification (none such in PSX)
-                 02h TLBL    Tlb load         (none such in PSX)
-                 03h TLBS    Tlb store        (none such in PSX)
-                 04h AdEL    Address error, Data load or Instruction fetch
-                 05h AdES    Address error, Data store
-                             The address errors occur when attempting to read
-                             outside of KUseg in user mode and when the address
-                             is misaligned. (See also: BadVaddr register)
-                 06h IBE     Bus error on Instruction fetch
-                 07h DBE     Bus error on Data load/store
-                 08h Syscall Generated unconditionally by syscall instruction
-                 09h BP      Breakpoint - break instruction
-                 0Ah RI      Reserved instruction
-                 0Bh CpU     Coprocessor unusable
-                 0Ch Ov      Arithmetic overflow
-                 0Dh-1Fh     Not used
-  7     -      Not used (zero)
-  8-15  Ip     Interrupt pending field. Bit 8 and 9 are R/W, and
-               contain the last value written to them. As long
-               as any of the bits are set they will cause an
-               interrupt if the corresponding bit is set in IM.
-  16-27 -      Not used (zero)
-  28-29 CE     Contains the coprocessor number if the exception
-               occurred because of a coprocessor instuction for
-               a coprocessor which wasn't enabled in SR.
-  30    -      Not used (zero)
-  31    BD     Is set when last exception points to the
-               branch instuction instead of the instruction
-               in the branch delay slot, where the exception
-               occurred.
-```
+Describes the most recently recognised exception.
+
+| Bits  | Mnemonic | Description     |
+|-------|----------|-----------------|
+| 0-1   |          | Not used (zero) |
+| 2-6   | ExcCode  | Describes what kind of exception occured (see below) |
+| 7     |          | Not used (zero) |
+| 8-9   | Sw       | Software Interrupts. Write to these bits to manually cause an exception. Clear them before returning from the exception handler. |
+| 10-15 | IP       | Interrupt pending field. As long as any of the bits are set they will cause an interrupt if the corresponding bit is set in IM. |
+| 16-27 |          | Not used (zero) |
+| 28-29 | CE       | Contains the coprocessor number if the exception occurred because of a coprocessor instuction for a coprocessor which wasn't enabled in SR. |
+| 30    | BT       | When BD is set, BT determines whether the branch is taken. The Target Address Register holds the return address. |
+| 31    | BD       | Is set when EPC points to the branch instuction instead of the instruction in the branch delay slot, where the exception occurred. |
+
+ExcCode values:
+
+|  Value  | Mnemonic | Description |
+|---------|----------|-------------|
+| 00h     | INT      | External Interrupt |
+| 01h     | MOD      | TLB modification (none such in PSX) |
+| 02h     | TLBL     | TLB load (none such in PSX) |
+| 03h     | TLBS     | TLB store (none such in PSX) |
+| 04h     | AdEL     | Address error, Data load or Instruction fetch |
+| 05h     | AdES     | Address error, Data store. The address errors occur when attempting to read outside of KUseg in user mode and when the address is misaligned. (See also: Bad Address register) |
+| 06h     | IBE      | Bus error on Instruction fetch |
+| 07h     | DBE      | Bus error on Data load/store |
+| 08h     | Sys      | Generated unconditionally by syscall instruction |
+| 09h     | Bp       | Breakpoint - break instruction |
+| 0Ah     | RI       | Reserved instruction |
+| 0Bh     | CpU      | Coprocessor unusable |
+| 0Ch     | Ovf      | Arithmetic overflow |
+| 0Dh-1Fh |          | Not used    |
 
 #### cop0r12 - SR - System status register (R/W)
 ```
@@ -642,7 +636,7 @@ Other exceptions may require to handle BD. In simple cases, when BD=0, the
 exception handler may return to EPC+0 (retry execution of the opcode), or to
 EPC+4 (skip the opcode that caused the exception). Note that jumps to faulty
 memory locations are executed without exception, but will trigger address
-errors and bus errors at the target location, ie. EPC (and BadVAddr, in case of
+errors and bus errors at the target location, ie. EPC (and BadAddr, in case of
 address errors) point to the faulty address, not to the opcode that has jumped
 to that address).<br/>
 
@@ -734,7 +728,7 @@ ROM doesn't contain any of the BEV=1 vectors).<br/>
 
 
 ##   COP0 - Misc
-#### cop0r15 - PRID - Processor ID (R)
+#### cop0r15 - PRID - Processor Revision Identifier (R)
 ```
   0-7   Revision
   8-15  Implementation
@@ -743,21 +737,11 @@ ROM doesn't contain any of the BEV=1 vectors).<br/>
 For a Playstation with CXD8606CQ CPU, the PRID value is 00000002h.<br/>
 Unknown if/which other Playstation CPU versions have other values...?<br/>
 
-#### cop0r6 - JUMPDEST - Randomly memorized jump address (R)
-The is a rather strange totally useless register. After certain exceptions, the
-CPU does memorize a jump destination address in the register. Once when it has
-memorized an address, the register becomes locked, and the memorized value
-won't change until it becomes unlocked by a new exception. Exceptions that do
-unlock the register are Reset and Interrupts (cause.bit10). Exceptions that do
-NOT unlock the register are syscall/break opcodes, and software generated
-interrupts (eg. cause.bit8).<br/>
-In the unlocked state, the CPU does more or less randomly memorize one of the
-next some jump destinations - eg. the destination from the second jump after
-reset, or from a jump that occured immediately before executing the IRQ
-handler, or from a jump inside of the IRQ handler, or even from a later jump
-that occurs shortly after returning from the IRQ handler.<br/>
-The register seems to be read-only (although the Kernel initialization code
-writes 0 to it for whatever reason).<br/>
+#### cop0r6 - TAR - Target Address (R)
+```
+  0-31  Return Address
+```
+When an exception occurs in the delay slot of a jump or branch (cop0r13.31=1), and the branch is to be taken (or it's an unconditional jump) (cop0r13.30=1), this register is updated to contain the destination address of the jump or branch.
 
 #### cop0r0..r2, cop0r4, cop0r10, cop0r32..r63 - N/A
 Registers 0,1,2,4,10 control virtual memory on some MIPS processors (but
