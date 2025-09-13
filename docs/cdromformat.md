@@ -1196,11 +1196,15 @@ current and parent directory.<br/>
 The Path Table contain a summary of the directory names (the same information
 is also stored in the directory records, so programs may either use path tables
 or directory records; the path tables are allowing to read the whole directory
-tree quickly at once, without neeeding to seek from directory to directory).<br/>
+tree quickly at once, without needing to seek from directory to directory).
+
 Path Table 1 is in Little-Endian format, Path Table 3 contains the same data in
 Big-Endian format. Path Table 2 and 4 are optional copies of Table 1 and 3. The
 size and location of the tables is stored in Volume Descriptor entries
-084h..09Bh. The format of the separate entries within a Path Table is,<br/>
+084h..09Bh.
+
+#### Format of a Path Table Entry
+
 ```
   00h 1       Length of Directory Name (LEN_DI) (01h..08h for PSX)
   01h 1       Extended Attribute Record Length  (usually 00h)
@@ -1209,15 +1213,18 @@ size and location of the tables is stored in Volume Descriptor entries
   08h LEN_DI  Directory Name (d-characters, d1-characters) (or 00h for Root)
   xxh 0..1    Padding Field (00h) (only if LEN_FI is odd)
 ```
-The first entry (directory number 0001h) is the root directory, the root
-doesn't have a name, nor a parent (the name field contains a 00h byte, rather
+
+The first entry (directory number 0001h) is the root directory. The root
+does not have a name nor a parent; the name field contains a 00h byte rather
 than ASCII text, LEN\_DI is 01h, and parent is 0001h, making the root it's own
-parent; ignoring the fact that incest is forbidden in many countries).<br/>
-The next entries (directory number 0002h and up) (if any) are sub-directories
-within the root (sorted in alphabetical order, and all having parent=0001h).
-The next entries are sub-directories (if any) of the first sub-directory (also
-sorted in alphabetical order, and all having parent=0002h). And so on.<br/>
-PSX disks usually contain all four tables (usually on sectors 18,19,20,21).<br/>
+parent.
+
+The next entries (directory number 0002h and up, if any) are sub-directories
+within the root sorted in alphabetical order, and all having parent=0001h.
+The next entries are sub-directories (if any) of the first sub-directory
+sorted in alphabetical order, and all having parent=0002h, and so on.
+
+PSX disks usually contain all four tables (usually on sectors 18, 19, 20 and 21).
 
 #### Format of an Extended Attribute Record (none such on PSX disks)
 If present, an Extended Attribute Record shall be recorded over at least one
