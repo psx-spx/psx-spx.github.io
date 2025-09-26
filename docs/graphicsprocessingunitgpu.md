@@ -879,7 +879,7 @@ hang if the Polygon/Line parameters are transferred in a separate DMA block
 Bit27: Gets set after sending GP0(C0h) and its parameters, and stays set until
 all data words are received; used as DMA request in DMA Mode 3.<br/>
 Bit26: Gets set when the GPU wants to receive a command. If the bit is cleared,
-then the GPU does either want to receive data, or it is busy with a command
+then the GPU wants to either receive additional parameters/data or it is busy with command
 execution (and doesn't want to receive anything).<br/>
 Bit25: This is the DMA Request bit, however, the bit is also useful for non-DMA
 transfers, especially in the FIFO State mode.<br/>
