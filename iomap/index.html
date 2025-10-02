@@ -1,0 +1,1371 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/iomap/">
+      
+      
+        <link rel="prev" href="../memorymap/">
+      
+      
+        <link rel="next" href="../graphicsprocessingunitgpu/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>I/O Map - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#io-map" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              I/O Map
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          I/O Map
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        I/O Map
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-1" class="md-nav__link">
+    Expansion Region 1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scratchpad" class="md-nav__link">
+    Scratchpad
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-control-1" class="md-nav__link">
+    Memory Control 1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#peripheral-io-ports" class="md-nav__link">
+    Peripheral I/O Ports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-control-2" class="md-nav__link">
+    Memory Control 2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interrupt-control" class="md-nav__link">
+    Interrupt Control
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dma-registers" class="md-nav__link">
+    DMA Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timers-aka-root-counters" class="md-nav__link">
+    Timers (aka Root counters)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-registers-addressreadwriteindex" class="md-nav__link">
+    CDROM Registers (Address.Read/Write.Index)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpu-registers" class="md-nav__link">
+    GPU Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-registers" class="md-nav__link">
+    MDEC Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-voice-023-registers" class="md-nav__link">
+    SPU Voice 0..23 Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-control-registers" class="md-nav__link">
+    SPU Control Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-reverb-configuration-area" class="md-nav__link">
+    SPU Reverb Configuration Area
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-internal-registers" class="md-nav__link">
+    SPU Internal Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-default-128-bytes-max-8-kbytes" class="md-nav__link">
+    Expansion Region 2 (default 128 bytes, max 8 KBytes)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-dual-serial-port-for-tty-debug-terminal" class="md-nav__link">
+    Expansion Region 2 - Dual Serial Port (for TTY Debug Terminal)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-intdippost" class="md-nav__link">
+    Expansion Region 2 - Int/Dip/Post
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-nocash-emulation-expansion" class="md-nav__link">
+    Expansion Region 2 - Nocash Emulation Expansion
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-pcsx-redux-emulation-expansion" class="md-nav__link">
+    Expansion Region 2 - PCSX-Redux Emulation Expansion
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-3-default-1-byte-max-2-mbytes" class="md-nav__link">
+    Expansion Region 3 (default 1 byte, max 2 MBytes)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bios-region-default-512-kbytes-max-4-mbytes" class="md-nav__link">
+    BIOS Region (default 512 Kbytes, max 4 MBytes)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-control-3-cache-control" class="md-nav__link">
+    Memory Control 3 (Cache Control)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coprocessor-registers" class="md-nav__link">
+    Coprocessor Registers
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        Geometry Transformation Engine (GTE)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        Macroblock Decoder (MDEC)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        Sound Processing Unit (SPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        Serial Interfaces (SIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        Expansion Port (PIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        Memory Control
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        CPU Specifications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        PSX Dev-Board Chipsets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-1" class="md-nav__link">
+    Expansion Region 1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scratchpad" class="md-nav__link">
+    Scratchpad
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-control-1" class="md-nav__link">
+    Memory Control 1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#peripheral-io-ports" class="md-nav__link">
+    Peripheral I/O Ports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-control-2" class="md-nav__link">
+    Memory Control 2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interrupt-control" class="md-nav__link">
+    Interrupt Control
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dma-registers" class="md-nav__link">
+    DMA Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timers-aka-root-counters" class="md-nav__link">
+    Timers (aka Root counters)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-registers-addressreadwriteindex" class="md-nav__link">
+    CDROM Registers (Address.Read/Write.Index)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpu-registers" class="md-nav__link">
+    GPU Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mdec-registers" class="md-nav__link">
+    MDEC Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-voice-023-registers" class="md-nav__link">
+    SPU Voice 0..23 Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-control-registers" class="md-nav__link">
+    SPU Control Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-reverb-configuration-area" class="md-nav__link">
+    SPU Reverb Configuration Area
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-internal-registers" class="md-nav__link">
+    SPU Internal Registers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-default-128-bytes-max-8-kbytes" class="md-nav__link">
+    Expansion Region 2 (default 128 bytes, max 8 KBytes)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-dual-serial-port-for-tty-debug-terminal" class="md-nav__link">
+    Expansion Region 2 - Dual Serial Port (for TTY Debug Terminal)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-intdippost" class="md-nav__link">
+    Expansion Region 2 - Int/Dip/Post
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-nocash-emulation-expansion" class="md-nav__link">
+    Expansion Region 2 - Nocash Emulation Expansion
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-2-pcsx-redux-emulation-expansion" class="md-nav__link">
+    Expansion Region 2 - PCSX-Redux Emulation Expansion
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-region-3-default-1-byte-max-2-mbytes" class="md-nav__link">
+    Expansion Region 3 (default 1 byte, max 2 MBytes)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bios-region-default-512-kbytes-max-4-mbytes" class="md-nav__link">
+    BIOS Region (default 512 Kbytes, max 4 MBytes)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-control-3-cache-control" class="md-nav__link">
+    Memory Control 3 (Cache Control)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coprocessor-registers" class="md-nav__link">
+    Coprocessor Registers
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="io-map">I/O Map</h1>
+<h4 id="expansion-region-1">Expansion Region 1</h4>
+<div class="highlight"><pre><span></span><code>  1F000000h 80000h Expansion Region (default 512 Kbytes, max 8 MBytes)
+  1F000000h 100h   Expansion ROM Header (IDs and Entrypoints)
+</code></pre></div>
+<h4 id="scratchpad">Scratchpad</h4>
+<div class="highlight"><pre><span></span><code>  1F800000h 400h Scratchpad (1K Fast RAM) (Data Cache mapped to fixed address)
+</code></pre></div>
+<h4 id="memory-control-1">Memory Control 1</h4>
+<div class="highlight"><pre><span></span><code>  1F801000h 4    Expansion 1 Base Address (usually 1F000000h)
+  1F801004h 4    Expansion 2 Base Address (usually 1F802000h)
+  1F801008h 4    Expansion 1 Delay/Size (usually 0013243Fh; 512Kbytes 8bit-bus)
+  1F80100Ch 4    Expansion 3 Delay/Size (usually 00003022h; 1 byte)
+  1F801010h 4    BIOS ROM    Delay/Size (usually 0013243Fh; 512Kbytes 8bit-bus)
+  1F801014h 4    SPU_DELAY   Delay/Size (usually 200931E1h)
+  1F801018h 4    CDROM_DELAY Delay/Size (usually 00020843h or 00020943h)
+  1F80101Ch 4    Expansion 2 Delay/Size (usually 00070777h; 128-bytes 8bit-bus)
+  1F801020h 4    COM_DELAY / COMMON_DELAY (00031125h or 0000132Ch or 00001325h)
+</code></pre></div>
+<h4 id="peripheral-io-ports">Peripheral I/O Ports</h4>
+<div class="highlight"><pre><span></span><code>  1F801040h 1/4  JOY_DATA Joypad/Memory Card Data (R/W)
+  1F801044h 4    JOY_STAT Joypad/Memory Card Status (R)
+  1F801048h 2    JOY_MODE Joypad/Memory Card Mode (R/W)
+  1F80104Ah 2    JOY_CTRL Joypad/Memory Card Control (R/W)
+  1F80104Eh 2    JOY_BAUD Joypad/Memory Card Baudrate (R/W)
+  1F801050h 1/4  SIO_DATA Serial Port Data (R/W)
+  1F801054h 4    SIO_STAT Serial Port Status (R)
+  1F801058h 2    SIO_MODE Serial Port Mode (R/W)
+  1F80105Ah 2    SIO_CTRL Serial Port Control (R/W)
+  1F80105Ch 2    SIO_MISC Serial Port Internal Register (R/W)
+  1F80105Eh 2    SIO_BAUD Serial Port Baudrate (R/W)
+</code></pre></div>
+<h4 id="memory-control-2">Memory Control 2</h4>
+<div class="highlight"><pre><span></span><code>  1F801060h 4/2  RAM_SIZE (usually 00000B88h; 2MB RAM mirrored in first 8MB)
+</code></pre></div>
+<h4 id="interrupt-control">Interrupt Control</h4>
+<div class="highlight"><pre><span></span><code>  1F801070h 2    I_STAT - Interrupt status register
+  1F801074h 2    I_MASK - Interrupt mask register
+</code></pre></div>
+<h4 id="dma-registers">DMA Registers</h4>
+<div class="highlight"><pre><span></span><code>  1F80108xh      DMA0 channel 0 - MDECin
+  1F80109xh      DMA1 channel 1 - MDECout
+  1F8010Axh      DMA2 channel 2 - GPU (lists + image data)
+  1F8010Bxh      DMA3 channel 3 - CDROM
+  1F8010Cxh      DMA4 channel 4 - SPU
+  1F8010Dxh      DMA5 channel 5 - PIO (Expansion Port)
+  1F8010Exh      DMA6 channel 6 - OTC (reverse clear OT) (GPU related)
+  1F8010F0h      DPCR - DMA Control register
+  1F8010F4h      DICR - DMA Interrupt register
+  1F8010F8h      unknown
+  1F8010FCh      unknown
+</code></pre></div>
+<h4 id="timers-aka-root-counters">Timers (aka Root counters)</h4>
+<div class="highlight"><pre><span></span><code>  1F80110xh      Timer 0 Dotclock
+  1F80111xh      Timer 1 Horizontal Retrace
+  1F80112xh      Timer 2 1/8 system clock
+</code></pre></div>
+<h4 id="cdrom-registers-addressreadwriteindex">CDROM Registers (Address.Read/Write.Index)</h4>
+<div class="highlight"><pre><span></span><code>  1F801800h.x.x   1   CD Index/Status Register (Bit0-1 R/W, Bit2-7 Read Only)
+  1F801801h.R.x   1   CD Response Fifo (R) (usually with Index1)
+  1F801802h.R.x   1/2 CD Data Fifo - 8bit/16bit (R) (usually with Index0..1)
+  1F801803h.R.0   1   CD Interrupt Enable Register (R)
+  1F801803h.R.1   1   CD Interrupt Flag Register (R/W)
+  1F801803h.R.2   1   CD Interrupt Enable Register (R) (Mirror)
+  1F801803h.R.3   1   CD Interrupt Flag Register (R/W) (Mirror)
+  1F801801h.W.0   1   CD Command Register (W)
+  1F801802h.W.0   1   CD Parameter Fifo (W)
+  1F801803h.W.0   1   CD Request Register (W)
+  1F801801h.W.1   1   Unknown/unused
+  1F801802h.W.1   1   CD Interrupt Enable Register (W)
+  1F801803h.W.1   1   CD Interrupt Flag Register (R/W)
+  1F801801h.W.2   1   Unknown/unused
+  1F801802h.W.2   1   CD Audio Volume for Left-CD-Out to Left-SPU-Input (W)
+  1F801803h.W.2   1   CD Audio Volume for Left-CD-Out to Right-SPU-Input (W)
+  1F801801h.W.3   1   CD Audio Volume for Right-CD-Out to Right-SPU-Input (W)
+  1F801802h.W.3   1   CD Audio Volume for Right-CD-Out to Left-SPU-Input (W)
+  1F801803h.W.3   1   CD Audio Volume Apply Changes (by writing bit5=1)
+</code></pre></div>
+<h4 id="gpu-registers">GPU Registers</h4>
+<div class="highlight"><pre><span></span><code>  1F801810h.Write 4   GP0 Send GP0 Commands/Packets (Rendering and VRAM Access)
+  1F801814h.Write 4   GP1 Send GP1 Commands (Display Control)
+  1F801810h.Read  4   GPUREAD Read responses to GP0(C0h) and GP1(10h) commands
+  1F801814h.Read  4   GPUSTAT Read GPU Status Register
+</code></pre></div>
+<h4 id="mdec-registers">MDEC Registers</h4>
+<div class="highlight"><pre><span></span><code>  1F801820h.Write 4   MDEC Command/Parameter Register (W)
+  1F801820h.Read  4   MDEC Data/Response Register (R)
+  1F801824h.Write 4   MDEC Control/Reset Register (W)
+  1F801824h.Read  4   MDEC Status Register (R)
+</code></pre></div>
+<h4 id="spu-voice-023-registers">SPU Voice 0..23 Registers</h4>
+<div class="highlight"><pre><span></span><code>  1F801C00h+N*10h 4   Voice 0..23 Volume Left/Right
+  1F801C04h+N*10h 2   Voice 0..23 ADPCM Sample Rate
+  1F801C06h+N*10h 2   Voice 0..23 ADPCM Start Address
+  1F801C08h+N*10h 4   Voice 0..23 ADSR Attack/Decay/Sustain/Release
+  1F801C0Ch+N*10h 2   Voice 0..23 ADSR Current Volume
+  1F801C0Eh+N*10h 2   Voice 0..23 ADPCM Repeat Address
+</code></pre></div>
+<h4 id="spu-control-registers">SPU Control Registers</h4>
+<div class="highlight"><pre><span></span><code>  1F801D80h 4  Main Volume Left/Right
+  1F801D84h 4  Reverb Output Volume Left/Right
+  1F801D88h 4  Voice 0..23 Key ON (Start Attack/Decay/Sustain) (W)
+  1F801D8Ch 4  Voice 0..23 Key OFF (Start Release) (W)
+  1F801D90h 4  Voice 0..23 Channel FM (pitch lfo) mode (R/W)
+  1F801D94h 4  Voice 0..23 Channel Noise mode (R/W)
+  1F801D98h 4  Voice 0..23 Channel Reverb mode (R/W)
+  1F801D9Ch 4  Voice 0..23 Channel ON/OFF (status) (R)
+  1F801DA0h 2  Unknown? (R) or (W)
+  1F801DA2h 2  Sound RAM Reverb Work Area Start Address
+  1F801DA4h 2  Sound RAM IRQ Address
+  1F801DA6h 2  Sound RAM Data Transfer Address
+  1F801DA8h 2  Sound RAM Data Transfer Fifo
+  1F801DAAh 2  SPU Control Register (SPUCNT)
+  1F801DACh 2  Sound RAM Data Transfer Control
+  1F801DAEh 2  SPU Status Register (SPUSTAT) (R)
+  1F801DB0h 4  CD Volume Left/Right
+  1F801DB4h 4  Extern Volume Left/Right
+  1F801DB8h 4  Current Main Volume Left/Right
+  1F801DBCh 4  Unknown? (R/W)
+</code></pre></div>
+<h4 id="spu-reverb-configuration-area">SPU Reverb Configuration Area</h4>
+<div class="highlight"><pre><span></span><code>  1F801DC0h 2  dAPF1  Reverb APF Offset 1
+  1F801DC2h 2  dAPF2  Reverb APF Offset 2
+  1F801DC4h 2  vIIR   Reverb Reflection Volume 1
+  1F801DC6h 2  vCOMB1 Reverb Comb Volume 1
+  1F801DC8h 2  vCOMB2 Reverb Comb Volume 2
+  1F801DCAh 2  vCOMB3 Reverb Comb Volume 3
+  1F801DCCh 2  vCOMB4 Reverb Comb Volume 4
+  1F801DCEh 2  vWALL  Reverb Reflection Volume 2
+  1F801DD0h 2  vAPF1  Reverb APF Volume 1
+  1F801DD2h 2  vAPF2  Reverb APF Volume 2
+  1F801DD4h 4  mSAME  Reverb Same Side Reflection Address 1 Left/Right
+  1F801DD8h 4  mCOMB1 Reverb Comb Address 1 Left/Right
+  1F801DDCh 4  mCOMB2 Reverb Comb Address 2 Left/Right
+  1F801DE0h 4  dSAME  Reverb Same Side Reflection Address 2 Left/Right
+  1F801DE4h 4  mDIFF  Reverb Different Side Reflection Address 1 Left/Right
+  1F801DE8h 4  mCOMB3 Reverb Comb Address 3 Left/Right
+  1F801DECh 4  mCOMB4 Reverb Comb Address 4 Left/Right
+  1F801DF0h 4  dDIFF  Reverb Different Side Reflection Address 2 Left/Right
+  1F801DF4h 4  mAPF1  Reverb APF Address 1 Left/Right
+  1F801DF8h 4  mAPF2  Reverb APF Address 2 Left/Right
+  1F801DFCh 4  vIN    Reverb Input Volume Left/Right
+</code></pre></div>
+<h4 id="spu-internal-registers">SPU Internal Registers</h4>
+<div class="highlight"><pre><span></span><code>  1F801E00h+N*04h  4 Voice 0..23 Current Volume Left/Right
+  1F801E60h      20h Unknown? (R/W)
+  1F801E80h     180h Unknown? (Read: FFh-filled) (Unused or Write only?)
+</code></pre></div>
+<h4 id="expansion-region-2-default-128-bytes-max-8-kbytes">Expansion Region 2 (default 128 bytes, max 8 KBytes)</h4>
+<div class="highlight"><pre><span></span><code>  1F802000h      80h Expansion Region (8bit data bus, crashes on 16bit access?)
+</code></pre></div>
+<h4 id="expansion-region-2-dual-serial-port-for-tty-debug-terminal">Expansion Region 2 - Dual Serial Port (for TTY Debug Terminal)</h4>
+<div class="highlight"><pre><span></span><code>  1F802020h/1st    DUART Mode Register 1.A (R/W)
+  1F802020h/2nd    DUART Mode Register 2.A (R/W)
+  1F802021h/Read   DUART Status Register A (R)
+  1F802021h/Write  DUART Clock Select Register A (W)
+  1F802022h/Read   DUART Toggle Baud Rate Generator Test Mode (Read=Strobe)
+  1F802022h/Write  DUART Command Register A (W)
+  1F802023h/Read   DUART Rx Holding Register A (FIFO) (R)
+  1F802023h/Write  DUART Tx Holding Register A (W)
+  1F802024h/Read   DUART Input Port Change Register (R)
+  1F802024h/Write  DUART Aux. Control Register (W)
+  1F802025h/Read   DUART Interrupt Status Register (R)
+  1F802025h/Write  DUART Interrupt Mask Register (W)
+  1F802026h/Read   DUART Counter/Timer Current Value, Upper/Bit15-8 (R)
+  1F802026h/Write  DUART Counter/Timer Reload Value,  Upper/Bit15-8 (W)
+  1F802027h/Read   DUART Counter/Timer Current Value, Lower/Bit7-0 (R)
+  1F802027h/Write  DUART Counter/Timer Reload Value,  Lower/Bit7-0 (W)
+  1F802028h/1st    DUART Mode Register 1.B (R/W)
+  1F802028h/2nd    DUART Mode Register 2.B (R/W)
+  1F802029h/Read   DUART Status Register B (R)
+  1F802029h/Write  DUART Clock Select Register B (W)
+  1F80202Ah/Read   DUART Toggle 1X/16X Test Mode (Read=Strobe)
+  1F80202Ah/Write  DUART Command Register B (W)
+  1F80202Bh/Read   DUART Rx Holding Register B (FIFO) (R)
+  1F80202Bh/Write  DUART Tx Holding Register B (W)
+  1F80202Ch/None   DUART Reserved Register (neither R nor W)
+  1F80202Dh/Read   DUART Input Port (R)
+  1F80202Dh/Write  DUART Output Port Configuration Register (W)
+  1F80202Eh/Read   DUART Start Counter Command (Read=Strobe)
+  1F80202Eh/Write  DUART Set Output Port Bits Command (Set means Out=LOW)
+  1F80202Fh/Read   DUART Stop Counter Command (Read=Strobe)
+  1F80202Fh/Write  DUART Reset Output Port Bits Command (Reset means Out=HIGH)
+</code></pre></div>
+<h4 id="expansion-region-2-intdippost">Expansion Region 2 - Int/Dip/Post</h4>
+<div class="highlight"><pre><span></span><code>  1F802000h 1 DTL-H2000: ATCONS STAT (R)
+  1F802002h 1 DTL-H2000: ATCONS DATA (R and W)
+  1F802004h 2 DTL-H2000: Whatever 16bit data ?
+  1F802030h 1/4 DTL-H2000: Secondary IRQ10 Flags
+  1F802032h 1 DTL-H2000: Whatever IRQ Control ?
+  1F802040h 1 DTL-H2000: Bootmode &quot;Dip switches&quot; (R)
+  1F802041h 1 PSX: POST (external 7 segment display, indicate BIOS boot status)
+  1F802042h 1 DTL-H2000: POST/LED (similar to POST) (other addr, 2-digit wide)
+  1F802070h 1 PS2: POST2 (similar to POST, but PS2 BIOS uses this address)
+</code></pre></div>
+<h4 id="expansion-region-2-nocash-emulation-expansion">Expansion Region 2 - Nocash Emulation Expansion</h4>
+<div class="highlight"><pre><span></span><code>  1F802060h Emu-Expansion ID1 &quot;E&quot; (R)
+  1F802061h Emu-Expansion ID2 &quot;X&quot; (R)
+  1F802062h Emu-Expansion ID3 &quot;P&quot; (R)
+  1F802063h Emu-Expansion Version (01h) (R)
+  1F802064h Emu-Expansion Enable1 &quot;O&quot; (R/W)
+  1F802065h Emu-Expansion Enable2 &quot;N&quot; (R/W)
+  1F802066h Emu-Expansion Halt (R)
+  1F802067h Emu-Expansion Turbo Mode Flags (R/W)
+</code></pre></div>
+<h4 id="expansion-region-2-pcsx-redux-emulation-expansion">Expansion Region 2 - PCSX-Redux Emulation Expansion</h4>
+<div class="highlight"><pre><span></span><code>  1F802080h 4 Redux-Expansion ID &quot;PCSX&quot; (R)
+  1F802080h 1 Redux-Expansion Console putchar (W)
+  1F802081h 1 Redux-Expansion Debug break (W)
+  1F802082h 1 Redux-Expansion Exit code (W)
+  1F802084h 4 Redux-Expansion Notification message pointer (W)
+</code></pre></div>
+<h4 id="expansion-region-3-default-1-byte-max-2-mbytes">Expansion Region 3 (default 1 byte, max 2 MBytes)</h4>
+<div class="highlight"><pre><span></span><code>  1FA00000h - Not used by BIOS or any PSX games
+  1FA00000h - POST3 (similar to POST, but PS2 BIOS uses this address)
+</code></pre></div>
+<h4 id="bios-region-default-512-kbytes-max-4-mbytes">BIOS Region (default 512 Kbytes, max 4 MBytes)</h4>
+<div class="highlight"><pre><span></span><code>  1FC00000h 80000h   BIOS ROM (512Kbytes) (Reset Entrypoint at BFC00000h)
+</code></pre></div>
+<h4 id="memory-control-3-cache-control">Memory Control 3 (Cache Control)</h4>
+<div class="highlight"><pre><span></span><code>  FFFE0130h 4        Cache Control
+</code></pre></div>
+<h4 id="coprocessor-registers">Coprocessor Registers</h4>
+<div class="highlight"><pre><span></span><code>  COP0 System Control Coprocessor           - 32 registers (not all used)
+  COP1 N/A
+  COP2 Geometry Transformation Engine (GTE) - 64 registers (most are used)
+  COP3 N/A
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>

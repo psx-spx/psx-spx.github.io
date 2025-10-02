@@ -1,0 +1,1211 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/memorycontrol/">
+      
+      
+        <link rel="prev" href="../expansionportpio/">
+      
+      
+        <link rel="next" href="../unpredictablethings/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>Memory Control - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#memory-control" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Memory Control
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        I/O Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        Geometry Transformation Engine (GTE)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        Macroblock Decoder (MDEC)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        Sound Processing Unit (SPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        Serial Interfaces (SIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        Expansion Port (PIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Memory Control
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Memory Control
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1f801000h-expansion-1-base-address-usually-1f000000h" class="md-nav__link">
+    1F801000h - Expansion 1 Base Address (usually 1F000000h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801004h-expansion-2-base-address-usually-1f802000h" class="md-nav__link">
+    1F801004h - Expansion 2 Base Address (usually 1F802000h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801008h-expansion-1-delaysize-usually-0013243fh-512kbytes-8bit-bus-573-24173f47h" class="md-nav__link">
+    1F801008h - Expansion 1 Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus) (573: 24173F47h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80100ch-expansion-3-delaysize-usually-00003022h-1-byte" class="md-nav__link">
+    1F80100Ch - Expansion 3 Delay/Size (usually 00003022h) (1 byte)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801010h-bios-rom-delaysize-usually-0013243fh-512kbytes-8bit-bus" class="md-nav__link">
+    1F801010h - BIOS ROM Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801014h-spu-delaysize-200931e1h-use-220931e1h-for-spu-ram-reads" class="md-nav__link">
+    1F801014h - SPU Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801018h-cdrom-delaysize-00020843h-or-00020943h" class="md-nav__link">
+    1F801018h - CDROM Delay/Size (00020843h or 00020943h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80101ch-expansion-2-delaysize-usually-00070777h-128-bytes-8bit-bus" class="md-nav__link">
+    1F80101Ch - Expansion 2 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801020h-com_delay-common_delay-00031125h-or-0000132ch-or-00001325h" class="md-nav__link">
+    1F801020h - COM_DELAY / COMMON_DELAY (00031125h or 0000132Ch or 00001325h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801060h-ram_size-rw-usually-00000b88h-or-00000888h" class="md-nav__link">
+    1F801060h - RAM_SIZE (R/W) (usually 00000B88h) (or 00000888h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fffe0130h-bcc-biucache-configuration-register-rw" class="md-nav__link">
+    FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        CPU Specifications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        PSX Dev-Board Chipsets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1f801000h-expansion-1-base-address-usually-1f000000h" class="md-nav__link">
+    1F801000h - Expansion 1 Base Address (usually 1F000000h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801004h-expansion-2-base-address-usually-1f802000h" class="md-nav__link">
+    1F801004h - Expansion 2 Base Address (usually 1F802000h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801008h-expansion-1-delaysize-usually-0013243fh-512kbytes-8bit-bus-573-24173f47h" class="md-nav__link">
+    1F801008h - Expansion 1 Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus) (573: 24173F47h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80100ch-expansion-3-delaysize-usually-00003022h-1-byte" class="md-nav__link">
+    1F80100Ch - Expansion 3 Delay/Size (usually 00003022h) (1 byte)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801010h-bios-rom-delaysize-usually-0013243fh-512kbytes-8bit-bus" class="md-nav__link">
+    1F801010h - BIOS ROM Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801014h-spu-delaysize-200931e1h-use-220931e1h-for-spu-ram-reads" class="md-nav__link">
+    1F801014h - SPU Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801018h-cdrom-delaysize-00020843h-or-00020943h" class="md-nav__link">
+    1F801018h - CDROM Delay/Size (00020843h or 00020943h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80101ch-expansion-2-delaysize-usually-00070777h-128-bytes-8bit-bus" class="md-nav__link">
+    1F80101Ch - Expansion 2 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801020h-com_delay-common_delay-00031125h-or-0000132ch-or-00001325h" class="md-nav__link">
+    1F801020h - COM_DELAY / COMMON_DELAY (00031125h or 0000132Ch or 00001325h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801060h-ram_size-rw-usually-00000b88h-or-00000888h" class="md-nav__link">
+    1F801060h - RAM_SIZE (R/W) (usually 00000B88h) (or 00000888h)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fffe0130h-bcc-biucache-configuration-register-rw" class="md-nav__link">
+    FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="memory-control">Memory Control</h1>
+<p>The Memory Control registers are initialized by the BIOS, and, normally
+software doesn't need to change that settings. Some registers are useful for
+expansion hardware (allowing to increase the memory size and bus width).<br/></p>
+<h4 id="1f801000h-expansion-1-base-address-usually-1f000000h">1F801000h - Expansion 1 Base Address (usually 1F000000h)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-23   Base address       (R/W)
+  24-31  Fixed, always 1Fh  (R)
+</code></pre></div>
+The behavior of this register is somewhat inconsistent. Normally, the base
+address is forcefully aligned to the EXP1 region's size by masking off the
+bottommost N bits (where N = number of address lines, as set in register
+1F801008h). For instance, if the number of EXP1 address lines is set to 8,
+setting this register to 1F000000h or 1F0000FFh has the same effect.<br/>
+When performing a PIO DMA transfer, however, all bits of this register are
+output on the bus regardless of the currently set region size. The System 573
+relies on this behavior as it changes the base address to 1F480000h prior to
+reading data from the IDE CD-ROM using DMA (and does not reset it to 1F000000h
+afterwards).<br/>
+Note: presumably the masking lets the bus interface compute addresses quickly by
+replacing masked off bits with the LSBs of the incoming address value from the
+CPU, thus only requiring a few multiplexers instead of a full adder.<br/></p>
+<h4 id="1f801004h-expansion-2-base-address-usually-1f802000h">1F801004h - Expansion 2 Base Address (usually 1F802000h)</h4>
+<p>Same as 1F801000h, however trying to use ANY other value than 1F802000h seems to
+disable the Expansion 2 region, rather than mapping it to the specified address
+(ie. Port 1F801004h doesn't seem to work).<br/>
+For Expansion 3, the address seems to be fixed (1FA00000h).<br/></p>
+<h4 id="1f801008h-expansion-1-delaysize-usually-0013243fh-512kbytes-8bit-bus-573-24173f47h">1F801008h - Expansion 1 Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus) (573: 24173F47h)</h4>
+<h4 id="1f80100ch-expansion-3-delaysize-usually-00003022h-1-byte">1F80100Ch - Expansion 3 Delay/Size (usually 00003022h) (1 byte)</h4>
+<h4 id="1f801010h-bios-rom-delaysize-usually-0013243fh-512kbytes-8bit-bus">1F801010h - BIOS ROM Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus)</h4>
+<h4 id="1f801014h-spu-delaysize-200931e1h-use-220931e1h-for-spu-ram-reads">1F801014h - SPU Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)</h4>
+<h4 id="1f801018h-cdrom-delaysize-00020843h-or-00020943h">1F801018h - CDROM Delay/Size (00020843h or 00020943h)</h4>
+<h4 id="1f80101ch-expansion-2-delaysize-usually-00070777h-128-bytes-8bit-bus">1F80101Ch - Expansion 2 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-3   Write Delay        (00h..0Fh=01h..10h Cycles)
+  4-7   Read Delay         (00h..0Fh=01h..10h Cycles)
+  8     Recovery Period    (0=No, 1=Yes, uses COM0 timings)
+  9     Hold Period        (0=No, 1=Yes, uses COM1 timings)
+  10    Floating Period    (0=No, 1=Yes, uses COM2 timings)
+  11    Pre-strobe Period  (0=No, 1=Yes, uses COM3 timings)
+  12    Data Bus-width     (0=8bits, 1=16bits)
+  13    Auto Increment     (0=No, 1=Yes)
+  14-15 Unknown (R/W)
+  16-20 Number of address bits (memory window size = 1 &lt;&lt; N bytes)
+  21-23 Unknown (always zero)
+  24-27 DMA timing override
+  28    Address error flag. Write 1 to it to clear it.
+  29    DMA timing select  (0=use normal timings, 1=use bits 24-27)
+  30    Wide DMA           (0=use bit 12, 1=override to full 32 bits)
+  31    Wait               (1=wait on external device before being ready)
+</code></pre></div>
+When booting, all these registers are using the maximum cycle delays for both
+reads and writes. Then, the BIOS will immediately select a faster read
+access delay, resulting in a visible speed up after the first few instructions.
+The effects aren't immediate however. The BIOS boots using the following instructions:</p>
+<div class="highlight"><pre><span></span><code>bfc00000<span class="w">    </span><span class="k">lui</span><span class="w">        </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x0013
+bfc00004<span class="w">    </span><span class="k">ori</span><span class="w">        </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x243f
+bfc00008<span class="w">    </span><span class="k">lui</span><span class="w">        </span><span class="kt">$at</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x1f80
+bfc0000c<span class="w">    </span><span class="k">sw</span><span class="w">         </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x1010(<span class="kt">$at</span>)
+bfc00010<span class="w">    </span>nop
+bfc00014<span class="w">    </span><span class="nv">li</span><span class="w">         </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x0b88
+bfc00018<span class="w">    </span><span class="k">lui</span><span class="w">        </span><span class="kt">$at</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x1f80
+bfc0001c<span class="w">    </span><span class="k">sw</span><span class="w">         </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x1060(<span class="kt">$at</span>)
+bfc00020<span class="w">    </span>nop
+</code></pre></div>
+<p>When using a logic analyzer to monitor the boot sequence, the instruction at
+bfc00014 is still read using the old timings since reset, and then the instruction
+at bfc00018 is finally read using the sped up timings.</p>
+<p>Reads and writes access times aren't symmetrical, and are each controlled with
+their own values. By default, EXP1 will be set to 16 cycles when writing, which
+is the slowest possible. If the programmer wants to write to a flash chip on
+EXP1, or communicate with a computer, speeding up write access is recommended.</p>
+<p>The fastest a port could go would be by setting the lowest 16 bits to zero, which
+will result in 3 CPU cycles for a single byte access.</p>
+<p>!CS always goes active at least one cycle before !WR or !RD go active. The various
+timing changes are between all the events inside the data read/write waveform. The
+whole formula for computing the total access time is fairly complex overall, and
+difficult to properly describe.</p>
+<ul>
+<li>The pre-strobe period will add delays between the moment the data bus is set,
+  and the moment !CS goes active.</li>
+<li>The hold period will keep the data in the data bus for some more cycles after
+  !WR goes inactive, and before !CS goes inactive. The accessed device is supposed
+  to sample the data bus during this interval.</li>
+<li>The floating period will keep the data bus floating for some more cycles after
+  !RD goes inactive, and before !CS goes inactive. The accessed device is supposed
+  to stop driving the data bus during this interval. The CPU will sample the data
+  bus somewhere before or exactly when !CS goes inactive.</li>
+<li>The recovery period will add delays between two operations.</li>
+</ul>
+<p>The data bus width will influence if the CPU does full 16 bits reads, or only
+8 bits. When doing 32 bits operations, the CPU will issue 2 16-bits operations,
+or 4 8-bits operations, keeping !CS active the whole time, and strobing !WR or
+!RD accordingly. When doing these sequences, the address bus will also increment
+automatically between each operation, if the auto-increment bit is active.</p>
+<p>This means it is possible to slightly shorten the read time of 4 bytes off the
+same address by disabling auto-increment, and reading a full word. The CPU will
+then read 4 bytes off the same address, and place them all into each byte of
+the loaded register.</p>
+<p>The DMA timing override portion will replace the access timing when doing DMA,
+only if the DMA override flag is set.</p>
+<p>The Wide DMA flag will enable full 32 bits DMA operations on the bus, by reusing
+the low 16-bits address signals as the high 16-bits data. This means that if
+the CPU is doing Wide DMA reads, the low 16-bits of the address bus will become
+inputs.</p>
+<p>Trying to access addresses that exceed the selected size causes a bus exception.
+Maximum size would be Expansion 1 = 17h (8MB), BIOS = 16h (4MB), Expansion 2 =
+0Dh (8KB), Expansion 3 = 15h (2MB). Trying to select larger sizes would overlap
+the internal I/O ports, and crash the PSX. The Size bits seem to be ignored for
+SPU/CDROM. The SPU timings seem to be applied for both the 200h-byte SPU region
+at 1F801C00h and for the 200h-byte unknown region at 1F801E00h.<br/></p>
+<h4 id="1f801020h-com_delay-common_delay-00031125h-or-0000132ch-or-00001325h">1F801020h - COM_DELAY / COMMON_DELAY (00031125h or 0000132Ch or 00001325h)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-3   COM0 - Recovery period cycles
+  4-7   COM1 - Hold period cycles
+  8-11  COM2 - Floating release cycles
+  12-15 COM3 - Strobe active-going edge delay
+  16-31 Unknown/unused (read: always 0000h)
+</code></pre></div>
+This register contains clock cycle offsets that can be added to the Access Time
+values in Port 1F801008h..1Ch. Works (somehow) like so:<br/>
+<div class="highlight"><pre><span></span><code>  1ST=0, SEQ=0, MIN=0
+  IF Use_COM0 THEN 1ST=1ST+COM0-1, SEQ=SEQ+COM0-1
+  IF Use_COM2 THEN 1ST=1ST+COM2,   SEQ=SEQ+COM2
+  IF Use_COM3 THEN MIN=COM3
+  IF 1ST&lt;6 THEN 1ST=1ST+1   ;(somewhat like so)
+  1ST=1ST+AccessTime+2, SEQ=SEQ+AccessTime+2
+  IF 1ST&lt;(MIN+6) THEN 1ST=(MIN+6)
+  IF SEQ&lt;(MIN+2) THEN SEQ=(MIN+2)
+</code></pre></div>
+The total access time is the sum of First Access, plus any Sequential
+Access(es), eg. for a 32bit access with 8bit bus: Total=1ST+SEQ+SEQ+SEQ.<br/>
+If the access is done from code in (uncached) RAM, then 0..4 cycles are added
+to the Total value (the exact number seems to vary depending on the used COMx
+values or so).<br/></p>
+<h4 id="1f801060h-ram_size-rw-usually-00000b88h-or-00000888h">1F801060h - RAM_SIZE (R/W) (usually 00000B88h) (or 00000888h)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-2   Unknown (no effect)
+  3     Crashes when zero (except PU-7 and EARLY-PU-8, which &lt;do&gt; set bit3=0)
+  4-6   Unknown (no effect)
+  7     Delay on simultaneous CODE+DATA fetch from RAM (0=None, 1=One Cycle)
+  8     Unknown (no effect) (should be set for 8MB, cleared for 2MB)
+  9     RAM chip size 1 (0=1MB or 2MB, 1=4MB or 8MB)
+  10    Enable /RAS1 bank (0=disable/bus fault on access, 1=enable)
+  11    RAM chip size 2 (0=1MB or 4MB, 1=2MB or 8MB)
+  12-15 Unknown (no effect)
+  16-31 Unknown (Garbage)
+</code></pre></div>
+Possible values for bits 9-11 are:<br/>
+<div class="highlight"><pre><span></span><code>  000 = 1MB bank on /RAS0 + 15MB unmapped
+  001 = 4MB bank on /RAS0 + 12MB unmapped
+  010 = 1MB bank on /RAS0 + 1MB bank on /RAS1 (?) + 14MB unmapped
+  011 = 4MB bank on /RAS0 + 4MB bank on /RAS1 (?) + 8MB unmapped
+  100 = 2MB bank on /RAS0 + 14MB unmapped
+  101 = 8MB bank on /RAS0 + 8MB unmapped
+  110 = 2MB bank on /RAS0 + 2MB bank on /RAS1 (?) + 12MB unmapped
+  111 = 8MB bank on /RAS0 + 8MB bank on /RAS1 (?)
+</code></pre></div>
+The BIOS writes different values depending on the console revision:<br/>
+<div class="highlight"><pre><span></span><code>PU-7, EARLY-PU-8:
+  0B80h    Single 2MB bank (four 512Kx8 chips) on /RAS0
+           (incorrectly set as an 8MB bank, correct setting would be 0880h)
+Later consoles:
+  0B88h    Single 2MB bank (one 512Kx32 chip) on /RAS0
+           (incorrectly set as an 8MB bank, correct setting would be 0888h)
+DTL-H2000, DTL-H2700, DTL-H2500:
+  0B88h    Single 8MB bank (four 2Mx8 chips) on /RAS0
+           (correctly set as 8MB)
+System 573 (700A01, 700B01 if ASIC revision bit = 1):
+  0C80h    Two 2MB banks (four 512Kx8 chips each) on /RAS0 and /RAS1 respectively
+           (correctly set as 4MB)
+System 573 (700B01 if ASIC revision bit = 0):
+  4788h    Two 4MB banks on /RAS0 and /RAS1 respectively
+           (probably an incorrect setting for the two alternate 1Mx16 RAM
+           footprints on revision D of the PCB, labeled &quot;DR16M16&quot;)
+</code></pre></div>
+"Unmapped" means that the CPU generates an exception when accessing that area.<br/>
+Note: Wipeout uses a BIOS function that changes RAM_SIZE to 00000888h (ie. with
+corrected size of 2MB, and with the unknown Bit8 cleared). Gundam Battle
+Assault 2 does actually use the "8MB" space (with stacktop in mirrored RAM at
+807FFFxxh).<br/>
+Clearing bit7 causes many games to hang during CDROM loading on both EARLY-PU-8
+and LATE-PU-8 (but works on PU-18 through PM-41).<br/></p>
+<h4 id="fffe0130h-bcc-biucache-configuration-register-rw">FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0     LOCK   Enable cache lock mode              (when COP0_SR.IsC=1)
+  1     INV    Enable cache invalidation mode      (when COP0_SR.IsC=1)
+  2     TAG    Enable cache tag test mode          (when COP0_SR.IsC=1, used to flush i-cache)
+  3     RAM    Enable cache scratchpad mode        (usually 1, broken - see note)
+  4-5   DBLKSZ Data cache refill size              (usually 0, broken - see note)
+  6     -      Always 0 (R)
+  7     DS     Enable data cache                   (usually 1, disables scratchpad when 0)
+  8-9   IBLKSZ Instruction cache refill size       (0=2 words, 1=4 words/default, 2-3=invalid/crash)
+  10    IS0    Always 0 (R)                        (supposedly &quot;Enable instruction cache set 0&quot;)
+  11    IS1    Enable instruction cache
+  12    INTP   Supposedly &quot;Interrupt polarity&quot;     (usually 0)
+  13    RDPRI  Supposedly &quot;Enable read priority&quot;   (usually 1)
+  14    NOPAD  Supposedly &quot;No wait state&quot;          (usually 1)
+  15    BGNT   Supposedly &quot;Enable bus grant&quot;       (usually 1)
+  16    LDSCH  Supposedly &quot;Enable load scheduling&quot; (usually 1)
+  17    NOSTR  Supposedly &quot;No streaming&quot;           (usually 0)
+  18-31 -      Reserved (R/W)
+</code></pre></div>
+Documented in chapter 14 of the datasheet for LSI's L64360, which specifically
+states it "includes the LR33300 Family Control Registers described in the
+CW33300 manual".<br/>
+Used primarily by the BIOS to flush the i-cache in combination with the COP0
+status register, like so:<br/>
+<div class="highlight"><pre><span></span><code><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">COP0_SR</span><span class="p">;</span>
+
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IS1</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IsC</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="c1">// Clear tags (one for each 4-word line)</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="k">volatile</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">IS1</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IsC</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="c1">// Clear cache lines</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="k">volatile</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w">         </span><span class="c1">// Wait by reading dummy words from uncached RAM?</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="k">volatile</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mh">0xa0000000</span><span class="p">);</span>
+
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">RAM</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">DS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IBLKSZ_4</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IS1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">RDPRI</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">NOPAD</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">BGNT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">LDSCH</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sr</span><span class="p">;</span>
+</code></pre></div>
+At least one game (TOCA World Touring Cars, SLES-02572) flushes the cache using
+custom code running from uncached RAM (KSEG1) instead of calling the BIOS
+function described above. It follows a slightly different sequence:
+<div class="highlight"><pre><span></span><code><span class="kt">uint32_t</span><span class="w"> </span><span class="n">bcc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BCC</span><span class="p">,</span><span class="w"> </span><span class="n">sr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">COP0_SR</span><span class="p">;</span>
+
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">BCC</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="n">LOCK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">INV</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">DS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IS0</span><span class="p">))</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IS1</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IsC</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="c1">// Clear tags (one for each 4-word line)</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="k">volatile</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">bcc</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sr</span><span class="p">;</span>
+</code></pre></div>
+A usable version of this code
+<a href="https://github.com/pcsx-redux/nugget/blob/main/common/hardware/flushcache.s">is available</a>.<br/>
+Bit 3 may be cleared to unmap the scratchpad from memory and use it as a data
+cache instead, however doing so will result in erratic behavior due to it not
+being equipped with tag memory; each cache line's "tag" seems to be hardcoded to
+its respective scratchpad address instead. With bit 3 cleared, data in the
+scratchpad will be updated during CPU loads but no cache hits will ever occur.<br/>
+Bits 4-5 seem to have no effect whatsoever. The CPU will always fetch one word
+at a time from RAM, rather than attempting to prefetch an entire line using a
+burst read (as it does with the i-cache).<br/></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>
