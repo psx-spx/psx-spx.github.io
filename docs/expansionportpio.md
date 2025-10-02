@@ -498,6 +498,8 @@ Identification string. Use this to query that your binary is running under PCSX-
 #### 1F802080h 1 Redux-Expansion Console putchar (W)
 Adds this character to the console output. This is an easier way to write to the console than using the BIOS.
 
+This port is also available on Duckstation.
+
 #### 1F802081h 1 Redux-Expansion Debug break (W)
 Causes a debug breakpoint to be triggered. PCSX-Redux will pause and the user will be alerted of a software breakpoint.
 
