@@ -66,6 +66,8 @@ features such as the sound map functionality).
   6   DRQSTS   Data request          (R, 1=one or more RDDATA reads or WRDATA writes pending)
   7   BUSYSTS  Busy status           (R, 1=HC05 busy acknowledging command)
 ```
+Writing a value to the low 2 bits of this address changes the bank to said value. 
+Likewise, the low 2 bits of this address can be read to get the current bank.
 
 #### `0x1f801801` (write, bank 0): `COMMAND`
 ```
