@@ -602,7 +602,8 @@ plain seeks (and do Pause after completion). ReadN/ReadS are similar to SeekL
 (and do start reading data after the seek operation). Play is similar to SeekP
 (and does start playing audio after the seek operation).<br/>
 The amm,ass,asect parameters refer to the entire disk (not to the current
-track). To seek to a specific location within a specific track, use GetTD to
+track). Note that each of these parameters is encoded as BCD values, not binary.
+To seek to a specific location within a specific track, use GetTD to
 get the start address of the track, and add the desired time offset to it.<br/>
 
 #### SeekL - Command 15h --\> INT3(stat) --\> INT2(stat)
