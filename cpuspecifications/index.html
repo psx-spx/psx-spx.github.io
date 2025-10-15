@@ -1,0 +1,2935 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/cpuspecifications/">
+      
+      
+        <link rel="prev" href="../unpredictablethings/">
+      
+      
+        <link rel="next" href="../kernelbios/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>CPU Specifications - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cpu-specifications" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CPU Specifications
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        I/O Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        Geometry Transformation Engine (GTE)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        Macroblock Decoder (MDEC)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        Sound Processing Unit (SPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        Serial Interfaces (SIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        Expansion Port (PIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        Memory Control
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          CPU Specifications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        CPU Specifications
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cpu" class="md-nav__link">
+    CPU
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-control-coprocessor-cop0" class="md-nav__link">
+    System Control Coprocessor (COP0)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-registers" class="md-nav__link">
+    CPU Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r29-sp-full-decrementing-wasted-stack-pointer" class="md-nav__link">
+    R29 (SP) - Full Decrementing Wasted Stack Pointer
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-opcode-encoding" class="md-nav__link">
+    CPU Opcode Encoding
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Opcode Encoding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-opcode-field-bit-2631" class="md-nav__link">
+    Primary opcode field (Bit 26..31)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-opcode-field-bit-05-when-primary-opcode-00h" class="md-nav__link">
+    Secondary opcode field (Bit 0..5) (when Primary opcode = 00h)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcodeparameter-encoding" class="md-nav__link">
+    Opcode/Parameter Encoding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coprocessor-opcodeparameter-encoding" class="md-nav__link">
+    Coprocessor Opcode/Parameter Encoding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#illegal-opcodes" class="md-nav__link">
+    Illegal Opcodes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-loadstore-opcodes" class="md-nav__link">
+    CPU Load/Store Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Load/Store Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-instructions" class="md-nav__link">
+    Load instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caution-load-delay" class="md-nav__link">
+    Caution - Load Delay
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-instructions" class="md-nav__link">
+    Store instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caution-816-bit-writes-to-certain-io-registers" class="md-nav__link">
+    Caution - 8/16-bit writes to certain IO registers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loadstore-alignment" class="md-nav__link">
+    Load/Store Alignment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unaligned-loadstore" class="md-nav__link">
+    Unaligned Load/Store
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unaligned-loadstore-details" class="md-nav__link">
+    Unaligned Load/Store (Details)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-alu-opcodes" class="md-nav__link">
+    CPU ALU Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU ALU Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-instructions" class="md-nav__link">
+    arithmetic instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-instructions" class="md-nav__link">
+    comparison instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logical-instructions" class="md-nav__link">
+    logical instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shifting-instructions" class="md-nav__link">
+    shifting instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplydivide" class="md-nav__link">
+    Multiply/divide
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-jump-opcodes" class="md-nav__link">
+    CPU Jump Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Jump Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jumps-and-branches" class="md-nav__link">
+    jumps and branches
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jalr-cautions" class="md-nav__link">
+    JALR cautions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-opcodes" class="md-nav__link">
+    exception opcodes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-coprocessor-opcodes" class="md-nav__link">
+    CPU Coprocessor Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Coprocessor Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coprocessor-instructions-cop0cop3" class="md-nav__link">
+    Coprocessor Instructions (COP0..COP3)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caution-load-delay_1" class="md-nav__link">
+    Caution - Load Delay
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caution-store-delay" class="md-nav__link">
+    Caution - Store Delay
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-pseudo-opcodes" class="md-nav__link">
+    CPU Pseudo Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Pseudo Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pseudo-instructions-nativespasm" class="md-nav__link">
+    Pseudo instructions (native/spasm)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pseudo-instructions-nocasha22i-not-present-on-most-other-assemblers" class="md-nav__link">
+    Pseudo instructions (nocash/a22i, not present on most other assemblers)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directives-nocash" class="md-nav__link">
+    Directives (nocash)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directives-native" class="md-nav__link">
+    Directives (native)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#syntax-for-unknown-assembler-for-pads" class="md-nav__link">
+    Syntax for unknown assembler (for pad.s)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cop0-register-summary" class="md-nav__link">
+    COP0 - Register Summary
+  </a>
+  
+    <nav class="md-nav" aria-label="COP0 - Register Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop0-register-summary_1" class="md-nav__link">
+    COP0 Register Summary
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cop0-exception-handling" class="md-nav__link">
+    COP0 - Exception Handling
+  </a>
+  
+    <nav class="md-nav" aria-label="COP0 - Exception Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop0r13-cause-read-only-except-bit8-9-are-rw" class="md-nav__link">
+    cop0r13 - CAUSE - (Read-only, except, Bit8-9 are R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r12-sr-system-status-register-rw" class="md-nav__link">
+    cop0r12 - SR - System status register (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r14-epc-return-address-from-trap-r" class="md-nav__link">
+    cop0r14 - EPC - Return Address from Trap (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interrupts-vs-gte-commands" class="md-nav__link">
+    Interrupts vs GTE Commands
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0cmd10h-rfe-opcode-prepare-return-from-exception" class="md-nav__link">
+    cop0cmd=10h - RFE opcode - Prepare Return from Exception
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r8-badvaddr-bad-virtual-address-r" class="md-nav__link">
+    cop0r8 - BadVaddr - Bad Virtual Address (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-vectors-depending-on-bev-bit-in-sr-register" class="md-nav__link">
+    Exception Vectors (depending on BEV bit in SR register)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-priority" class="md-nav__link">
+    Exception Priority
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cop0-misc" class="md-nav__link">
+    COP0 - Misc
+  </a>
+  
+    <nav class="md-nav" aria-label="COP0 - Misc">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop0r15-prid-processor-revision-identifier-r" class="md-nav__link">
+    cop0r15 - PRID - Processor Revision Identifier (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r6-tar-target-address-r" class="md-nav__link">
+    cop0r6 - TAR - Target Address (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r0r2-cop0r4-cop0r10-cop0r32r63-na" class="md-nav__link">
+    cop0r0..r2, cop0r4, cop0r10, cop0r32..r63 - N/A
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0cmd01h02h06h08h-tlbrtlbwitlbwrtlbp" class="md-nav__link">
+    cop0cmd=01h,02h,06h,08h - TLBR,TLBWI,TLBWR,TLBP
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jfjt-cop0flgdest-conditional-cop0-jumps" class="md-nav__link">
+    jf/jt cop0flg,dest - conditional cop0 jumps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mov-memcop0reg-mov-cop0regmem-coprocessor-cop0-loadstore" class="md-nav__link">
+    mov [mem],cop0reg / mov cop0reg,[mem] - coprocessor cop0 load/store
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r16-r31-garbage" class="md-nav__link">
+    cop0r16-r31 - Garbage
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cop0-debug-registers" class="md-nav__link">
+    COP0 - Debug Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="COP0 - Debug Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop0r7-dcic-debug-and-cache-invalidate-control-rw" class="md-nav__link">
+    cop0r7 - DCIC - Debug and Cache Invalidate Control (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r7bit12-13-jump-redirection-note" class="md-nav__link">
+    cop0r7.bit12-13 - Jump Redirection Note
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r5-bda-breakpoint-data-address-rw" class="md-nav__link">
+    cop0r5 - BDA - Breakpoint Data Address (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r9-bdam-breakpoint-data-address-mask-rw" class="md-nav__link">
+    cop0r9 - BDAM - Breakpoint Data Address Mask (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r3-bpc-breakpoint-program-counter-rw" class="md-nav__link">
+    cop0r3 - BPC - Breakpoint Program Counter (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r11-bpcm-breakpoint-program-counter-mask-rw" class="md-nav__link">
+    cop0r11 - BPCM - Breakpoint Program Counter Mask (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-break-opcode" class="md-nav__link">
+    Note (BREAK Opcode)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-libcrypt" class="md-nav__link">
+    Note (LibCrypt)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-cheat-devicesexpansion-roms" class="md-nav__link">
+    Note (Cheat Devices/Expansion ROMs)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        PSX Dev-Board Chipsets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cpu" class="md-nav__link">
+    CPU
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-control-coprocessor-cop0" class="md-nav__link">
+    System Control Coprocessor (COP0)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-registers" class="md-nav__link">
+    CPU Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#r29-sp-full-decrementing-wasted-stack-pointer" class="md-nav__link">
+    R29 (SP) - Full Decrementing Wasted Stack Pointer
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-opcode-encoding" class="md-nav__link">
+    CPU Opcode Encoding
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Opcode Encoding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-opcode-field-bit-2631" class="md-nav__link">
+    Primary opcode field (Bit 26..31)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-opcode-field-bit-05-when-primary-opcode-00h" class="md-nav__link">
+    Secondary opcode field (Bit 0..5) (when Primary opcode = 00h)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opcodeparameter-encoding" class="md-nav__link">
+    Opcode/Parameter Encoding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coprocessor-opcodeparameter-encoding" class="md-nav__link">
+    Coprocessor Opcode/Parameter Encoding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#illegal-opcodes" class="md-nav__link">
+    Illegal Opcodes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-loadstore-opcodes" class="md-nav__link">
+    CPU Load/Store Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Load/Store Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-instructions" class="md-nav__link">
+    Load instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caution-load-delay" class="md-nav__link">
+    Caution - Load Delay
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-instructions" class="md-nav__link">
+    Store instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caution-816-bit-writes-to-certain-io-registers" class="md-nav__link">
+    Caution - 8/16-bit writes to certain IO registers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loadstore-alignment" class="md-nav__link">
+    Load/Store Alignment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unaligned-loadstore" class="md-nav__link">
+    Unaligned Load/Store
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unaligned-loadstore-details" class="md-nav__link">
+    Unaligned Load/Store (Details)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-alu-opcodes" class="md-nav__link">
+    CPU ALU Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU ALU Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-instructions" class="md-nav__link">
+    arithmetic instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-instructions" class="md-nav__link">
+    comparison instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logical-instructions" class="md-nav__link">
+    logical instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shifting-instructions" class="md-nav__link">
+    shifting instructions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplydivide" class="md-nav__link">
+    Multiply/divide
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-jump-opcodes" class="md-nav__link">
+    CPU Jump Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Jump Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jumps-and-branches" class="md-nav__link">
+    jumps and branches
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jalr-cautions" class="md-nav__link">
+    JALR cautions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-opcodes" class="md-nav__link">
+    exception opcodes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-coprocessor-opcodes" class="md-nav__link">
+    CPU Coprocessor Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Coprocessor Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coprocessor-instructions-cop0cop3" class="md-nav__link">
+    Coprocessor Instructions (COP0..COP3)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caution-load-delay_1" class="md-nav__link">
+    Caution - Load Delay
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caution-store-delay" class="md-nav__link">
+    Caution - Store Delay
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-pseudo-opcodes" class="md-nav__link">
+    CPU Pseudo Opcodes
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Pseudo Opcodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pseudo-instructions-nativespasm" class="md-nav__link">
+    Pseudo instructions (native/spasm)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pseudo-instructions-nocasha22i-not-present-on-most-other-assemblers" class="md-nav__link">
+    Pseudo instructions (nocash/a22i, not present on most other assemblers)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directives-nocash" class="md-nav__link">
+    Directives (nocash)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directives-native" class="md-nav__link">
+    Directives (native)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#syntax-for-unknown-assembler-for-pads" class="md-nav__link">
+    Syntax for unknown assembler (for pad.s)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cop0-register-summary" class="md-nav__link">
+    COP0 - Register Summary
+  </a>
+  
+    <nav class="md-nav" aria-label="COP0 - Register Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop0-register-summary_1" class="md-nav__link">
+    COP0 Register Summary
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cop0-exception-handling" class="md-nav__link">
+    COP0 - Exception Handling
+  </a>
+  
+    <nav class="md-nav" aria-label="COP0 - Exception Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop0r13-cause-read-only-except-bit8-9-are-rw" class="md-nav__link">
+    cop0r13 - CAUSE - (Read-only, except, Bit8-9 are R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r12-sr-system-status-register-rw" class="md-nav__link">
+    cop0r12 - SR - System status register (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r14-epc-return-address-from-trap-r" class="md-nav__link">
+    cop0r14 - EPC - Return Address from Trap (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interrupts-vs-gte-commands" class="md-nav__link">
+    Interrupts vs GTE Commands
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0cmd10h-rfe-opcode-prepare-return-from-exception" class="md-nav__link">
+    cop0cmd=10h - RFE opcode - Prepare Return from Exception
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r8-badvaddr-bad-virtual-address-r" class="md-nav__link">
+    cop0r8 - BadVaddr - Bad Virtual Address (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-vectors-depending-on-bev-bit-in-sr-register" class="md-nav__link">
+    Exception Vectors (depending on BEV bit in SR register)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-priority" class="md-nav__link">
+    Exception Priority
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cop0-misc" class="md-nav__link">
+    COP0 - Misc
+  </a>
+  
+    <nav class="md-nav" aria-label="COP0 - Misc">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop0r15-prid-processor-revision-identifier-r" class="md-nav__link">
+    cop0r15 - PRID - Processor Revision Identifier (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r6-tar-target-address-r" class="md-nav__link">
+    cop0r6 - TAR - Target Address (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r0r2-cop0r4-cop0r10-cop0r32r63-na" class="md-nav__link">
+    cop0r0..r2, cop0r4, cop0r10, cop0r32..r63 - N/A
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0cmd01h02h06h08h-tlbrtlbwitlbwrtlbp" class="md-nav__link">
+    cop0cmd=01h,02h,06h,08h - TLBR,TLBWI,TLBWR,TLBP
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jfjt-cop0flgdest-conditional-cop0-jumps" class="md-nav__link">
+    jf/jt cop0flg,dest - conditional cop0 jumps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mov-memcop0reg-mov-cop0regmem-coprocessor-cop0-loadstore" class="md-nav__link">
+    mov [mem],cop0reg / mov cop0reg,[mem] - coprocessor cop0 load/store
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r16-r31-garbage" class="md-nav__link">
+    cop0r16-r31 - Garbage
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cop0-debug-registers" class="md-nav__link">
+    COP0 - Debug Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="COP0 - Debug Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop0r7-dcic-debug-and-cache-invalidate-control-rw" class="md-nav__link">
+    cop0r7 - DCIC - Debug and Cache Invalidate Control (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r7bit12-13-jump-redirection-note" class="md-nav__link">
+    cop0r7.bit12-13 - Jump Redirection Note
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r5-bda-breakpoint-data-address-rw" class="md-nav__link">
+    cop0r5 - BDA - Breakpoint Data Address (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r9-bdam-breakpoint-data-address-mask-rw" class="md-nav__link">
+    cop0r9 - BDAM - Breakpoint Data Address Mask (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r3-bpc-breakpoint-program-counter-rw" class="md-nav__link">
+    cop0r3 - BPC - Breakpoint Program Counter (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop0r11-bpcm-breakpoint-program-counter-mask-rw" class="md-nav__link">
+    cop0r11 - BPCM - Breakpoint Program Counter Mask (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-break-opcode" class="md-nav__link">
+    Note (BREAK Opcode)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-libcrypt" class="md-nav__link">
+    Note (LibCrypt)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note-cheat-devicesexpansion-roms" class="md-nav__link">
+    Note (Cheat Devices/Expansion ROMs)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="cpu-specifications">CPU Specifications</h1>
+<h4 id="cpu">CPU</h4>
+<p><a href="./#cpu-registers">CPU Registers</a><br/>
+<a href="./#cpu-opcode-encoding">CPU Opcode Encoding</a><br/>
+<a href="./#cpu-loadstore-opcodes">CPU Load/Store Opcodes</a><br/>
+<a href="./#cpu-alu-opcodes">CPU ALU Opcodes</a><br/>
+<a href="./#cpu-jump-opcodes">CPU Jump Opcodes</a><br/>
+<a href="./#cpu-coprocessor-opcodes">CPU Coprocessor Opcodes</a><br/>
+<a href="./#cpu-pseudo-opcodes">CPU Pseudo Opcodes</a><br/></p>
+<h4 id="system-control-coprocessor-cop0">System Control Coprocessor (COP0)</h4>
+<p><a href="./#cop0-register-summary">COP0 - Register Summary</a><br/>
+<a href="./#cop0-exception-handling">COP0 - Exception Handling</a><br/>
+<a href="./#cop0-misc">COP0 - Misc</a><br/>
+<a href="./#cop0-debug-registers">COP0 - Debug Registers</a><br/></p>
+<h2 id="cpu-registers">CPU Registers</h2>
+<p>All registers are 32bit wide.<br/>
+<div class="highlight"><pre><span></span><code>  Name       Alias    Common Usage
+  R0         zero     Constant (always 0)
+  R1         at       Assembler temporary (destroyed by some assembler pseudoinstructions!)
+  R2-R3      v0-v1    Subroutine return values, may be changed by subroutines
+  R4-R7      a0-a3    Subroutine arguments, may be changed by subroutines
+  R8-R15     t0-t7    Temporaries, may be changed by subroutines
+  R16-R23    s0-s7    Static variables, must be saved by subs
+  R24-R25    t8-t9    Temporaries, may be changed by subroutines
+  R26-R27    k0-k1    Reserved for kernel (destroyed by some IRQ handlers!)
+  R28        gp       Global pointer (rarely used)
+  R29        sp       Stack pointer
+  R30        fp(s8)   Frame Pointer, or 9th Static variable, must be saved
+  R31        ra       Return address (used so by JAL,BLTZAL,BGEZAL opcodes)
+  -          pc       Program counter
+  -          hi,lo    Multiply/divide results, may be changed by subroutines
+</code></pre></div>
+R0 is always zero.<br/>
+R31 can be used as general purpose register, however, some opcodes are using it
+to store the return address: JAL, BLTZAL, BGEZAL. (Note: JALR can optionally
+store the return address in R31, or in R1..R30. Exceptions store the return
+address in cop0r14 - EPC).<br/></p>
+<h4 id="r29-sp-full-decrementing-wasted-stack-pointer">R29 (SP) - Full Decrementing Wasted Stack Pointer</h4>
+<p>The CPU doesn't explicitly have stack-related registers or opcodes, however,
+conventionally, R29 is used as stack pointer (SP). The stack can be accessed
+with normal load/store opcodes, which do not automatically increase/decrease
+SP, so the SP register must be manually modified to (de-)allocate data.<br/>
+The PSX BIOS is using "Full Decrementing Wasted Stack".<br/>
+Decrementing means that SP gets decremented when allocating data (that's common
+for most CPUs) - Full means that SP points to the first ALLOCATED word on the
+stack, so the allocated memory is at SP+0 and above, free memory at SP-1 and
+below, Wasted means that when calling a sub-function with N parameters, then
+the caller must pre-allocate N works on stack, and the sub-function may freely
+use and destroy these words; at [SP+0..N*4-1].<br/></p>
+<p>For example, "push ra,r16,r17" would be implemented as:<br/>
+<div class="highlight"><pre><span></span><code>  sub  sp,20h
+  mov  [sp+14h],ra
+  mov  [sp+18h],r16
+  mov  [sp+1Ch],r17
+</code></pre></div>
+where the allocated 20h bytes have the following purpose:<br/>
+<div class="highlight"><pre><span></span><code>  [sp+00h..0Fh]  wasted stack (may, or may not, be used by sub-functions)
+  [sp+10h..13h]  8-byte alignment padding (not used)
+  [sp+14h..1Fh]  pushed registers
+</code></pre></div></p>
+<h2 id="cpu-opcode-encoding">CPU Opcode Encoding</h2>
+<h4 id="primary-opcode-field-bit-2631">Primary opcode field (Bit 26..31)</h4>
+<div class="highlight"><pre><span></span><code>  00h=SPECIAL 08h=ADDI  10h=COP0 18h=N/A   20h=LB   28h=SB   30h=LWC0 38h=SWC0
+  01h=BcondZ  09h=ADDIU 11h=COP1 19h=N/A   21h=LH   29h=SH   31h=LWC1 39h=SWC1
+  02h=J       0Ah=SLTI  12h=COP2 1Ah=N/A   22h=LWL  2Ah=SWL  32h=LWC2 3Ah=SWC2
+  03h=JAL     0Bh=SLTIU 13h=COP3 1Bh=N/A   23h=LW   2Bh=SW   33h=LWC3 3Bh=SWC3
+  04h=BEQ     0Ch=ANDI  14h=N/A  1Ch=N/A   24h=LBU  2Ch=N/A  34h=N/A  3Ch=N/A
+  05h=BNE     0Dh=ORI   15h=N/A  1Dh=N/A   25h=LHU  2Dh=N/A  35h=N/A  3Dh=N/A
+  06h=BLEZ    0Eh=XORI  16h=N/A  1Eh=N/A   26h=LWR  2Eh=SWR  36h=N/A  3Eh=N/A
+  07h=BGTZ    0Fh=LUI   17h=N/A  1Fh=N/A   27h=N/A  2Fh=N/A  37h=N/A  3Fh=N/A
+</code></pre></div>
+<h4 id="secondary-opcode-field-bit-05-when-primary-opcode-00h">Secondary opcode field (Bit 0..5) (when Primary opcode = 00h)</h4>
+<div class="highlight"><pre><span></span><code>  00h=SLL   08h=JR      10h=MFHI 18h=MULT  20h=ADD  28h=N/A  30h=N/A  38h=N/A
+  01h=N/A   09h=JALR    11h=MTHI 19h=MULTU 21h=ADDU 29h=N/A  31h=N/A  39h=N/A
+  02h=SRL   0Ah=N/A     12h=MFLO 1Ah=DIV   22h=SUB  2Ah=SLT  32h=N/A  3Ah=N/A
+  03h=SRA   0Bh=N/A     13h=MTLO 1Bh=DIVU  23h=SUBU 2Bh=SLTU 33h=N/A  3Bh=N/A
+  04h=SLLV  0Ch=SYSCALL 14h=N/A  1Ch=N/A   24h=AND  2Ch=N/A  34h=N/A  3Ch=N/A
+  05h=N/A   0Dh=BREAK   15h=N/A  1Dh=N/A   25h=OR   2Dh=N/A  35h=N/A  3Dh=N/A
+  06h=SRLV  0Eh=N/A     16h=N/A  1Eh=N/A   26h=XOR  2Eh=N/A  36h=N/A  3Eh=N/A
+  07h=SRAV  0Fh=N/A     17h=N/A  1Fh=N/A   27h=NOR  2Fh=N/A  37h=N/A  3Fh=N/A
+</code></pre></div>
+<h4 id="opcodeparameter-encoding">Opcode/Parameter Encoding</h4>
+<div class="highlight"><pre><span></span><code>  31..26 |25..21|20..16|15..11|10..6 |  5..0  |
+   6bit  | 5bit | 5bit | 5bit | 5bit |  6bit  |
+  -------+------+------+------+------+--------+------------
+  000000 | N/A  | rt   | rd   | imm5 | 0000xx | shift-imm
+  000000 | rs   | rt   | rd   | N/A  | 0001xx | shift-reg
+  000000 | rs   | N/A  | N/A  | N/A  | 001000 | jr
+  000000 | rs   | N/A  | rd   | N/A  | 001001 | jalr
+  000000 | &lt;-----comment20bit------&gt; | 00110x | sys/brk
+  000000 | N/A  | N/A  | rd   | N/A  | 0100x0 | mfhi/mflo
+  000000 | rs   | N/A  | N/A  | N/A  | 0100x1 | mthi/mtlo
+  000000 | rs   | rt   | N/A  | N/A  | 0110xx | mul/div
+  000000 | rs   | rt   | rd   | N/A  | 10xxxx | alu-reg
+  000001 | rs   | 00000| &lt;--immediate16bit--&gt; | bltz
+  000001 | rs   | 00001| &lt;--immediate16bit--&gt; | bgez
+  000001 | rs   | 10000| &lt;--immediate16bit--&gt; | bltzal
+  000001 | rs   | 10001| &lt;--immediate16bit--&gt; | bgezal
+  00001x | &lt;---------immediate26bit---------&gt; | j/jal
+  00010x | rs   | rt   | &lt;--immediate16bit--&gt; | beq/bne
+  00011x | rs   | N/A  | &lt;--immediate16bit--&gt; | blez/bgtz
+  001xxx | rs   | rt   | &lt;--immediate16bit--&gt; | alu-imm
+  001111 | N/A  | rt   | &lt;--immediate16bit--&gt; | lui-imm
+  100xxx | rs   | rt   | &lt;--immediate16bit--&gt; | load rt,[rs+imm]
+  101xxx | rs   | rt   | &lt;--immediate16bit--&gt; | store rt,[rs+imm]
+  x1xxxx | &lt;------coprocessor specific------&gt; | coprocessor (see below)
+</code></pre></div>
+<h4 id="coprocessor-opcodeparameter-encoding">Coprocessor Opcode/Parameter Encoding</h4>
+<div class="highlight"><pre><span></span><code>  31..26 |25..21|20..16|15..11|10..6 |  5..0  |
+   6bit  | 5bit | 5bit | 5bit | 5bit |  6bit  |
+  -------+------+------+------+------+--------+------------
+  0100nn |0|0000| rt   | rd   | N/A  | 000000 | MFCn rt,rd_dat  ;rt = dat
+  0100nn |0|0010| rt   | rd   | N/A  | 000000 | CFCn rt,rd_cnt  ;rt = cnt
+  0100nn |0|0100| rt   | rd   | N/A  | 000000 | MTCn rt,rd_dat  ;dat = rt
+  0100nn |0|0110| rt   | rd   | N/A  | 000000 | CTCn rt,rd_cnt  ;cnt = rt
+  0100nn |0|1000|00000 | &lt;--immediate16bit--&gt; | BCnF target ;jump if false
+  0100nn |0|1000|00001 | &lt;--immediate16bit--&gt; | BCnT target ;jump if true
+  0100nn |1| &lt;--------immediate25bit--------&gt; | COPn imm25
+  010000 |1|0000| N/A  | N/A  | N/A  | 000001 | COP0 01h  ;=TLBR, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 000010 | COP0 02h  ;=TLBWI, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 000110 | COP0 06h  ;=TLBWR, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 001000 | COP0 08h  ;=TLBP, unused on PS1
+  010000 |1|0000| N/A  | N/A  | N/A  | 010000 | COP0 10h  ;=RFE
+  1100nn | rs   | rt   | &lt;--immediate16bit--&gt; | LWCn rt_dat,[rs+imm]
+  1110nn | rs   | rt   | &lt;--immediate16bit--&gt; | SWCn rt_dat,[rs+imm]
+</code></pre></div>
+<h4 id="illegal-opcodes">Illegal Opcodes</h4>
+<p>All opcodes that are marked as "N/A" in the Primary and Secondary opcode tables
+are causing a Reserved Instruction Exception (excode=0Ah).<br/>
+The unused operand bits (eg. Bit21-25 for LUI opcode) should be usually zero,
+but do not necessarily trigger exceptions if set to nonzero values.<br/></p>
+<h2 id="cpu-loadstore-opcodes">CPU Load/Store Opcodes</h2>
+<h4 id="load-instructions">Load instructions</h4>
+<p><div class="highlight"><pre><span></span><code>  lb  rt,imm(rs)    rt=[imm+rs]  ;byte sign-extended
+  lbu rt,imm(rs)    rt=[imm+rs]  ;byte zero-extended
+  lh  rt,imm(rs)    rt=[imm+rs]  ;halfword sign-extended
+  lhu rt,imm(rs)    rt=[imm+rs]  ;halfword zero-extended
+  lw  rt,imm(rs)    rt=[imm+rs]  ;word
+</code></pre></div>
+Load instructions can read from the data cache (if the data is not in the
+cache, or if the memory region is uncached, then the CPU gets halted until it
+has read the data) (however, the PSX doesn't have a data cache).<br/>
+Load and store instructions can generate address error exceptions if the memory address is not properly aligned (To a halfword boundary for lh/lhu/sh or a word boundary for lw/sw. lwl/lwr/swl/swr can't access misaligned address as they force align the memory address).
+Additionally, accessing certain invalid memory locations will cause a bus error exception. If an exception occurs during a load instruction, the rt register is left untouched.<br/></p>
+<h4 id="caution-load-delay">Caution - Load Delay</h4>
+<p>The loaded data is NOT available to the next opcode, ie. the target register
+isn't updated until the next opcode has completed. So, if the next opcode tries
+to read from the load destination register, then it would (usually) receive the
+OLD value of that register (unless an IRQ occurs between the load and next
+opcode, in that case the load would complete during IRQ handling, and so, the
+next opcode would receive the NEW value).<br/>
+MFC2/CFC2 also have a 1-instruction delay until the target register is loaded with its new value (more info in the GTE section).<br/></p>
+<h4 id="store-instructions">Store instructions</h4>
+<p><div class="highlight"><pre><span></span><code>  sb  rt,imm(rs)    [imm+rs]=(rt AND FFh)   ;store 8bit
+  sh  rt,imm(rs)    [imm+rs]=(rt AND FFFFh) ;store 16bit
+  sw  rt,imm(rs)    [imm+rs]=rt             ;store 32bit
+</code></pre></div>
+Store operations are passed to the write-queue, so they can execute within a
+single clock cycle (unless the write-queue was full, in that case the CPU gets
+halted until there's room in the queue). For more information on the write-queue, visit <a href="https://psx-spx.consoledev.net/memorymap/#write-queue">this page</a>.<br/></p>
+<h4 id="caution-816-bit-writes-to-certain-io-registers">Caution - 8/16-bit writes to certain IO registers</h4>
+<p>During an 8-bit or 16-bit store, all 32 bits of the GPR are placed on the bus.
+As such, when writing to certain 32-bit IO registers with an 8 or 16-bit store, it will behave like a 32-bit store, using the register's full value.
+The soundscope on some shells is known to rely on this, as it uses <code>sh</code> to write to certain DMA registers.
+If this is not properly emulated, the soundscope will hang, waiting for an interrupt that will never be fired.<br/></p>
+<h4 id="loadstore-alignment">Load/Store Alignment</h4>
+<p>Halfword addresses must be aligned by 2, word addresses must be aligned by 4,
+trying to access mis-aligned addresses will cause an exception. There's no
+alignment restriction for bytes.<br/></p>
+<h4 id="unaligned-loadstore">Unaligned Load/Store</h4>
+<p><div class="highlight"><pre><span></span><code>  lwr   rt,imm(rs)     load right bits of rt from memory (usually imm+0)
+  lwl   rt,imm(rs)     load left  bits of rt from memory (usually imm+3)
+  swr   rt,imm(rs)     store right bits of rt to memory (usually imm+0)
+  swl   rt,imm(rs)     store left  bits of rt to memory (usually imm+3)
+</code></pre></div>
+There's no delay required between lwl and lwr, so you can use them directly
+following eachother, eg. to load a word anywhere in memory without regard to
+alignment:<br/>
+<div class="highlight"><pre><span></span><code>  lwl   r2,$0003(t0)   ;\no delay required between these
+  lwr   r2,$0000(t0)   ;/(although both access r2)
+  nop                  ;-requires load delay HERE (before reading from r2)
+  and   r2,r2,0ffffh   ;-access r2 (eg. reducing it to unaligned 16bit data)
+</code></pre></div></p>
+<h4 id="unaligned-loadstore-details">Unaligned Load/Store (Details)</h4>
+<p>LWR/SWR transfers the right (=lower) bits of Rt, up-to 32bit memory boundary:<br/>
+<div class="highlight"><pre><span></span><code>  lwr/swr [N*4+0]     transfer whole 32bit of Rt to/from [N*4+0..3]
+  lwr/swr [N*4+1]     transfer lower 24bit of Rt to/from [N*4+1..3]
+  lwr/swr [N*4+2]     transfer lower 16bit of Rt to/from [N*4+2..3]
+  lwr/swr [N*4+3]     transfer lower  8bit of Rt to/from [N*4+3]
+</code></pre></div>
+LWL/SWL transfers the left (=upper) bits of Rt, down-to 32bit memory boundary:<br/>
+<div class="highlight"><pre><span></span><code>  lwl/swl [N*4+0]     transfer upper  8bit of Rt to/from [N*4+0]
+  lwl/swl [N*4+1]     transfer upper 16bit of Rt to/from [N*4+0..1]
+  lwl/swl [N*4+2]     transfer upper 24bit of Rt to/from [N*4+0..2]
+  lwl/swl [N*4+3]     transfer whole 32bit of Rt to/from [N*4+0..3]
+</code></pre></div>
+The CPU has four separate byte-access signals, so, within a 32bit location, it
+can transfer all fragments of Rt at once (including for odd 24bit amounts). The
+transferred data is not zero- or sign-expanded, eg. when transferring 8bit
+data, the other 24bit of Rt and [mem] will remain intact.<br/></p>
+<p>Note: The aligned variant can also misused for blocking memory access on
+aligned addresses (in that case, if the address is known to be aligned, only
+one of the opcodes are needed, either LWL or LWR).... Uhhhhhhhm, OR is that NOT
+allowed... more PROBABLY that doesn't work?<br/></p>
+<h2 id="cpu-alu-opcodes">CPU ALU Opcodes</h2>
+<h4 id="arithmetic-instructions">arithmetic instructions</h4>
+<p><div class="highlight"><pre><span></span><code>  add   rd,rs,rt         rd=rs+rt (with overflow trap)
+  addu  rd,rs,rt         rd=rs+rt
+  sub   rd,rs,rt         rd=rs-rt (with overflow trap)
+  subu  rd,rs,rt         rd=rs-rt
+  addi  rt,rs,imm        rt=rs+(-8000h..+7FFFh) (with ov.trap)
+  addiu rt,rs,imm        rt=rs+(-8000h..+7FFFh)
+</code></pre></div>
+The opcodes "with overflow trap" do trigger an exception (and leave rd
+unchanged) in case of overflows.<br/></p>
+<h4 id="comparison-instructions">comparison instructions</h4>
+<div class="highlight"><pre><span></span><code>  slt   rd,rs,rt  if rs&lt;rt (signed comparison) then rd=1 else rd=0
+  sltu  rd,rs,rt  if rs&lt;rt (unsigned comparison) then rd=1 else rd=0
+  slti  rt,rs,imm if rs&lt;(sign-extended immediate in range [-8000h..+7FFFh], signed comparison) then rt=1 else rt=0
+  sltiu rt,rs,imm if rs&lt;(sign-extended immediate in range [0..7FFFh] U [FFFF8000h..FFFFFFFFh], unsigned comparison) then rt=1 else rt=0
+</code></pre></div>
+<h4 id="logical-instructions">logical instructions</h4>
+<div class="highlight"><pre><span></span><code>  and  rd,rs,rt         rd = rs AND rt
+  or   rd,rs,rt         rd = rs OR  rt
+  xor  rd,rs,rt         rd = rs XOR rt
+  nor  rd,rs,rt         rd = FFFFFFFFh XOR (rs OR rt)
+  andi rt,rs,imm        rt = rs AND (0000h..FFFFh)
+  ori  rt,rs,imm        rt = rs OR  (0000h..FFFFh)
+  xori rt,rs,imm        rt = rs XOR (0000h..FFFFh)
+</code></pre></div>
+<h4 id="shifting-instructions">shifting instructions</h4>
+<p><div class="highlight"><pre><span></span><code>  sllv rd,rt,rs          rd = rt SHL (rs AND 1Fh)
+  srlv rd,rt,rs          rd = rt SHR (rs AND 1Fh)
+  srav rd,rt,rs          rd = rt SAR (rs AND 1Fh)
+  sll  rd,rt,imm         rd = rt SHL (00h..1Fh)
+  srl  rd,rt,imm         rd = rt SHR (00h..1Fh)
+  sra  rd,rt,imm         rd = rt SAR (00h..1Fh)
+  lui  rt,imm            rt = (0000h..FFFFh) SHL 16
+</code></pre></div>
+Unlike many other opcodes, shifts use 'rt' as second (not third) operand.<br/>
+The hardware does NOT generate exceptions on SHL overflows.<br/></p>
+<h4 id="multiplydivide">Multiply/divide</h4>
+<p><div class="highlight"><pre><span></span><code>  mult   rs,rt           hi:lo = rs*rt (signed)
+  multu  rs,rt           hi:lo = rs*rt (unsigned)
+  div    rs,rt           lo = rs/rt, hi=rs mod rt (signed)
+  divu   rs,rt           lo = rs/rt, hi=rs mod rt (unsigned)
+  mfhi   rd              rd=hi  ;move from hi
+  mflo   rd              rd=lo  ;move from lo
+  mthi   rs              hi=rs  ;move to hi
+  mtlo   rs              lo=rs  ;move to lo
+</code></pre></div>
+The mul/div opcodes are starting the multiply/divide operation, starting takes
+only a single clock cycle, however, trying to read the result from the hi/lo
+registers while the mul/div operation is busy will halt the CPU until the
+mul/div has completed. For multiply, the execution time depends on rs (ie.
+"small*large" can be much faster than "large*small").<br/>
+<div class="highlight"><pre><span></span><code>  __multu_execution_time_____________________________________________________
+  Fast  (6 cycles)   rs = 00000000h..000007FFh
+  Med   (9 cycles)   rs = 00000800h..000FFFFFh
+  Slow  (13 cycles)  rs = 00100000h..FFFFFFFFh
+  __mult_execution_time_____________________________________________________
+  Fast  (6 cycles)   rs = 00000000h..000007FFh, or rs = FFFFF800h..FFFFFFFFh
+  Med   (9 cycles)   rs = 00000800h..000FFFFFh, or rs = FFF00000h..FFFFF801h
+  Slow  (13 cycles)  rs = 00100000h..7FFFFFFFh, or rs = 80000000h..FFF00001h
+  __divu/div_execution_time________________________________________________
+  Fixed (36 cycles)  no matter of rs and rt values
+</code></pre></div>
+For example, when executing "multu 123h,12345678h" and "mflo r1", one can
+insert up to six (cached) ALU opcodes, or read one value from PSX Main RAM
+(which has 6 cycle access time) between the "multu" and "mflo" opcodes without
+additional slowdown.<br/>
+The hardware does NOT generate exceptions on divide overflows, instead, divide
+errors are returning the following values:<br/>
+<div class="highlight"><pre><span></span><code>  Opcode  Rs              Rt       Hi/Remainder  Lo/Result
+  divu    0..FFFFFFFFh    0   --&gt;  Rs            FFFFFFFFh
+  div     0..+7FFFFFFFh   0   --&gt;  Rs            -1
+  div     -80000000h..-1  0   --&gt;  Rs            +1
+  div     -80000000h      -1  --&gt;  0             -80000000h
+</code></pre></div>
+For divu, the result is more or less correct (as close to infinite as
+possible). For div, the results are total garbage (about furthest away from
+the desired result as possible).<br/>
+Note: After accessing the lo/hi registers, there seems to be a strange rule
+that one should not touch the lo/hi registers in the next 2 cycles or so... not
+yet understood if/when/how that rule applies...?<br/></p>
+<h2 id="cpu-jump-opcodes">CPU Jump Opcodes</h2>
+<h4 id="jumps-and-branches">jumps and branches</h4>
+<p>Note that the instruction following the branch will always be executed.<br/>
+<div class="highlight"><pre><span></span><code>  j      dest        pc=(pc and F0000000h)+(imm26bit*4)
+  jal    dest        pc=(pc and F0000000h)+(imm26bit*4),ra=$+8
+  jr     rs          pc=rs
+  jalr (rd,)rs(,rd)  pc=rs, rd=$+8 ;see caution
+  beq    rs,rt,dest  if rs=rt  then pc=$+4+(-8000h..+7FFFh)*4
+  bne    rs,rt,dest  if rs&lt;&gt;rt then pc=$+4+(-8000h..+7FFFh)*4
+  bltz   rs,dest     if rs&lt;0   then pc=$+4+(-8000h..+7FFFh)*4
+  bgez   rs,dest     if rs&gt;=0  then pc=$+4+(-8000h..+7FFFh)*4
+  bgtz   rs,dest     if rs&gt;0   then pc=$+4+(-8000h..+7FFFh)*4
+  blez   rs,dest     if rs&lt;=0  then pc=$+4+(-8000h..+7FFFh)*4
+  bltzal rs,dest     if rs&lt;0   then pc=$+4+(..)*4; ra=$+8; 
+  bgezal rs,dest     if rs&gt;=0  then pc=$+4+(..)*4; ra=$+8;
+</code></pre></div></p>
+<p>jr/jalr can be used to jump to an unaligned address, in which case an address error (AdEL) exception will be raised on the next instruction fetch.<br/>
+Additionally, bltzal/bgezal will always place the return address in $ra, whether or not the branch is taken. Additionally, if <code>rs</code> is $ra, then the value used for the comparison is $ra's value before linking.<br/></p>
+<h4 id="jalr-cautions">JALR cautions</h4>
+<p>Caution: The JALR source code syntax varies (IDT79R3041 specs say "jalr rs,rd",
+but MIPS32 specs say "jalr rd,rs"). Moreover, JALR may not use the same
+register for both operands (eg. "jalr r31,r31") (doing so would destroy the
+target address; which is normally no problem, but it can be a problem if an IRQ
+occurs between the JALR opcode and the following branch delay opcode; in that
+case BD gets set, and EPC points "back" to the JALR opcode, so JALR is executed
+twice, with destroyed target address in second execution).<br/></p>
+<h4 id="exception-opcodes">exception opcodes</h4>
+<p>Unlike for jump/branch opcodes, exception opcodes are immediately executed (ie.
+without executing the following opcode).<br/>
+<div class="highlight"><pre><span></span><code>  syscall  imm20        generates a system call exception
+  break    imm20        generates a breakpoint exception
+</code></pre></div>
+The 20bit immediate doesn't affect the CPU (however, the exception handler may
+interprete it by software; by examing the opcode bits at [epc-4]).<br/></p>
+<h2 id="cpu-coprocessor-opcodes">CPU Coprocessor Opcodes</h2>
+<h4 id="coprocessor-instructions-cop0cop3">Coprocessor Instructions (COP0..COP3)</h4>
+<p><div class="highlight"><pre><span></span><code>  mfc# rt,rd       ;rt = cop#datRd ;data regs
+  cfc# rt,rd       ;rt = cop#cntRd ;control regs
+  mtc# rt,rd       ;cop#datRd = rt ;data regs
+  ctc# rt,rd       ;cop#cntRd = rt ;control regs
+  cop# imm25       ;exec cop# command 0..1FFFFFFh
+  lwc# rt,imm(rs)  ;cop#dat_rt = [rs+imm]  ;word
+  swc# rt,imm(rs)  ;[rs+imm] = cop#dat_rt  ;word
+  bc#f dest        ;if cop#flg=false then pc=$+disp
+  bc#t dest        ;if cop#flg=true  then pc=$+disp
+  rfe              ;return from exception (COP0)
+  tlb&lt;xx&gt;          ;virtual memory related (COP0), unused in the PS1
+</code></pre></div>
+Unknown if any tlb-opcodes (tlbr,tlbwi,tlbwr,tlbp) are implemented in the psx hardware?<br/></p>
+<h4 id="caution-load-delay_1">Caution - Load Delay</h4>
+<p>When reading from a coprocessor register, the next opcode cannot use the
+destination register as operand (much the same as the Load Delays that occur
+when reading from memory; see there for details).<br/>
+Reportedly, the Load Delay applies for the next TWO opcodes after coprocessor
+reads, but, that seems to be nonsense (the PSX does finish both COP0 and COP2
+reads after ONE opcode).<br/></p>
+<h4 id="caution-store-delay">Caution - Store Delay</h4>
+<p>In some cases, a similar delay occurs when writing to a coprocessor register.
+COP0 is more or less free of store delays (eg. one can read from a cop0
+register immediately after writing to it), the only known exception is the cop2
+enable bit in cop0r12.bit30 (setting that cop0 bit acts delayed, and cop2 isn't
+actually enabled until after 2 clock cycles or so).<br/>
+Writing to cop2 registers has a delay of 2..3 clock cycles. In most cases, that
+is probably (?) only 2 cycles, but special cases like writing to IRGB (which
+does additionally affect IR1,IR2,IR3) take 3 cycles until the result arrives in
+all registers).<br/>
+Note that Store Delays are counted in numbers of clock cycles (not in numbers
+of opcodes). For 3 cycle delay, one must usually insert 3 cached opcodes (or
+one uncached opcode).<br/></p>
+<h2 id="cpu-pseudo-opcodes">CPU Pseudo Opcodes</h2>
+<h4 id="pseudo-instructions-nativespasm">Pseudo instructions (native/spasm)</h4>
+<div class="highlight"><pre><span></span><code>  nop                  ;alias for sll r0,r0,0
+  move rd,rs           ;alias for addu rd,rs,r0
+  la   rx,imm32        ;load address   (alias for lui rx / addiu rx)
+  li   rx,imm32        ;load immediate (alias for lui rx / ori   rx)
+  li   rx,imm16        ;load immediate (alias for ori, range 0..FFFFh)
+  li   rx,-imm15       ;load immediate (alias for addiu, range -1..-8000h)
+  li   rx,imm16*10000h ;load immediate (alias for lui)
+  lw   rx,imm32        ;load from address (lui rx / lw rx,rx)
+  sw   rx,imm32        ;store to address  (lui r1 / sw rx,r1) (destroys r1!)
+  lb,lh,lwl,lwr,lbu,lhu;as above pseudo lw
+  sb,sh,swl,swr        ;as above pseudo sw (ie. also destroys r1!)
+  alu  rx,op           ;alias for alu  rx,rx,op
+  alu(u) rx,rx,imm     ;alias for alui(u) rx,rx,imm
+  jalr  rx             ;alias for jalr (RA,)rx(,RA)
+  subi(u) rt,rs,imm    ;alias for addi(u) rt,rs,-imm
+  beqz rx,dest         ;alias for beq rx,r0,dest
+  bnez rx,dest         ;alias for bne rx,r0,dest
+  b   dest             ;alias for beq r0,r0,dest (jump relative/spasm)
+  bra dest             ;alias for bgez r0, r0, dest
+  bal dest             ;alias for bgezal r0, r0, dest
+</code></pre></div>
+<h4 id="pseudo-instructions-nocasha22i-not-present-on-most-other-assemblers">Pseudo instructions (nocash/a22i, not present on most other assemblers)</h4>
+<p><div class="highlight"><pre><span></span><code>  mov  rx,NNNN0000h    ;alias for lui  rx,NNNNh
+  mov  rx,0000NNNNh    ;alias for or   rx,r0,NNNNh  ;max +FFFFh
+  mov  rx,-imm15       ;alias for add  rx,r0,-NNNNh ;min -8000h
+  mov  rx,ry           ;alias for or   rx,ry,0  (or &quot;addiu&quot;)
+  jrel dest            ;alias for blez R0,dest   ;relative jump
+  crel dest            ;alias for callns R0,dest ;relative call
+  jz   rx,dest         ;alias for je   rx,R0,dest
+  jnz  rx,dest         ;alias for jne  rx,R0,dest
+  call rx              ;alias for call rx,ret=RA
+  ret                  ;alias for jmp  ra
+  subt rt,rs,imm       ;alias for addt rt,rs,-imm
+  sub  rt,rs,imm       ;alias for add  rt,rs,-imm
+  alu  rx,op           ;alias for alu  rx,rx,op
+  neg(t) rx,ry         ;alias for sub(t) rx,R0,ry
+  not    rx,ry         ;alias for nor    rx,R0,ry
+  neg(t)/not rx        ;alias for neg(t)/not rx,rx
+  setz rx,ry           ;alias for setb rx,ry,1   (set if zero)
+  setnz rx,ry          ;alias for setb rx,R0,ry  (set if nonzero)
+  syscall/break        ;alias for syscall/break 000000h
+</code></pre></div>
+Below are pseudo instructions combined of two 32bit opcodes...<br/>
+<div class="highlight"><pre><span></span><code>  movp rx,imm32        ;alias for lui  rx,imm16 -plus- or rx,rx,imm16)
+  mov(bhs)p rx,[imm32] ;load from address (lui rx,imm16 / mov rx,[rx+imm16])
+  movu [rs+imm]        ;alias for lwr/swr [rs+imm] plus lwl/swl [rs+imm+3]
+  reti                 ;alias for jmp k0 plus rfe
+</code></pre></div>
+Below are pseudo instructions combined of two or more 32bit opcodes...<br/>
+<div class="highlight"><pre><span></span><code>  push rlist           ;alias for sub sp,n*4 -- mov [sp+(1..n)*4],r1..rn
+  pop  rlist           ;alias for mov r1..rn,[sp+(1..n)*4] -- add sp,n*4
+  pop  pc,rlist        ;alias for pop ra,rlist -- jmp ra
+</code></pre></div></p>
+<h4 id="directives-nocash">Directives (nocash)</h4>
+<div class="highlight"><pre><span></span><code>  .mips          ;select MIPS instruction set (alternately .hc05 for MC68HC05)
+  .bios          ;create a .ROM file (instead of .EXE)
+  .auto_nop      ;append NOPs to jumps ;unless next opcode starts with a +
+  org imm        ;assume following code to be originated at address &quot;imm&quot;
+  db n(,n(..)))  ;define 8bit data values(s) or quoted ASCII strings
+  dw n(,n(..)))  ;define 16bit data values(s) (not 32bit data!)
+  dd n(,n(..)))  ;define 32bit data values(s)
+  .align imm
+  0              ;alias for immediate 0 and register R0 (whichever fits)
+</code></pre></div>
+<h4 id="directives-native">Directives (native)</h4>
+<div class="highlight"><pre><span></span><code>  org imm        ;self-explaining (but, default=$80010000 for spasm!)
+  align imm      ;self-explaining (probably zeropadded?)
+  db n(,n(..)))  ;define 8bit data values(s) or quoted ASCII strings
+  dh n(,n(..)))  ;define 16bit data values(s)
+  dw n(,n(..)))  ;define 32bit data values(s) (not 16bit data!)
+  dcb len,value  ;fill &lt;len&gt; bytes by &lt;value&gt; (different as DCB on ARM CPUs)
+  xyz            ;define label &quot;xyz&quot; at current address (without colon)
+  xyz equ n      ;assign value n to xyz
+  xyz = n        ;probably same/sililar as &quot;equ&quot;
+  ;xyz           ;comments invoked with semicolon (spasm)
+  incbin file.bin       ;import binary file
+  include file.asm      ;import asm file
+  zero           ;alias for r0
+  &gt;imm32         ;alias for (i-(i AND 8000h))/10000h,  and/or i/10000h ?
+  &lt;imm32         ;alias for (i AND 0FFFFh), used for SW(+/-) and ORI(+)?
+  end       ;N/A ;no &quot;end&quot; or &quot;.end&quot; directive needed/used by spasm
+  r1 aka at ;N/A ;some assemblers may (optionally) reject to use r1/at
+</code></pre></div>
+<h4 id="syntax-for-unknown-assembler-for-pads">Syntax for unknown assembler (for pad.s)</h4>
+<p>It uses "0x" for HEX values (but doesn't use "$" for registers).<br/>
+It uses "#" instead of ";" for comments.<br/>
+It uses ":" for labels (fortunately).<br/>
+The assembler has at least one directive: ".byte" (equivalent to "db" on other
+assemblers).<br/>
+I've no clue which assembler is used for that syntax... could that be the Psy-Q
+assembler?<br/></p>
+<h2 id="cop0-register-summary">COP0 - Register Summary</h2>
+<h4 id="cop0-register-summary_1">COP0 Register Summary</h4>
+<table>
+<thead>
+<tr>
+<th>Number</th>
+<th>Mnemonic</th>
+<th>Name</th>
+<th>R/W</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cop0r0-r2</td>
+<td>N/A</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>cop0r3</td>
+<td>BPC</td>
+<td>Breakpoint Program Counter</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>cop0r4</td>
+<td>N/A</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>cop0r5</td>
+<td>BDA</td>
+<td>Breakpoint Data Address</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>cop0r6</td>
+<td>TAR</td>
+<td>Target Address</td>
+<td>R</td>
+</tr>
+<tr>
+<td>cop0r7</td>
+<td>DCIC</td>
+<td>Debug and Cache Invalidate Control</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>cop0r8</td>
+<td>BadA</td>
+<td>Bad Address</td>
+<td>R</td>
+</tr>
+<tr>
+<td>cop0r9</td>
+<td>BDAM</td>
+<td>Breakpoint Data Address Mask</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>cop0r10</td>
+<td>N/A</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>cop0r11</td>
+<td>BPCM</td>
+<td>Breakpoint Program Counter Mask</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>cop0r12</td>
+<td>SR</td>
+<td>Status Register</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>cop0r13</td>
+<td>CAUSE</td>
+<td>Cause of the last exception</td>
+<td>R</td>
+</tr>
+<tr>
+<td>cop0r14</td>
+<td>EPC</td>
+<td>Exception Program Counter</td>
+<td>R</td>
+</tr>
+<tr>
+<td>cop0r15</td>
+<td>PRID</td>
+<td>Processor Revision Identifier</td>
+<td>R</td>
+</tr>
+<tr>
+<td>cop0r16-r31</td>
+<td></td>
+<td>Garbage</td>
+<td></td>
+</tr>
+<tr>
+<td>cop0r32-r63</td>
+<td>N/A</td>
+<td>Control regs</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="cop0-exception-handling">COP0 - Exception Handling</h2>
+<h4 id="cop0r13-cause-read-only-except-bit8-9-are-rw">cop0r13 - CAUSE - (Read-only, except, Bit8-9 are R/W)</h4>
+<p>Describes the most recently recognised exception.</p>
+<table>
+<thead>
+<tr>
+<th>Bits</th>
+<th>Mnemonic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-1</td>
+<td></td>
+<td>Not used (zero)</td>
+</tr>
+<tr>
+<td>2-6</td>
+<td>ExcCode</td>
+<td>Describes what kind of exception occured (see below)</td>
+</tr>
+<tr>
+<td>7</td>
+<td></td>
+<td>Not used (zero)</td>
+</tr>
+<tr>
+<td>8-9</td>
+<td>Sw</td>
+<td>Software Interrupts. Write to these bits to manually cause an exception. Clear them before returning from the exception handler.</td>
+</tr>
+<tr>
+<td>10-15</td>
+<td>IP</td>
+<td>Interrupt pending field. As long as any of the bits are set they will cause an interrupt if the corresponding bit is set in IM.</td>
+</tr>
+<tr>
+<td>16-27</td>
+<td></td>
+<td>Not used (zero)</td>
+</tr>
+<tr>
+<td>28-29</td>
+<td>CE</td>
+<td>Contains the coprocessor number if the exception occurred because of a coprocessor instuction for a coprocessor which wasn't enabled in SR.</td>
+</tr>
+<tr>
+<td>30</td>
+<td>BT</td>
+<td>When BD is set, BT determines whether the branch is taken. The Target Address Register holds the return address.</td>
+</tr>
+<tr>
+<td>31</td>
+<td>BD</td>
+<td>Is set when EPC points to the branch instuction instead of the instruction in the branch delay slot, where the exception occurred.</td>
+</tr>
+</tbody>
+</table>
+<p>ExcCode values:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Mnemonic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00h</td>
+<td>INT</td>
+<td>External Interrupt</td>
+</tr>
+<tr>
+<td>01h</td>
+<td>MOD</td>
+<td>TLB modification (none such in PSX)</td>
+</tr>
+<tr>
+<td>02h</td>
+<td>TLBL</td>
+<td>TLB load (none such in PSX)</td>
+</tr>
+<tr>
+<td>03h</td>
+<td>TLBS</td>
+<td>TLB store (none such in PSX)</td>
+</tr>
+<tr>
+<td>04h</td>
+<td>AdEL</td>
+<td>Address error, Data load or Instruction fetch</td>
+</tr>
+<tr>
+<td>05h</td>
+<td>AdES</td>
+<td>Address error, Data store. The address errors occur when attempting to read outside of KUseg in user mode and when the address is misaligned. (See also: Bad Address register)</td>
+</tr>
+<tr>
+<td>06h</td>
+<td>IBE</td>
+<td>Bus error on Instruction fetch</td>
+</tr>
+<tr>
+<td>07h</td>
+<td>DBE</td>
+<td>Bus error on Data load/store</td>
+</tr>
+<tr>
+<td>08h</td>
+<td>Sys</td>
+<td>Generated unconditionally by syscall instruction</td>
+</tr>
+<tr>
+<td>09h</td>
+<td>Bp</td>
+<td>Breakpoint - break instruction</td>
+</tr>
+<tr>
+<td>0Ah</td>
+<td>RI</td>
+<td>Reserved instruction</td>
+</tr>
+<tr>
+<td>0Bh</td>
+<td>CpU</td>
+<td>Coprocessor unusable</td>
+</tr>
+<tr>
+<td>0Ch</td>
+<td>Ovf</td>
+<td>Arithmetic overflow</td>
+</tr>
+<tr>
+<td>0Dh-1Fh</td>
+<td></td>
+<td>Not used</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cop0r12-sr-system-status-register-rw">cop0r12 - SR - System status register (R/W)</h4>
+<div class="highlight"><pre><span></span><code>  0     IEc Current Interrupt Enable  (0=Disable, 1=Enable) ;rfe pops IUp here
+  1     KUc Current Kernel/User Mode  (0=Kernel, 1=User)    ;rfe pops KUp here
+  2     IEp Previous Interrupt Enable                       ;rfe pops IUo here
+  3     KUp Previous Kernel/User Mode                       ;rfe pops KUo here
+  4     IEo Old Interrupt Enable                        ;left unchanged by rfe
+  5     KUo Old Kernel/User Mode                        ;left unchanged by rfe
+  6-7   -   Not used (zero)
+  8-15  Im  8 bit interrupt mask fields. When set the corresponding
+            interrupts are allowed to cause an exception.
+  16    Isc Isolate Cache (0=No, 1=Isolate)
+              When isolated, all load and store operations are targetted
+              to the Data cache, and never the main memory.
+              (Used by PSX Kernel, in combination with Port FFFE0130h)
+  17    Swc Swapped cache mode (0=Normal, 1=Swapped)
+              Instruction cache will act as Data cache and vice versa.
+              Use only with Isc to access &amp; invalidate Instr. cache entries.
+              (Not used by PSX Kernel)
+  18    PZ  When set cache parity bits are written as 0.
+  19    CM  Shows the result of the last load operation with the D-cache
+            isolated. It gets set if the cache really contained data
+            for the addressed memory location.
+  20    PE  Cache parity error (Does not cause exception)
+  21    TS  TLB shutdown. Gets set if a programm address simultaneously
+            matches 2 TLB entries.
+            (initial value on reset allows to detect extended CPU version?)
+  22    BEV Boot exception vectors in RAM/ROM (0=RAM/KSEG0, 1=ROM/KSEG1)
+  23-24 -   Not used (zero)
+  25    RE  Reverse endianness   (0=Normal endianness, 1=Reverse endianness)
+              Reverses the byte order in which data is stored in
+              memory. (lo-hi -&gt; hi-lo)
+              (Affects only user mode, not kernel mode) (?)
+              (The bit doesn&#39;t exist in PSX ?)
+  26-27 -   Not used (zero)
+  28    CU0 COP0 Enable (0=Enable only in Kernel Mode, 1=Kernel and User Mode)
+  29    CU1 COP1 Enable (0=Disable, 1=Enable) (none in PSX)
+  30    CU2 COP2 Enable (0=Disable, 1=Enable) (GTE in PSX)
+  31    CU3 COP3 Enable (0=Disable, 1=Enable) (none in PSX)
+</code></pre></div>
+<h4 id="cop0r14-epc-return-address-from-trap-r">cop0r14 - EPC - Return Address from Trap (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-31  Return Address from Exception
+</code></pre></div>
+This register points to the address at which an exception occured, unless BD in CAUSE is set, in which case EPC is set to the address of the exception - 4.<br/>
+Interrupts should always return to EPC+0, no matter of the BD flag. That way,
+if BD=1, the branch gets executed again, that's required because EPC stores
+only the current program counter, but not additionally the branch destination
+address.<br/>
+Other exceptions may require to handle BD. In simple cases, when BD=0, the
+exception handler may return to EPC+0 (retry execution of the opcode), or to
+EPC+4 (skip the opcode that caused the exception). Note that jumps to faulty
+memory locations are executed without exception, but will trigger address
+errors and bus errors at the target location, ie. EPC (and BadAddr, in case of
+address errors) point to the faulty address, not to the opcode that has jumped
+to that address).<br/></p>
+<h4 id="interrupts-vs-gte-commands">Interrupts vs GTE Commands</h4>
+<p>If an interrupt occurs "on" a GTE command (cop2cmd), then the GTE command is
+executed, but nethertheless, the return address in EPC points to the GTE
+command. So, if the exeception handler would return to EPC as usually, then the
+GTE command would be executed twice. In best case, this would be a waste of
+clock cycles, in worst case it may lead to faulty result (if the results from
+the 1st execution are re-used as incoming parameters in the 2nd execution). To
+fix the problem, the exception handler must do:<br/>
+<div class="highlight"><pre><span></span><code>  if (cause AND 7Ch)=00h                ;if excode=interrupt
+   if ([epc] AND FE000000h)=4A000000h   ;and opcode=cop2cmd
+    epc=epc+4                           ;then skip that opcode
+</code></pre></div>
+Note: The above exception handling is working only in newer PSX BIOSes, but in
+very old PSX BIOSes, it is only incompletely implemented (see "BIOS Patches"
+chapter for common workarounds; or write your own exception handler without
+using the BIOS).<br/>
+Of course, the above exeption handling won't work in branch delays (where BD
+gets set to indicate that EPC was modified) (best workaround is not to use GTE
+commands in branch delays).<br/>
+Several games are known to rely on this, notably including the Crash Bandicoot trilogy,
+Jinx and Spyro the Dragon, all of which will render broken geometry
+if running on an emulator which doesn't emulate this,
+or if the installed interrupt service routine doesn't account for it.</p>
+<h4 id="cop0cmd10h-rfe-opcode-prepare-return-from-exception">cop0cmd=10h - RFE opcode - Prepare Return from Exception</h4>
+<p>The RFE opcode moves some bits in cop0r12 (SR): bit2-3 are copied to bit0-1,
+and bit4-5 are copied to bit2-3, all other bits (including bit4-5) are left
+unchanged.<br/>
+The RFE opcode does NOT automatically jump to EPC. Instead, the exception
+handler must copy EPC into a register (usually R26 aka K0), and then jump to
+that address. Because of branch delays, that would look like so:<br/>
+<div class="highlight"><pre><span></span><code>  mov  k0,epc  ;get return address
+  push k0      ;save epc in memory (if you expect nested exceptions)
+  ...          ;whatever (ie. process CAUSE)
+  pop  k0      ;restore from memory (if you expect nested exceptions)
+  jmp  k0      ;jump to K0 (after executing the next opcode)
+  +rfe         ;move SR bit4/5 --&gt; bit2/3 --&gt; bit0/1
+</code></pre></div>
+If you expect exceptions to be nested deeply, also push/pop SR. Note that
+there's no way to leave all registers intact (ie. above code destroys K0).<br/></p>
+<h4 id="cop0r8-badvaddr-bad-virtual-address-r">cop0r8 - BadVaddr - Bad Virtual Address (R)</h4>
+<p>Contains the address whose reference caused an exception. Set on any MMU type
+of exceptions, on references outside of kuseg (in User mode) and on any
+misaligned reference. BadVaddr is updated ONLY by Address errors (Excode 04h
+and 05h), all other exceptions (including bus errors) leave BadVaddr unchanged.<br/></p>
+<h4 id="exception-vectors-depending-on-bev-bit-in-sr-register">Exception Vectors (depending on BEV bit in SR register)</h4>
+<p><div class="highlight"><pre><span></span><code>  Exception     BEV=0         BEV=1
+  Reset         BFC00000h     BFC00000h   (Reset)
+  UTLB Miss     80000000h     BFC00100h   (Virtual memory, none such in PSX)
+  COP0 Break    80000040h     BFC00140h   (Debug Break)
+  General       80000080h     BFC00180h   (General Interrupts &amp; Exceptions)
+</code></pre></div>
+Note: Changing vectors at 800000xxh (kseg0) seems to be automatically reflected
+to the instruction cache without needing to flush cache (at least it worked
+SOMETIMES in my test proggy... but NOT always? ...anyways, it'd be highly
+recommended to flush cache when changing any opcodes), whilst changing mirrors
+at 000000xxh (kuseg) seems to require to flush cache.<br/>
+The PSX uses only the BEV=0 vectors (aside from the reset vector, the PSX BIOS
+ROM doesn't contain any of the BEV=1 vectors).<br/></p>
+<h4 id="exception-priority">Exception Priority</h4>
+<div class="highlight"><pre><span></span><code>  Reset At any time (highest)            ;-reset
+  AdEL Memory (Load instruction)         ;\
+  AdES Memory (Store instruction)        ; memory (data load/store)
+  DBE  Memory (Load or store)            ;/
+  MOD  ALU (Data TLB)                    ;\
+  TLBL ALU (DTLB Miss)                   ; none such
+  TLBS ALU (DTLB Miss)                   ;/
+  Ovf  ALU                               ;-overflow
+  Int  ALU                               ;-interrupt
+  Sys  RD (Instruction Decode)           ;\
+  Bp   RD (Instruction Decode)           ;
+  RI   RD (Instruction Decode)           ;
+  CpU  RD (Instruction Decode)           ;/
+  TLBL I-Fetch (ITLB Miss)               ;-none such
+  AdEL IVA (Instruction Virtual Address) ;\memory (opcode fetch)
+  IBE  RD (end of I-Fetch, lowest)       ;/
+</code></pre></div>
+<h2 id="cop0-misc">COP0 - Misc</h2>
+<h4 id="cop0r15-prid-processor-revision-identifier-r">cop0r15 - PRID - Processor Revision Identifier (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-7   Revision
+  8-15  Implementation
+  16-31 Not used
+</code></pre></div>
+For a Playstation with CXD8606CQ CPU, the PRID value is 00000002h.<br/>
+Unknown if/which other Playstation CPU versions have other values...?<br/></p>
+<h4 id="cop0r6-tar-target-address-r">cop0r6 - TAR - Target Address (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-31  Return Address
+</code></pre></div>
+When an exception occurs in the delay slot of a jump or branch (cop0r13.31=1), and the branch is to be taken (or it's an unconditional jump) (cop0r13.30=1), this register is updated to contain the destination address of the jump or branch.</p>
+<h4 id="cop0r0r2-cop0r4-cop0r10-cop0r32r63-na">cop0r0..r2, cop0r4, cop0r10, cop0r32..r63 - N/A</h4>
+<p>Registers 0,1,2,4,10 control virtual memory on some MIPS processors (but
+there's none such in the PSX), and Registers 32..63 (aka "control registers")
+aren't used in any MIPS processors. Trying to read any of these registers
+causes a Reserved Instruction Exception (excode=0Ah).<br/></p>
+<h4 id="cop0cmd01h02h06h08h-tlbrtlbwitlbwrtlbp">cop0cmd=01h,02h,06h,08h - TLBR,TLBWI,TLBWR,TLBP</h4>
+<p>The PSX supports only one cop0cmd (cop0cmd=10h aka RFE). Trying to execute the
+TLBxx opcodes causes a Reserved Instruction Exception (excode=0Ah).<br/></p>
+<h4 id="jfjt-cop0flgdest-conditional-cop0-jumps">jf/jt cop0flg,dest - conditional cop0 jumps</h4>
+<h4 id="mov-memcop0reg-mov-cop0regmem-coprocessor-cop0-loadstore">mov [mem],cop0reg / mov cop0reg,[mem] - coprocessor cop0 load/store</h4>
+<p>Not supported by the CPU. Trying to execute these opcodes causes a Coprocessor
+Unusable Exception (excode=0Bh, ie. unlike above, not 0Ah).<br/></p>
+<h4 id="cop0r16-r31-garbage">cop0r16-r31 - Garbage</h4>
+<p>Trying to read these registers returns garbage (but does not trigger an
+exception). When reading one of the garbage registers shortly after reading a
+valid cop0 register, the garbage value is usually the same as that of the valid
+register. When doing the read later on, the return value is usually 00000020h,
+or when reading much later it returns 00000040h, or even 00000100h. No idea
+what is causing that effect...?<br/>
+Note: The garbage registers can be accessed (without causing an exception) even
+in "User mode with cop0 disabled" (SR.Bit1=1 and SR.Bit28=0); accessing any
+other existing cop0 registers (or executing the rfe opcode) in that state is
+causing Coprocessor Unusable Exceptions (excode=0Bh).<br/></p>
+<h2 id="cop0-debug-registers">COP0 - Debug Registers</h2>
+<p>"Normal" R30xx CPUs like IDT's R3041 and R3051 don't have similar debug
+registers, however they are described in LSI's "L64360" datasheet, chapter 14,
+and in their LR33300/LR33310 datasheet, chapter 4.</p>
+<h4 id="cop0r7-dcic-debug-and-cache-invalidate-control-rw">cop0r7 - DCIC - Debug and Cache Invalidate Control (R/W)</h4>
+<table>
+<thead>
+<tr>
+<th>Bit</th>
+<th>Mnemonic</th>
+<th>Name</th>
+<th>Description</th>
+<th>R/W</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>DB</td>
+<td>Debug</td>
+<td>Automatically set upon Any break</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>1</td>
+<td>PC</td>
+<td>Program Counter</td>
+<td>Automatically set upon BPC Program Counter break</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DA</td>
+<td>Data Address</td>
+<td>Automatically set upon BDA Data Address break</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>3</td>
+<td>R</td>
+<td>Read Reference</td>
+<td>Automatically set upon BDA Data Read break</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>4</td>
+<td>W</td>
+<td>Write Reference</td>
+<td>Automatically set upon BDA Data Write break</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>5</td>
+<td>T</td>
+<td>Trace</td>
+<td>Automatically set upon Trace break</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>6-11</td>
+<td></td>
+<td>Not used</td>
+<td>Always zero</td>
+<td>R</td>
+</tr>
+<tr>
+<td>12-13</td>
+<td></td>
+<td>Jump Redirection</td>
+<td>0=Disable, 1..3=Enable (see note)</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>14-15</td>
+<td></td>
+<td>Unknown?</td>
+<td></td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>16-22</td>
+<td></td>
+<td>Not used</td>
+<td>Always zero</td>
+<td>R</td>
+</tr>
+<tr>
+<td>23</td>
+<td>DE</td>
+<td>Debug Enable</td>
+<td>0=Disabled, 1=Enable bits 24-31</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>24</td>
+<td>PCE</td>
+<td>Program Counter Breakpoint Enable</td>
+<td>0=Disabled, 1=Enabled (see BPC, BPCM)</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>25</td>
+<td>DAE</td>
+<td>Data Address Breakpoint Enable</td>
+<td>0=Disabled, 1=Enabled (see BDA, BDAM)</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>26</td>
+<td>DR</td>
+<td>Data Read Enable</td>
+<td>0=No, 1=Break/when Bit25=1</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>27</td>
+<td>DW</td>
+<td>Data Write Enable</td>
+<td>0=No, 1=Break/when Bit25=1</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>28</td>
+<td>TE</td>
+<td>Trace Enable</td>
+<td>0=No, 1=Break on branch/jump/call/etc.</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>29</td>
+<td>KD</td>
+<td>Kernel Debug Enable</td>
+<td>0=Disabled, 1=Break in kernel mode</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>30</td>
+<td>UD</td>
+<td>User Debug Enable</td>
+<td>0=Disabled, 1=Break in user mode</td>
+<td>R/W</td>
+</tr>
+<tr>
+<td>31</td>
+<td>TR</td>
+<td>Trap Enable</td>
+<td>0=Only set status bits, 1=Jump to debug vector</td>
+<td>R/W</td>
+</tr>
+</tbody>
+</table>
+<p>When a breakpoint address match occurs the PSX jumps to 80000040h (i.e. unlike
+normal exceptions, not to 80000080h). The Excode value in the CAUSE register is
+set to 09h (same as BREAK opcode), and EPC contains the return address, as
+usual. One of the first things to be done in the exception handler is to
+disable breakpoints (e.g. if "trace" break is enabled, then it must be
+disabled BEFORE jumping from 80000040h to the actual exception handler).</p>
+<h4 id="cop0r7bit12-13-jump-redirection-note">cop0r7.bit12-13 - Jump Redirection Note</h4>
+<p>If one or both of these bits are nonzero, then the PSX seems to check for the
+following opcode sequence,<br/>
+<div class="highlight"><pre><span></span><code>  mov rx,[mem]   ;load rx from memory
+  ...            ;one or more opcodes that do not change rx
+  jmp/call rx    ;jump or call to rx
+</code></pre></div>
+if it does sense that sequence, then it sets PC=[00000000h], but does not store
+any useful information in any cop0 registers, namely it does not store the
+return address in EPC, so it's impossible to determine which opcode has caused
+the exception. For the jump target address, there are 31 registers, so one
+could only guess which of them contains the target value; for "POP PC" code
+it'd be usually R31, but for "JMP [vector]" code it may be any register. So far
+the feature seems to be more or less unusable...?<br/></p>
+<h4 id="cop0r5-bda-breakpoint-data-address-rw">cop0r5 - BDA - Breakpoint Data Address (R/W)</h4>
+<h4 id="cop0r9-bdam-breakpoint-data-address-mask-rw">cop0r9 - BDAM - Breakpoint Data Address Mask (R/W)</h4>
+<p>Break condition is "((addr XOR BDA) AND BDAM)=0".</p>
+<h4 id="cop0r3-bpc-breakpoint-program-counter-rw">cop0r3 - BPC - Breakpoint Program Counter (R/W)</h4>
+<h4 id="cop0r11-bpcm-breakpoint-program-counter-mask-rw">cop0r11 - BPCM - Breakpoint Program Counter Mask (R/W)</h4>
+<p>Break condition is "((PC XOR BPC) AND BPCM)=0".</p>
+<h4 id="note-break-opcode">Note (BREAK Opcode)</h4>
+<p>Additionally, the BREAK opcode can be used to create further breakpoints by
+patching the executable code. The BREAK opcode uses the same Excode value (09h)
+in CAUSE register. However, the BREAK opcode jumps to the normal exception
+handler at 80000080h (not 80000040h).</p>
+<h4 id="note-libcrypt">Note (LibCrypt)</h4>
+<p>The debug registers are mis-used by "Legacy of Kain: Soul Reaver" (and maybe
+also other games) for storing libcrypt copy-protection related values (ie. just
+as a "hidden" location for storing data, not for actual debugging purposes).<br/>
+<a href="../cdromformat/#cdrom-protection-libcrypt">CDROM Protection - LibCrypt</a></p>
+<h4 id="note-cheat-devicesexpansion-roms">Note (Cheat Devices/Expansion ROMs)</h4>
+<p>The Expansion ROM header supports only Pre-Boot and Post-Boot vectors, but no
+Mid-Boot vector. Cheat Devices are often using COP0 breaks for Mid-Boot Hooks,
+either with BPC=BFC06xxxh (break address in ROM, used in older cheat
+firmwares), or with BPC=80030000h (break address in RAM aka relocated GUI
+entrypoint, used in later cheat firmwares). Moreover, aside from the Mid-Boot
+Hook, the Xplorer cheat device is also supporting a special cheat code that
+uses the COP0 break feature.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>

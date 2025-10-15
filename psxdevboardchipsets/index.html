@@ -1,0 +1,1322 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/psxdevboardchipsets/">
+      
+      
+        <link rel="prev" href="../cheatdevices/">
+      
+      
+        <link rel="next" href="../hardwarenumbers/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>PSX Dev-Board Chipsets - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#psx-dev-board-chipsets" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PSX Dev-Board Chipsets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        I/O Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        Geometry Transformation Engine (GTE)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        Macroblock Decoder (MDEC)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        Sound Processing Unit (SPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        Serial Interfaces (SIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        Expansion Port (PIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        Memory Control
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        CPU Specifications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          PSX Dev-Board Chipsets
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        PSX Dev-Board Chipsets
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2000-cpu-board" class="md-nav__link">
+    Sony DTL-H2000 CPU Board
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2000-pio-board" class="md-nav__link">
+    Sony DTL-H2000 PIO Board
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2500-dev-board-pci-bus" class="md-nav__link">
+    Sony DTL-H2500 Dev board (PCI bus)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2700-dev-board-isa-bus-cpu-analyzer" class="md-nav__link">
+    Sony DTL-H2700 Dev board (ISA bus) (CPU, ANALYZER ...?)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h201a-dt-hv-graphic-artist-board-ibm-pcats-to-ntsc-video" class="md-nav__link">
+    Sony DTL-H201A / DT-HV - Graphic Artist Board (IBM PC/ATs to NTSC video)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dtl-s2020-aka-psy-q-cd-emu" class="md-nav__link">
+    DTL-S2020 aka Psy-Q CD Emu
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#psy-q-development-system-psygnosis-1994" class="md-nav__link">
+    PSY-Q Development System (Psygnosis 1994)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h800-sound-artist-board-with-optical-fibre-audio-out" class="md-nav__link">
+    Sony DTL-H800 Sound Artist Board (with optical fibre audio out)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-coh-2000-unknown-purpose" class="md-nav__link">
+    Sony COH-2000 (unknown purpose)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2010-black-external-cdrom-drive-for-dtl-h2000-cd-r-compatible" class="md-nav__link">
+    Sony DTL-H2010 (Black External CDROM Drive for DTL-H2000, CD-R compatible)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2510-gray-internal-cdrom-drive" class="md-nav__link">
+    Sony DTL-H2510 (Gray Internal CDROM Drive)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-scph-9903-gray-scex-free-playstation" class="md-nav__link">
+    Sony SCPH-9903 (Gray SCEx-free Playstation)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2000-cpu-board" class="md-nav__link">
+    Sony DTL-H2000 CPU Board
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2000-pio-board" class="md-nav__link">
+    Sony DTL-H2000 PIO Board
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2500-dev-board-pci-bus" class="md-nav__link">
+    Sony DTL-H2500 Dev board (PCI bus)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2700-dev-board-isa-bus-cpu-analyzer" class="md-nav__link">
+    Sony DTL-H2700 Dev board (ISA bus) (CPU, ANALYZER ...?)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h201a-dt-hv-graphic-artist-board-ibm-pcats-to-ntsc-video" class="md-nav__link">
+    Sony DTL-H201A / DT-HV - Graphic Artist Board (IBM PC/ATs to NTSC video)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dtl-s2020-aka-psy-q-cd-emu" class="md-nav__link">
+    DTL-S2020 aka Psy-Q CD Emu
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#psy-q-development-system-psygnosis-1994" class="md-nav__link">
+    PSY-Q Development System (Psygnosis 1994)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h800-sound-artist-board-with-optical-fibre-audio-out" class="md-nav__link">
+    Sony DTL-H800 Sound Artist Board (with optical fibre audio out)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-coh-2000-unknown-purpose" class="md-nav__link">
+    Sony COH-2000 (unknown purpose)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2010-black-external-cdrom-drive-for-dtl-h2000-cd-r-compatible" class="md-nav__link">
+    Sony DTL-H2010 (Black External CDROM Drive for DTL-H2000, CD-R compatible)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-dtl-h2510-gray-internal-cdrom-drive" class="md-nav__link">
+    Sony DTL-H2510 (Gray Internal CDROM Drive)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sony-scph-9903-gray-scex-free-playstation" class="md-nav__link">
+    Sony SCPH-9903 (Gray SCEx-free Playstation)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="psx-dev-board-chipsets">PSX Dev-Board Chipsets</h1>
+<h4 id="sony-dtl-h2000-cpu-board">Sony DTL-H2000 CPU Board</h4>
+<div class="highlight"><pre><span></span><code>  CL825  20pin pin test points (2x10 pins)
+  CL827  20pin pin test points (2x10 pins)
+  U83    64pin SEC KM4216V256G-60 (DRAM 256Kx16) ;dual-ported VRAM
+  U84    64pin SEC KM4216V256G-60 (DRAM 256Kx16) ;dual-ported VRAM
+  CL828  20pin pin test points (2x10 pins)
+  CL826  20pin pin test points (2x10 pins)
+  X10     4pin JC53.20     (PAL, 53.203425MHz)
+  X2      4pin 53.69317MHz (NTSC, 53.693175MHz)
+  U62    20pin LVT244 (dual 4-bit 3-state noninverting buffer/line driver)
+  U27    64pin Sony CXD2923AR    ;GPU&#39;b
+  CL813  20pin pin test points (2x10 pins)
+  CL814  20pin pin test points (2x10 pins) (with one resistor or so installed)
+  U16   160pin Sony CXD8514Q     ;GPU&#39;a
+  X7      4pin 67.73760 MHz
+  CL807  20pin pin test points (2x10 pins)
+  CL809  20pin pin test points (2x10 pins)
+  CL811  20pin pin test points (2x10 pins)
+  U801  208pin Sony CXD8530BQ    ;CPU
+  U11    28pin SEC KM48V2104AJ-6 (DRAM 2Mx8) ;Main RAM
+  U10    28pin SEC KM48V2104AJ-6 (DRAM 2Mx8) ;Main RAM
+  U9     28pin SEC KM48V2104AJ-6 (DRAM 2Mx8) ;Main RAM
+  U8     28pin SEC KM48V2104AJ-6 (DRAM 2Mx8) ;Main RAM
+  CN801 100pin Blue connector (to other ISA board)
+  U66    48pin LVT16244? (quad 4-bit 3-state noninverting buffer/line driver)
+  U65    48pin LVT16244? (quad 4-bit 3-state noninverting buffer/line driver)
+  U64    48pin LVT16245? (dual 8-bit 3-state noninverting bus transceiver)
+  U34   100pin Sony CXD2922Q     ;SPU
+  U63    14pin 74F74N (dual flipflop)
+  U32    44pin SEC KM416V256B1-8 (DRAM 256Kx16)  ;SoundRAM
+  CL801  20pin pin test points (2x10 pins)
+  CL802  20pin pin test points (2x10 pins)
+  Q881    3pin voltage stuff?
+  U31    20pin 74ACT244P (dual 4-bit 3-state noninverting buffer/line driver)
+  U35    18pin Sony CXD2554P or OKI M6538-01 (aka MSM6538-01?) (audio related?)
+  U36    20pin Sanyo LC78815  ;16bit D/A Converter
+  U37     8pin NEC ...?    C4558C?   D426N0B or 9426HOB or so?
+  J806    8pin solder pads...
+  J805    9pin solder pads...
+  J804   10pin solder pads... (11pins, with only 10 contacts?)
+  -      48pin solder pads (12x4pin config jumpers or so)
+  U26    20pin SN74ALSxxx logic?
+  U71    24pin Sony CXA1xxxx?  ;RGB?
+  JPxx    9pin PAL/NTSC Jumpers (three 3pin jumpers)
+  J801   24pin solder pads...
+  J803    9pin rear connector: Serial Port (3.3V) (aka &quot;J308&quot;) (DB9) (5+4pin)
+  J802   15pin rear connector: AV Multi-out   (5+5+5pin)
+  CN881  98pin ISA Bus Cart-edge (2x31 basic pins, plus 2x18 extended pins)
+</code></pre></div>
+<h4 id="sony-dtl-h2000-pio-board">Sony DTL-H2000 PIO Board</h4>
+<p><div class="highlight"><pre><span></span><code>  JP72x 68pin Black connector (maybe equivalent to 68pin PSX expansion port?)
+  SWI    5pin solder pads...
+  U371  40pin HN27C4000G-12 (512Kx8 / 256Kx16 EPROM) (sticker: &quot;94/7/27&quot;)
+  U370  84pin Altera EPM7160ELC84-12 (sticker: &quot;U730, cntl 1&quot;)
+  U3    14pin SN74ALS1004N (hex inverters)
+  U43   44pin Altera EPM7032LC44-10 (sticker: &quot;U43, add 1&quot;)
+  U716  28pin Sharp LH5498D-35 (FIFO 2Kx9)
+  U717  28pin Sharp LH5498D-35 (FIFO 2Kx9)
+  U719  28pin Sharp LH5498D-35 (FIFO 2Kx9)
+  U720  28pin Sharp LH5498D-35 (FIFO 2Kx9)
+  U724  20pin SN74ALS688N  (8bit inverting identity comparator with enable)
+  U722  20pin SN74ALS245AN (8bit tristate noninverting bus transceiver)
+  U47   20pin 74FCT244ATP  (dual 4-bit 3-state noninverting buffer/line driver)
+  U732  48pin LVT16245? (dual 8-bit 3-state noninverting bus transceiver)
+  U711  20pin SN74ALS244BN (dual 4-bit 3-state noninverting buffer/line driver)
+  U712  20pin SN74ALS244BN (dual 4-bit 3-state noninverting buffer/line driver)
+  U713  20pin 74HC244AP    (dual 4-bit 3-state noninverting buffer/line driver)
+  U714  20pin 74HC244AP    (dual 4-bit 3-state noninverting buffer/line driver)
+  U721  20pin SN74ALS244BN (dual 4-bit 3-state noninverting buffer/line driver)
+  U55   14pin SN74ALS08N   (quad 2-input AND gates)
+  U726  20pin SN74ALS245AN (8bit tristate noninverting bus transceiver)
+  U715  20pin 74HC244AP    (dual 4-bit 3-state noninverting buffer/line driver)
+  JPxx 100pin Blue connector (to other ISA board)
+  U738  20pin LVT244 (SMD) (dual 4-bit 3-state noninverting buffer/line driver)
+  U734  32pin KM684000G-7 (SRAM 512Kx8)         ;\maybe 1Mbyte EXP3 RAM ?
+  U733  32pin KM684000G-7 (SRAM 512Kx8)         ;/
+  U725  20pin SN74ALS688N  (8bit inverting identity comparator with enable)
+  S700  24pin 12bit DIP switch  (select I/O Address bits A15..A4)
+  JP700  8pin Jumper (4x2 pins) (select IRQ15/IRQ12/IRQ11/IRQ10)
+  JP7xx 12pin Jumper (3x4 pins) (select DMA7/DMA6/DMA5)
+  U64   48pin LVT16245? (dual 8-bit 3-state noninverting bus transceiver)
+  U65   48pin LVT16244? (quad 4-bit 3-state noninverting buffer/line driver)
+  U66   48pin LVT16244? (quad 4-bit 3-state noninverting buffer/line driver)
+  U737  48pin LVT16244? (quad 4-bit 3-state noninverting buffer/line driver)
+  U710  20pin SN74ALS244BN (dual 4-bit 3-state noninverting buffer/line driver)
+  U709  20pin HD74HC245P   (8bit tristate noninverting bus transceiver)
+  U723  14pin SN74ALS38AN (quad open-collector NAND gates with buffered output)
+  U2    14pin SN74LS19AN  (hex inverters with schmitt-trigger)
+  U1     8pin Dallas DS1232 (MicroMonitor Chip) ;power-good-detect ?
+  U708  20pin HD74HC245P   (8bit tristate noninverting bus transceiver)
+  X3     2pin 4.1900 (4.19MHz for SPC700 CPU)
+  U42   80pin P823, U01Q (Sony CXP82300 SPC700 CPU with piggyback EPROM socket)
+  U42&#39;  32pin 27C256A-15 (EPROM 32Kx8) (sticker: &quot;94/11/28&quot;)
+  U706  10pin some slim chip with 1x10 pins
+  BT700  2pin battery (or super-cap?) for DS1302S (?) (not installed)
+  U729?  5pin voltage stuff?
+  U40    8pin Dallas DS1302S (real time clock)
+  X4     2pin small crystal (32.768kHz for DS1302S)
+  JP702 34pin Black connector (maybe for internal CDROM Emulator ISA cart?)
+  U736  28pin Sony CXK58257ASP-70L (SRAM 32Kx8)         ;CDROM Sector Buffer?
+  U735 100pin Sony CXD1199BQ    ;CDROM Decoder/FIFO
+  JP715 40pin Blue connector... to external DTL-H2010 CDROM drive?
+  JP721  9pin rear connector: Joypad/Memcard 2 (DB9)
+  JP719  9pin rear connector: Joypad/Memcard 1 (DB9)
+  ?      -    rear hole for cdrom-cable to Blue 40pin connector?
+  J70x  98pin ISA Bus Cart-edge (2x31 basic pins, plus 2x18 extended pins)
+</code></pre></div>
+JP715 must be either connected to an external CDROM drive, or to some of
+"terminator" plug (which shortcuts Pin23 and Pin26 with each other; software
+may hang upon certain I/O operations without that terminator).<br/></p>
+<h4 id="sony-dtl-h2500-dev-board-pci-bus">Sony DTL-H2500 Dev board (PCI bus)</h4>
+<p>Newer revision of the DTL-H2000 board. Consists of a single PCI card (plus tiny
+daughterboard with Controller ports).<br/>
+<div class="highlight"><pre><span></span><code>  Mainboard     &quot;PI-27 1-589-867-11, DTL-H2500, MAIN BOARD 1575E01A0, SONY&quot;
+  Daughterboard &quot;SONY,CN-102 1-589-865-11,CONNECTOR BOARD,DTL-H2500,1575E02A0&quot;
+  CJ1      9pin rear connector: DB9
+  CJ2?    15pin rear connector: AV Multi-out   (5+5+5pin)
+  CJ3     10pin gray connector (to controller daughterboard with two DB9&#39;s)
+  CJ4     34pin black connector (maybe for internal CDROM Emulator ISA cart?)
+  CJ5     50pin black connector (to DTL-H2510, Gray Internal CDROM Drive?)
+  CJ6     68pin black connector (maybe equivalent to 68pin PSX expansion port?)
+  -      124pin PCI bus cart edge connector
+  CJ1&#39;     9pin rear connector: DB9 (CTR1, joypad 1)     ;\
+  CJ2&#39;     9pin rear connector: DB9 (CTR2, joypad 2)     ; on daughterboard
+  CJ3&#39;    10pin gray ribbon cable (to CJ3 on main board) ;/
+  IC103  208pin Sony CXD8530CQ (CPU)
+  IC106   28pin SEC KM48V2104AT-6 (DRAM 2Mx8)
+  IC107   28pin SEC KM48V2104AT-6 (DRAM 2Mx8)
+  IC108   28pin SEC KM48V2104AT-6 (DRAM 2Mx8)
+  IC109   28pin SEC KM48V2104AT-6 (DRAM 2Mx8)
+  IC201   64pin SEC KM4216V256G-60 (DRAM 256Kx16) ;dual-ported VRAM
+  IC202   64pin SEC KM4216V256G-60 (DRAM 256Kx16) ;dual-ported VRAM
+  IC203  160pin Sony CXD8514Q     ;GPU&#39;a
+  IC207   64pin Sony CXD2923AR    ;GPU&#39;b
+  IC303   28pin HM62W256LFP-7T (CDROM SRAM 32Kx8)               ;on back side
+  IC304   52pin &quot;D 2021, SC430920PB, G64C 185, JSAA9618A&quot; (Sub-CPU)  ;on back
+  IC305  100pin Sony CXD1199BQ (CDROM Decoder/FIFO)             ;on back side
+  IC308  100pin Sony CXD2922BQ (SPU)                            ;on back side
+  IC310   44pin SEC KM416V256BLT-7 (DRAM 256Kx16)  ;SoundRAM    ;on back side
+  IC402   24pin something bigger
+  IC404    8pin something small
+  IC405    8pin something small
+  IC501   24pin Sony CXA1645M (Analog RGB to Composite)         ;on back side
+  IC701    4pin &quot;RD, 5B&quot; or so                                  ;on back side
+  IC801  +++pin &quot;ALTERA, FLEX, EPF8820ARC208-3, A9607&quot;
+  IC802   20pin LVT245A &lt;--                                     ;on back side
+  IC803   52pin &quot;IDT71321, LA35J, S9704P&quot; (2Kx8 dual port SRAM)
+  IC804   20pin LVT244A
+  IC805    8pin something with socket (sticker: &quot;PD3&quot;)
+  IC807-2 32pin MX 27C1000MC-90 (PROM)   ;\on back side
+  IC808   32pin F 29F040A-90    (FLASH)  ;/BIOS on these chip(s) or so?
+  IC901    4pin 37, 69      ;\on back side
+  IC902    4pin 37, 69      ;/
+  ICxxx?  28pin &quot;DALLAS, DS1230Y-100, NONVOLATILE SRAM&quot;
+  U28     20pin LVT244A
+  Z1      20pin LVT244A     ;\on back side
+  Z2      20pin LVT245A &lt;-- ;/
+  Z3      20pin LVT244A
+  Z4      20pin LVT244A     ;\
+  Z5      20pin LVT245A &lt;-- ; on back side
+  Z6      20pin LVT244A     ;/
+  Z7      20pin LVT244A
+  Z8      20pin LVT244A
+  Z9      20pin LVT244A
+  X101     4pin RC67.73, JVC 5L (67.7376MHz oscillator for main cpu)
+  X201     4pin JC53.20, JVC 6A (for GPU, PAL)
+  X202     4pin JC53.69, JVC 6A (for GPU, NTSC)
+  X302     3pin 4.000MHz (for sub-cpu)
+</code></pre></div></p>
+<h4 id="sony-dtl-h2700-dev-board-isa-bus-cpu-analyzer">Sony DTL-H2700 Dev board (ISA bus) (CPU, ANALYZER ...?)</h4>
+<p>Another revision of the DTL-H2000/DTL-H2500 boards. Consists of a single ISA
+card stacked together with two huge daughterboards, and probably additionally
+having a small connector daughterboard. Exact chipset is unknown (there might
+be components on both sides of the PCBs, most of them not visible due to the
+PCB stacking, so taking photos/scans of the PCBs would require advanced
+techniques with screwdrivers).<br/>
+Currently the only known chip name is an EPROM (MX 27C1000DC-90, with sticker
+"Title=DTL-H2700, Ver=1.00, Date=96.12.4, Sum=046B No."). The ISA card is
+having markings: "SONY HCD MWB-7? MADE IN JAPAN, PA47 1-589-003-01 1642E03A0".<br/>
+One uncommon feature is an extra connector for a "trigger switch" (foot pedal),
+which is reportedly used for activating performance analyzer logging.<br/></p>
+<h4 id="sony-dtl-h201a-dt-hv-graphic-artist-board-ibm-pcats-to-ntsc-video">Sony DTL-H201A / DT-HV - Graphic Artist Board (IBM PC/ATs to NTSC video)</h4>
+<div class="highlight"><pre><span></span><code>  X2     xpin TXC-2 OSC 66.000MHz
+  X1     xpin TXC-2AOSC 53.693MHz
+  U16   14pin 74F74 (dual flipflop)
+  U29   14pin 74AS04 (hex inverters)
+  U14   20pin LVT244 (dual 4-bit 3-state noninverting buffer/line driver)
+  U18   20pin LVT244 (dual 4-bit 3-state noninverting buffer/line driver)
+  U15   20pin ACT244 (dual 4-bit 3-state noninverting buffer/line driver)
+  U11   84pin Altera EPM7096LC84-12 (sticker: &quot;artpc13&quot; or &quot;ARTPC13&quot;)
+  U13  160pin Sony CXD8514Q     ;GPU&#39;a
+  U5    14pin ALS38A   ? (quad open-collector NAND gates with buffered output)
+  U27   20pin ALS244AJ ? (dual 4bit tristate noninverting buffer/line driver)
+  Q1     3pin T B596
+  U23   64pin KM4216V256G-60 (DRAM 256Kx16) ;dual-ported VRAM
+  U22   64pin KM4216V256G-60 (DRAM 256Kx16) ;dual-ported VRAM
+  U28   64pin Sony CXD2923AR    ;GPU&#39;b
+  S1    16pin 8bit DIP switch (select I/O address A15..A8)
+  S2     8pin 4bit DIP switch (select I/O address A7..A4)
+  U1    20pin SN74ALS688N (8bit inverting identity comparator with enable)
+  U2    20pin SN74ALS688N (8bit inverting identity comparator with enable)
+  U3    20pin ALS245A (8bit tristate noninverting bus transceiver)
+  JP9   12pin Jumper (6x2 pins) (select IRQ15/IRQ11/IRQ10/IRQ9/IRQ5/IRQ3)
+  U26   24pin Sony CXA1145M ?  ;RGB?
+  JP10   3pin Jumper   ;\
+  JP12   3pin Jumper   ; select &quot;S&quot; or &quot;O&quot; (?)
+  JP11   3pin Jumper   ;/
+  J3    2pin? Yellow connector (composite video out?)
+  J2?    pin? Mini DIN? connector (maybe S-video out?)
+  J1    15pin High Density SubD (maybe video multi out?)
+  CJx   98pin ISA Bus Cart-edge (2x31 basic pins, plus 2x18 extended pins)
+</code></pre></div>
+<h4 id="dtl-s2020-aka-psy-q-cd-emu">DTL-S2020 aka Psy-Q CD Emu</h4>
+<p><div class="highlight"><pre><span></span><code>  Yellow PCB &quot;CD Emulator System, (C) Cirtech &amp; SN Systems Ldt, 1994 v1.2&quot;
+  IC    24pin GAL20V8B
+  IC    68pin Analog Devices ADSP-2101 (16bit DSP Microprocessor)
+  IC    20pin HD74HC244P
+  IC15  20pin HD74HC244P
+  IC14  20pin CD74HCT245E
+  IC7   28pin 27C512-10     (EPROM 64Kx8) (yellow sticker, without text)
+  IC    28pin HY62256ALP-70 (SRAM 32Kx8)
+  IC12  28pin HY62256ALP-70 (SRAM 32Kx8)
+  IC    28pin HY62256ALP-70 (SRAM 32Kx8)
+  IC13  84pin Emulex/QLogic FAS216 (Fast Architecture SCSI Processor)
+  IC5   84pin Emulex/QLogic FAS216 (Fast Architecture SCSI Processor)
+  IC4   24pin GAL20V8B (near IO Addr jumpers)
+  IC    20pin 74LS244B1   (near lower 8bit of ISA databus)
+  IC    20pin SN74LS245N? (near lower 8bit of ISA databus)
+  IC    20pin SN74LS245N  (near upper 8bit of ISA databus)
+  DMA   12pin Jumpers (select DMA7/6/5)
+  IRQ   12pin Jumpers (select IRQ15/12/11/10/7/5)
+  IO    16pin Jumpers (select IO Addr 300/308/310/318/380/388/390/398)
+  SCSI   6pin Jumpers (select SCSI ID 4/2/1) (aka 3bit 0..7 ?)
+  PL3   34pin Connector to DTL-H2000 ?
+  PL1   50pin Connector to INTERNAL SCSI hardware ?
+  PL2  50pin? Connector to EXTERNAL SCSI hardware ? (25pin plug/50pin cable?)
+  Jx    98pin ISA Bus Cart-edge (2x31 basic pins, plus 2x18 extended pins)
+</code></pre></div>
+Note: There's also a similar ISA cart (DTL-S510B) with less chips and less
+connectors.<br/>
+Note: The SN Systems carts seem to have been distributed by Sony (with
+"DTL-Sxxxx" numbers), and also distributed by Psygnosis. The external SCSI
+connectors can be possibly also used with Psy-Q Development Systems for SNES
+and Sega Saturn?<br/></p>
+<h4 id="psy-q-development-system-psygnosis-1994">PSY-Q Development System (Psygnosis 1994)</h4>
+<div class="highlight"><pre><span></span><code>  32pin GM76C8128ALLFW85 (SRAM 128Kx8)
+  44pin ALTERA EPM7032LC44-15T
+  34pin EMULEX FAS101 (SCSI Interface Processor)
+  28pin 27C64 (EPROM 8Kx8) (green sticker, without text)
+  20pin LCX245 (=74245?)
+   8pin 2112, CPA, H9527 (?)
+   3pin transistor? voltage regulator?
+  20pin DIP socket (containing two 10pin resistor networks)
+  20pin DIP socket (containing two 10pin resistor networks)
+   2pin CR2032 Battery 3V
+  68pin Connector to PSX &quot;Parallel I/O&quot; expansion port
+  25pin Connector to SCSI hardware (to DTL-S510B or DTL-S2020 ISA cart or so?)
+</code></pre></div>
+<h4 id="sony-dtl-h800-sound-artist-board-with-optical-fibre-audio-out">Sony DTL-H800 Sound Artist Board (with optical fibre audio out)</h4>
+<p><div class="highlight"><pre><span></span><code>  U15  24pin ?
+  U5   28pin 27C256 (EPROM 32Kx8) (not installed)
+  U7    4pin 67.7376MHz oscillator
+  U8   14pin ?
+  U11  44pin SEC KM416V256B1-8 (DRAM 256Kx16)  ;SoundRAM
+                (44pin package with middle 4pin missing, 40pins used)
+  U10 100pin Sony CXD2925Q  ;SPU
+  U4  160pin Lattice IspLSI 3256 (sticker: &quot;VER3&quot;)
+  U6  128pin Lattice IspLSI xxxx ?
+  U12  48pin ?
+  U13  48pin ?
+  U3   20pin 74ACT244
+  U14   5pin &quot;LM25755, -3.3 P+&quot; ?
+  U2   54pin ?
+  U1   54pin ?
+  U9    ?pin GP1F31T (light transmitting unit for optical fibre cable)
+  ?   124pin PCI bus cart edge connector
+  ?     8pin internal jumper/connector? (7pin installed, 1pin empty)
+</code></pre></div>
+Note: There's also a similar board (DTL-H700) for MAC/NuBus instead of PCI bus.<br/></p>
+<h4 id="sony-coh-2000-unknown-purpose">Sony COH-2000 (unknown purpose)</h4>
+<p><div class="highlight"><pre><span></span><code>  U1   14pin SN74ALS388N  ?
+  U2   20pin SN74ALS688N (8bit inverting identity comparator with enable)
+  U3   20pin SN74ALS688N (8bit inverting identity comparator with enable)
+  U4   24pin PALxxx ?
+  U5   20pin SN74ALS245AN
+  U6   20pin SN74ALS245AN
+  U7   20pin SN74ALS244N
+  U8   20pin SN74ALS244N
+  U9   20pin SN74ALS245AN
+  U10  20pin SN74ALS245AN
+  U11  20pin SN74ALS244N
+  S2   16pin 8bit DIP switch (ISA 15/14/13/12/11/10/9/8) ;I/O address bit15-8
+  S1    8pin 4bit DIP switch (ISA 7/6/5/4)               ;I/O address bit7-4
+  S3    8pin 4bit DIP switch (BISO? 3/2/1/0)         ;BISO? or BISD? or 8150?
+  JPxx  .... several jumpers (unknown purpose)
+  Jx    98pin ISA Bus Cart-edge (2x31 basic pins, plus 2x18 extended pins)
+  J5    68pin Connector on rear side (unknown purpose)
+</code></pre></div>
+Unknown what COH-2000 was used for. One theory was that it's related to
+PSX-based arcade cabinets. The 68pin connector might be also related to the
+68pin PSX "Parallel I/O" expansion port.<br/></p>
+<h4 id="sony-dtl-h2010-black-external-cdrom-drive-for-dtl-h2000-cd-r-compatible">Sony DTL-H2010 (Black External CDROM Drive for DTL-H2000, CD-R compatible)</h4>
+<p>External front loading CDROM drive with Eject button. Connects to the blue
+40pin connector on DTL-H2000 boards.<br/>
+<div class="highlight"><pre><span></span><code>  IC101 100pin SONY CXD2515Q (Signal Processor + Servo Amp)   ;\
+  IC102 28pin  BA6297AFP                                      ; on mainboard
+  ICxx  20pin  SONY CXA1571N (RF Amp) (on tiny daughtboard)   ; (HCMK-81X)
+  CN101 21pin connector to DEX2010.SCH board                  ;
+  CN10x 12pin connector to KSS-240A (laser pickup)            ;
+  S101   2pin pos0 switch or so?                              ;
+  M101   2pin spindle motor                                   ;/
+  U1    20pin 74ALS244BN                        ;\
+  U2    20pin 74ALS244BN                        ;
+  U3    20pin 74ALS244BN                        ; on DEX2010.SCH board
+  J1     2pin connector to EJECT BUTTON         ;
+  J2     5pin connector to LOADING MOTOR        ;
+  J3    21pin connector to mainboard            ;
+  JP1   40pin external connector to DTL-H2000   ;/
+  CN151  5pin connector to DEX2010.SCH board    ;\
+  M151   2pin loading motor (eject motor)       ; on CDM 14, CMK PSX board
+  S151   2pin OUT SW ;\switches, probably to    ;
+  S152   2pin IN SW  ;/sense load/eject status  ;/
+  CN1    2pin connector to DEX2010.SCH board    ;\on DTL-H2010(1) board
+  SW1    2pin eject button                      ;/
+</code></pre></div>
+The required cable consists of a Yamaichi NFS-40a female connector (blue
+connector on DTL-H2000 side), 0.635mm pitch ribbon cable, and 3M Sub-D MDR40
+connector (silver connector on DTL-H2010 side). But caution: the odd/even pins
+on the cable are somewhat swapped, on DTL-H2000 side the wires should be
+ordered 1,2,3,4,..,39,40, but on DTL-H2010 side they should be ordered
+2,1,4,3,..,40,39.<br/></p>
+<h4 id="sony-dtl-h2510-gray-internal-cdrom-drive">Sony DTL-H2510 (Gray Internal CDROM Drive)</h4>
+<p>This is some sort of a mimmicked front loading PC CDROM drive (consisting of a
+tray that contains a normal (top-loading) PSX cdrom drive unit).<br/>
+<div class="highlight"><pre><span></span><code>  IC309 80pin Sony CXD2510Q (CDROM Signal Processor)
+  ICxx   ?pin Unknown if there are further ICs (eg. CXA1782BR should exist?)
+  CN1   10pin Connector to daughterboard (with drive unit)
+  CN2    4pin Connector to PC power supply (12V/5V and 2xGND)
+  CN3   50pin Connector to DTL-H2500 or so? (need &quot;PCS-E50FC&quot; plug?)
+</code></pre></div>
+There is no eject button, unknown if there's some eject motor, or if one
+needs to push/pull the drive tray manually.<br/></p>
+<h4 id="sony-scph-9903-gray-scex-free-playstation">Sony SCPH-9903 (Gray SCEx-free Playstation)</h4>
+<p>A rare SCEx-free Playstation that can boot from CDR's without SCEx strings;
+maybe intended for beta-testers. Marked "Property of Sony Computer
+Entertainment", "U/C".<br/></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>
