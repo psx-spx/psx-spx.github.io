@@ -81,8 +81,15 @@ When that bit gets zero, the response can be read immediately (immediately for
 MOST commands, but not ALL commands; so better wait for the IRQ).<br/>
 Alternately, you can wait for an IRQ (which seems to take place MUCH later),
 and then read the response.<br/>
-If there are any pending cdrom interrupts, these MUST be acknowledged before
-sending the command (otherwise BUSYSTS will stay set forever).<br/>
+If there are any pending cdrom interrupts from a previous command, for example, an
+INT3/Acknowledge, these should be cleared before sending a new command. If a new 
+command is sent early anyway, the behavior becomes unpredictable. For one, BUSYSTS 
+will stay set from the last command. In addition to this, the new command will simplily
+sit in the command register unhandled and can be easily overwritten by new commands
+that are sent. On top of all of this, the new comamnd may possibly take precedence
+over the execution of the previously submitted command (seems to be related to the 
+specific combinatiion of commands sent). Overall, this can just be avoided by just
+servicing the previous commands interrupts first.<br/>
 
 #### `0x1f801802` (write, bank 0): `PARAMETER`
 ```
@@ -277,12 +284,15 @@ Indicates ready-to-send-new-command,<br/>
 Trying to send a new command in the Busy-phase causes malfunction (the older
 command seems to get lost, the newer command executes and returns its results
 and triggers an interrupt, but, thereafter, the controller seems to hang). So,
-always wait until BUSYSTS goes off before sending a command.<br/>
-When BUSYSTS goes off, a new command can be send immediately (even if the
-response from the previous command wasn't received yet), however, the new
-command stays in the Busy-phase until the IRQ from the previous command is
-acknowledged, at that point the actual transmission of the new command starts,
-and BUSYSTS goes off (once when the transmission completes).<br/>
+always at least wait until BUSYSTS goes off before sending a command.<br/>
+When BUSYSTS goes off, a new command may be sent immediately (even if the
+response from the previous command wasn't received yet), however, as previously
+noted, the behavior doing this is unpredictable. The new command MAY stay in 
+the Busy-phase until the IRQ from the previous command is acknowledged, 
+at that point the actual transmission of the new command starts. However,
+some command combinations may cause the new command to take precedence.
+This behavior is unpredictable, so one should instead just wait for the interrupt
+status bits in HINTSTS to be 0 first before sending a new command.<br/>
 
 ```
 Pause -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/Pause/Stop/SetMode/SeekL/... <br/>
