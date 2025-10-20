@@ -1,0 +1,3327 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/soundprocessingunitspu/">
+      
+      
+        <link rel="prev" href="../macroblockdecodermdec/">
+      
+      
+        <link rel="next" href="../interrupts/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>Sound Processing Unit (SPU) - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sound-processing-unit-spu" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sound Processing Unit (SPU)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        I/O Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        Geometry Transformation Engine (GTE)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        Macroblock Decoder (MDEC)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Sound Processing Unit (SPU)
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Sound Processing Unit (SPU)
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spu-overview" class="md-nav__link">
+    SPU Overview
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spu-io-port-summary" class="md-nav__link">
+    SPU I/O Port Summary
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-memory-layout-512kbyte-ram" class="md-nav__link">
+    SPU Memory layout (512Kbyte RAM)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voices" class="md-nav__link">
+    Voices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voice-capabilities" class="md-nav__link">
+    Voice Capabilities
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-sound-inputs" class="md-nav__link">
+    Additional Sound Inputs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monostereo-audio-output" class="md-nav__link">
+    Mono/Stereo Audio Output
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unstable-and-delayed-io" class="md-nav__link">
+    Unstable and Delayed I/O
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-bus-width" class="md-nav__link">
+    SPU Bus-Width
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-adpcm-samples" class="md-nav__link">
+    SPU ADPCM Samples
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU ADPCM Samples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801c06hn10h-voice-023-adpcm-start-address-rw" class="md-nav__link">
+    1F801C06h+N*10h - Voice 0..23 ADPCM Start Address (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801c0ehn10h-voice-023-adpcm-repeat-address-rw" class="md-nav__link">
+    1F801C0Eh+N*10h - Voice 0..23 ADPCM Repeat Address (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-data-spu-adpcm" class="md-nav__link">
+    Sample Data (SPU-ADPCM)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flag-bits-in-2nd-byte-of-adpcm-header" class="md-nav__link">
+    Flag Bits (in 2nd byte of ADPCM Header)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#looped-and-one-shot-samples" class="md-nav__link">
+    Looped and One-shot Samples
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-adpcm-vs-xa-adpcm" class="md-nav__link">
+    SPU-ADPCM vs XA-ADPCM
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-adpcm-pitch" class="md-nav__link">
+    SPU ADPCM Pitch
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU ADPCM Pitch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801c04hn10h-voice-023-adpcm-sample-rate-rw-vxpitch" class="md-nav__link">
+    1F801C04h+N*10h - Voice 0..23 ADPCM Sample Rate (R/W) (VxPitch)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d90h-voice-023-pitch-modulation-enable-flags-pmon" class="md-nav__link">
+    1F801D90h - Voice 0..23 Pitch Modulation Enable Flags (PMON)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pitch-counter" class="md-nav__link">
+    Pitch Counter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maximum-sound-frequency" class="md-nav__link">
+    Maximum Sound Frequency
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-point-gaussian-interpolation" class="md-nav__link">
+    4-Point Gaussian Interpolation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#waveform-examples" class="md-nav__link">
+    Waveform Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-volume-and-adsr-generator" class="md-nav__link">
+    SPU Volume and ADSR Generator
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Volume and ADSR Generator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801c08hn10h-voice-023-attackdecaysustainrelease-adsr-32bit" class="md-nav__link">
+    1F801C08h+N*10h - Voice 0..23 Attack/Decay/Sustain/Release (ADSR) (32bit)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d80h-mainvolume-left" class="md-nav__link">
+    1F801D80h - Mainvolume left
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d82h-mainvolume-right" class="md-nav__link">
+    1F801D82h - Mainvolume right
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801c00hn10h-voice-023-volume-left" class="md-nav__link">
+    1F801C00h+N*10h - Voice 0..23 Volume Left
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801c02hn10h-voice-023-volume-right" class="md-nav__link">
+    1F801C02h+N*10h - Voice 0..23 Volume Right
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801db0h-cd-audio-input-volume-for-normal-cd-da-and-compressed-xa-adpcm" class="md-nav__link">
+    1F801DB0h - CD Audio Input Volume (for normal CD-DA, and compressed XA-ADPCM)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801db4h-external-audio-input-volume" class="md-nav__link">
+    1F801DB4h - External Audio Input Volume
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envelope-operation-depending-on-shiftstepmodedirection" class="md-nav__link">
+    Envelope Operation depending on Shift/Step/Mode/Direction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801c0chn10h-voice-023-current-adsr-volume-rw" class="md-nav__link">
+    1F801C0Ch+N*10h - Voice 0..23 Current ADSR volume (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801db8h-current-main-volume-leftright" class="md-nav__link">
+    1F801DB8h - Current Main Volume Left/Right
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801e00hvoice04h-voice-023-current-volume-leftright" class="md-nav__link">
+    1F801E00h+voice*04h - Voice 0..23 Current Volume Left/Right
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-voice-flags" class="md-nav__link">
+    SPU Voice Flags
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Voice Flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801d88h-voice-023-key-on-start-attackdecaysustain-kon-w" class="md-nav__link">
+    1F801D88h - Voice 0..23 Key ON (Start Attack/Decay/Sustain) (KON) (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d8ch-voice-023-key-off-start-release-koff-w" class="md-nav__link">
+    1F801D8Ch - Voice 0..23 Key OFF (Start Release) (KOFF) (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d9ch-voice-023-onoff-status-endx-r" class="md-nav__link">
+    1F801D9Ch - Voice 0..23 ON/OFF (status) (ENDX) (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rw" class="md-nav__link">
+    R/W
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-noise-generator" class="md-nav__link">
+    SPU Noise Generator
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Noise Generator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801d94h-voice-023-noise-mode-enable-non" class="md-nav__link">
+    1F801D94h - Voice 0..23 Noise mode enable (NON)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-noise-generator_1" class="md-nav__link">
+    SPU Noise Generator
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-control-and-status-register" class="md-nav__link">
+    SPU Control and Status Register
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Control and Status Register">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801daah-spu-control-register-spucnt" class="md-nav__link">
+    1F801DAAh - SPU Control Register (SPUCNT)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801daeh-spu-status-register-spustat-r" class="md-nav__link">
+    1F801DAEh - SPU Status Register  (SPUSTAT) (R)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-memory-access" class="md-nav__link">
+    SPU Memory Access
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Memory Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801da6h-sound-ram-data-transfer-address" class="md-nav__link">
+    1F801DA6h - Sound RAM Data Transfer Address
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801da8h-sound-ram-data-transfer-fifo" class="md-nav__link">
+    1F801DA8h - Sound RAM Data Transfer Fifo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801dach-sound-ram-data-transfer-control-should-be-0004h" class="md-nav__link">
+    1F801DACh - Sound RAM Data Transfer Control (should be 0004h)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-manual-write" class="md-nav__link">
+    SPU RAM Manual Write
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-dma-write" class="md-nav__link">
+    SPU RAM DMA-Write
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-manual-read" class="md-nav__link">
+    SPU RAM Manual-Read
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-dma-read-stable-reading-with-1f801014hbit24-27-nonzero" class="md-nav__link">
+    SPU RAM DMA-Read (stable reading, with [1F801014h].bit24-27 = nonzero)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-dma-read-unstable-reading-with-1f801014hbit24-27-zero" class="md-nav__link">
+    SPU RAM DMA-Read (unstable reading, with [1F801014h].bit24-27 = zero)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-interrupt" class="md-nav__link">
+    SPU Interrupt
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Interrupt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801da4h-sound-ram-irq-address-irq9" class="md-nav__link">
+    1F801DA4h - Sound RAM IRQ Address (IRQ9)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voice-interrupt" class="md-nav__link">
+    Voice Interrupt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-interrupt" class="md-nav__link">
+    Capture Interrupt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-interrupt" class="md-nav__link">
+    Reverb Interrupt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-transfers" class="md-nav__link">
+    Data Transfers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note_1" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-reverb-registers" class="md-nav__link">
+    SPU Reverb Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Reverb Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reverb-volume-and-address-registers-rw" class="md-nav__link">
+    Reverb Volume and Address Registers (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d98h-voice-023-reverb-mode-aka-echo-on-eon-rw" class="md-nav__link">
+    1F801D98h - Voice 0..23 Reverb mode aka Echo On (EON) (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-bits-in-spucnt-register-rw" class="md-nav__link">
+    Reverb Bits in SPUCNT Register (R/W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-reverb-formula" class="md-nav__link">
+    SPU Reverb Formula
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Reverb Formula">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reverb-formula" class="md-nav__link">
+    Reverb Formula
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-disable" class="md-nav__link">
+    Reverb Disable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug" class="md-nav__link">
+    Bug
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#speed-of-sound" class="md-nav__link">
+    Speed of Sound
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-buffer-resampling" class="md-nav__link">
+    Reverb Buffer Resampling
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-reverb-examples" class="md-nav__link">
+    SPU Reverb Examples
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Reverb Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reverb-examples" class="md-nav__link">
+    Reverb Examples
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#room-size26c0h-bytes" class="md-nav__link">
+    Room (size=26C0h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studio-small-size1f40h-bytes" class="md-nav__link">
+    Studio Small (size=1F40h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studio-medium-size4840h-bytes" class="md-nav__link">
+    Studio Medium (size=4840h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studio-large-size6fe0h-bytes" class="md-nav__link">
+    Studio Large (size=6FE0h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hall-sizeade0h-bytes" class="md-nav__link">
+    Hall (size=ADE0h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#half-echo-size3c00h-bytes" class="md-nav__link">
+    Half Echo (size=3C00h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#space-echo-sizef6c0h-bytes" class="md-nav__link">
+    Space Echo (size=F6C0h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chaos-echo-almost-infinite-size18040h-bytes" class="md-nav__link">
+    Chaos Echo (almost infinite) (size=18040h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delay-one-shot-echo-size18040h-bytes" class="md-nav__link">
+    Delay (one-shot echo) (size=18040h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-off-size10h-dummy-bytes" class="md-nav__link">
+    Reverb off (size=10h dummy bytes)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-unknown-registers" class="md-nav__link">
+    SPU Unknown Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Unknown Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801da0h-some-kind-of-a-read-only-status-register-or-just-garbage" class="md-nav__link">
+    1F801DA0h - Some kind of a read-only status register.. or just garbage..?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801dbch-4-bytes-unknown-rw" class="md-nav__link">
+    1F801DBCh - 4 bytes - Unknown? (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801e60h-32-bytes-unknown-rw" class="md-nav__link">
+    1F801E60h - 32 bytes - Unknown? (R/W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-internal-state-machine-from-spu-ram-timing" class="md-nav__link">
+    SPU Internal State Machine from SPU RAM Timing
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Internal State Machine from SPU RAM Timing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-look-at-the-data-from-logic-analyzer" class="md-nav__link">
+    First look at the data from logic analyzer.
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence-of-work" class="md-nav__link">
+    Sequence of work
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-we-can-guess-from-those-information" class="md-nav__link">
+    What we can guess from those information.
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-computation-order" class="md-nav__link">
+    Reverb Computation Order
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voices_1" class="md-nav__link">
+    Voices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_1" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        Serial Interfaces (SIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        Expansion Port (PIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        Memory Control
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        CPU Specifications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        PSX Dev-Board Chipsets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spu-overview" class="md-nav__link">
+    SPU Overview
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spu-io-port-summary" class="md-nav__link">
+    SPU I/O Port Summary
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-memory-layout-512kbyte-ram" class="md-nav__link">
+    SPU Memory layout (512Kbyte RAM)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voices" class="md-nav__link">
+    Voices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voice-capabilities" class="md-nav__link">
+    Voice Capabilities
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-sound-inputs" class="md-nav__link">
+    Additional Sound Inputs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monostereo-audio-output" class="md-nav__link">
+    Mono/Stereo Audio Output
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unstable-and-delayed-io" class="md-nav__link">
+    Unstable and Delayed I/O
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-bus-width" class="md-nav__link">
+    SPU Bus-Width
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-adpcm-samples" class="md-nav__link">
+    SPU ADPCM Samples
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU ADPCM Samples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801c06hn10h-voice-023-adpcm-start-address-rw" class="md-nav__link">
+    1F801C06h+N*10h - Voice 0..23 ADPCM Start Address (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801c0ehn10h-voice-023-adpcm-repeat-address-rw" class="md-nav__link">
+    1F801C0Eh+N*10h - Voice 0..23 ADPCM Repeat Address (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-data-spu-adpcm" class="md-nav__link">
+    Sample Data (SPU-ADPCM)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flag-bits-in-2nd-byte-of-adpcm-header" class="md-nav__link">
+    Flag Bits (in 2nd byte of ADPCM Header)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#looped-and-one-shot-samples" class="md-nav__link">
+    Looped and One-shot Samples
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-adpcm-vs-xa-adpcm" class="md-nav__link">
+    SPU-ADPCM vs XA-ADPCM
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-adpcm-pitch" class="md-nav__link">
+    SPU ADPCM Pitch
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU ADPCM Pitch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801c04hn10h-voice-023-adpcm-sample-rate-rw-vxpitch" class="md-nav__link">
+    1F801C04h+N*10h - Voice 0..23 ADPCM Sample Rate (R/W) (VxPitch)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d90h-voice-023-pitch-modulation-enable-flags-pmon" class="md-nav__link">
+    1F801D90h - Voice 0..23 Pitch Modulation Enable Flags (PMON)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pitch-counter" class="md-nav__link">
+    Pitch Counter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maximum-sound-frequency" class="md-nav__link">
+    Maximum Sound Frequency
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-point-gaussian-interpolation" class="md-nav__link">
+    4-Point Gaussian Interpolation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#waveform-examples" class="md-nav__link">
+    Waveform Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-volume-and-adsr-generator" class="md-nav__link">
+    SPU Volume and ADSR Generator
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Volume and ADSR Generator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801c08hn10h-voice-023-attackdecaysustainrelease-adsr-32bit" class="md-nav__link">
+    1F801C08h+N*10h - Voice 0..23 Attack/Decay/Sustain/Release (ADSR) (32bit)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d80h-mainvolume-left" class="md-nav__link">
+    1F801D80h - Mainvolume left
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d82h-mainvolume-right" class="md-nav__link">
+    1F801D82h - Mainvolume right
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801c00hn10h-voice-023-volume-left" class="md-nav__link">
+    1F801C00h+N*10h - Voice 0..23 Volume Left
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801c02hn10h-voice-023-volume-right" class="md-nav__link">
+    1F801C02h+N*10h - Voice 0..23 Volume Right
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801db0h-cd-audio-input-volume-for-normal-cd-da-and-compressed-xa-adpcm" class="md-nav__link">
+    1F801DB0h - CD Audio Input Volume (for normal CD-DA, and compressed XA-ADPCM)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801db4h-external-audio-input-volume" class="md-nav__link">
+    1F801DB4h - External Audio Input Volume
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envelope-operation-depending-on-shiftstepmodedirection" class="md-nav__link">
+    Envelope Operation depending on Shift/Step/Mode/Direction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801c0chn10h-voice-023-current-adsr-volume-rw" class="md-nav__link">
+    1F801C0Ch+N*10h - Voice 0..23 Current ADSR volume (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801db8h-current-main-volume-leftright" class="md-nav__link">
+    1F801DB8h - Current Main Volume Left/Right
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801e00hvoice04h-voice-023-current-volume-leftright" class="md-nav__link">
+    1F801E00h+voice*04h - Voice 0..23 Current Volume Left/Right
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-voice-flags" class="md-nav__link">
+    SPU Voice Flags
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Voice Flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801d88h-voice-023-key-on-start-attackdecaysustain-kon-w" class="md-nav__link">
+    1F801D88h - Voice 0..23 Key ON (Start Attack/Decay/Sustain) (KON) (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d8ch-voice-023-key-off-start-release-koff-w" class="md-nav__link">
+    1F801D8Ch - Voice 0..23 Key OFF (Start Release) (KOFF) (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d9ch-voice-023-onoff-status-endx-r" class="md-nav__link">
+    1F801D9Ch - Voice 0..23 ON/OFF (status) (ENDX) (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rw" class="md-nav__link">
+    R/W
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-noise-generator" class="md-nav__link">
+    SPU Noise Generator
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Noise Generator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801d94h-voice-023-noise-mode-enable-non" class="md-nav__link">
+    1F801D94h - Voice 0..23 Noise mode enable (NON)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-noise-generator_1" class="md-nav__link">
+    SPU Noise Generator
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-control-and-status-register" class="md-nav__link">
+    SPU Control and Status Register
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Control and Status Register">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801daah-spu-control-register-spucnt" class="md-nav__link">
+    1F801DAAh - SPU Control Register (SPUCNT)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801daeh-spu-status-register-spustat-r" class="md-nav__link">
+    1F801DAEh - SPU Status Register  (SPUSTAT) (R)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-memory-access" class="md-nav__link">
+    SPU Memory Access
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Memory Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801da6h-sound-ram-data-transfer-address" class="md-nav__link">
+    1F801DA6h - Sound RAM Data Transfer Address
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801da8h-sound-ram-data-transfer-fifo" class="md-nav__link">
+    1F801DA8h - Sound RAM Data Transfer Fifo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801dach-sound-ram-data-transfer-control-should-be-0004h" class="md-nav__link">
+    1F801DACh - Sound RAM Data Transfer Control (should be 0004h)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-manual-write" class="md-nav__link">
+    SPU RAM Manual Write
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-dma-write" class="md-nav__link">
+    SPU RAM DMA-Write
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-manual-read" class="md-nav__link">
+    SPU RAM Manual-Read
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-dma-read-stable-reading-with-1f801014hbit24-27-nonzero" class="md-nav__link">
+    SPU RAM DMA-Read (stable reading, with [1F801014h].bit24-27 = nonzero)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spu-ram-dma-read-unstable-reading-with-1f801014hbit24-27-zero" class="md-nav__link">
+    SPU RAM DMA-Read (unstable reading, with [1F801014h].bit24-27 = zero)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-interrupt" class="md-nav__link">
+    SPU Interrupt
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Interrupt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801da4h-sound-ram-irq-address-irq9" class="md-nav__link">
+    1F801DA4h - Sound RAM IRQ Address (IRQ9)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voice-interrupt" class="md-nav__link">
+    Voice Interrupt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-interrupt" class="md-nav__link">
+    Capture Interrupt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-interrupt" class="md-nav__link">
+    Reverb Interrupt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-transfers" class="md-nav__link">
+    Data Transfers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note_1" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-reverb-registers" class="md-nav__link">
+    SPU Reverb Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Reverb Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reverb-volume-and-address-registers-rw" class="md-nav__link">
+    Reverb Volume and Address Registers (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801d98h-voice-023-reverb-mode-aka-echo-on-eon-rw" class="md-nav__link">
+    1F801D98h - Voice 0..23 Reverb mode aka Echo On (EON) (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-bits-in-spucnt-register-rw" class="md-nav__link">
+    Reverb Bits in SPUCNT Register (R/W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-reverb-formula" class="md-nav__link">
+    SPU Reverb Formula
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Reverb Formula">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reverb-formula" class="md-nav__link">
+    Reverb Formula
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-disable" class="md-nav__link">
+    Reverb Disable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug" class="md-nav__link">
+    Bug
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#speed-of-sound" class="md-nav__link">
+    Speed of Sound
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-buffer-resampling" class="md-nav__link">
+    Reverb Buffer Resampling
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-reverb-examples" class="md-nav__link">
+    SPU Reverb Examples
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Reverb Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reverb-examples" class="md-nav__link">
+    Reverb Examples
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#room-size26c0h-bytes" class="md-nav__link">
+    Room (size=26C0h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studio-small-size1f40h-bytes" class="md-nav__link">
+    Studio Small (size=1F40h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studio-medium-size4840h-bytes" class="md-nav__link">
+    Studio Medium (size=4840h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studio-large-size6fe0h-bytes" class="md-nav__link">
+    Studio Large (size=6FE0h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hall-sizeade0h-bytes" class="md-nav__link">
+    Hall (size=ADE0h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#half-echo-size3c00h-bytes" class="md-nav__link">
+    Half Echo (size=3C00h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#space-echo-sizef6c0h-bytes" class="md-nav__link">
+    Space Echo (size=F6C0h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chaos-echo-almost-infinite-size18040h-bytes" class="md-nav__link">
+    Chaos Echo (almost infinite) (size=18040h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delay-one-shot-echo-size18040h-bytes" class="md-nav__link">
+    Delay (one-shot echo) (size=18040h bytes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-off-size10h-dummy-bytes" class="md-nav__link">
+    Reverb off (size=10h dummy bytes)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-unknown-registers" class="md-nav__link">
+    SPU Unknown Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Unknown Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f801da0h-some-kind-of-a-read-only-status-register-or-just-garbage" class="md-nav__link">
+    1F801DA0h - Some kind of a read-only status register.. or just garbage..?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801dbch-4-bytes-unknown-rw" class="md-nav__link">
+    1F801DBCh - 4 bytes - Unknown? (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f801e60h-32-bytes-unknown-rw" class="md-nav__link">
+    1F801E60h - 32 bytes - Unknown? (R/W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spu-internal-state-machine-from-spu-ram-timing" class="md-nav__link">
+    SPU Internal State Machine from SPU RAM Timing
+  </a>
+  
+    <nav class="md-nav" aria-label="SPU Internal State Machine from SPU RAM Timing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-look-at-the-data-from-logic-analyzer" class="md-nav__link">
+    First look at the data from logic analyzer.
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence-of-work" class="md-nav__link">
+    Sequence of work
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-we-can-guess-from-those-information" class="md-nav__link">
+    What we can guess from those information.
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverb-computation-order" class="md-nav__link">
+    Reverb Computation Order
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voices_1" class="md-nav__link">
+    Voices
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_1" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="sound-processing-unit-spu">Sound Processing Unit (SPU)</h1>
+<p><a href="./#spu-overview">SPU Overview</a><br/>
+<a href="./#spu-adpcm-samples">SPU ADPCM Samples</a><br/>
+<a href="./#spu-adpcm-pitch">SPU ADPCM Pitch</a><br/>
+<a href="./#spu-volume-and-adsr-generator">SPU Volume and ADSR Generator</a><br/>
+<a href="./#spu-voice-flags">SPU Voice Flags</a><br/>
+<a href="./#spu-noise-generator">SPU Noise Generator</a><br/>
+<a href="./#spu-control-and-status-register">SPU Control and Status Register</a><br/>
+<a href="./#spu-memory-access">SPU Memory Access</a><br/>
+<a href="./#spu-interrupt">SPU Interrupt</a><br/>
+<a href="./#spu-reverb-registers">SPU Reverb Registers</a><br/>
+<a href="./#spu-reverb-formula">SPU Reverb Formula</a><br/>
+<a href="./#spu-reverb-examples">SPU Reverb Examples</a><br/>
+<a href="./#spu-unknown-registers">SPU Unknown Registers</a><br/>
+<a href="./#spu-internal-state-machine-from-spu-ram-timing">SPU Internal State Machine from SPU RAM Timing</a><br/></p>
+<h2 id="spu-overview">SPU Overview</h2>
+<h4 id="spu-io-port-summary">SPU I/O Port Summary</h4>
+<div class="highlight"><pre><span></span><code>  1F801C00h..1F801D7Fh - Voice 0..23 Registers (eight 16bit regs per voice)
+  1F801D80h..1F801D87h - SPU Control (volume)
+  1F801D88h..1F801D9Fh - Voice 0..23 Flags (six 1bit flags per voice)
+  1F801DA2h..1F801DBFh - SPU Control (memory, control, etc.)
+  1F801DC0h..1F801DFFh - Reverb configuration area
+  1F801E00h..1F801E5Fh - Voice 0..23 Internal Registers
+  1F801E60h..1F801E7Fh - Unknown?
+  1F801E80h..1F801FFFh - Unused?
+</code></pre></div>
+<h4 id="spu-memory-layout-512kbyte-ram">SPU Memory layout (512Kbyte RAM)</h4>
+<p><div class="highlight"><pre><span></span><code>  00000h-003FFh  CD Audio left  (1Kbyte) ;\CD Audio before Volume processing
+  00400h-007FFh  CD Audio right (1Kbyte) ;/signed 16bit samples at 44.1kHz
+  00800h-00BFFh  Voice 1 mono   (1Kbyte) ;\Voice 1 and 3 after ADSR processing
+  00C00h-00FFFh  Voice 3 mono   (1Kbyte) ;/signed 16bit samples at 44.1kHz
+  01000h-xxxxxh  ADPCM Samples  (first 16bytes usually contain a Sine wave)
+  xxxxxh-7FFFFh  Reverb work area
+</code></pre></div>
+As shown above, the first 4Kbytes are used as special capture buffers, and, if
+desired, one can also use the Reverb hardware to capture output from other
+voice(s).<br/>
+The SPU memory is not mapped to the CPU bus, it can be accessed only via I/O,
+or via DMA transfers (DMA4).<br/></p>
+<h4 id="voices">Voices</h4>
+<p>The SPU has 24 hardware voices. These voices can be used to reproduce sample
+data, noise or can be used as frequency modulator on the next voice. Each voice
+has it's own programmable ADSR envelope filter. The main volume can be
+programmed independently for left and right output.<br/></p>
+<h4 id="voice-capabilities">Voice Capabilities</h4>
+<p>All 24 voices are having exactly the same capabilities(?), with the exception
+that Voice 1 and 3 are having a special Capture feature (see SPU Memory map).<br/>
+There seems to be no way to produce square waves (without storing a square
+wavefrom in memory... although, since SPU RAM isn't connected to the CPU bus,
+the "useless" DMA for square wave data wouldn't slowdown the CPU bus)?<br/></p>
+<h4 id="additional-sound-inputs">Additional Sound Inputs</h4>
+<p>External Audio can be input (from the Expansion Port?), and the CDROM drive can
+be commanded to playback normal Audio CDs (via Play command), or XA-ADPCM
+sectors (via Read command), and to pass that data to the SPU.<br/></p>
+<h4 id="monostereo-audio-output">Mono/Stereo Audio Output</h4>
+<p>The standard PSX Audio cables have separate Left/Right signals, that is good
+for stereo TVs, but, when using a normal mono TV, only one of the two audio
+signals (Left or Right) can be connected. PSX programs should thus offer an
+option to disable stereo effects, and to output an equal volume to both cables.<br/></p>
+<h4 id="unstable-and-delayed-io">Unstable and Delayed I/O</h4>
+<p>The SPU occasionally seems to "miss" 32bit I/O writes (not sure if that can be
+fixed by any Memory Control settings?), a stable workaround is to split each
+32bit write into two 16bit writes. The SPU seems to process written values at
+44100Hz rate (so it may take 1/44100 seconds (300h clock cycles) until it has
+actually realized the new value).<br/></p>
+<h4 id="spu-bus-width">SPU Bus-Width</h4>
+<p>The SPU is connected to a 16bit databus. 8bit/16bit/32bit reads and 16bit
+writes are implemented; 32bit writes are also supported but seem to be
+particularly unstable (see above). However, 8bit writes are NOT implemented:
+8bit writes to ODD addresses are simply ignored (without causing any
+exceptions), 8bit writes to EVEN addresses are executed as 16bit writes (e.g.
+<code>li v0, 12345678h; sb v0, spu\_port</code> will write 5678h instead of 78h).<br/></p>
+<h2 id="spu-adpcm-samples">SPU ADPCM Samples</h2>
+<p>The SPU supports only ADPCM compressed samples (uncompressed samples seem to be
+totally unsupported; leaving apart that one can write uncompressed 16bit PCM
+samples to the Reverb Buffer, which can be then output at 22050Hz, as long as
+they aren't overwritten by the hardware).<br/></p>
+<h4 id="1f801c06hn10h-voice-023-adpcm-start-address-rw">1F801C06h+N*10h - Voice 0..23 ADPCM Start Address (R/W)</h4>
+<p>This register holds the sample start address (not the current address, ie. the
+register doesn't increment during playback).<br/>
+<div class="highlight"><pre><span></span><code>  15-0   Startaddress of sound in Sound buffer (in 8-byte units)
+</code></pre></div>
+Writing to this register has no effect on the currently playing voice.<br/>
+The start address is copied to the current address upon Key On.<br/></p>
+<h4 id="1f801c0ehn10h-voice-023-adpcm-repeat-address-rw">1F801C0Eh+N*10h - Voice 0..23 ADPCM Repeat Address (R/W)</h4>
+<p>If the hardware finds an ADPCM header with Loop-Start-Bit, then it copies the
+current address to the repeat addresss register.<br/>
+If the hardware finds an ADPCM header with Loop-Stop-Bit, then it copies the
+repeat addresss register setting to the current address; that, \&lt;after>
+playing the current ADPCM block.<br/>
+<div class="highlight"><pre><span></span><code>  15-0  Address sample loops to at end (in 8-byte units)
+</code></pre></div>
+Normally, repeat works automatically via the above start/stop bits, and
+software doesn't need to deal with the Repeat Address Register. However,
+reading from it may be useful to sense if the hardware has reached a start bit,
+and writing may be also useful in some cases, eg. to redirect a one-shot sample
+(with stop-bit, but without any start-bits) to a silent-loop located elsewhere
+in memory.<br/></p>
+<h4 id="sample-data-spu-adpcm">Sample Data (SPU-ADPCM)</h4>
+<p>Samples consist of one or more 16-byte blocks:<br/>
+<div class="highlight"><pre><span></span><code>  00h       Shift/Filter (reportedly same as for CD-XA) (see there)
+  01h       Flag Bits (see below)
+  02h       Compressed Data (LSBs=1st Sample, MSBs=2nd Sample)
+  03h       Compressed Data (LSBs=3rd Sample, MSBs=4th Sample)
+  04h       Compressed Data (LSBs=5th Sample, MSBs=6th Sample)
+  ...       ...
+  0Fh       Compressed Data (LSBs=27th Sample, MSBs=28th Sample)
+</code></pre></div></p>
+<h4 id="flag-bits-in-2nd-byte-of-adpcm-header">Flag Bits (in 2nd byte of ADPCM Header)</h4>
+<p><div class="highlight"><pre><span></span><code>  0   Loop End    (0=No change, 1=Set ENDX flag and Jump to [1F801C0Eh+N*10h])
+  1   Loop Repeat (0=Force Release and set ADSR Level to Zero; only if Bit0=1)
+  2   Loop Start  (0=No change, 1=Copy current address to [1F801C0Eh+N*10h])
+  3-7 Unknown    (usually 0)
+</code></pre></div>
+Possible combinations for Bit0-1 are:<br/>
+<div class="highlight"><pre><span></span><code>  Code 0 = Normal     (continue at next 16-byte block)
+  Code 1 = End+Mute   (jump to Loop-address, set ENDX flag, Release, Env=0000h)
+  Code 2 = Ignored    (same as Code 0)
+  Code 3 = End+Repeat (jump to Loop-address, set ENDX flag)
+</code></pre></div></p>
+<h4 id="looped-and-one-shot-samples">Looped and One-shot Samples</h4>
+<p>The Loop Start/End flags in the ADPCM Header allow to play one or more sample
+block(s) in a loop, that can be either all block(s) endless repeated, or only
+the last some block(s) of the sample.<br/>
+There's no way to stop the output, so a one-shot sample must be followed by
+dummy block (with Loop Start/End flags both set, and all data nibbles set to
+zero; so that the block gets endless repeated, but doesn't produce any sound).<br/></p>
+<h4 id="spu-adpcm-vs-xa-adpcm">SPU-ADPCM vs XA-ADPCM</h4>
+<p>The PSX supports two ADPCM formats: SPU-ADPCM (as described above), and
+XA-ADPCM. XA-ADPCM is decompressed by the CDROM Controller, and sent directly
+to the sound mixer, without needing to store the data in SPU RAM, nor needing
+to use a Voice channel.<br/>
+The actual decompression algorithm is the same for both formats. However, the
+XA nibbles are arranged in different order, and XA uses 2x28 nibbles per block
+(instead of 2x14), XA blocks can contain mono or stereo data, XA supports only
+two sample rates, and, XA doesn't support looping.<br/></p>
+<h2 id="spu-adpcm-pitch">SPU ADPCM Pitch</h2>
+<h4 id="1f801c04hn10h-voice-023-adpcm-sample-rate-rw-vxpitch">1F801C04h+N*10h - Voice 0..23 ADPCM Sample Rate (R/W) (VxPitch)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-15  Sample rate (0=stop, 4000h=fastest, 4001h..FFFFh=usually same as 4000h)
+</code></pre></div>
+Defines the ADPCM sample rate (1000h = 44100Hz). This register (and PMON) does
+affect only the ADPCM sample frequency (but not on the Noise frequency, which
+is defined - and shared for all voices - in the SPUCNT register).<br/></p>
+<h4 id="1f801d90h-voice-023-pitch-modulation-enable-flags-pmon">1F801D90h - Voice 0..23 Pitch Modulation Enable Flags (PMON)</h4>
+<p>Pitch modulation allows to generate "Frequency Sweep" effects by mis-using the
+amplitude from channel (x-1) as pitch factor for channel (x).<br/>
+<div class="highlight"><pre><span></span><code>  0     Unknown... Unused?
+  1-23  Flags for Voice 1..23 (0=Normal, 1=Modulate by Voice 0..22)
+  24-31 Not used
+</code></pre></div>
+For example, output a very loud 1Hz sine-wave on channel 4 (with ADSR volume
+4000h, and with Left/Right volume=0; unless you actually want to output it to
+the speaker). Then additionally output a 2kHz sine wave on channel 5 with
+PMON.Bit5 set. The "2kHz" sound should then repeatedly sweep within 1kHz..3kHz
+range (or, for a more decent sweep in 1.8kHz..2.2kHz range, drop the ADSR
+volume of channel 4).<br/></p>
+<h4 id="pitch-counter">Pitch Counter</h4>
+<p>The pitch counter is adjusted at 44100Hz rate as follows:<br/>
+<div class="highlight"><pre><span></span><code>  Step = VxPitch                  ;range +0000h..+FFFFh (0...705.6 kHz)
+  IF PMON.Bit(x)=1 AND (x&gt;0)      ;pitch modulation enable
+    Factor = VxOUTX(x-1)          ;range -8000h..+7FFFh (prev voice amplitude)
+    Factor = Factor+8000h         ;range +0000h..+FFFFh (factor = 0.00 .. 1.99)
+    Step=SignExpand16to32(Step)   ;hardware glitch on VxPitch&gt;7FFFh, make sign
+    Step = (Step * Factor) SAR 15 ;range 0..1FFFFh (glitchy if VxPitch&gt;7FFFh)
+    Step=Step AND 0000FFFFh       ;hardware glitch on VxPitch&gt;7FFFh, kill sign
+  IF Step&gt;3FFFh then Step=4000h   ;range +0000h..+3FFFh (0.. 176.4kHz)
+  Counter = Counter + Step
+</code></pre></div>
+Counter.Bit12 and up indicates the current sample (within a ADPCM block).<br/>
+Counter.Bit4..11 are used as 8bit gaussian interpolation index.<br/></p>
+<h4 id="maximum-sound-frequency">Maximum Sound Frequency</h4>
+<p>The Mixer and DAC supports a 44.1kHz output rate (allowing to produce max
+22.1kHz tones). The Reverb unit supports only half the frequency.<br/>
+The pitch counter supports sample rates up to 176.4kHz. However, exceeding the
+44.1kHz limit causes the hardware to skip samples (or actually: to apply
+incomplete interpolation on the 'skipped' samples).<br/>
+VxPitch can be theoretically 0..FFFFh (max 705.6kHz), normally 4000h..FFFFh are
+simply clipped to max=4000h (176.4kHz). Except, 4000h..FFFFh could be used with
+pitch modulation (as they are multiplied by 0.00..1.99 before clipping; in
+practice this works only for 4000h..7FFFh; as values 8000h..FFFFh are mistaken
+as signed values).<br/></p>
+<h4 id="4-point-gaussian-interpolation">4-Point Gaussian Interpolation</h4>
+<p>Interpolation is applied on the 4 most recent 16bit ADPCM samples
+(new,old,older,oldest), using bit4-11 of the pitch counter as 8bit
+interpolation index (i=00h..FFh):<br/>
+<div class="highlight"><pre><span></span><code>  out =       ((gauss[0FFh-i] * oldest) SAR 15)
+  out = out + ((gauss[1FFh-i] * older)  SAR 15)
+  out = out + ((gauss[100h+i] * old)    SAR 15)
+  out = out + ((gauss[000h+i] * new)    SAR 15)
+</code></pre></div>
+The Gauss table contains the following values (in hex):<br/>
+<div class="highlight"><pre><span></span><code>  -001h,-001h,-001h,-001h,-001h,-001h,-001h,-001h ;\
+  -001h,-001h,-001h,-001h,-001h,-001h,-001h,-001h ;
+  0000h,0000h,0000h,0000h,0000h,0000h,0000h,0001h ;
+  0001h,0001h,0001h,0002h,0002h,0002h,0003h,0003h ;
+  0003h,0004h,0004h,0005h,0005h,0006h,0007h,0007h ;
+  0008h,0009h,0009h,000Ah,000Bh,000Ch,000Dh,000Eh ;
+  000Fh,0010h,0011h,0012h,0013h,0015h,0016h,0018h ; entry
+  0019h,001Bh,001Ch,001Eh,0020h,0021h,0023h,0025h ; 000h..07Fh
+  0027h,0029h,002Ch,002Eh,0030h,0033h,0035h,0038h ;
+  003Ah,003Dh,0040h,0043h,0046h,0049h,004Dh,0050h ;
+  0054h,0057h,005Bh,005Fh,0063h,0067h,006Bh,006Fh ;
+  0074h,0078h,007Dh,0082h,0087h,008Ch,0091h,0096h ;
+  009Ch,00A1h,00A7h,00ADh,00B3h,00BAh,00C0h,00C7h ;
+  00CDh,00D4h,00DBh,00E3h,00EAh,00F2h,00FAh,0101h ;
+  010Ah,0112h,011Bh,0123h,012Ch,0135h,013Fh,0148h ;
+  0152h,015Ch,0166h,0171h,017Bh,0186h,0191h,019Ch ;/
+  01A8h,01B4h,01C0h,01CCh,01D9h,01E5h,01F2h,0200h ;\
+  020Dh,021Bh,0229h,0237h,0246h,0255h,0264h,0273h ;
+  0283h,0293h,02A3h,02B4h,02C4h,02D6h,02E7h,02F9h ;
+  030Bh,031Dh,0330h,0343h,0356h,036Ah,037Eh,0392h ;
+  03A7h,03BCh,03D1h,03E7h,03FCh,0413h,042Ah,0441h ;
+  0458h,0470h,0488h,04A0h,04B9h,04D2h,04ECh,0506h ;
+  0520h,053Bh,0556h,0572h,058Eh,05AAh,05C7h,05E4h ; entry
+  0601h,061Fh,063Eh,065Ch,067Ch,069Bh,06BBh,06DCh ; 080h..0FFh
+  06FDh,071Eh,0740h,0762h,0784h,07A7h,07CBh,07EFh ;
+  0813h,0838h,085Dh,0883h,08A9h,08D0h,08F7h,091Eh ;
+  0946h,096Fh,0998h,09C1h,09EBh,0A16h,0A40h,0A6Ch ;
+  0A98h,0AC4h,0AF1h,0B1Eh,0B4Ch,0B7Ah,0BA9h,0BD8h ;
+  0C07h,0C38h,0C68h,0C99h,0CCBh,0CFDh,0D30h,0D63h ;
+  0D97h,0DCBh,0E00h,0E35h,0E6Bh,0EA1h,0ED7h,0F0Fh ;
+  0F46h,0F7Fh,0FB7h,0FF1h,102Ah,1065h,109Fh,10DBh ;
+  1116h,1153h,118Fh,11CDh,120Bh,1249h,1288h,12C7h ;/
+  1307h,1347h,1388h,13C9h,140Bh,144Dh,1490h,14D4h ;\
+  1517h,155Ch,15A0h,15E6h,162Ch,1672h,16B9h,1700h ;
+  1747h,1790h,17D8h,1821h,186Bh,18B5h,1900h,194Bh ;
+  1996h,19E2h,1A2Eh,1A7Bh,1AC8h,1B16h,1B64h,1BB3h ;
+  1C02h,1C51h,1CA1h,1CF1h,1D42h,1D93h,1DE5h,1E37h ;
+  1E89h,1EDCh,1F2Fh,1F82h,1FD6h,202Ah,207Fh,20D4h ;
+  2129h,217Fh,21D5h,222Ch,2282h,22DAh,2331h,2389h ; entry
+  23E1h,2439h,2492h,24EBh,2545h,259Eh,25F8h,2653h ; 100h..17Fh
+  26ADh,2708h,2763h,27BEh,281Ah,2876h,28D2h,292Eh ;
+  298Bh,29E7h,2A44h,2AA1h,2AFFh,2B5Ch,2BBAh,2C18h ;
+  2C76h,2CD4h,2D33h,2D91h,2DF0h,2E4Fh,2EAEh,2F0Dh ;
+  2F6Ch,2FCCh,302Bh,308Bh,30EAh,314Ah,31AAh,3209h ;
+  3269h,32C9h,3329h,3389h,33E9h,3449h,34A9h,3509h ;
+  3569h,35C9h,3629h,3689h,36E8h,3748h,37A8h,3807h ;
+  3867h,38C6h,3926h,3985h,39E4h,3A43h,3AA2h,3B00h ;
+  3B5Fh,3BBDh,3C1Bh,3C79h,3CD7h,3D35h,3D92h,3DEFh ;/
+  3E4Ch,3EA9h,3F05h,3F62h,3FBDh,4019h,4074h,40D0h ;\
+  412Ah,4185h,41DFh,4239h,4292h,42EBh,4344h,439Ch ;
+  43F4h,444Ch,44A3h,44FAh,4550h,45A6h,45FCh,4651h ;
+  46A6h,46FAh,474Eh,47A1h,47F4h,4846h,4898h,48E9h ;
+  493Ah,498Ah,49D9h,4A29h,4A77h,4AC5h,4B13h,4B5Fh ;
+  4BACh,4BF7h,4C42h,4C8Dh,4CD7h,4D20h,4D68h,4DB0h ;
+  4DF7h,4E3Eh,4E84h,4EC9h,4F0Eh,4F52h,4F95h,4FD7h ; entry
+  5019h,505Ah,509Ah,50DAh,5118h,5156h,5194h,51D0h ; 180h..1FFh
+  520Ch,5247h,5281h,52BAh,52F3h,532Ah,5361h,5397h ;
+  53CCh,5401h,5434h,5467h,5499h,54CAh,54FAh,5529h ;
+  5558h,5585h,55B2h,55DEh,5609h,5632h,565Bh,5684h ;
+  56ABh,56D1h,56F6h,571Bh,573Eh,5761h,5782h,57A3h ;
+  57C3h,57E2h,57FFh,581Ch,5838h,5853h,586Dh,5886h ;
+  589Eh,58B5h,58CBh,58E0h,58F4h,5907h,5919h,592Ah ;
+  593Ah,5949h,5958h,5965h,5971h,597Ch,5986h,598Fh ;
+  5997h,599Eh,59A4h,59A9h,59ADh,59B0h,59B2h,59B3h ;/
+</code></pre></div>
+The PSX table is a bit different as the SNES table: Values up to 3569h are
+smaller as on SNES, the remaining values are bigger as on SNES, and the width
+of the PSX table entries is 4bit higher as on SNES.<br/>
+The PSX table is slightly bugged: Theoretically, each four values
+(gauss[000h+i], gauss[0FFh-i], gauss[100h+i], gauss[1FFh-i]) should sum up to
+8000h, but in practice they do sum up to 7F7Fh..7F81h (fortunately the PSX sum
+doesn't exceed the 8000h limit; meaning that the PSX interpolations won't
+overflow, which has been a hardware glitch on the SNES).<br/></p>
+<h4 id="waveform-examples">Waveform Examples</h4>
+<div class="highlight"><pre><span></span><code>  Incoming ADPCM Data ---&gt; Interpolated Data
+   _   _   _   _
+  | | | | | | | |           .   .   .   .    Nibbles=79797979, Filter=0
+  | | | | | | | |     ---&gt; / \ / \ / \ / \   HALF-volume ZIGZAG-wave
+  | |_| |_| |_| |_            &#39;   &#39;   &#39;   &#39;
+   ___     ___
+  |   |   |   |              .&#39;.     .&#39;.     Nibbles=77997799, Filter=0
+  |   |   |   |       ---&gt;  /   \   /   \    FULL-volume SINE-wave
+  |   |___|   |___         &#39;     &#39;.&#39;     &#39;.
+   _______                     ___
+  |       |                  .&#39;   &#39;.         Nibbles=77779999, Filter=0
+  |       |           ---&gt;  /       \        SQUARE wave (with rounded edges)
+  |       |_______         &#39;         &#39;.____
+   _____         _             __
+  |     |_     _|            .&#39;  &#39;&#39;.    .&#39;   Nibbles=7777CC44, Filter=0
+  |       |___|       ---&gt;  /       &#39;..&#39;     CUSTOM wave-form
+  |                        &#39;
+   ___     __
+  |   |___|  |    _         \ ! /  .  \ ! /  Nibbles=77DE9HZK, Filter=V
+  |_     ____|  _|    ---&gt;  - + -  +  - + -  SOLAR STORM wave-form
+  __|   |______|___         / ! \  &#39;  / ! \
+</code></pre></div>
+<h2 id="spu-volume-and-adsr-generator">SPU Volume and ADSR Generator</h2>
+<h4 id="1f801c08hn10h-voice-023-attackdecaysustainrelease-adsr-32bit">1F801C08h+N*10h - Voice 0..23 Attack/Decay/Sustain/Release (ADSR) (32bit)</h4>
+<p><div class="highlight"><pre><span></span><code>  ____lower 16bit (at 1F801C08h+N*10h)___________________________________
+  15    Attack Mode       (0=Linear, 1=Exponential)
+  -     Attack Direction  (Fixed, always Increase) (until Level 7FFFh)
+  14-10 Attack Shift      (0..1Fh = Fast..Slow)
+  9-8   Attack Step       (0..3 = &quot;+7,+6,+5,+4&quot;)
+  -     Decay Mode        (Fixed, always Exponential)
+  -     Decay Direction   (Fixed, always Decrease) (until Sustain Level)
+  7-4   Decay Shift       (0..0Fh = Fast..Slow)
+  -     Decay Step        (Fixed, always &quot;-8&quot;)
+  3-0   Sustain Level     (0..0Fh)  ;Level=(N+1)*800h
+  ____upper 16bit (at 1F801C0Ah+N*10h)___________________________________
+  31    Sustain Mode      (0=Linear, 1=Exponential)
+  30    Sustain Direction (0=Increase, 1=Decrease) (until Key OFF flag)
+  29    Not used?         (should be zero)
+  28-24 Sustain Shift     (0..1Fh = Fast..Slow)
+  23-22 Sustain Step      (0..3 = &quot;+7,+6,+5,+4&quot; or &quot;-8,-7,-6,-5&quot;) (inc/dec)
+  21    Release Mode      (0=Linear, 1=Exponential)
+  -     Release Direction (Fixed, always Decrease) (until Level 0000h)
+  20-16 Release Shift     (0..1Fh = Fast..Slow)
+  -     Release Step      (Fixed, always &quot;-8&quot;)
+</code></pre></div>
+The Attack phase gets started when the software sets the voice ON flag (see
+below), the hardware does then automatically go through Attack/Decay/Sustain,
+and switches from Sustain to Release when the software sets the Key OFF flag.<br/></p>
+<h4 id="1f801d80h-mainvolume-left">1F801D80h - Mainvolume left</h4>
+<h4 id="1f801d82h-mainvolume-right">1F801D82h - Mainvolume right</h4>
+<h4 id="1f801c00hn10h-voice-023-volume-left">1F801C00h+N*10h - Voice 0..23 Volume Left</h4>
+<h4 id="1f801c02hn10h-voice-023-volume-right">1F801C02h+N*10h - Voice 0..23 Volume Right</h4>
+<p>Fixed Volume Mode (when Bit15=0):<br/>
+<div class="highlight"><pre><span></span><code>  15    Must be zero      (0=Volume Mode)
+  0-14  Voice volume/2    (-4000h..+3FFFh = Volume -8000h..+7FFEh)
+</code></pre></div>
+Sweep Volume Mode (when Bit15=1):<br/>
+<div class="highlight"><pre><span></span><code>  15    Must be set       (1=Sweep Mode)
+  14    Sweep Mode        (0=Linear, 1=Exponential)
+  13    Sweep Direction   (0=Increase, 1=Decrease)
+  12    Sweep Phase       (0=Positive, 1=Negative)
+  7-11  Not used?         (should be zero)
+  6-2   Sweep Shift       (0..1Fh = Fast..Slow)
+  1-0   Sweep Step        (0..3 = &quot;+7,+6,+5,+4&quot; or &quot;-8,-7,-6,-5&quot;) (inc/dec)
+</code></pre></div>
+Sweep is another Volume envelope, additionally to the ADSR volume envelope
+(unlike ADSR, sweep can be used for stereo effects, such like blending from
+left to right).<br/>
+Sweep starts at the current volume (which can be set via Bit15=0, however,
+caution - the Bit15=0 setting isn't applied until the next 44.1kHz cycle; so
+setting the initial level with Bit15=0, followed by the sweep parameter with
+Bit15=1 works only if there's a suitable delay between the two operations).
+Once when sweep is started, the current volume level increases to +7FFFh, or
+decreases to 0000h.<br/>
+Sweep Phase should be equal to the sign of the current volume (not yet tested,
+in the negative mode it does probably "increase" to -7FFFh?). The Phase bit
+seems to have no effect in Exponential Decrease mode.<br/></p>
+<h4 id="1f801db0h-cd-audio-input-volume-for-normal-cd-da-and-compressed-xa-adpcm">1F801DB0h - CD Audio Input Volume (for normal CD-DA, and compressed XA-ADPCM)</h4>
+<h4 id="1f801db4h-external-audio-input-volume">1F801DB4h - External Audio Input Volume</h4>
+<p><div class="highlight"><pre><span></span><code>  0-15  Volume Left   (-8000h..+7FFFh)
+  16-31 Volume Right  (-8000h..+7FFFh)
+</code></pre></div>
+Note: The CDROM controller supports additional CD volume control (including
+ability to convert stereo CD output to mono, or to swap left/right channels).<br/></p>
+<h4 id="envelope-operation-depending-on-shiftstepmodedirection">Envelope Operation depending on Shift/Step/Mode/Direction</h4>
+<div class="highlight"><pre><span></span><code>  ; Precalculation, can be cached on phase begin.
+  AdsrStep = 7 - StepValue
+  IF Decreasing XOR PhaseNegative THEN
+    AdsrStep = NOT AdsrStep ; +7,+6,+5,+4 =&gt; -8,-7,-6,-5
+  AdsrStep = AdsrStep SHL Max(0,11-ShiftValue)
+  CounterIncrement = 8000h SHR Max(0,ShiftValue-11) 
+  IF exponential AND increase AND AdsrLevel&gt;6000h THEN
+    IF ShiftValue &lt; 10 THEN
+      AdsrStep /= 4 ; SHR 2
+    ELSE IF ShiftValue &gt;= 11 THEN
+      CounterIncrement /= 4 ; SHR 2
+    ELSE
+      AdsrStep /= 4 ; SHR 2
+      CounterIncrement /= 4 ; SHR 2
+  ELSE IF exponential AND decrease THEN
+    AdsrStep=AdsrStep*AdsrLevel/8000h
+
+  IF (StepValue | (ShiftValue SHL 2)) != ALL_BITS THEN
+    CounterIncrement = MAX(CounterIncrement, 1)
+
+  ; Runs once per 44.1kHz clock.
+  Counter += CounterIncrement
+  IF (Counter &amp; 8000h) == 0 THEN
+    RETURN ; No step this cycle.
+
+  ; Saturate depending on mode.
+  AdsrLevel = AdsrLevel + AdsrStep
+  IF NOT decreasing THEN
+    AdsrLevel = CLAMP(AdsrLevel, -8000h..+7FFFh)
+  ELSE IF PhaseNegative THEN
+    AdsrLevel = CLAMP(AdsrLevel, -8000h..0h)
+  ELSE ; decreasing
+    AdsrLevel = MAX(AdsrLevel, 0)
+</code></pre></div>
+<p>Exponential Increase is a fake (simply changes to a slower linear increase
+rate at higher volume levels).</p>
+<p>Phase invert cause the step to be positive in decreasing mode, otherwise
+negative.</p>
+<p>Using a step value of all-ones causes the volume to never step, and
+additionally never saturate. i.e. 0x7f, or 0x1f for decay/release.</p>
+<p>The step counter has very strange behaviour. Initially this was documented
+as <code>AdsrCycles = 1 SHL Max(0,ShiftValue-11)</code>, however, this is incorrect
+for shift values above 26. Hardware tests show that a rate of 0x76 behaves
+like 0x6A, seems it's dependent on the Bit15=1.</p>
+<p>Phase invert acts very strange. If the volume is positive, it will decrease
+to zero, then increase back to maximum negative (inverted) volume. Except
+when decrementing, then it snaps straight to zero. Simply clamping to int16
+range will be fine for incrementing, because the volume never decreases past
+zero. If the volume <em>was</em> negative, and is incrementing, hardware tests show
+that it only clamps to max, not 0.</p>
+<p>Phase inversion is commonly used in "Dolby Surround" for simulating sound
+effects that should play through the rear speakers. There are also some cases
+where it is incorrectly used, such as Wipeout 3, where it sets a positive
+volume with an inverted sweep, but since all the rate bits are set to 1, the
+volume never steps, and it stays positive. If the rate had any bits clear,
+then the volume would slowly decrease to zero, then up to -8000h, growing
+louder but with phase inversion.</p>
+<h4 id="1f801c0chn10h-voice-023-current-adsr-volume-rw">1F801C0Ch+N*10h - Voice 0..23 Current ADSR volume (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  15-0  Current ADSR Volume  (0..+7FFFh) (or -8000h..+7FFFh on manual write)
+</code></pre></div>
+Reportedly Release can go down to -1 (FFFFh), but that isn't true; and release
+ends at 0... or does THAT depend on an END flag found in the sample-data?<br/>
+The register is read/writeable, writing allows to let the ADSR generator to
+"jump" to a specific volume level. But, ACTUALLY, the ADSR generator does
+overwrite the setting (from another internal register) whenever applying a new
+Step?!<br/></p>
+<h4 id="1f801db8h-current-main-volume-leftright">1F801DB8h - Current Main Volume Left/Right</h4>
+<h4 id="1f801e00hvoice04h-voice-023-current-volume-leftright">1F801E00h+voice*04h - Voice 0..23 Current Volume Left/Right</h4>
+<p><div class="highlight"><pre><span></span><code>  0-15  Current Volume Left  (-8000h..+7FFFh)
+  16-31 Current Volume Right (-8000h..+7FFFh)
+</code></pre></div>
+These are internal registers, normally not used by software (the Volume
+settings are usually set via Ports 1F801D80h and 1F801C00h+N*10h).<br/></p>
+<h4 id="note">Note</h4>
+<p>Negative volumes are phase inverted, otherwise same as positive.<br/></p>
+<h2 id="spu-voice-flags">SPU Voice Flags</h2>
+<h4 id="1f801d88h-voice-023-key-on-start-attackdecaysustain-kon-w">1F801D88h - Voice 0..23 Key ON (Start Attack/Decay/Sustain) (KON) (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-23  Voice 0..23 On  (0=No change, 1=Start Attack/Decay/Sustain)
+  24-31 Not used
+</code></pre></div>
+Starts the ADSR Envelope, and automatically initializes ADSR Volume to zero,
+and copies Voice Start Address to Voice Repeat Address.<br/></p>
+<h4 id="1f801d8ch-voice-023-key-off-start-release-koff-w">1F801D8Ch - Voice 0..23 Key OFF (Start Release) (KOFF) (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-23  Voice 0..23 Off (0=No change, 1=Start Release)
+  24-31 Not used
+</code></pre></div>
+For a full ADSR pattern, OFF would be usually issued in the Sustain period,
+however, it can be issued at any time (eg. to abort Attack, skip the Decay and
+Sustain periods, and switch immediately to Release).<br/></p>
+<h4 id="1f801d9ch-voice-023-onoff-status-endx-r">1F801D9Ch - Voice 0..23 ON/OFF (status) (ENDX) (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-23  Voice 0..23 Status (0=Newly Keyed On, 1=Reached LOOP-END)
+  24-31 Not used
+</code></pre></div>
+The bits get CLEARED when setting the corresponding KEY ON bits.<br/>
+The bits get SET when reaching an LOOP-END flag in ADPCM header.bit0.<br/></p>
+<h4 id="rw">R/W</h4>
+<p>Key On and Key Off should be treated as write-only (although, reading returns
+the most recently 32bit value, this doesn't doesn't provide any status
+information about whether sound is on or off).<br/>
+The on/off (status) (ENDX) register should be treated read-only (writing is
+possible in so far that the written value can be read-back for a short moment,
+however, thereafter the hardware is overwriting that value).<br/></p>
+<h2 id="spu-noise-generator">SPU Noise Generator</h2>
+<h4 id="1f801d94h-voice-023-noise-mode-enable-non">1F801D94h - Voice 0..23 Noise mode enable (NON)</h4>
+<div class="highlight"><pre><span></span><code>  0-23  Voice 0..23 Noise (0=ADPCM, 1=Noise)
+  24-31 Not used
+</code></pre></div>
+<h4 id="spu-noise-generator_1">SPU Noise Generator</h4>
+<p>The signed 16bit output Level is calculated as so (repeated at 44.1kHz clock):<br/>
+<div class="highlight"><pre><span></span><code>  Wait(1 cycle)          ;at 44.1kHz clock
+  Timer=Timer-NoiseStep  ;subtract Step (4..7)
+  ParityBit = NoiseLevel.Bit15 xor Bit12 xor Bit11 xor Bit10 xor 1
+  IF Timer&lt;0 then NoiseLevel = NoiseLevel*2 + ParityBit
+  IF Timer&lt;0 then Timer=Timer+(20000h SHR NoiseShift)  ;reload timer once
+  IF Timer&lt;0 then Timer=Timer+(20000h SHR NoiseShift)  ;reload again if needed
+</code></pre></div>
+Note that the Noise frequency is solely controlled by the Shift/Step values in
+SPUCNT register (the ADPCM Sample Rate has absolutely no effect on noise), so
+when using noise for multiple voices, all of them are forcefully having the
+same frequency; the only workaround is to store a random ADPCM pattern in SPU
+RAM, which can be then used with any desired sample rate(s).<br/></p>
+<h2 id="spu-control-and-status-register">SPU Control and Status Register</h2>
+<h4 id="1f801daah-spu-control-register-spucnt">1F801DAAh - SPU Control Register (SPUCNT)</h4>
+<p><div class="highlight"><pre><span></span><code>  15    SPU Enable              (0=Off, 1=On)       (Don&#39;t care for CD Audio)
+  14    Mute SPU                (0=Mute, 1=Unmute)  (Don&#39;t care for CD Audio)
+  13-10 Noise Frequency Shift   (0..0Fh = Low .. High Frequency)
+  9-8   Noise Frequency Step    (0..03h = Step &quot;4,5,6,7&quot;)
+  7     Reverb Master Enable    (0=Disabled, 1=Enabled)
+  6     IRQ9 Enable (0=Disabled/Acknowledge, 1=Enabled; only when Bit15=1)
+  5-4   Sound RAM Transfer Mode (0=Stop, 1=ManualWrite, 2=DMAwrite, 3=DMAread)
+  3     External Audio Reverb   (0=Off, 1=On)
+  2     CD Audio Reverb         (0=Off, 1=On) (for CD-DA and XA-ADPCM)
+  1     External Audio Enable   (0=Off, 1=On)
+  0     CD Audio Enable         (0=Off, 1=On) (for CD-DA and XA-ADPCM)
+</code></pre></div>
+Changes to bit0-5 aren't applied immediately; after writing to SPUCNT, it'd be
+usually recommended to wait until the LSBs of SPUSTAT are updated accordingly.
+Before setting a new Transfer Mode, it'd be recommended first to set the "Stop"
+mode (and, again, wait until Stop is applied in SPUSTAT).<br/></p>
+<h4 id="1f801daeh-spu-status-register-spustat-r">1F801DAEh - SPU Status Register  (SPUSTAT) (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  15-12 Unknown/Unused (seems to be usually zero)
+  11    Writing to First/Second half of Capture Buffers (0=First, 1=Second)
+  10    Data Transfer Busy Flag          (0=Ready, 1=Busy)
+  9     Data Transfer DMA Read Request   (0=No, 1=Yes)
+  8     Data Transfer DMA Write Request  (0=No, 1=Yes)
+  7     Data Transfer DMA Read/Write Request ;seems to be same as SPUCNT.Bit5
+  6     IRQ9 Flag                        (0=No, 1=Interrupt Request)
+  5-0   Current SPU Mode   (same as SPUCNT.Bit5-0, but, applied a bit delayed)
+</code></pre></div>
+When switching SPUCNT to DMA-read mode, status bit9 and bit7 aren't set
+immediately (apparently the SPU is first internally collecting the data in the
+Fifo, before transferring it).<br/>
+Bit11 indicates if data is currently written to the first or second half of the
+four 1K-byte capture buffers (for CD Audio left/right, and voice 1/3). Note:
+Bit11 works only if Bit2 and/or Bit3 of Port 1F801DACh are set.<br/>
+The SPUSTAT register should be treated read-only (writing is possible in so far
+that the written value can be read-back for a short moment, however, thereafter
+the hardware is overwriting that value).<br/></p>
+<h2 id="spu-memory-access">SPU Memory Access</h2>
+<h4 id="1f801da6h-sound-ram-data-transfer-address">1F801DA6h - Sound RAM Data Transfer Address</h4>
+<p><div class="highlight"><pre><span></span><code>  15-0  Address in sound buffer divided by eight
+</code></pre></div>
+Used for manual write and DMA read/write SPU memory. Writing to this registers
+stores the written value in 1F801DA6h, and does additional store the value
+(multiplied by 8) in another internal "current address" register (that internal
+register does increment during transfers, whilst the 1F801DA6h value DOESN'T
+increment).<br/></p>
+<h4 id="1f801da8h-sound-ram-data-transfer-fifo">1F801DA8h - Sound RAM Data Transfer Fifo</h4>
+<p><div class="highlight"><pre><span></span><code>  15-0  Data (max 32 halfwords)
+</code></pre></div>
+Used for manual-write. Not sure if it can be also used for manual read?<br/></p>
+<h4 id="1f801dach-sound-ram-data-transfer-control-should-be-0004h">1F801DACh - Sound RAM Data Transfer Control (should be 0004h)</h4>
+<p><div class="highlight"><pre><span></span><code>  15-4   Unknown/no effect?                       (should be zero)
+  3-1    Sound RAM Data Transfer Type (see below) (should be 2)
+  0      Unknown/no effect?                       (should be zero)
+</code></pre></div>
+The Transfer Type selects how data is forwarded from Fifo to SPU RAM:<br/>
+<div class="highlight"><pre><span></span><code>  __Transfer Type___Halfwords in Fifo________Halfwords written to SPU RAM__
+  0,1,6,7  Fill     A,B,C,D,E,F,G,H,...,X    X,X,X,X,X,X,X,X,...
+  2        Normal   A,B,C,D,E,F,G,H,...,X    A,B,C,D,E,F,G,H,...
+  3        Rep2     A,B,C,D,E,F,G,H,...,X    A,A,C,C,E,E,G,G,...
+  4        Rep4     A,B,C,D,E,F,G,H,...,X    A,A,A,A,E,E,E,E,...
+  5        Rep8     A,B,C,D,E,F,G,H,...,X    H,H,H,H,H,H,H,H,...
+</code></pre></div>
+Rep2 skips the 2nd halfword, Rep4 skips 2nd..4th, Rep8 skips 1st..7th.<br/>
+Fill uses only the LAST halfword in Fifo, that might be useful for memfill
+purposes, although, the length is probably determined by the number of writes
+to the Fifo (?) so one must still issue writes for ALL halfwords...?<br/>
+Note:<br/>
+The above rather bizarre results apply to WRITE mode. In READ mode, the
+register causes the same halfword to be read 2/4/8 times (for rep2/4/8).<br/></p>
+<h4 id="spu-ram-manual-write">SPU RAM Manual Write</h4>
+<ul>
+<li>Be sure that [1F801DACh] is set to 0004h<br/></li>
+<li>Set SPUCNT to "Stop" (and wait until it is applied in SPUSTAT)<br/></li>
+<li>Set the transfer address<br/></li>
+<li>Write 1..32 halfword(s) to the Fifo<br/></li>
+<li>Set SPUCNT to "Manual Write" (and wait until it is applied in SPUSTAT)<br/></li>
+<li>Wait until Transfer Busy in SPUSTAT goes off (that, AFTER above apply-wait)<br/>
+For multi-block transfers: Repeat the above last three steps (that is rarely
+done by any games, but it is done by the BIOS intro; observe that waiting for
+SPUCNT writes being applied in SPUSTAT won't work in that case (since SPUCNT
+was already in manual write mode from previous block), so one must instead use
+some hardcoded delay of at least 300h cycles; the BIOS is using a much longer
+bizarre delay though).<br/></li>
+</ul>
+<h4 id="spu-ram-dma-write">SPU RAM DMA-Write</h4>
+<ul>
+<li>Be sure that [1F801DACh] is set to 0004h<br/></li>
+<li>Set SPUCNT to "Stop" (and wait until it is applied in SPUSTAT)<br/></li>
+<li>Set the transfer address<br/></li>
+<li>Set SPUCNT to "DMA Write" (and wait until it is applied in SPUSTAT)<br/></li>
+<li>Start DMA4 at CPU Side (blocksize=10h, control=01000201h)<br/></li>
+<li>Wait until DMA4 finishes (at CPU side)<br/></li>
+</ul>
+<h4 id="spu-ram-manual-read">SPU RAM Manual-Read</h4>
+<p>As by now, there's no known method for reading SPU RAM without using DMA.<br/></p>
+<h4 id="spu-ram-dma-read-stable-reading-with-1f801014hbit24-27-nonzero">SPU RAM DMA-Read (stable reading, with [1F801014h].bit24-27 = nonzero)</h4>
+<ul>
+<li>Be sure that [1F801014h] is set to 220931E1h (bit24-27 MUST be nonzero)<br/></li>
+<li>Be sure that [1F801DACh] is set to 0004h<br/></li>
+<li>Set SPUCNT to "Stop" (and wait until it is applied in SPUSTAT)<br/></li>
+<li>Set the transfer address<br/></li>
+<li>Set SPUCNT to "DMA Read" (and wait until it is applied in SPUSTAT)<br/></li>
+<li>Start DMA4 at CPU Side (blocksize=10h, control=01000200h)<br/></li>
+<li>Wait until DMA4 finishes (at CPU side)<br/></li>
+</ul>
+<h4 id="spu-ram-dma-read-unstable-reading-with-1f801014hbit24-27-zero">SPU RAM DMA-Read (unstable reading, with [1F801014h].bit24-27 = zero)</h4>
+<p>Below describes some dirt effects and some trickery to get around those dirt
+effects.<br/>
+<div class="highlight"><pre><span></span><code>  Below problems (and workarounds) apply ONLY if [1F801014h].bit24-27 = zero.
+  Ie. below info describes what happens when [1F801014h] is mis-initialized.
+  Normally one should set [1F801014h]=220931E1h (and can ignore below info).
+</code></pre></div>
+With [1F801014h].bit24-27=zero, reading SPU RAM via DMA works glitchy:<br/>
+The first received halfword within each block is FFFFh. So with a DMA blocksize
+of 10h words (=20h halfwords), the following is received:<br/>
+<div class="highlight"><pre><span></span><code>  1st block:   FFFFh, halfwords[00h..1Eh]
+  2nd block:   FFFFh, halfwords[20h..3Eh]
+  etc.
+</code></pre></div>
+that'd theoretically match the SPU Fifo Size, but, because of the inserted
+FFFFh value, the last Fifo entry isn't received, ie. halfword[1Fh,3Fh] are
+lost. As a workaround, one can increase the DMA blocksize to 11h words, and
+then the following is received:<br/>
+<div class="highlight"><pre><span></span><code>  1st block:   FFFFh, halfwords[00h..1Eh], twice halfword[1Fh]
+  2nd block:   FFFFh, halfwords[20h..3Eh], twice halfword[3Fh]
+  etc.
+</code></pre></div>
+this time, all data is received, but after the transfer one must still remove
+the FFFFh values, and the duplicated halfwords by software. Aside from the
+\&lt;inserted> FFFFh values there are occassionaly some unstable halfwords
+ORed by FFFFh (or ORed by other garbage values), this can be fixed by using
+"rep2" mode, which does then receive:<br/>
+<div class="highlight"><pre><span></span><code>  1st block:   FFFFh, halfwords[00h,00h,..0Eh,0Eh], triple halfword[0Fh]
+  2nd block:   FFFFh, halfwords[10h,10h,..1Eh,1Eh], triple halfword[1Fh]
+  etc.
+</code></pre></div>
+again, remove the first halfword (FFFFh) and the last halfword, and, take the
+duplicated halfwords ANDed together. Unstable values occur only every 32
+halfwords or so (probably when the SPU is simultaneously reading ADPCM data),
+but do never occur on two continous halfwords, so, even if one halfword was
+ORed by garbage, the other halfword is always correct, and the result of the
+ANDed halfwords is 100% stable.<br/>
+Note: The unstable reading does NOT occur always, when resetting the PSX a
+couple of times it does occassionally boot-up with totally stable reading,
+since there is no known way to activate the stable "mode" via I/O ports, the
+stable/unstable behaviour does eventually depend on internal clock
+dividers/multipliers, and whether they are starting in sync with the CPU or
+not.<br/>
+Caution: The "rep2" trick cannot be used in combination with reverb (reverb
+seems to be using the Port 1F801DACh Sound RAM Data Transfer Control, too).<br/></p>
+<h2 id="spu-interrupt">SPU Interrupt</h2>
+<h4 id="1f801da4h-sound-ram-irq-address-irq9">1F801DA4h - Sound RAM IRQ Address (IRQ9)</h4>
+<p><div class="highlight"><pre><span></span><code>  15-0  Address in sound buffer divided by eight
+</code></pre></div>
+See also: SPUCNT (IRQ enable/disable/acknowledge) and SPUSTAT (IRQ flag).<br/></p>
+<h4 id="voice-interrupt">Voice Interrupt</h4>
+<p>Triggers an IRQ when a voice reads ADPCM data from the IRQ address.<br/>
+Mind that ADPCM cannot be stopped (uh, except, probably they CAN be stopped, by
+setting the sample rate to zero?), all voices are permanently reading data from
+SPU RAM - even in Noise mode, even if the Voice Volume is zero, and even if the
+ADSR pattern has finished the Release period - so even inaudible voices can
+trigger IRQs. To prevent unwanted IRQs, best set all unused voices to an
+endless looped dummy ADPCM block.<br/>
+For stable IRQs, the IRQ address should be aligned to the 16-byte ADPCM blocks.
+If if the IRQ address is in the middle of a 16-byte ADPCM block, then the IRQ
+doesn't seem to trigger always (unknown why, but it seems to occassionally miss
+IRQs, even if the block gets repeated several times).<br/></p>
+<h4 id="capture-interrupt">Capture Interrupt</h4>
+<p>Setting the IRQ address to 0000h..01FFh (aka byte address 00000h..00FFFh) will
+trigger IRQs on writes to the four capture buffers. Each of the four buffers
+contains 400h bytes (=200h samples), so the IRQ rate will be around 86.13Hz
+(44100Hz/200h).<br/>
+CD-Audio capture is always active (even CD-Audio output is disabld in SPUCNT,
+and even if the drive door is open). Voice capture is (probably) also always
+active (even if the corresponding voice is off).<br/>
+Capture IRQs do NOT occur if 1F801DACh.bit3-2 are both zero.<br/></p>
+<h4 id="reverb-interrupt">Reverb Interrupt</h4>
+<p>Reverb is also triggering interrupts if the IRQ address is located in the
+reverb buffer area. Unknown \&lt;which> of the various reverb read(s) and/or
+reverb write(s) are triggering interrupts.<br/></p>
+<h4 id="data-transfers">Data Transfers</h4>
+<p>Data Transfers (usually via DMA4) to/from SPU-RAM do also trap SPU interrupts.<br/></p>
+<h4 id="note_1">Note</h4>
+<p>The IRQ Address is used in the following games (not exhaustive):
+Metal Gear Solid: Dialogue and Konami intro.
+Legend of Mana
+Hercules: the memory card loading screen's lip sync.
+Tokimeki Memorial 2
+Crash Team Racing: Lip sync, requires capture buffers.
+The Misadventures of Tron Bonne: Dialogues.
+Need For Speed 3: (somewhat?).<br/></p>
+<h2 id="spu-reverb-registers">SPU Reverb Registers</h2>
+<h4 id="reverb-volume-and-address-registers-rw">Reverb Volume and Address Registers (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  Port      Reg   Name    Type    Expl.
+  1F801D84h spu   vLOUT   volume  Reverb Output Volume Left
+  1F801D86h spu   vROUT   volume  Reverb Output Volume Right
+  1F801DA2h spu   mBASE   base    Reverb Work Area Start Address in Sound RAM
+  1F801DC0h rev00 dAPF1   disp    Reverb APF Offset 1
+  1F801DC2h rev01 dAPF2   disp    Reverb APF Offset 2
+  1F801DC4h rev02 vIIR    volume  Reverb Reflection Volume 1
+  1F801DC6h rev03 vCOMB1  volume  Reverb Comb Volume 1
+  1F801DC8h rev04 vCOMB2  volume  Reverb Comb Volume 2
+  1F801DCAh rev05 vCOMB3  volume  Reverb Comb Volume 3
+  1F801DCCh rev06 vCOMB4  volume  Reverb Comb Volume 4
+  1F801DCEh rev07 vWALL   volume  Reverb Reflection Volume 2
+  1F801DD0h rev08 vAPF1   volume  Reverb APF Volume 1
+  1F801DD2h rev09 vAPF2   volume  Reverb APF Volume 2
+  1F801DD4h rev0A mLSAME  src/dst Reverb Same Side Reflection Address 1 Left
+  1F801DD6h rev0B mRSAME  src/dst Reverb Same Side Reflection Address 1 Right
+  1F801DD8h rev0C mLCOMB1 src     Reverb Comb Address 1 Left
+  1F801DDAh rev0D mRCOMB1 src     Reverb Comb Address 1 Right
+  1F801DDCh rev0E mLCOMB2 src     Reverb Comb Address 2 Left
+  1F801DDEh rev0F mRCOMB2 src     Reverb Comb Address 2 Right
+  1F801DE0h rev10 dLSAME  src     Reverb Same Side Reflection Address 2 Left
+  1F801DE2h rev11 dRSAME  src     Reverb Same Side Reflection Address 2 Right
+  1F801DE4h rev12 mLDIFF  src/dst Reverb Different Side Reflect Address 1 Left
+  1F801DE6h rev13 mRDIFF  src/dst Reverb Different Side Reflect Address 1 Right
+  1F801DE8h rev14 mLCOMB3 src     Reverb Comb Address 3 Left
+  1F801DEAh rev15 mRCOMB3 src     Reverb Comb Address 3 Right
+  1F801DECh rev16 mLCOMB4 src     Reverb Comb Address 4 Left
+  1F801DEEh rev17 mRCOMB4 src     Reverb Comb Address 4 Right
+  1F801DF0h rev18 dLDIFF  src     Reverb Different Side Reflect Address 2 Left
+  1F801DF2h rev19 dRDIFF  src     Reverb Different Side Reflect Address 2 Right
+  1F801DF4h rev1A mLAPF1  src/dst Reverb APF Address 1 Left
+  1F801DF6h rev1B mRAPF1  src/dst Reverb APF Address 1 Right
+  1F801DF8h rev1C mLAPF2  src/dst Reverb APF Address 2 Left
+  1F801DFAh rev1D mRAPF2  src/dst Reverb APF Address 2 Right
+  1F801DFCh rev1E vLIN    volume  Reverb Input Volume Left
+  1F801DFEh rev1F vRIN    volume  Reverb Input Volume Right
+</code></pre></div>
+All volume registers are signed 16bit (range -8000h..+7FFFh).<br/>
+All src/dst/disp/base registers are addresses in SPU memory (divided by 8),
+src/dst are relative to the current buffer address, the disp registers are
+relative to src registers, the base register defines the start address of the
+reverb buffer (the end address is fixed, at 7FFFEh). Writing a value to mBASE
+does additionally set the current buffer address to that value.<br/></p>
+<h4 id="1f801d98h-voice-023-reverb-mode-aka-echo-on-eon-rw">1F801D98h - Voice 0..23 Reverb mode aka Echo On (EON) (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-23  Voice 0..23 Destination (0=To Mixer, 1=To Mixer and to Reverb)
+  24-31 Not used
+</code></pre></div>
+Sets reverb for the channel. As soon as the sample ends, the reverb for that
+channel is turned off... that's fine, but WHEN does it end?<br/>
+In Reverb mode, the voice seems to output BOTH normal (immediately) AND via
+Reverb (delayed).<br/></p>
+<h4 id="reverb-bits-in-spucnt-register-rw">Reverb Bits in SPUCNT Register (R/W)</h4>
+<p>The SPUCNT register contains a Reverb Master Enable flag, and Reverb Enable
+flags for External Audio input and CD Audio input.<br/>
+When the Reverb Master Enable flag is cleared, the SPU stops to write any data
+to the Reverb buffer (that is useful when zero-filling the reverb buffer;
+ensuring that already-zero values aren't overwritten by still-nonzero values).<br/>
+However, the Reverb Master Enable flag does not disable output from Reverb
+buffer to the speakers (that might be useful to output uncompressed 22050Hz
+samples) (otherwise, to disable the buffer output, set the Reverb Output volume
+to zero and/or zerofill the reverb buffer).<br/></p>
+<h2 id="spu-reverb-formula">SPU Reverb Formula</h2>
+<h4 id="reverb-formula">Reverb Formula</h4>
+<div class="highlight"><pre><span></span><code>  ___Input from Mixer (Input volume multiplied with incoming data)_____________
+  Lin = vLIN * LeftInput    ;from any channels that have Reverb enabled
+  Rin = vRIN * RightInput   ;from any channels that have Reverb enabled
+  ____Same Side Reflection (left-to-left and right-to-right)___________________
+  [mLSAME] = (Lin + [dLSAME]*vWALL - [mLSAME-2])*vIIR + [mLSAME-2]  ;L-to-L
+  [mRSAME] = (Rin + [dRSAME]*vWALL - [mRSAME-2])*vIIR + [mRSAME-2]  ;R-to-R
+  ___Different Side Reflection (left-to-right and right-to-left)_______________
+  [mLDIFF] = (Lin + [dRDIFF]*vWALL - [mLDIFF-2])*vIIR + [mLDIFF-2]  ;R-to-L
+  [mRDIFF] = (Rin + [dLDIFF]*vWALL - [mRDIFF-2])*vIIR + [mRDIFF-2]  ;L-to-R
+  ___Early Echo (Comb Filter, with input from buffer)__________________________
+  Lout=vCOMB1*[mLCOMB1]+vCOMB2*[mLCOMB2]+vCOMB3*[mLCOMB3]+vCOMB4*[mLCOMB4]
+  Rout=vCOMB1*[mRCOMB1]+vCOMB2*[mRCOMB2]+vCOMB3*[mRCOMB3]+vCOMB4*[mRCOMB4]
+  ___Late Reverb APF1 (All Pass Filter 1, with input from COMB)________________
+  Lout=Lout-vAPF1*[mLAPF1-dAPF1], [mLAPF1]=Lout, Lout=Lout*vAPF1+[mLAPF1-dAPF1]
+  Rout=Rout-vAPF1*[mRAPF1-dAPF1], [mRAPF1]=Rout, Rout=Rout*vAPF1+[mRAPF1-dAPF1]
+  ___Late Reverb APF2 (All Pass Filter 2, with input from APF1)________________
+  Lout=Lout-vAPF2*[mLAPF2-dAPF2], [mLAPF2]=Lout, Lout=Lout*vAPF2+[mLAPF2-dAPF2]
+  Rout=Rout-vAPF2*[mRAPF2-dAPF2], [mRAPF2]=Rout, Rout=Rout*vAPF2+[mRAPF2-dAPF2]
+  ___Output to Mixer (Output volume multiplied with input from APF2)___________
+  LeftOutput  = Lout*vLOUT
+  RightOutput = Rout*vROUT
+  ___Finally, before repeating the above steps_________________________________
+  BufferAddress = MAX(mBASE, (BufferAddress+2) AND 7FFFEh)
+  Wait one 22050Hz cycle, then repeat the above stuff
+</code></pre></div>
+<h4 id="notes">Notes</h4>
+<p>The values written to memory are saturated to -8000h..+7FFFh.<br/>
+The multiplication results are divided by +8000h, to fit them to 16bit range.<br/>
+All memory addresses are relative to the current BufferAddress, and wrapped
+within mBASE..7FFFEh when exceeding that region.<br/>
+All data in the Reverb buffer consists of signed 16bit samples. The Left and
+Right Reverb Buffer addresses should be choosen so that one half of the buffer
+contains Left samples, and the other half Right samples (ie. the data is
+L,L,L,L,... R,R,R,R,...; it is NOT interlaced like L,R,L,R,...), during
+operation, when the buffer address increases, the Left half will overwrite the
+older samples of the Right half, and vice-versa.<br/>
+The reverb hardware spends one 44100h cycle on left calculations, and the next
+44100h cycle on right calculations (unlike as shown in the above formula, where
+left/right are shown simultaneously at 22050Hz).<br/></p>
+<h4 id="reverb-disable">Reverb Disable</h4>
+<p>SPUCNT.bit7 disables writes to reverb buffer, but reads from reverb buffer do
+still occur. If vAPF2 is zero then it does simply read "Lout=[mLAPF2-dAPF2]"
+and "Rout=[mRAPF2-dAPF2]". If vAPF2 is nonzero then it does additionally use
+data from APF1, if vAPF1 and vAPF2 are both nonzero then it's also using data
+from COMB. However, the SAME/DIFF stages aren't used when reverb is disabled.<br/></p>
+<h4 id="bug">Bug</h4>
+<p>vIIR works only in range -7FFFh..+7FFFh. When set to -8000h, the multiplication
+by -8000h is still done correctly, but, the final result (the value written to
+memory) gets negated (this is a pretty strange feature, it is NOT a simple
+overflow bug, it does affect the "+[mLSAME-2]" addition; although that part
+normally shouldn't be affected by the "*vIIR" multiplication). Similar effects
+might (?) occur on some other volume registers when they are set to -8000h.<br/></p>
+<h4 id="speed-of-sound">Speed of Sound</h4>
+<p>The speed of sound is circa 340 meters per second (in dry air, at room
+temperature). For example, a voice that travels to a wall at 17 meters
+distance, and back to its origin, should have a delay of 0.1 seconds.<br/></p>
+<h4 id="reverb-buffer-resampling">Reverb Buffer Resampling</h4>
+<p>Input and output to/from the reverb unit is resampled using a 39-tap FIR filter
+with the following coefficients. <br/></p>
+<div class="highlight"><pre><span></span><code> -0001h,  0000h,  0002h,  0000h, -000Ah,  0000h,  0023h,  0000h,
+ -0067h,  0000h,  010Ah,  0000h, -0268h,  0000h,  0534h,  0000h,
+ -0B90h,  0000h,  2806h,  4000h,  2806h,  0000h, -0B90h,  0000h,
+  0534h,  0000h, -0268h,  0000h,  010Ah,  0000h, -0067h,  0000h,
+  0023h,  0000h, -000Ah,  0000h,  0002h,  0000h, -0001h,
+</code></pre></div>
+<h2 id="spu-reverb-examples">SPU Reverb Examples</h2>
+<h4 id="reverb-examples">Reverb Examples</h4>
+<p>Below are some Reverb examples, showing the required memory size (ie. set Port
+1F801DA2h to "(80000h-size)/8"), and the Reverb register settings for Port
+1F801DC0h..1F801DFFh, ie. arranged like so:<br/>
+<div class="highlight"><pre><span></span><code>  dAPF1  dAPF2  vIIR   vCOMB1 vCOMB2  vCOMB3  vCOMB4  vWALL   ;1F801DC0h..CEh
+  vAPF1  vAPF2  mLSAME mRSAME mLCOMB1 mRCOMB1 mLCOMB2 mRCOMB2 ;1F801DD0h..DEh
+  dLSAME dRSAME mLDIFF mRDIFF mLCOMB3 mRCOMB3 mLCOMB4 mRCOMB4 ;1F801DE0h..EEh
+  dLDIFF dRDIFF mLAPF1 mRAPF1 mLAPF2  mRAPF2  vLIN    vRIN    ;1F801DF0h..FEh
+</code></pre></div>
+Also, don't forget to initialize Port 1F801D84h, 1F801D86h, 1F801D98h, and
+SPUCNT, and to zerofill the Reverb Buffer (so that no garbage values are output
+when activating reverb). For whatever reason, one MUST also initialize Port
+1F801DACh (otherwise reverb stays off).<br/></p>
+<h4 id="room-size26c0h-bytes">Room (size=26C0h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  007Dh,005Bh,6D80h,54B8h,BED0h,0000h,0000h,BA80h
+  5800h,5300h,04D6h,0333h,03F0h,0227h,0374h,01EFh
+  0334h,01B5h,0000h,0000h,0000h,0000h,0000h,0000h
+  0000h,0000h,01B4h,0136h,00B8h,005Ch,8000h,8000h
+</code></pre></div>
+<h4 id="studio-small-size1f40h-bytes">Studio Small (size=1F40h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  0033h,0025h,70F0h,4FA8h,BCE0h,4410h,C0F0h,9C00h
+  5280h,4EC0h,03E4h,031Bh,03A4h,02AFh,0372h,0266h
+  031Ch,025Dh,025Ch,018Eh,022Fh,0135h,01D2h,00B7h
+  018Fh,00B5h,00B4h,0080h,004Ch,0026h,8000h,8000h
+</code></pre></div>
+<h4 id="studio-medium-size4840h-bytes">Studio Medium (size=4840h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  00B1h,007Fh,70F0h,4FA8h,BCE0h,4510h,BEF0h,B4C0h
+  5280h,4EC0h,0904h,076Bh,0824h,065Fh,07A2h,0616h
+  076Ch,05EDh,05ECh,042Eh,050Fh,0305h,0462h,02B7h
+  042Fh,0265h,0264h,01B2h,0100h,0080h,8000h,8000h
+</code></pre></div>
+<h4 id="studio-large-size6fe0h-bytes">Studio Large (size=6FE0h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  00E3h,00A9h,6F60h,4FA8h,BCE0h,4510h,BEF0h,A680h
+  5680h,52C0h,0DFBh,0B58h,0D09h,0A3Ch,0BD9h,0973h
+  0B59h,08DAh,08D9h,05E9h,07ECh,04B0h,06EFh,03D2h
+  05EAh,031Dh,031Ch,0238h,0154h,00AAh,8000h,8000h
+</code></pre></div>
+<h4 id="hall-sizeade0h-bytes">Hall (size=ADE0h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  01A5h,0139h,6000h,5000h,4C00h,B800h,BC00h,C000h
+  6000h,5C00h,15BAh,11BBh,14C2h,10BDh,11BCh,0DC1h
+  11C0h,0DC3h,0DC0h,09C1h,0BC4h,07C1h,0A00h,06CDh
+  09C2h,05C1h,05C0h,041Ah,0274h,013Ah,8000h,8000h
+</code></pre></div>
+<h4 id="half-echo-size3c00h-bytes">Half Echo (size=3C00h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  0017h,0013h,70F0h,4FA8h,BCE0h,4510h,BEF0h,8500h
+  5F80h,54C0h,0371h,02AFh,02E5h,01DFh,02B0h,01D7h
+  0358h,026Ah,01D6h,011Eh,012Dh,00B1h,011Fh,0059h
+  01A0h,00E3h,0058h,0040h,0028h,0014h,8000h,8000h
+</code></pre></div>
+<h4 id="space-echo-sizef6c0h-bytes">Space Echo (size=F6C0h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  033Dh,0231h,7E00h,5000h,B400h,B000h,4C00h,B000h
+  6000h,5400h,1ED6h,1A31h,1D14h,183Bh,1BC2h,16B2h
+  1A32h,15EFh,15EEh,1055h,1334h,0F2Dh,11F6h,0C5Dh
+  1056h,0AE1h,0AE0h,07A2h,0464h,0232h,8000h,8000h
+</code></pre></div>
+<h4 id="chaos-echo-almost-infinite-size18040h-bytes">Chaos Echo (almost infinite) (size=18040h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  0001h,0001h,7FFFh,7FFFh,0000h,0000h,0000h,8100h
+  0000h,0000h,1FFFh,0FFFh,1005h,0005h,0000h,0000h
+  1005h,0005h,0000h,0000h,0000h,0000h,0000h,0000h
+  0000h,0000h,1004h,1002h,0004h,0002h,8000h,8000h
+</code></pre></div>
+<h4 id="delay-one-shot-echo-size18040h-bytes">Delay (one-shot echo) (size=18040h bytes)</h4>
+<div class="highlight"><pre><span></span><code>  0001h,0001h,7FFFh,7FFFh,0000h,0000h,0000h,0000h
+  0000h,0000h,1FFFh,0FFFh,1005h,0005h,0000h,0000h
+  1005h,0005h,0000h,0000h,0000h,0000h,0000h,0000h
+  0000h,0000h,1004h,1002h,0004h,0002h,8000h,8000h
+</code></pre></div>
+<h4 id="reverb-off-size10h-dummy-bytes">Reverb off (size=10h dummy bytes)</h4>
+<p><div class="highlight"><pre><span></span><code>  0000h,0000h,0000h,0000h,0000h,0000h,0000h,0000h
+  0000h,0000h,0001h,0001h,0001h,0001h,0001h,0001h
+  0000h,0000h,0001h,0001h,0001h,0001h,0001h,0001h
+  0000h,0000h,0001h,0001h,0001h,0001h,0000h,0000h
+</code></pre></div>
+Note that the memory offsets should be 0001h here (not 0000h), otherwise
+zerofilling the reverb buffer seems to fail (maybe because zero memory offsets
+somehow cause the fill-value to mixed with the old value or so; that appears
+even when reverb master enable is zero). Also, when not using reverb, Port
+1F801D84h, 1F801D86h, 1F801D98h, and the SPUCNT reverb bits should be set to
+zero.<br/></p>
+<h2 id="spu-unknown-registers">SPU Unknown Registers</h2>
+<h4 id="1f801da0h-some-kind-of-a-read-only-status-register-or-just-garbage">1F801DA0h - Some kind of a read-only status register.. or just garbage..?</h4>
+<p><div class="highlight"><pre><span></span><code>  0-15 Unknown?
+</code></pre></div>
+Usually 9D78h, occassionaly changes to 17DAh or 108Eh for a short moment.<br/>
+Other day: Usually 9CF8h, or occassionally 9CFAh.<br/>
+Another day: Usually 0000h, or occassionally 4000h.<br/></p>
+<h4 id="1f801dbch-4-bytes-unknown-rw">1F801DBCh - 4 bytes - Unknown? (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  80 21 4B DF
+</code></pre></div>
+Other day (dots = same as above):<br/>
+<div class="highlight"><pre><span></span><code>  .. 31 .. ..
+</code></pre></div></p>
+<h4 id="1f801e60h-32-bytes-unknown-rw">1F801E60h - 32 bytes - Unknown? (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  7E 61 A9 96 47 39 F9 1E E1 E1 80 DD E8 17 7F FB
+  FB BF 1D 6C 8F EC F3 04 06 23 89 45 C1 6D 31 82
+</code></pre></div>
+Other day (dots = same as above):<br/>
+<div class="highlight"><pre><span></span><code>  .. .. .. .. .. .. .. .. .. .. .. .. .. .. 7B ..
+  .. .. .. .. .. .. .. .. 04 .. .. .. .. .. .. 86
+</code></pre></div></p>
+<p>The bytes at 1F801DBCh and 1F801E60h usually have the above values on
+cold-boot. The registers are read/write-able, although writing any values to
+them doesn't seem to have any effect on sound output. Also, the SPU doesn't
+seem to modify the registers at any time during sound output, nor reverb
+calculations, nor activated external audio input... the registers seem to be
+just some kind of general-purpose RAM.<br/></p>
+<h2 id="spu-internal-state-machine-from-spu-ram-timing">SPU Internal State Machine from SPU RAM Timing</h2>
+<h3 id="introduction">Introduction</h3>
+<p>The 33.8 Mhz clock of the PSX is a well chosen value.
+It is exactly 768 x 44.1 Khz = For each audio sample in CD quality, there are 768 cycles of system clock.
+So, the state machine has to repeat its complete cycle every 768 system clock cycles.</p>
+<p>Now the full job to do within those 768 cycles:
+- 24 channels to process.
+- Reverb to compute and write back.
+- Write back to voice 1 / 3, audio CD L/R.
+- Do transfer from/to CPU bus of SPU RAM data if asked.</p>
+<h3 id="first-look-at-the-data-from-logic-analyzer">First look at the data from logic analyzer.</h3>
+<p>By looking at the signal of the SPU RAM chip, it is possible to figure out what it is reading and writing.
+- A read or a write to the SPU Ram is happening in 8 clock cycles. (Did not check in detail, but probably allow refresh and everything)
+- Each channel is using 24 cycles. (3 operations of 8 cycles)
+  - Has TWO read for the current ADPCM block : one to the header of the currently played ADPCM block, one to the current 16 bit of the ADPCM.
+  - A unrelated READ (see later)
+- 8 Cycle for each operation : WRITE CD Left, WRITE CD Right, Voice 1 WRITE, Voice 3 WRITE.
+- Reverb operations : 14 memory operations of 8 cycles.</p>
+<h3 id="sequence-of-work">Sequence of work</h3>
+<p>When doing the analysis from data, it is possible to figure out what are the operations, in what order they are done.
+But it is not possible to figure out what is the FIRST operation in the loop.
+So we arbitrarely decide to start the loop at 'Voice 1' (voice being from 1 to 24).</p>
+<ul>
+<li>Voice 1</li>
+<li>Write CD Left</li>
+<li>Write CD Right</li>
+<li>Write Voice 1</li>
+<li>Write Voice 3</li>
+<li>Reverb</li>
+<li>Voice 2</li>
+<li>Voice 3</li>
+<li>Voice 4</li>
+<li>...</li>
+<li>...</li>
+<li>Voice 23</li>
+<li>Voice 24</li>
+</ul>
+<p>As written earlier, each Voice is 3x RAM access (one unrelated), reverb is 14x RAM access, then 4x RAM access for the all write.</p>
+<h3 id="what-we-can-guess-from-those-information">What we can guess from those information.</h3>
+<ul>
+<li>If system wants to keep reverb done in the end, and write in sync against Voice 1 and 3, then the loop would most likely start at Voice 2.</li>
+<li>ADPCM decoder has to keep ADPCM decoder internal state about the samples. As the algorithm depends on the previous value inside a block, it can't do a direct access to a given sample in the block.</li>
+<li>We also understand how reverb is using 22 Khz because of the lack of bandwidth to do everything in 768 cycles if done at 44.1 Khz.</li>
+<li>Even when voices are not active, they always read something. It is possible to guess that the sample is simply ignored at some point in the data path (volume set to zero internally or mux not selecting the value). Interestingly, it may be possible if garbage is introduced in those read, to know how it is cancelled (enabling suddenly the channel and reading the sample out of the channel 1 or 3) -&gt; DSP keeps history of sample for Gaussian Interpolation.</li>
+</ul>
+<h3 id="reverb-computation-order">Reverb Computation Order</h3>
+<p><div class="highlight"><pre><span></span><code>             [Left Side]        [Right Side]
+READ REVERB   dLSame            dRSame
+READ REVERB   mLSame-1          mRSame-1
+READ REVERB   dRDiff            dLDiff
+XXXX REVERB   mLSame            mRSame          &lt;-- WRITE becomes READ if REVERB DISABLED.
+READ REVERB   mLDiff-1          mRDiff-1
+READ REVERB   mLComb1           mRComb1
+XXXX REVERB   mLDiff            mRDiff          &lt;-- WRITE becomes READ if REVERB DISABLED.
+READ REVERB   mLComb2           mRComb2
+READ REVERB   mLComb3           mRComb3
+READ REVERB   mLComb4           mRComb4
+READ REVERB   mLAPF1 - dAPF1    mRAPF1 - dAPF1
+READ REVERB   mLAPF2 - dAPF2    mRAPF2 - dAPF2
+XXXX REVERB   mLAPF1            mRAPF1          &lt;-- WRITE becomes READ if REVERB DISABLED.
+XXXX REVERB   mLAPF2            mRAPF2          &lt;-- WRITE becomes READ if REVERB DISABLED.
+</code></pre></div>
+We anticipate that the easiest way in hardware to disable/enable the REVERB function would be to switch those WRITE into READ.</p>
+<h3 id="voices_1">Voices</h3>
+<div class="highlight"><pre><span></span><code>Read Header word in current ADPCM block.
+Read Current Sample 16 bit word in current ADPCM block.
+Read [UNRELATED ADR ? Not related to current block...]
+</code></pre></div>
+<h3 id="notes_1">Notes</h3>
+<ul>
+<li>Remaining cycles.</li>
+<li>With 24x8 + 4x8 + 14x8 = 720 cycles out of 768 cycles.</li>
+<li>That would mean 6 READ/WRITE should still be possible.</li>
+<li>UNRELATED READ in voices : probably used for transfer from [CPU-&gt;SPU RAM] or [SPU RAM-&gt;CPU]</li>
+<li>That would equate to a transfer performance of 24 x 2 byte x 44100 Khz = 2,116,800 bytes/sec</li>
+<li>The fixed READ timing would explain also why CPU can't read directly SPU RAM. As the SPU need to be the master to push the data.</li>
+<li>It only works with DMA waiting for the data to be sent.</li>
+</ul>
+<p>Everything is not fully clear yet, testing of SPU with proper tests to validate/invalidate various assumption.
+Our finding are based on a logic analyzer log using the PSX boot sounds, knowing the values of the registers thanks to emulators.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>

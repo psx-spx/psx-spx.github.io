@@ -1,0 +1,2318 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/geometrytransformationenginegte/">
+      
+      
+        <link rel="prev" href="../graphicsprocessingunitgpu/">
+      
+      
+        <link rel="next" href="../macroblockdecodermdec/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>Geometry Transformation Engine (GTE) - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#geometry-transformation-engine-gte" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Geometry Transformation Engine (GTE)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        I/O Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Geometry Transformation Engine (GTE)
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Geometry Transformation Engine (GTE)
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gte-overview" class="md-nav__link">
+    GTE Overview
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gte-operation" class="md-nav__link">
+    GTE Operation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-load-delay-slots" class="md-nav__link">
+    GTE Load Delay Slots
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-command-encoding-cop2-imm25-opcodes" class="md-nav__link">
+    GTE Command Encoding (COP2 imm25 opcodes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-data-register-summary-cop2r0-31" class="md-nav__link">
+    GTE Data Register Summary (cop2r0-31)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-control-register-summary-cop2r32-63" class="md-nav__link">
+    GTE Control Register Summary (cop2r32-63)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-registers" class="md-nav__link">
+    GTE Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#matrix-registers" class="md-nav__link">
+    Matrix Registers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#translation-vector-tr-input-rw" class="md-nav__link">
+    Translation Vector (TR) (Input, R/W?)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#background-color-bk-input-rw" class="md-nav__link">
+    Background Color (BK) (Input?, R/W?)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#far-color-fc-input-rw" class="md-nav__link">
+    Far Color (FC) (Input?) (R/W?)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screen-offset-and-distance-input-rw" class="md-nav__link">
+    Screen Offset and Distance (Input, R/W?)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#average-z-registers-zsf3zsf4input-rw-otzresult-r" class="md-nav__link">
+    Average Z Registers (ZSF3/ZSF4=Input, R/W?) (OTZ=Result, R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screen-xyz-coordinate-fifos" class="md-nav__link">
+    Screen XYZ Coordinate FIFOs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16bit-vectors-rw" class="md-nav__link">
+    16bit Vectors (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color-register-and-color-fifo" class="md-nav__link">
+    Color Register and Color FIFO
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpolation-factor" class="md-nav__link">
+    Interpolation Factor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xx" class="md-nav__link">
+    XX...
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xx_1" class="md-nav__link">
+    XX...
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r28-irgb-color-conversion-input-rw" class="md-nav__link">
+    cop2r28 - IRGB - Color conversion Input (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r29-orgb-color-conversion-output-r" class="md-nav__link">
+    cop2r29 - ORGB - Color conversion Output (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r30-lzcs-count-leading-bits-source-data-rw" class="md-nav__link">
+    cop2r30 - LZCS - Count Leading Bits Source data (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r31-lzcr-count-leading-bits-result-r" class="md-nav__link">
+    cop2r31 - LZCR - Count Leading Bits Result (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r63-cnt31-flag-returns-any-calculation-errors" class="md-nav__link">
+    cop2r63 (cnt31) - FLAG - Returns any calculation errors.
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-saturation" class="md-nav__link">
+    GTE Saturation
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Saturation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop2r63-cnt31-flag-returns-any-calculation-errors_1" class="md-nav__link">
+    cop2r63 (cnt31) - FLAG - Returns any calculation errors.
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-opcode-summary" class="md-nav__link">
+    GTE Opcode Summary
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Opcode Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gte-command-summary-sorted-by-real-opcode-bits-bit0-5" class="md-nav__link">
+    GTE Command Summary (sorted by Real Opcode bits) (bit0-5)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-command-summary-sorted-by-fake-opcode-bits-bit20-24" class="md-nav__link">
+    GTE Command Summary (sorted by Fake Opcode bits) (bit20-24)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-functions" class="md-nav__link">
+    Additional Functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-coordinate-calculation-commands" class="md-nav__link">
+    GTE Coordinate Calculation Commands
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Coordinate Calculation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0180001h-15-cycles-rtps-perspective-transformation-single" class="md-nav__link">
+    COP2 0180001h - 15 Cycles - RTPS - Perspective Transformation (single)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0280030h-23-cycles-rtpt-perspective-transformation-triple" class="md-nav__link">
+    COP2 0280030h - 23 Cycles - RTPT - Perspective Transformation (triple)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-1400006h-8-cycles-nclip-normal-clipping" class="md-nav__link">
+    COP2 1400006h - 8 Cycles - NCLIP - Normal clipping
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-158002dh-5-cycles-avsz3-average-of-three-z-values-for-triangles" class="md-nav__link">
+    COP2 158002Dh - 5 Cycles - AVSZ3 - Average of three Z values (for Triangles)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-168002eh-6-cycles-avsz4-average-of-four-z-values-for-quads" class="md-nav__link">
+    COP2 168002Eh - 6 Cycles - AVSZ4 - Average of four Z values (for Quads)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-general-purpose-calculation-commands" class="md-nav__link">
+    GTE General Purpose Calculation Commands
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE General Purpose Calculation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0400012h-8-cycles-mvmvasfmxvcvlm" class="md-nav__link">
+    COP2 0400012h - 8 Cycles - MVMVA(sf,mx,v,cv,lm)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0a00428hsf80000h-5-cycles-sqrsf-square-vector" class="md-nav__link">
+    COP2 0A00428h+sf*80000h - 5 Cycles - SQR(sf) - Square vector
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-170000chsf80000h-6-cycles-opsflm-cross-product-of-2-vectors" class="md-nav__link">
+    COP2 170000Ch+sf*80000h - 6 Cycles - OP(sf,lm) - Cross product of 2 vectors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lzcslzcr-registers-cycles-count-leading-zeroesleading-ones" class="md-nav__link">
+    LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-color-calculation-commands" class="md-nav__link">
+    GTE Color Calculation Commands
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Color Calculation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0c8041eh-14-cycles-ncs-normal-color-single" class="md-nav__link">
+    COP2 0C8041Eh - 14 Cycles - NCS - Normal color (single)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0d80420h-30-cycles-nct-normal-color-triple" class="md-nav__link">
+    COP2 0D80420h - 30 Cycles - NCT - Normal color (triple)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-108041bh-17-cycles-nccs-normal-color-color-single-vector" class="md-nav__link">
+    COP2 108041Bh - 17 Cycles - NCCS - Normal Color Color (single vector)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-118043fh-39-cycles-ncct-normal-color-color-triple-vector" class="md-nav__link">
+    COP2 118043Fh - 39 Cycles - NCCT - Normal Color Color (triple vector)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0e80413h-19-cycles-ncds-normal-color-depth-cue-single-vector" class="md-nav__link">
+    COP2 0E80413h - 19 Cycles - NCDS - Normal color depth cue (single vector)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0f80416h-44-cycles-ncdt-normal-color-depth-cue-triple-vectors" class="md-nav__link">
+    COP2 0F80416h - 44 Cycles - NCDT - Normal color depth cue (triple vectors)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-138041ch-11-cycles-cclm1-color-color" class="md-nav__link">
+    COP2 138041Ch - 11 Cycles - CC(lm=1) - Color Color
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-1280414h-13-cycles-cdp-color-depth-que" class="md-nav__link">
+    COP2 1280414h - 13 Cycles - CDP(...) - Color Depth Que
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0680029h-8-cycles-dcpl-depth-cue-color-light" class="md-nav__link">
+    COP2 0680029h - 8 Cycles - DCPL - Depth Cue Color light
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0780010h-8-cycles-dpcs-depth-cueing-single" class="md-nav__link">
+    COP2 0780010h - 8 Cycles - DPCS - Depth Cueing (single)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0x8002ah-17-cycles-dpct-depth-cueing-triple" class="md-nav__link">
+    COP2 0x8002Ah - 17 Cycles - DPCT - Depth Cueing (triple)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0980011h-8-cycles-intpl-interpolation-of-a-vector-and-far-color" class="md-nav__link">
+    COP2 0980011h - 8 Cycles - INTPL - Interpolation of a vector and far color
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-190003dh-5-cycles-gpfsflm-general-purpose-interpolation" class="md-nav__link">
+    COP2 190003Dh - 5 Cycles - GPF(sf,lm) - General purpose Interpolation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-1a0003eh-5-cycles-gplsf-general-interpolation-with-base" class="md-nav__link">
+    COP2 1A0003Eh - 5 Cycles - GPL(sf,?) - General Interpolation with base
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details-on-macfc-macir0" class="md-nav__link">
+    Details on "MAC+(FC-MAC)*IR0"
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details-on-llmv0-sar-sf12-and-bk1000h-lcmir-sar-sf12" class="md-nav__link">
+    Details on "(LLM*V0) SAR (sf*12)" and "(BK*1000h + LCM*IR) SAR (sf*12)"
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-division-inaccuracy" class="md-nav__link">
+    GTE Division Inaccuracy
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Division Inaccuracy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gte-division-inaccuracy-for-rtpsrtpt-commands" class="md-nav__link">
+    GTE Division Inaccuracy (for RTPS/RTPT commands)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        Macroblock Decoder (MDEC)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        Sound Processing Unit (SPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        Serial Interfaces (SIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        Expansion Port (PIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        Memory Control
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        CPU Specifications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        PSX Dev-Board Chipsets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gte-overview" class="md-nav__link">
+    GTE Overview
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gte-operation" class="md-nav__link">
+    GTE Operation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-load-delay-slots" class="md-nav__link">
+    GTE Load Delay Slots
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-command-encoding-cop2-imm25-opcodes" class="md-nav__link">
+    GTE Command Encoding (COP2 imm25 opcodes)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-data-register-summary-cop2r0-31" class="md-nav__link">
+    GTE Data Register Summary (cop2r0-31)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-control-register-summary-cop2r32-63" class="md-nav__link">
+    GTE Control Register Summary (cop2r32-63)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-registers" class="md-nav__link">
+    GTE Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#matrix-registers" class="md-nav__link">
+    Matrix Registers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#translation-vector-tr-input-rw" class="md-nav__link">
+    Translation Vector (TR) (Input, R/W?)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#background-color-bk-input-rw" class="md-nav__link">
+    Background Color (BK) (Input?, R/W?)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#far-color-fc-input-rw" class="md-nav__link">
+    Far Color (FC) (Input?) (R/W?)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screen-offset-and-distance-input-rw" class="md-nav__link">
+    Screen Offset and Distance (Input, R/W?)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#average-z-registers-zsf3zsf4input-rw-otzresult-r" class="md-nav__link">
+    Average Z Registers (ZSF3/ZSF4=Input, R/W?) (OTZ=Result, R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screen-xyz-coordinate-fifos" class="md-nav__link">
+    Screen XYZ Coordinate FIFOs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16bit-vectors-rw" class="md-nav__link">
+    16bit Vectors (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color-register-and-color-fifo" class="md-nav__link">
+    Color Register and Color FIFO
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpolation-factor" class="md-nav__link">
+    Interpolation Factor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xx" class="md-nav__link">
+    XX...
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xx_1" class="md-nav__link">
+    XX...
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r28-irgb-color-conversion-input-rw" class="md-nav__link">
+    cop2r28 - IRGB - Color conversion Input (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r29-orgb-color-conversion-output-r" class="md-nav__link">
+    cop2r29 - ORGB - Color conversion Output (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r30-lzcs-count-leading-bits-source-data-rw" class="md-nav__link">
+    cop2r30 - LZCS - Count Leading Bits Source data (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r31-lzcr-count-leading-bits-result-r" class="md-nav__link">
+    cop2r31 - LZCR - Count Leading Bits Result (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2r63-cnt31-flag-returns-any-calculation-errors" class="md-nav__link">
+    cop2r63 (cnt31) - FLAG - Returns any calculation errors.
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-saturation" class="md-nav__link">
+    GTE Saturation
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Saturation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop2r63-cnt31-flag-returns-any-calculation-errors_1" class="md-nav__link">
+    cop2r63 (cnt31) - FLAG - Returns any calculation errors.
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-opcode-summary" class="md-nav__link">
+    GTE Opcode Summary
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Opcode Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gte-command-summary-sorted-by-real-opcode-bits-bit0-5" class="md-nav__link">
+    GTE Command Summary (sorted by Real Opcode bits) (bit0-5)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gte-command-summary-sorted-by-fake-opcode-bits-bit20-24" class="md-nav__link">
+    GTE Command Summary (sorted by Fake Opcode bits) (bit20-24)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-functions" class="md-nav__link">
+    Additional Functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-coordinate-calculation-commands" class="md-nav__link">
+    GTE Coordinate Calculation Commands
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Coordinate Calculation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0180001h-15-cycles-rtps-perspective-transformation-single" class="md-nav__link">
+    COP2 0180001h - 15 Cycles - RTPS - Perspective Transformation (single)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0280030h-23-cycles-rtpt-perspective-transformation-triple" class="md-nav__link">
+    COP2 0280030h - 23 Cycles - RTPT - Perspective Transformation (triple)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-1400006h-8-cycles-nclip-normal-clipping" class="md-nav__link">
+    COP2 1400006h - 8 Cycles - NCLIP - Normal clipping
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-158002dh-5-cycles-avsz3-average-of-three-z-values-for-triangles" class="md-nav__link">
+    COP2 158002Dh - 5 Cycles - AVSZ3 - Average of three Z values (for Triangles)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-168002eh-6-cycles-avsz4-average-of-four-z-values-for-quads" class="md-nav__link">
+    COP2 168002Eh - 6 Cycles - AVSZ4 - Average of four Z values (for Quads)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-general-purpose-calculation-commands" class="md-nav__link">
+    GTE General Purpose Calculation Commands
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE General Purpose Calculation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0400012h-8-cycles-mvmvasfmxvcvlm" class="md-nav__link">
+    COP2 0400012h - 8 Cycles - MVMVA(sf,mx,v,cv,lm)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0a00428hsf80000h-5-cycles-sqrsf-square-vector" class="md-nav__link">
+    COP2 0A00428h+sf*80000h - 5 Cycles - SQR(sf) - Square vector
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-170000chsf80000h-6-cycles-opsflm-cross-product-of-2-vectors" class="md-nav__link">
+    COP2 170000Ch+sf*80000h - 6 Cycles - OP(sf,lm) - Cross product of 2 vectors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lzcslzcr-registers-cycles-count-leading-zeroesleading-ones" class="md-nav__link">
+    LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-color-calculation-commands" class="md-nav__link">
+    GTE Color Calculation Commands
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Color Calculation Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0c8041eh-14-cycles-ncs-normal-color-single" class="md-nav__link">
+    COP2 0C8041Eh - 14 Cycles - NCS - Normal color (single)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0d80420h-30-cycles-nct-normal-color-triple" class="md-nav__link">
+    COP2 0D80420h - 30 Cycles - NCT - Normal color (triple)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-108041bh-17-cycles-nccs-normal-color-color-single-vector" class="md-nav__link">
+    COP2 108041Bh - 17 Cycles - NCCS - Normal Color Color (single vector)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-118043fh-39-cycles-ncct-normal-color-color-triple-vector" class="md-nav__link">
+    COP2 118043Fh - 39 Cycles - NCCT - Normal Color Color (triple vector)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0e80413h-19-cycles-ncds-normal-color-depth-cue-single-vector" class="md-nav__link">
+    COP2 0E80413h - 19 Cycles - NCDS - Normal color depth cue (single vector)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0f80416h-44-cycles-ncdt-normal-color-depth-cue-triple-vectors" class="md-nav__link">
+    COP2 0F80416h - 44 Cycles - NCDT - Normal color depth cue (triple vectors)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-138041ch-11-cycles-cclm1-color-color" class="md-nav__link">
+    COP2 138041Ch - 11 Cycles - CC(lm=1) - Color Color
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-1280414h-13-cycles-cdp-color-depth-que" class="md-nav__link">
+    COP2 1280414h - 13 Cycles - CDP(...) - Color Depth Que
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0680029h-8-cycles-dcpl-depth-cue-color-light" class="md-nav__link">
+    COP2 0680029h - 8 Cycles - DCPL - Depth Cue Color light
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0780010h-8-cycles-dpcs-depth-cueing-single" class="md-nav__link">
+    COP2 0780010h - 8 Cycles - DPCS - Depth Cueing (single)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0x8002ah-17-cycles-dpct-depth-cueing-triple" class="md-nav__link">
+    COP2 0x8002Ah - 17 Cycles - DPCT - Depth Cueing (triple)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-0980011h-8-cycles-intpl-interpolation-of-a-vector-and-far-color" class="md-nav__link">
+    COP2 0980011h - 8 Cycles - INTPL - Interpolation of a vector and far color
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-190003dh-5-cycles-gpfsflm-general-purpose-interpolation" class="md-nav__link">
+    COP2 190003Dh - 5 Cycles - GPF(sf,lm) - General purpose Interpolation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cop2-1a0003eh-5-cycles-gplsf-general-interpolation-with-base" class="md-nav__link">
+    COP2 1A0003Eh - 5 Cycles - GPL(sf,?) - General Interpolation with base
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details-on-macfc-macir0" class="md-nav__link">
+    Details on "MAC+(FC-MAC)*IR0"
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details-on-llmv0-sar-sf12-and-bk1000h-lcmir-sar-sf12" class="md-nav__link">
+    Details on "(LLM*V0) SAR (sf*12)" and "(BK*1000h + LCM*IR) SAR (sf*12)"
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gte-division-inaccuracy" class="md-nav__link">
+    GTE Division Inaccuracy
+  </a>
+  
+    <nav class="md-nav" aria-label="GTE Division Inaccuracy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gte-division-inaccuracy-for-rtpsrtpt-commands" class="md-nav__link">
+    GTE Division Inaccuracy (for RTPS/RTPT commands)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="geometry-transformation-engine-gte">Geometry Transformation Engine (GTE)</h1>
+<p><a href="./#gte-overview">GTE Overview</a><br/>
+<a href="./#gte-registers">GTE Registers</a><br/>
+<a href="./#gte-saturation">GTE Saturation</a><br/>
+<a href="./#gte-opcode-summary">GTE Opcode Summary</a><br/>
+<a href="./#gte-coordinate-calculation-commands">GTE Coordinate Calculation Commands</a><br/>
+<a href="./#gte-general-purpose-calculation-commands">GTE General Purpose Calculation Commands</a><br/>
+<a href="./#gte-color-calculation-commands">GTE Color Calculation Commands</a><br/>
+<a href="./#gte-division-inaccuracy">GTE Division Inaccuracy</a><br/></p>
+<h2 id="gte-overview">GTE Overview</h2>
+<h4 id="gte-operation">GTE Operation</h4>
+<p>The GTE doesn't have any memory or I/O ports mapped to the CPU memory bus,
+instead, it's solely accessed via coprocessor opcodes:<br/>
+<div class="highlight"><pre><span></span><code>  mov  cop0r12,rt          ;-enable/disable COP2 (GTE) via COP0 status register
+  mov  cop2r0-63,rt        ;\write parameters to GTE registers
+  mov  cop2r0-31,[rs+imm]  ;/
+  mov  cop2cmd,imm25       ;-issue GTE command
+  mov  rt,cop2r0-63        ;\read results from GTE registers
+  mov  [rs+imm],cop2r0-31  ;/
+  jt   cop2flg,dest        ;-jump never  ;\implemented (no exception), but,
+  jf   cop2flg,dest        ;-jump always ;/flag seems to be always &quot;false&quot;
+</code></pre></div></p>
+<h4 id="gte-load-delay-slots">GTE Load Delay Slots</h4>
+<p>Using CFC2/MFC2 has a delay of 1 instruction until the GPR is loaded with its new value.
+Certain games are sensitive to this, with the notable example of Tekken 2
+which will be filled with broken geometry on emulators which don't emulate this properly.<br/>
+GTE (memory-?) load and store instructions have a delay of 2 instructions, for
+any GTE commands or operations accessing that register. Any? That's wrong!<br/>
+GTE instructions and functions should not be used in<br/>
+<div class="highlight"><pre><span></span><code>  - Delay slots of jumps and branches
+  - Event handlers or interrupts (sounds like nonsense?) (need push/pop though)
+</code></pre></div>
+If an instruction that reads a GTE register or a GTE command is executed before
+the current GTE command is finished, the CPU will hold until the instruction
+has finished. The number of cycles each GTE instruction takes is shown in the
+command list.<br/></p>
+<h4 id="gte-command-encoding-cop2-imm25-opcodes">GTE Command Encoding (COP2 imm25 opcodes)</h4>
+<p><div class="highlight"><pre><span></span><code>  31-25  Must be 0100101b for &quot;COP2 imm25&quot; instructions
+  20-24  Fake GTE Command Number (00h..1Fh) (ignored by hardware)
+  19     sf - Shift Fraction in IR registers (0=No fraction, 1=12bit fraction)
+  17-18  MVMVA Multiply Matrix    (0=Rotation. 1=Light, 2=Color, 3=Reserved)
+  15-16  MVMVA Multiply Vector    (0=V0, 1=V1, 2=V2, 3=IR/long)
+  13-14  MVMVA Translation Vector (0=TR, 1=BK, 2=FC/Bugged, 3=None)
+  11-12  Always zero                        (ignored by hardware)
+  10     lm - Saturate IR1,IR2,IR3 result (0=To -8000h..+7FFFh, 1=To 0..+7FFFh)
+  6-9    Always zero                        (ignored by hardware)
+  0-5    Real GTE Command Number (00h..3Fh) (used by hardware)
+</code></pre></div>
+The MVMVA bits are used only by the MVMVA opcode (the bits are zero for all
+other opcodes).<br/>
+The "sf" and "lm" bits are usually fixed (either set, or cleared, depending on
+the command) (for MVMVA, the bits are variable) (also, "sf" can be changed for
+some commands like SQR) (although they are usually fixed for most other
+opcodes, changing them might have some effect on some/all opcodes)?<br/></p>
+<h4 id="gte-data-register-summary-cop2r0-31">GTE Data Register Summary (cop2r0-31)</h4>
+<div class="highlight"><pre><span></span><code>  cop2r0-1   3xS16 VXY0,VZ0              Vector 0 (X,Y,Z)
+  cop2r2-3   3xS16 VXY1,VZ1              Vector 1 (X,Y,Z)
+  cop2r4-5   3xS16 VXY2,VZ2              Vector 2 (X,Y,Z)
+  cop2r6     4xU8  RGBC                  Color/code value
+  cop2r7     1xU16 OTZ                   Average Z value (for Ordering Table)
+  cop2r8     1xS16 IR0                   16bit Accumulator (Interpolate)
+  cop2r9-11  3xS16 IR1,IR2,IR3           16bit Accumulator (Vector)
+  cop2r12-15 6xS16 SXY0,SXY1,SXY2,SXYP   Screen XY-coordinate FIFO  (3 stages)
+  cop2r16-19 4xU16 SZ0,SZ1,SZ2,SZ3       Screen Z-coordinate FIFO   (4 stages)
+  cop2r20-22 12xU8 RGB0,RGB1,RGB2        Color CRGB-code/color FIFO (3 stages)
+  cop2r23    4xU8  (RES1)                Prohibited
+  cop2r24    1xS32 MAC0                  32bit Maths Accumulators (Value)
+  cop2r25-27 3xS32 MAC1,MAC2,MAC3        32bit Maths Accumulators (Vector)
+  cop2r28-29 1xU15 IRGB,ORGB             Convert RGB Color (48bit vs 15bit)
+  cop2r30-31 2xS32 LZCS,LZCR             Count Leading-Zeroes/Ones (sign bits)
+</code></pre></div>
+<h4 id="gte-control-register-summary-cop2r32-63">GTE Control Register Summary (cop2r32-63)</h4>
+<div class="highlight"><pre><span></span><code>  cop2r32-36 9xS16 RT11RT12,..,RT33 Rotation matrix     (3x3)        ;cnt0-4
+  cop2r37-39 3x 32 TRX,TRY,TRZ      Translation vector  (X,Y,Z)      ;cnt5-7
+  cop2r40-44 9xS16 L11L12,..,L33    Light source matrix (3x3)        ;cnt8-12
+  cop2r45-47 3x 32 RBK,GBK,BBK      Background color    (R,G,B)      ;cnt13-15
+  cop2r48-52 9xS16 LR1LR2,..,LB3    Light color matrix source (3x3)  ;cnt16-20
+  cop2r53-55 3x 32 RFC,GFC,BFC      Far color           (R,G,B)      ;cnt21-23
+  cop2r56-57 2x 32 OFX,OFY          Screen offset       (X,Y)        ;cnt24-25
+  cop2r58 BuggyU16 H                Projection plane distance.       ;cnt26
+  cop2r59      S16 DQA              Depth queing parameter A (coeff) ;cnt27
+  cop2r60       32 DQB              Depth queing parameter B (offset);cnt28
+  cop2r61-62 2xS16 ZSF3,ZSF4        Average Z scale factors          ;cnt29-30
+  cop2r63      U20 FLAG             Returns any calculation errors   ;cnt31
+</code></pre></div>
+<h2 id="gte-registers">GTE Registers</h2>
+<p>Note in some functions format is different from the one that's given here.<br/></p>
+<h4 id="matrix-registers">Matrix Registers</h4>
+<p><div class="highlight"><pre><span></span><code>  Rotation matrix (RT)   Light matrix (LLM)     Light Color matrix (LCM)
+  cop2r32.lsbs=RT11      cop2r40.lsbs=L11       cop2r48.lsbs=LR1
+  cop2r32.msbs=RT12      cop2r40.msbs=L12       cop2r48.msbs=LR2
+  cop2r33.lsbs=RT13      cop2r41.lsbs=L13       cop2r49.lsbs=LR3
+  cop2r33.msbs=RT21      cop2r41.msbs=L21       cop2r49.msbs=LG1
+  cop2r34.lsbs=RT22      cop2r42.lsbs=L22       cop2r50.lsbs=LG2
+  cop2r34.msbs=RT23      cop2r42.msbs=L23       cop2r50.msbs=LG3
+  cop2r35.lsbs=RT31      cop2r43.lsbs=L31       cop2r51.lsbs=LB1
+  cop2r35.msbs=RT32      cop2r43.msbs=L32       cop2r51.msbs=LB2
+  cop2r36     =RT33      cop2r44     =L33       cop2r52     =LB3
+</code></pre></div>
+Each element is 16bit (1bit sign, 3bit integer, 12bit fraction). Reading the
+last elements (RT33,L33,LB3) returns the 16bit value sign-expanded to 32bit.<br/></p>
+<h4 id="translation-vector-tr-input-rw">Translation Vector (TR) (Input, R/W?)</h4>
+<p><div class="highlight"><pre><span></span><code>  cop2r37 (cnt5) - TRX - Translation vector X (R/W?)
+  cop2r38 (cnt6) - TRY - Translation vector Y (R/W?)
+  cop2r39 (cnt7) - TRZ - Translation vector Z (R/W?)
+</code></pre></div>
+Each element is 32bit (1bit sign, 31bit integer).<br/>
+Used only for MVMVA, RTPS, RTPT commands.<br/></p>
+<h4 id="background-color-bk-input-rw">Background Color (BK) (Input?, R/W?)</h4>
+<p><div class="highlight"><pre><span></span><code>  cop2r45 (cnt13) - RBK - Background color red component
+  cop2r46 (cnt14) - GBK - Background color green component
+  cop2r47 (cnt15) - BBK - Background color blue component
+</code></pre></div>
+Each element is 32bit (1bit sign, 19bit integer, 12bit fraction).<br/></p>
+<h4 id="far-color-fc-input-rw">Far Color (FC) (Input?) (R/W?)</h4>
+<p><div class="highlight"><pre><span></span><code>  cop2r53 (cnt21) - RFC - Far color red component
+  cop2r54 (cnt22) - GFC - Far color green component
+  cop2r55 (cnt23) - BFC - Far color blue component
+</code></pre></div>
+Each element is 32bit (1bit sign, 27bit integer, 4bit fraction).<br/></p>
+<h4 id="screen-offset-and-distance-input-rw">Screen Offset and Distance (Input, R/W?)</h4>
+<p><div class="highlight"><pre><span></span><code>  cop2r56 (cnt24) - OFX - Screen offset X
+  cop2r57 (cnt25) - OFY - Screen offset Y
+  cop2r58 (cnt26) - H   - Projection plane distance
+  cop2r59 (cnt27) - DQA - Depth queing parameter A.(coeff.)
+  cop2r60 (cnt28) - DQB - Depth queing parameter B.(offset.)
+</code></pre></div>
+The X and Y values are each 32bit (1bit sign, 15bit integer, 16bit fraction).<br/>
+The H value is 16bit unsigned (0bit sign, 16bit integer, 0bit fraction). BUG:
+When reading the H register, the hardware does accidently \&lt;sign-expand>
+the \&lt;unsigned> 16bit value (ie. values +8000h..+FFFFh are returned as
+FFFF8000h..FFFFFFFFh) (this bug applies only to "mov rd,cop2r58" opcodes; the
+actual calculations via RTPS/RTPT opcodes are working okay).<br/>
+The DQA value is only 16bit (1bit sign, 7bit integer, 8bit fraction).<br/>
+The DQB value is 32bit (1bit sign, 7bit integer, 24bit? fraction).<br/>
+Used only for RTPS/RTPT commands.<br/></p>
+<h4 id="average-z-registers-zsf3zsf4input-rw-otzresult-r">Average Z Registers (ZSF3/ZSF4=Input, R/W?) (OTZ=Result, R)</h4>
+<p><div class="highlight"><pre><span></span><code>  cop2r61 (cnt29) ZSF3 |  0|ZSF3 1,3,12| Z3 average scale factor (normally 1/3)
+  cop2r62 (cnt30) ZSF4 |  0|ZSF4 1,3,12| Z4 average scale factor (normally 1/4)
+  cop2r7       OTZ (R) |   |OTZ 0,15, 0| Average Z value (for Ordering Table)
+</code></pre></div>
+Used only for AVSZ3/AVSZ4 commands.<br/></p>
+<h4 id="screen-xyz-coordinate-fifos">Screen XYZ Coordinate FIFOs</h4>
+<p><div class="highlight"><pre><span></span><code>  cop2r12 - SXY0  rw|SY0 1,15, 0|SX0 1,15, 0| Screen XY fifo (older)
+  cop2r13 - SXY1  rw|SY1 1,15, 0|SX1 1,15, 0| Screen XY fifo (old)
+  cop2r14 - SXY2  rw|SY2 1,15, 0|SX2 1,15, 0| Screen XY fifo (new)
+  cop2r15 - SXYP  rw|SYP 1,15, 0|SXP 1,15, 0| SXY2-mirror with move-on-write
+  cop2r16 - SZ0   rw|          0|SZ0 0,16, 0| Screen Z fifo (oldest)
+  cop2r17 - SZ1   rw|          0|SZ1 0,16, 0| Screen Z fifo (older)
+  cop2r18 - SZ2   rw|          0|SZ2 0,16, 0| Screen Z fifo (old)
+  cop2r19 - SZ3   rw|          0|SZ3 0,16, 0| Screen Z fifo (new)
+</code></pre></div>
+SX,SY,SZ are used as Output for RTPS/RTPT. Additionally, SX,SY are used as
+Input for NCLIP, and SZ is used as Input for AVSZ3/AVSZ4.<br/>
+The SZn Fifo has 4 stages (required for AVSZ4 command), the SXYn Fifo has only
+3 stages, and a special mirrored register: SXYP is a mirror of SXY2, the
+difference is that writing to SXYP moves SXY2/SXY1 to SXY1/SXY0, whilst writing
+to SXY2 (or any other SXYn or SZn registers) changes only the written register,
+but doesn't move any other Fifo entries.<br/></p>
+<h4 id="16bit-vectors-rw">16bit Vectors (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  Vector 0 (V0)         Vector 1 (V1)       Vector 2 (V2)       Vector 3 (IR)
+  cop2r0.lsbs - VX0     cop2r2.lsbs - VX1   cop2r4.lsbs - VX2   cop2r9  - IR1
+  cop2r0.msbs - VY0     cop2r2.msbs - VY1   cop2r4.msbs - VY2   cop2r10 - IR2
+  cop2r1      - VZ0     cop2r3      - VZ1   cop2r5      - VZ2   cop2r11 - IR3
+</code></pre></div>
+All elements are signed 16bit. The IRn and VZn elements occupy a whole 32bit
+register, reading these registers returns the 16bit value sign-expanded to
+32bit. Note: IRn can be also indirectly accessed via IRGB/ORGB registers.<br/></p>
+<h4 id="color-register-and-color-fifo">Color Register and Color FIFO</h4>
+<p><div class="highlight"><pre><span></span><code>  cop2r6  - RGBC  rw|CODE |B    |G    |R    | Color/code
+  cop2r20 - RGB0  rw|CD0  |B0   |G0   |R0   | Characteristic color fifo.
+  cop2r21 - RGB1  rw|CD1  |B1   |G1   |R1   |
+  cop2r22 - RGB2  rw|CD2  |B2   |G2   |R2   |
+  cop2r23 - (RES1)  |                       | Prohibited
+</code></pre></div>
+RES1 seems to be unused... looks like an unused Fifo stage... RES1 is
+read/write-able... unlike SXYP (for SXYn Fifo) it does not mirror to RGB2, nor
+does it have a move-on-write function...<br/></p>
+<h4 id="interpolation-factor">Interpolation Factor</h4>
+<p><div class="highlight"><pre><span></span><code>  cop2r8   IR0   rw|Sign       |IR0 1, 3,12| Intermediate value 0.
+</code></pre></div>
+Used as Output for RTPS/RTPT, and as Input for various commands.<br/></p>
+<h4 id="xx">XX...</h4>
+<div class="highlight"><pre><span></span><code>  cop2r24  MAC0  rw|MAC0 1,31,0            | Sum of products value 0
+</code></pre></div>
+<h4 id="xx_1">XX...</h4>
+<div class="highlight"><pre><span></span><code>  cop2r25  MAC1  rw|MAC1 1,31,0            | Sum of products value 1
+  cop2r26  MAC2  rw|MAC2 1,31,0            | Sum of products value 2
+  cop2r27  MAC3  rw|MAC3 1,31,0            | Sum of products value 3
+</code></pre></div>
+<h4 id="cop2r28-irgb-color-conversion-input-rw">cop2r28 - IRGB - Color conversion Input (R/W)</h4>
+<p>Expands 5:5:5 bit RGB (range 0..1Fh) to 16:16:16 bit RGB (range 0000h..0F80h).<br/>
+<div class="highlight"><pre><span></span><code>  0-4    Red   (0..1Fh) (R/W)  ;multiplied by 80h, and written to IR1
+  5-9    Green (0..1Fh) (R/W)  ;multiplied by 80h, and written to IR2
+  10-14  Blue  (0..1Fh) (R/W)  ;multiplied by 80h, and written to IR3
+  15-31  Not used (always zero) (Read only)
+</code></pre></div>
+After writing to IRGB, the result can be read from IR3 after TWO nop's, and
+from IR1,IR2 after THREE nop's (for uncached code, ONE nop would work). When
+using IR1,IR2,IR3 as parameters for GTE commands, similar timing restrictions
+might apply... depending on when the specific commands use the parameters?<br/></p>
+<h4 id="cop2r29-orgb-color-conversion-output-r">cop2r29 - ORGB - Color conversion Output (R)</h4>
+<p>Collapses 16:16:16 bit RGB (range 0000h..0F80h) to 5:5:5 bit RGB (range
+0..1Fh). Negative values (8000h..FFFFh/80h) are saturated to 00h, large
+positive values (1000h..7FFFh/80h) are saturated to 1Fh, there are no overflow
+or saturation flags set in cop2r63 though.<br/>
+<div class="highlight"><pre><span></span><code>  0-4    Red   (0..1Fh) (R)  ;IR1 divided by 80h, saturated to +00h..+1Fh
+  5-9    Green (0..1Fh) (R)  ;IR2 divided by 80h, saturated to +00h..+1Fh
+  10-14  Blue  (0..1Fh) (R)  ;IR3 divided by 80h, saturated to +00h..+1Fh
+  15-31  Not used (always zero) (Read only)
+</code></pre></div>
+Any changes to IR1,IR2,IR3 are reflected to this register (and, actually also
+to IRGB) (ie. ORGB is simply a read-only mirror of IRGB).<br/></p>
+<h4 id="cop2r30-lzcs-count-leading-bits-source-data-rw">cop2r30 - LZCS - Count Leading Bits Source data (R/W)</h4>
+<h4 id="cop2r31-lzcr-count-leading-bits-result-r">cop2r31 - LZCR - Count Leading Bits Result (R)</h4>
+<p>Reading LZCR returns the leading 0 count of LZCS if LZCS is positive and the
+leading 1 count of LZCS if LZCS is negative. The results are in range 1..32.<br/></p>
+<h4 id="cop2r63-cnt31-flag-returns-any-calculation-errors">cop2r63 (cnt31) - FLAG - Returns any calculation errors.</h4>
+<p>See GTE Saturation chapter.<br/></p>
+<h2 id="gte-saturation">GTE Saturation</h2>
+<p>Maths overflows are indicated in FLAG register. In most cases, the result is
+saturated to MIN/MAX values (except MAC0,MAC1,MAC2,MAC3 which aren't
+saturated). For IR1,IR2,IR3 many commands allow to select the MIN value via
+"lm" bit of the GTE opcode (though not all commands, RTPS/RTPT always act as if
+lm=0).<br/></p>
+<h4 id="cop2r63-cnt31-flag-returns-any-calculation-errors_1">cop2r63 (cnt31) - FLAG - Returns any calculation errors.</h4>
+<p><div class="highlight"><pre><span></span><code>  31   Error Flag (Bit30..23, and 18..13 ORed together) (Read only)
+  30   MAC1 Result larger than 43 bits and positive
+  29   MAC2 Result larger than 43 bits and positive
+  28   MAC3 Result larger than 43 bits and positive
+  27   MAC1 Result larger than 43 bits and negative
+  26   MAC2 Result larger than 43 bits and negative
+  25   MAC3 Result larger than 43 bits and negative
+  24   IR1 saturated to +0000h..+7FFFh (lm=1) or to -8000h..+7FFFh (lm=0)
+  23   IR2 saturated to +0000h..+7FFFh (lm=1) or to -8000h..+7FFFh (lm=0)
+  22   IR3 saturated to +0000h..+7FFFh (lm=1) or to -8000h..+7FFFh (lm=0)
+  21   Color-FIFO-R saturated to +00h..+FFh
+  20   Color-FIFO-G saturated to +00h..+FFh
+  19   Color-FIFO-B saturated to +00h..+FFh
+  18   SZ3 or OTZ saturated to +0000h..+FFFFh
+  17   Divide overflow. RTPS/RTPT division result saturated to max=1FFFFh
+  16   MAC0 Result larger than 31 bits and positive
+  15   MAC0 Result larger than 31 bits and negative
+  14   SX2 saturated to -0400h..+03FFh
+  13   SY2 saturated to -0400h..+03FFh
+  12   IR0 saturated to +0000h..+1000h
+  0-11 Not used (always zero) (Read only)
+</code></pre></div>
+Bit30-12 are read/write-able, ie. they can be set/reset by software, however,
+that's normally not required - all bits are automatically reset at the begin of
+a new GTE command.<br/>
+Bit31 is apparently intended for RTPS/RTPT commands, since it triggers only on
+flags that are affected by these two commands, but even for that commands it's
+totally useless since one could as well check if FLAG is nonzero.<br/>
+Note: Writing 32bit values to 16bit GTE registers by software does not trigger
+any overflow/saturation flags (and does not do any saturation), eg. writing
+12008900h (positive 32bit) to a signed 16bit register sets that register to
+FFFF8900h (negative 16bit).<br/></p>
+<h2 id="gte-opcode-summary">GTE Opcode Summary</h2>
+<h4 id="gte-command-summary-sorted-by-real-opcode-bits-bit0-5">GTE Command Summary (sorted by Real Opcode bits) (bit0-5)</h4>
+<p><div class="highlight"><pre><span></span><code>  Opc  Name   Clk Expl.
+  00h  -          N/A (modifies similar registers than RTPS...)
+  01h  RTPS   15  Perspective Transformation single
+  0xh  -          N/A
+  06h  NCLIP  8   Normal clipping
+  0xh  -          N/A
+  0Ch  OP(sf) 6   Cross product of 2 vectors
+  0xh  -          N/A
+  10h  DPCS   8   Depth Cueing single
+  11h  INTPL  8   Interpolation of a vector and far color vector
+  12h  MVMVA  8   Multiply vector by matrix and add vector (see below)
+  13h  NCDS   19  Normal color depth cue single vector
+  14h  CDP    13  Color Depth Que
+  15h  -          N/A
+  16h  NCDT   44  Normal color depth cue triple vectors
+  1xh  -          N/A
+  1Bh  NCCS   17  Normal Color Color single vector
+  1Ch  CC     11  Color Color
+  1Dh  -          N/A
+  1Eh  NCS    14  Normal color single
+  1Fh  -          N/A
+  20h  NCT    30  Normal color triple
+  2xh  -          N/A
+  28h  SQR(sf)5   Square of vector IR
+  29h  DCPL   8   Depth Cue Color light
+  2Ah  DPCT   17  Depth Cueing triple (should be fake=08h, but isn&#39;t)
+  2xh  -          N/A
+  2Dh  AVSZ3  5   Average of three Z values
+  2Eh  AVSZ4  6   Average of four Z values
+  2Fh  -          N/A
+  30h  RTPT   23  Perspective Transformation triple
+  3xh  -          N/A
+  3Dh  GPF(sf)5   General purpose interpolation
+  3Eh  GPL(sf)5   General purpose interpolation with base
+  3Fh  NCCT   39  Normal Color Color triple vector
+</code></pre></div>
+Unknown if/what happens when using the "N/A" opcodes?<br/></p>
+<h4 id="gte-command-summary-sorted-by-fake-opcode-bits-bit20-24">GTE Command Summary (sorted by Fake Opcode bits) (bit20-24)</h4>
+<p>The fake opcode number in bit20-24 has absolutely no effect on the hardware, it
+seems to be solely used to (or not to) confuse developers. Having the opcodes
+sorted by their fake numbers gives a more or less well arranged list:<br/>
+<div class="highlight"><pre><span></span><code>  Fake Name   Clk Expl.
+  00h  -          N/A
+  01h  RTPS   15  Perspective Transformation single
+  02h  RTPT   23  Perspective Transformation triple
+  03h  -          N/A
+  04h  MVMVA  8   Multiply vector by matrix and add vector (see below)
+  05h  -          N/A
+  06h  DCPL   8   Depth Cue Color light
+  07h  DPCS   8   Depth Cueing single
+  08h  DPCT   17  Depth Cueing triple (should be fake=08h, but isn&#39;t)
+  09h  INTPL  8   Interpolation of a vector and far color vector
+  0Ah  SQR(sf)5   Square of vector IR
+  0Bh  -          N/A
+  0Ch  NCS    14  Normal color single
+  0Dh  NCT    30  Normal color triple
+  0Eh  NCDS   19  Normal color depth cue single vector
+  0Fh  NCDT   44  Normal color depth cue triple vectors
+  10h  NCCS   17  Normal Color Color single vector
+  11h  NCCT   39  Normal Color Color triple vector
+  12h  CDP    13  Color Depth Que
+  13h  CC     11  Color Color
+  14h  NCLIP  8   Normal clipping
+  15h  AVSZ3  5   Average of three Z values
+  16h  AVSZ4  6   Average of four Z values
+  17h  OP(sf) 6   Cross product of 2 vectors
+  18h  -          N/A
+  19h  GPF(sf)5   General purpose interpolation
+  1Ah  GPL(sf)5   General purpose interpolation with base
+  1Bh  -          N/A
+  1Ch  -          N/A
+  1Dh  -          N/A
+  1Eh  -          N/A
+  1Fh  -          N/A
+</code></pre></div>
+For the sort-effect, DCPT should use fake=08h, but Sony seems to have
+accidently numbered it fake=0Fh in their devkit (giving it the same fake number
+as for NCDT). Also, "Wipeout 2097" accidently uses 0140006h (fake=01h and
+distorted bit18) instead of 1400006h (fake=14h) for NCLIP.<br/></p>
+<h4 id="additional-functions">Additional Functions</h4>
+<p>The LZCS/LZCR registers offer a Count-Leading-Zeroes/Leading-Ones function.<br/>
+The IRGB/ORGB registers allow to convert between 48bit and 15bit RGB colors.<br/>
+These registers work without needing to send any COP2 commands. However, unlike
+for commands (which do automatically halt the CPU when needed), one must insert
+dummy opcodes between writing and reading the registers.<br/></p>
+<h2 id="gte-coordinate-calculation-commands">GTE Coordinate Calculation Commands</h2>
+<h4 id="cop2-0180001h-15-cycles-rtps-perspective-transformation-single">COP2 0180001h - 15 Cycles - RTPS - Perspective Transformation (single)</h4>
+<h4 id="cop2-0280030h-23-cycles-rtpt-perspective-transformation-triple">COP2 0280030h - 23 Cycles - RTPT - Perspective Transformation (triple)</h4>
+<p>RTPS performs final Rotate, translate and perspective transformation on vertex
+V0. Before writing to the FIFOs, the older entries are moved one stage down.
+RTPT is same as RTPS, but repeats for V1 and V2. The "sf" bit should be usually
+set.<br/>
+<div class="highlight"><pre><span></span><code>  IR1 = MAC1 = (TRX*1000h + RT11*VX0 + RT12*VY0 + RT13*VZ0) SAR (sf*12)
+  IR2 = MAC2 = (TRY*1000h + RT21*VX0 + RT22*VY0 + RT23*VZ0) SAR (sf*12)
+  IR3 = MAC3 = (TRZ*1000h + RT31*VX0 + RT32*VY0 + RT33*VZ0) SAR (sf*12)
+  SZ3 = MAC3 SAR ((1-sf)*12)                           ;ScreenZ FIFO 0..+FFFFh
+  MAC0=(((H*20000h/SZ3)+1)/2)*IR1+OFX, SX2=MAC0/10000h ;ScrX FIFO -400h..+3FFh
+  MAC0=(((H*20000h/SZ3)+1)/2)*IR2+OFY, SY2=MAC0/10000h ;ScrY FIFO -400h..+3FFh
+  MAC0=(((H*20000h/SZ3)+1)/2)*DQA+DQB, IR0=MAC0/1000h  ;Depth cueing 0..+1000h
+</code></pre></div>
+If the result of the "(((H*20000h/SZ3)+1)/2)" division is greater than 1FFFFh,
+then the division result is saturated to +1FFFFh, and the divide overflow bit
+in the FLAG register gets set; that happens if the vertex is exceeding the
+"near clip plane", ie. if it is very close to the camera (SZ3\&lt;=H/2), exactly
+at the camara position (SZ3=0), or behind the camera (negative Z coordinates
+are saturated to SZ3=0). For details on the division, see:<br/>
+<a href="./#gte-division-inaccuracy">GTE Division Inaccuracy</a><br/>
+For "far plane clipping", one can use the SZ3 saturation flag (MaxZ=FFFFh), or
+the IR3 saturation flag (MaxZ=7FFFh) (eg. used by Wipeout 2097), or one can
+compare the SZ3 value with any desired MaxZ value by software.<br/>
+Note: The command does saturate IR1,IR2,IR3 to -8000h..+7FFFh (regardless of lm
+bit). When using RTP with sf=0, then the IR3 saturation flag (FLAG.22) gets set
+\&lt;only> if "MAC3 SAR 12" exceeds -8000h..+7FFFh (although IR3 is saturated
+when "MAC3" exceeds -8000h..+7FFFh).<br/></p>
+<h4 id="cop2-1400006h-8-cycles-nclip-normal-clipping">COP2 1400006h - 8 Cycles - NCLIP - Normal clipping</h4>
+<p><div class="highlight"><pre><span></span><code>  MAC0 =   SX0*SY1 + SX1*SY2 + SX2*SY0 - SX0*SY2 - SX1*SY0 - SX2*SY1
+</code></pre></div>
+The sign of the result indicates whether the polygon coordinates are arranged
+clockwise or anticlockwise (ie. whether the front side or backside is visible).
+If the result is zero, then it's neither one (ie. the vertices are all arranged
+in a straight line). Note: The GPU probably renders straight lines as invisble
+0 pixel width lines?<br/></p>
+<h4 id="cop2-158002dh-5-cycles-avsz3-average-of-three-z-values-for-triangles">COP2 158002Dh - 5 Cycles - AVSZ3 - Average of three Z values (for Triangles)</h4>
+<h4 id="cop2-168002eh-6-cycles-avsz4-average-of-four-z-values-for-quads">COP2 168002Eh - 6 Cycles - AVSZ4 - Average of four Z values (for Quads)</h4>
+<p><div class="highlight"><pre><span></span><code>  MAC0 =  ZSF3*(SZ1+SZ2+SZ3)       ;for AVSZ3
+  MAC0 =  ZSF4*(SZ0+SZ1+SZ2+SZ3)   ;for AVSZ4
+  OTZ  =  MAC0/1000h               ;for both (saturated to 0..FFFFh)
+</code></pre></div>
+Adds three or four Z values together and multplies them by a fixed point value.
+The result can be used as index in the GPU's Ordering Table (OT).<br/>
+<a href="../graphicsprocessingunitgpu/#gpu-depth-ordering">GPU Depth Ordering</a><br/>
+The scaling factors would be usually ZSF3=N/30h and ZSF4=N/40h, where "N" is
+the number of entries in the OT (max 10000h). SZn and OTZ are unsigned 16bit
+values, for whatever reason ZSFn registers are signed 16bit values (negative
+values would allow a negative result in MAC0, but would saturate OTZ to zero).<br/></p>
+<h2 id="gte-general-purpose-calculation-commands">GTE General Purpose Calculation Commands</h2>
+<h4 id="cop2-0400012h-8-cycles-mvmvasfmxvcvlm">COP2 0400012h - 8 Cycles - MVMVA(sf,mx,v,cv,lm)</h4>
+<p>Multiply vector by matrix and vector addition.<br/>
+<div class="highlight"><pre><span></span><code>  Mx = matrix specified by mx  ;RT/LLM/LCM - Rotation, light or color matrix
+  Vx = vector specified by v   ;V0, V1, V2, or [IR1,IR2,IR3]
+  Tx = translation vector specified by cv  ;TR or BK or Bugged/FC, or None
+</code></pre></div>
+Calculation:<br/>
+<div class="highlight"><pre><span></span><code>  MAC1 = (Tx1*1000h + Mx11*Vx1 + Mx12*Vx2 + Mx13*Vx3) SAR (sf*12)
+  MAC2 = (Tx2*1000h + Mx21*Vx1 + Mx22*Vx2 + Mx23*Vx3) SAR (sf*12)
+  MAC3 = (Tx3*1000h + Mx31*Vx1 + Mx32*Vx2 + Mx33*Vx3) SAR (sf*12)
+  [IR1,IR2,IR3] = [MAC1,MAC2,MAC3]
+</code></pre></div>
+Multiplies a vector with either the rotation matrix, the light matrix or the
+color matrix and then adds the translation vector or background color vector.<br/>
+The GTE also allows selection of the far color vector (FC), but this vector is
+not added correctly by the hardware: The return values are reduced to the last
+portion of the formula, ie. MAC1=(Mx13*Vx3) SAR (sf*12), and similar for MAC2
+and MAC3, nethertheless, some bits in the FLAG register seem to be adjusted as
+if the full operation would have been executed. Setting Mx=3 selects a garbage
+matrix (with elements -60h, +60h, IR0, RT13, RT13, RT13, RT22, RT22, RT22).<br/></p>
+<h4 id="cop2-0a00428hsf80000h-5-cycles-sqrsf-square-vector">COP2 0A00428h+sf*80000h - 5 Cycles - SQR(sf) - Square vector</h4>
+<p><div class="highlight"><pre><span></span><code>  [MAC1,MAC2,MAC3] = [IR1*IR1,IR2*IR2,IR3*IR3] SHR (sf*12)
+  [IR1,IR2,IR3]    = [MAC1,MAC2,MAC3]    ;IR1,IR2,IR3 saturated to max 7FFFh
+</code></pre></div>
+Calculates the square of a vector. The result is, of course, always positive,
+so the "lm" flag for negative saturation has no effect.<br/></p>
+<h4 id="cop2-170000chsf80000h-6-cycles-opsflm-cross-product-of-2-vectors">COP2 170000Ch+sf*80000h - 6 Cycles - OP(sf,lm) - Cross product of 2 vectors</h4>
+<p><div class="highlight"><pre><span></span><code>  [MAC1,MAC2,MAC3] = [IR3*D2-IR2*D3, IR1*D3-IR3*D1, IR2*D1-IR1*D2] SAR (sf*12)
+  [IR1,IR2,IR3]    = [MAC1,MAC2,MAC3]                        ;copy result
+</code></pre></div>
+Calculates the cross product of two signed 16bit vectors. Note: D1,D2,D3 are
+meant to be the RT11,RT22,RT33 elements of the RT matrix "misused" as vector.
+lm should be usually zero.<br/>
+The official Sony documentation refers to this opcode as the Outer Product,
+but this is likely the result of a bad translation from Japanese: "外積 - gaiseki"
+can be translated to "cross product", "vector product", or "outer product".<br/></p>
+<h4 id="lzcslzcr-registers-cycles-count-leading-zeroesleading-ones">LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones</h4>
+<p>The LZCS/LZCR registers offer a Count-Leading-Zeroes/Leading-Ones function.<br/></p>
+<h2 id="gte-color-calculation-commands">GTE Color Calculation Commands</h2>
+<h4 id="cop2-0c8041eh-14-cycles-ncs-normal-color-single">COP2 0C8041Eh - 14 Cycles - NCS - Normal color (single)</h4>
+<h4 id="cop2-0d80420h-30-cycles-nct-normal-color-triple">COP2 0D80420h - 30 Cycles - NCT - Normal color (triple)</h4>
+<h4 id="cop2-108041bh-17-cycles-nccs-normal-color-color-single-vector">COP2 108041Bh - 17 Cycles - NCCS - Normal Color Color (single vector)</h4>
+<h4 id="cop2-118043fh-39-cycles-ncct-normal-color-color-triple-vector">COP2 118043Fh - 39 Cycles - NCCT - Normal Color Color (triple vector)</h4>
+<h4 id="cop2-0e80413h-19-cycles-ncds-normal-color-depth-cue-single-vector">COP2 0E80413h - 19 Cycles - NCDS - Normal color depth cue (single vector)</h4>
+<h4 id="cop2-0f80416h-44-cycles-ncdt-normal-color-depth-cue-triple-vectors">COP2 0F80416h - 44 Cycles - NCDT - Normal color depth cue (triple vectors)</h4>
+<p>In: V0=Normal vector (for triple variants repeated with V1 and V2),
+BK=Background color, RGBC=Primary color/code, LLM=Light matrix, LCM=Color
+matrix, IR0=Interpolation value.<br/>
+<div class="highlight"><pre><span></span><code>  [IR1,IR2,IR3] = [MAC1,MAC2,MAC3] = (LLM*V0) SAR (sf*12)
+  [IR1,IR2,IR3] = [MAC1,MAC2,MAC3] = (BK*1000h + LCM*IR) SAR (sf*12)
+  [MAC1,MAC2,MAC3] = [R*IR1,G*IR2,B*IR3] SHL 4          ;&lt;--- for NCDx/NCCx
+  [MAC1,MAC2,MAC3] = MAC+(FC-MAC)*IR0                   ;&lt;--- for NCDx only
+  [MAC1,MAC2,MAC3] = [MAC1,MAC2,MAC3] SAR (sf*12)       ;&lt;--- for NCDx/NCCx
+  Color FIFO = [MAC1/16,MAC2/16,MAC3/16,CODE], [IR1,IR2,IR3] = [MAC1,MAC2,MAC3]
+</code></pre></div></p>
+<h4 id="cop2-138041ch-11-cycles-cclm1-color-color">COP2 138041Ch - 11 Cycles - CC(lm=1) - Color Color</h4>
+<h4 id="cop2-1280414h-13-cycles-cdp-color-depth-que">COP2 1280414h - 13 Cycles - CDP(...) - Color Depth Que</h4>
+<p>In: [IR1,IR2,IR3]=Vector, RGBC=Primary color/code, LCM=Color matrix,
+BK=Background color, and, for CDP, IR0=Interpolation value, FC=Far color.<br/>
+<div class="highlight"><pre><span></span><code>  [IR1,IR2,IR3] = [MAC1,MAC2,MAC3] = (BK*1000h + LCM*IR) SAR (sf*12)
+  [MAC1,MAC2,MAC3] = [R*IR1,G*IR2,B*IR3] SHL 4
+  [MAC1,MAC2,MAC3] = MAC+(FC-MAC)*IR0                   ;&lt;--- for CDP only
+  [MAC1,MAC2,MAC3] = [MAC1,MAC2,MAC3] SAR (sf*12)
+  Color FIFO = [MAC1/16,MAC2/16,MAC3/16,CODE], [IR1,IR2,IR3] = [MAC1,MAC2,MAC3]
+</code></pre></div></p>
+<h4 id="cop2-0680029h-8-cycles-dcpl-depth-cue-color-light">COP2 0680029h - 8 Cycles - DCPL - Depth Cue Color light</h4>
+<h4 id="cop2-0780010h-8-cycles-dpcs-depth-cueing-single">COP2 0780010h - 8 Cycles - DPCS - Depth Cueing (single)</h4>
+<h4 id="cop2-0x8002ah-17-cycles-dpct-depth-cueing-triple">COP2 0x8002Ah - 17 Cycles - DPCT - Depth Cueing (triple)</h4>
+<h4 id="cop2-0980011h-8-cycles-intpl-interpolation-of-a-vector-and-far-color">COP2 0980011h - 8 Cycles - INTPL - Interpolation of a vector and far color</h4>
+<p>In: [IR1,IR2,IR3]=Vector, FC=Far Color, IR0=Interpolation value, CODE=MSB of
+RGBC, and, for DCPL, R,G,B=LSBs of RGBC.<br/>
+<div class="highlight"><pre><span></span><code>  [MAC1,MAC2,MAC3] = [R*IR1,G*IR2,B*IR3] SHL 4          ;&lt;--- for DCPL only
+  [MAC1,MAC2,MAC3] = [IR1,IR2,IR3] SHL 12               ;&lt;--- for INTPL only
+  [MAC1,MAC2,MAC3] = [R,G,B] SHL 16                     ;&lt;--- for DPCS/DPCT
+  [MAC1,MAC2,MAC3] = MAC+(FC-MAC)*IR0
+  [MAC1,MAC2,MAC3] = [MAC1,MAC2,MAC3] SAR (sf*12)
+  Color FIFO = [MAC1/16,MAC2/16,MAC3/16,CODE], [IR1,IR2,IR3] = [MAC1,MAC2,MAC3]
+</code></pre></div>
+DPCT executes thrice, and reads the R,G,B values from RGB0 (ie. reads from the
+Bottom of the Color FIFO, instead of from the RGBC register) (the CODE value is
+kept read from RGBC as usually), so, after DPCT execution, the RGB0,RGB1,RGB2
+Fifo entries are modified.<br/></p>
+<h4 id="cop2-190003dh-5-cycles-gpfsflm-general-purpose-interpolation">COP2 190003Dh - 5 Cycles - GPF(sf,lm) - General purpose Interpolation</h4>
+<h4 id="cop2-1a0003eh-5-cycles-gplsf-general-interpolation-with-base">COP2 1A0003Eh - 5 Cycles - GPL(sf,?) - General Interpolation with base</h4>
+<p><div class="highlight"><pre><span></span><code>  [MAC1,MAC2,MAC3] = [0,0,0]                            ;&lt;--- for GPF only
+  [MAC1,MAC2,MAC3] = [MAC1,MAC2,MAC3] SHL (sf*12)       ;&lt;--- for GPL only
+  [MAC1,MAC2,MAC3] = (([IR1,IR2,IR3] * IR0) + [MAC1,MAC2,MAC3]) SAR (sf*12)
+  Color FIFO = [MAC1/16,MAC2/16,MAC3/16,CODE], [IR1,IR2,IR3] = [MAC1,MAC2,MAC3]
+</code></pre></div>
+Note: Although the SHL in GPL is theoretically undone by the SAR, 44bit
+overflows can occur internally when sf=1.<br/></p>
+<h4 id="details-on-macfc-macir0">Details on "MAC+(FC-MAC)*IR0"</h4>
+<p><div class="highlight"><pre><span></span><code>  [IR1,IR2,IR3] = (([RFC,GFC,BFC] SHL 12) - [MAC1,MAC2,MAC3]) SAR (sf*12)
+  [MAC1,MAC2,MAC3] = (([IR1,IR2,IR3] * IR0) + [MAC1,MAC2,MAC3])
+</code></pre></div>
+Note: Above "[IR1,IR2,IR3]=(FC-MAC)" is saturated to -8000h..+7FFFh (ie. as if
+lm=0), anyways, further writes to [IR1,IR2,IR3] (within the same command) are
+saturated as usually (ie. depening on lm setting).<br/></p>
+<h4 id="details-on-llmv0-sar-sf12-and-bk1000h-lcmir-sar-sf12">Details on "(LLM*V0) SAR (sf*12)" and "(BK*1000h + LCM*IR) SAR (sf*12)"</h4>
+<p>Works like MVMVA command (see there), but with fixed Tx/Vx/Mx parameters, the
+sf/lm bits can be changed and do affect the results (although normally both
+bits should be set for use with color matrices).<br/></p>
+<h4 id="notes">Notes</h4>
+<p>The 8bit RGB values written to the top of Color Fifo are the 32bit MACn values
+divided by 16, and saturated to +00h..+FFh, and of course, the older Fifo
+entries are moved downwards. Note that, at the GPU side, the meaning of the RGB
+values depends on whether or not texture blending is used (for untextured
+polygons FFh is max brightness) (for texture blending FFh is double brightness
+and 80h is normal brightness).<br/>
+The 8bit CODE value is intended to contain a GP0(20h..7Fh) Rendering command,
+allowing to automatically merge the 8bit command number, with the 24bit color
+value.<br/>
+The IRGB/ORGB registers allow to convert between 48bit and 15bit RGB colors.<br/>
+Although the result of the commands in this chapter is written to the Color
+FIFO, some commands like GPF/GPL may be also used for other purposes (eg. to
+scale or scale/translate single vertices).<br/></p>
+<h2 id="gte-division-inaccuracy">GTE Division Inaccuracy</h2>
+<h4 id="gte-division-inaccuracy-for-rtpsrtpt-commands">GTE Division Inaccuracy (for RTPS/RTPT commands)</h4>
+<p>Basically, the GTE division does (attempt to) work as so (using 33bit maths):<br/>
+<div class="highlight"><pre><span></span><code>  n = (((H*20000h/SZ3)+1)/2)
+</code></pre></div>
+alternatly, below would give (almost) the same result (using 32bit maths):<br/>
+<div class="highlight"><pre><span></span><code>  n = ((H*10000h+SZ3/2)/SZ3)
+</code></pre></div>
+in both cases, the result is saturated about as so:<br/>
+<div class="highlight"><pre><span></span><code>  if n&gt;1FFFFh or division_by_zero then n=1FFFFh, FLAG.Bit17=1, FLAG.Bit31=1
+</code></pre></div>
+However, the real GTE hardware is using a fast, but less accurate division
+mechanism (based on Unsigned Newton-Raphson (UNR) algorithm):<br/>
+<div class="highlight"><pre><span></span><code>  if (H &lt; SZ3*2) then                            ;check if overflow
+    z = count_leading_zeroes(SZ3)                ;z=0..0Fh (for 16bit SZ3)
+    n = (H SHL z)                                ;n=0..7FFF8000h
+    d = (SZ3 SHL z)                              ;d=8000h..FFFFh
+    u = unr_table[(d-7FC0h) SHR 7] + 101h        ;u=200h..101h
+    d = ((2000080h - (d * u)) SHR 8)             ;d=10000h..0FF01h
+    d = ((0000080h + (d * u)) SHR 8)             ;d=20000h..10000h
+    n = min(1FFFFh, (((n*d) + 8000h) SHR 16))    ;n=0..1FFFFh
+  else n = 1FFFFh, FLAG.Bit17=1, FLAG.Bit31=1    ;n=1FFFFh plus overflow flag
+</code></pre></div>
+the GTE's unr_table[000h..100h] consists of following values:<br/>
+<div class="highlight"><pre><span></span><code>  FFh,FDh,FBh,F9h,F7h,F5h,F3h,F1h,EFh,EEh,ECh,EAh,E8h,E6h,E4h,E3h ;\
+  E1h,DFh,DDh,DCh,DAh,D8h,D6h,D5h,D3h,D1h,D0h,CEh,CDh,CBh,C9h,C8h ; 00h..3Fh
+  C6h,C5h,C3h,C1h,C0h,BEh,BDh,BBh,BAh,B8h,B7h,B5h,B4h,B2h,B1h,B0h ;
+  AEh,ADh,ABh,AAh,A9h,A7h,A6h,A4h,A3h,A2h,A0h,9Fh,9Eh,9Ch,9Bh,9Ah ;/
+  99h,97h,96h,95h,94h,92h,91h,90h,8Fh,8Dh,8Ch,8Bh,8Ah,89h,87h,86h ;\
+  85h,84h,83h,82h,81h,7Fh,7Eh,7Dh,7Ch,7Bh,7Ah,79h,78h,77h,75h,74h ; 40h..7Fh
+  73h,72h,71h,70h,6Fh,6Eh,6Dh,6Ch,6Bh,6Ah,69h,68h,67h,66h,65h,64h ;
+  63h,62h,61h,60h,5Fh,5Eh,5Dh,5Dh,5Ch,5Bh,5Ah,59h,58h,57h,56h,55h ;/
+  54h,53h,53h,52h,51h,50h,4Fh,4Eh,4Dh,4Dh,4Ch,4Bh,4Ah,49h,48h,48h ;\
+  47h,46h,45h,44h,43h,43h,42h,41h,40h,3Fh,3Fh,3Eh,3Dh,3Ch,3Ch,3Bh ; 80h..BFh
+  3Ah,39h,39h,38h,37h,36h,36h,35h,34h,33h,33h,32h,31h,31h,30h,2Fh ;
+  2Eh,2Eh,2Dh,2Ch,2Ch,2Bh,2Ah,2Ah,29h,28h,28h,27h,26h,26h,25h,24h ;/
+  24h,23h,22h,22h,21h,20h,20h,1Fh,1Eh,1Eh,1Dh,1Dh,1Ch,1Bh,1Bh,1Ah ;\
+  19h,19h,18h,18h,17h,16h,16h,15h,15h,14h,14h,13h,12h,12h,11h,11h ; C0h..FFh
+  10h,0Fh,0Fh,0Eh,0Eh,0Dh,0Dh,0Ch,0Ch,0Bh,0Ah,0Ah,09h,09h,08h,08h ;
+  07h,07h,06h,06h,05h,05h,04h,04h,03h,03h,02h,02h,01h,01h,00h,00h ;/
+  00h    ;&lt;-- one extra table entry (for &quot;(d-7FC0h)/80h&quot;=100h)    ;-100h
+</code></pre></div>
+Above can be generated as "unr_table[i]=min(0,(40000h/(i+100h)+1)/2-101h)".<br/>
+Some special cases: NNNNh/0001h uses a big multiplier (d=20000h), in practice,
+this can occur only for 0000h/0001h and 0001h/0001h (due to the H\&lt;SZ3*2
+overflow check).<br/>
+The min(1FFFFh) limit is needed for cases like FE3Fh/7F20h, F015h/780Bh, etc.
+(these do produce UNR result 20000h, and are saturated to 1FFFFh, but without
+setting overflow FLAG bits).<br/></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>
