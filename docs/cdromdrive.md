@@ -240,9 +240,11 @@ quad-volume "FFh,FFh,FFh,FFh").<br/>
   0-7  Volume Level (00h..FFh) (00h=Off, FFh=Max/Double, 80h=Default/Normal)
 ```
 After changing these registers, the CHNGATV flag in ADPCTL must be set.<br/>
-Spyro the Dragon sets volume using these registers depending on whether mono or stereo sound is selected in the options menu. The stereo setting sets ATV0, ATV2 to 7Fh and ATV1, ATV3 to 00h. The mono setting sets every register to 3Fh. Resident
-Evil 2 uses these ports to produce fade-in/fade-out effects (although, for that
-purpose, it should be much easier to use Port 1F801DB0h).<br/>
+Spyro the Dragon sets volume using these registers depending on whether mono or
+stereo sound is selected in the options menu. The stereo setting sets ATV0, ATV2
+to 7Fh and ATV1, ATV3 to 00h. The mono setting sets every register to 3Fh. 
+Resident Evil 2 uses these ports to produce fade-in/fade-out effects (although,
+for that purpose, it should be much easier to use Port 1F801DB0h).<br/>
 
 #### `0x1f801803` (write, bank 3): `ADPCTL`
 ```
