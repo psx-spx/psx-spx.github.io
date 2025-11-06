@@ -59,9 +59,15 @@ to the programmer. Neither the kernel nor the Sony libraries will try to make us
 of it, so it is therefore completely up for grabs to the programmer. A good example
 would be if you were to write a piece of code that's doing a lot of CRC computation,
 to use the 1KB scratchpad to initially load the CRC lookup tables, which incidentally,
-is exactly 1KB large. Doing this will relieve SDRAM page changes overhead while reading
-the data to checksum linearly, while also keeping the whole CRC code in the i-Cache,
-hence being more optimal than what you'd get with an automatic d-Cache system.
+is exactly 1KB large. Doing this will speed up reads from the lookup table,
+while also keeping the whole CRC code in the i-Cache, hence being more optimal than 
+what you'd get with an automatic d-Cache system where parts of the table would be evicted
+while reading the data to compute the CRC of. Unlike an automatic d-Cache system however, 
+there is no row burst reads, so memory throughput is still much lower than if a d-Cache was present.<br/>
+Note that the scratchpad is NOT executable. Attempts to jump to this region will cause
+a bus error on the first instruction fetch. Attemping to force the scratchpad to be 
+executable using the bit 17 "Swap cache mode" in cop0 r12/SR do not work, and 
+a bus error will still occur.<br/>
 
 #### Memory Mirrors
 As described above, the 512Mbyte KUSEG, KSEG0, and KSEG1 regions are mirrors of
