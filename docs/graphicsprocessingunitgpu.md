@@ -260,7 +260,7 @@ Rectangles are drawn much faster than polygons. Unlike polygons, gouraud
 shading is not possible, dithering isn't applied, the rectangle must forcefully
 have horizontal and vertical edges, textures cannot be rotated or scaled, and,
 of course, the GPU does render Rectangles as a single entity, without splitting
-them into two triangles.<br/>
+them into two triangles. Note that this is sometimes refered to as a "sprite".<br/>
 
 The Rectangle command can be decoded using the following bitfield:
 ```
@@ -294,6 +294,10 @@ Unlike for Textured-Polygons, the "Texpage" must be set up separately for
 Rectangles, via GP0(E1h). Width and Height can be up to 1023x511, however, the
 maximum size of the texture window is 256x256 (so the source data will be
 repeated when trying to use sizes larger than 256x256).<br/>
+
+If using a texture with a rectangle primitive, please that the texture UV, 
+as well as the texture width must be even. If not, there will be one pixel
+sampling errors in the drawn rectangle every 16 pixels.
 
 #### Texture Origin and X/Y-Flip
 Vertex & Texcoord specify the upper-left edge of the rectangle. And,
@@ -880,7 +884,9 @@ Bit27: Gets set after sending GP0(C0h) and its parameters, and stays set until
 all data words are received; used as DMA request in DMA Mode 3.<br/>
 Bit26: Gets set when the GPU wants to receive a command. If the bit is cleared,
 then the GPU wants to either receive additional parameters/data or it is busy with command
-execution (and doesn't want to receive anything).<br/>
+execution (and doesn't want to receive anything). Note that this bit can NOT be used
+to determine when the GPU is finished drawing a DMA chain of primitives, as it will briefly
+go high after processing each primitive.<br/>
 Bit25: This is the DMA Request bit, however, the bit is also useful for non-DMA
 transfers, especially in the FIFO State mode.<br/>
 
