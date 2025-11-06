@@ -885,7 +885,7 @@ all data words are received; used as DMA request in DMA Mode 3.<br/>
 Bit26: Gets set when the GPU wants to receive a command. If the bit is cleared,
 then the GPU wants to either receive additional parameters/data or it is busy with command
 execution (and doesn't want to receive anything). Note that this bit can NOT be used
-to determin when the GPU is finished drawing a DMA chain of primitives, as it will breifly
+to determine when the GPU is finished drawing a DMA chain of primitives, as it will briefly
 go high after processing each primitive.<br/>
 Bit25: This is the DMA Request bit, however, the bit is also useful for non-DMA
 transfers, especially in the FIFO State mode.<br/>
