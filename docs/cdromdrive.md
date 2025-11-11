@@ -679,10 +679,13 @@ Read with retry. The command responds once with "stat,INT3", and then it's
 repeatedly sending "stat,INT1 --\> datablock", that is continued even after a
 successful read has occured; use the Pause command to terminate the repeated
 INT1 responses.<br/>
+If you are reading an unlicensed disk without a modchip or first unlocking the drive, 
+this command will first trigger INT5, without triggering INT3 or INT1.
+This INT5 is accompanied with the stat byte 0x3 and the following error byte 0x40,
+indicating an invalid command. This can be avoided by first unlocking the drive.<br/>
 Unknown which responses are sent in case of read errors?<br/>
 ====<br/>
-ReadN and ReadS cause errors if you're trying to read an unlicensed CD or CD-R
-without a mod chip. Sectors on Audio CDs can be read only when CDDA is enabled
+Sectors on Audio CDs can be read only when CDDA is enabled
 via Setmode (otherwise error code 40h is returned).<br/>
 ====<br/>
 Actually, Read seems to work on unlicensed CD-R's, but the returned data is the
