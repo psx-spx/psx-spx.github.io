@@ -265,7 +265,6 @@ program levels).<br/>
   Crash Team Racing
   FIFA series soccer games
   Frogger
-  Gauntlet: Dark Legacy
   Hot Shots Golf 2 & 3
   Jigsaw Island: Japan Graffiti / Jigsaw Madness (requires Multitap on Port 2 instead of 1)
   NBA Live (any year) (up to 8 players with two multitaps)
