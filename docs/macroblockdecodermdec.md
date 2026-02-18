@@ -125,8 +125,8 @@ These commands act identical as MDEC(0).<br/>
   rl_decode_block(Crblk,src,iq_uv)                 ;Cr (low resolution)
   rl_decode_block(Cbblk,src,iq_uv)                 ;Cb (low resolution)
   rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(0,0)  ;Y1 (and upper-left Cr,Cb)
-  rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(0,8)  ;Y2 (and upper-right Cr,Cb)
-  rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(8,0)  ;Y3 (and lower-left Cr,Cb)
+  rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(8,0)  ;Y2 (and upper-right Cr,Cb)
+  rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(0,8)  ;Y3 (and lower-left Cr,Cb)
   rl_decode_block(Yblk,src,iq_y), yuv_to_rgb(8,8)  ;Y4 (and lower-right Cr,Cb)
 ```
 
