@@ -3100,8 +3100,8 @@ potentiometers and similar resistive analog controls.
 | --: | :---- | :-- |
 |   1 | `5V`  |     |
 |   2 | `5V`  |     |
-|   3 | `5V`  |     |
-|   4 | `5V`  |     |
+|   3 | `NC`  |     |
+|   4 | `NC`  |     |
 |   5 | `CH0` | I   |
 |   6 | `GND` |     |
 |   7 | `CH1` | I   |
