@@ -690,7 +690,7 @@ The number of displayed pixels per line is "(((X2-X1)/cycles\_per\_pix)+2) AND
 NOT 3" (ie. the hardware is rounding the width up/down to a multiple of 4
 pixels).<br/>
 Most games are using a width equal to the horizontal resolution (ie. 256, 320,
-368, 512, 640 pixels). A few games are using slightly smaller widths (probably
+384, 512, 640 pixels). A few games are using slightly smaller widths (probably
 due to programming bugs). Pandemonium 2 is using a bigger "overscan" width
 (ensuring an intact picture without borders even on mis-calibrated TV sets).<br/>
 The 260h value is the first visible pixel on normal TV Sets, this value is used
@@ -728,7 +728,7 @@ those particular cases.<br/>
   3     Video Mode                  (0=NTSC/60Hz, 1=PAL/50Hz)    ;GPUSTAT.20
   4     Display Area Color Depth    (0=15bit, 1=24bit)           ;GPUSTAT.21
   5     Vertical Interlace          (0=Off, 1=On)                ;GPUSTAT.22
-  6     Horizontal Resolution 2     (0=256/320/512/640, 1=368)   ;GPUSTAT.16
+  6     Horizontal Resolution 2     (0=256/320/512/640, 1=384)   ;GPUSTAT.16
   7     Flip screen horizontally    (0=Off, 1=On, v1 only)       ;GPUSTAT.14
   8-23  Not used (zero)
 ```
@@ -846,7 +846,7 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
   13    Interlace Field       (or, always 1 when GP1(08h).5=0)
   14    Flip screen horizontally (0=Off, 1=On, v1 only)           ;GP1(08h).7
   15    Texture page Y Base 2 (N*512) (only for 2 MB VRAM)        ;GP0(E1h).11
-  16    Horizontal Resolution 2     (0=256/320/512/640, 1=368)    ;GP1(08h).6
+  16    Horizontal Resolution 2     (0=256/320/512/640, 1=384)    ;GP1(08h).6
   17-18 Horizontal Resolution 1     (0=256, 1=320, 2=512, 3=640)  ;GP1(08h).0-1
   19    Vertical Resolution         (0=240, 1=480, when Bit22=1)  ;GP1(08h).2
   20    Video Mode                  (0=NTSC/60Hz, 1=PAL/50Hz)     ;GP1(08h).3
@@ -1094,7 +1094,7 @@ The GPU supports 10 resolutions, with 16bit or 24bit per pixel.<br/>
   Resolution  16bit      24bit      |  Resolution  16bit      24bit
   256x240     120Kbytes  180Kbytes  |  256x480     240Kbytes  360Kbytes
   320x240     150Kbytes  225Kbytes  |  320x480     300Kbytes  450Kbytes
-  368x240     xx0Kbytes  xx0Kbytes  |  368x480     xx0Kbytes  xx0Kbytes
+  384x240     xx0Kbytes  xx0Kbytes  |  384x480     xx0Kbytes  xx0Kbytes
   512x240     240Kbytes  360Kbytes  |  512x480     480Kbytes  720Kbytes
   640x240     300Kbytes  450Kbytes  |  640x480     600Kbytes  900Kbytes
 ```
@@ -1309,7 +1309,7 @@ Dotclocks:<br/>
 ```
   PSX.256-pix Dotclock =  5.322240MHz (44100Hz*300h*11/7/10)
   PSX.320-pix Dotclock =  6.652800MHz (44100Hz*300h*11/7/8)
-  PSX.368-pix Dotclock =  7.603200MHz (44100Hz*300h*11/7/7)
+  PSX.384-pix Dotclock =  7.603200MHz (44100Hz*300h*11/7/7)
   PSX.512-pix Dotclock = 10.644480MHz (44100Hz*300h*11/7/5)
   PSX.640-pix Dotclock = 13.305600MHz (44100Hz*300h*11/7/4)
   Namco GunCon 385-pix =  8.000000MHz (from 8.00MHz on lightgun PCB)
@@ -1320,7 +1320,7 @@ Dots per scanline are, depending on horizontal resolution, and on PAL/NTSC:<br/>
   640pix/PAL: 3406/4  = 851.5 dots      640pix/NTSC: 3413/4  = 853.25 dots
   256pix/PAL: 3406/10 = 340.6 dots      256pix/NTSC: 3413/10 = 341.3 dots
   512pix/PAL: 3406/5  = 681.2 dots      512pix/NTSC: 3413/5  = 682.6 dots
-  368pix/PAL: 3406/7  = 486.5714 dots   368pix/NTSC: 3413/7  = 487.5714 dots
+  384pix/PAL: 3406/7  = 486.5714 dots   384pix/NTSC: 3413/7  = 487.5714 dots
 ```
 Timer0 can use the dotclock as input, however, the Timer0 input "ignores" the
 fractional portions (in most cases, the values are rounded down, ie. with 340.6
