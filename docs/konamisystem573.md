@@ -3090,6 +3090,33 @@ internal message array.
 
 ### Main board pinouts (`GX700-PWB(A)`)
 
+### RGB Output ('DB15')
+
+Labelled RGB out, this is following the usual VGA pinout but it is not VGA compatible as
+it uses 15 KHz C-Sync instead of 31 KHz H/V-Sync and a nominal resolution of 320x240p
+comapred to 640x480p.
+
+| Pin | Name      | Dir |
+| --: | :-------- | :-- |
+|   1 | `R`       | O   |
+|   2 | `G`       | O   |
+|   3 | `B`       | O   |
+|   4 | `NC`      |     |
+|   5 | `GND`     |     |
+|   6 | `GND`     |     |
+|   7 | `GND`     |     |
+|   8 | `GND`     |     |
+|   9 | `NC`      |     |
+|  10 | `GND`     |     |
+|  11 | `NC`      |     |
+|  12 | `NC`      |     |
+|  13 | `C-Sync`  | O   |
+|  14 | `V-Sync*` | O   |
+|  15 | `NC`      |     |
+
+Note *: Pin 14 signal is not normally present. There is a an unmarked two-pin header near the 
+RGB out port which when bridged will join this pin to V-Sync
+
 #### Analog input port (`ANALOG`, `CN3`)
 
 The inputs are wired directly to the 573's built-in ADC with no protection, so
@@ -3283,8 +3310,8 @@ known I/O board uses it. All signals are 3.3V.
 |  A2 | `A10`  | O   |  B2 | `A11`    | O   |
 |  A3 | `A16`  | O   |  B3 | `A17`    | O   |
 |  A4 | `A18`  | O   |  B4 | `A19`    | O   |
-|  A5 | `GND`  |     |  B5 | `?`      |     |
-|  A6 | `GND`  |     |  B6 | `?`      |     |
+|  A5 | `GND`  |     |  B5 | `V-SYNC` | O   |
+|  A6 | `GND`  |     |  B6 | `H-SYNC` | O   |
 |  A7 | `GND`  |     |  B7 | `GND`    |     |
 |  A8 | `GND`  |     |  B8 | `DOTCLK` | O   |
 |  A9 | `GND`  |     |  B9 | `GND`    |     |
@@ -3350,6 +3377,7 @@ connectors.
 |   3 | `BOUT`  | O   |        13 |
 |   4 | `GOUT`  | O   |         N |
 |   5 | `ROUT`  | O   |        12 |
+
 
 #### Watchdog configuration jumper (`S86`)
 
