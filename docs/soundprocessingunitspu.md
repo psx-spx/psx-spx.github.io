@@ -492,8 +492,7 @@ Negative volumes are phase inverted, otherwise same as positive.<br/>
   0-23  Voice 0..23 On  (0=No change, 1=Start Attack/Decay/Sustain)
   24-31 Not used
 ```
-Starts the ADSR Envelope, and automatically initializes ADSR Volume to zero,
-and copies Voice Start Address to Voice Repeat Address.<br/>
+Starts the ADSR Envelope, and automatically initializes ADSR Volume to zero.<br/>
 
 #### 1F801D8Ch - Voice 0..23 Key OFF (Start Release) (KOFF) (W)
 ```
