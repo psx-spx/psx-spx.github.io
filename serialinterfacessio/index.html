@@ -1,0 +1,1211 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/serialinterfacessio/">
+      
+      
+        <link rel="prev" href="../pocketstation/">
+      
+      
+        <link rel="next" href="../expansionportpio/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>Serial Interfaces (SIO) - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#serial-interfaces-sio" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Serial Interfaces (SIO)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        I/O Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        Geometry Transformation Engine (GTE)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        Macroblock Decoder (MDEC)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        Sound Processing Unit (SPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Serial Interfaces (SIO)
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Serial Interfaces (SIO)
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1f801040hn10h-sio_tx_data-w" class="md-nav__link">
+    1F801040h+N*10h - SIO#_TX_DATA (W)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801040hn10h-sio_rx_data-r" class="md-nav__link">
+    1F801040h+N*10h - SIO#_RX_DATA (R)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801044hn10h-sio_stat-r" class="md-nav__link">
+    1F801044h+N*10h - SIO#_STAT (R)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801048hn10h-sio_mode-rw-eg-004eh-8n1-with-factormul16" class="md-nav__link">
+    1F801048h+N*10h - SIO#_MODE (R/W) (eg. 004Eh --> 8N1 with Factor=MUL16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80104ahn10h-sio_ctrl-rw" class="md-nav__link">
+    1F80104Ah+N*10h - SIO#_CTRL (R/W)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80105ch-sio1_misc-rw" class="md-nav__link">
+    1F80105Ch - SIO1_MISC (R/W)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80104ehn10h-sio_baud-rw-eg-00dch-9600-bps-when-factormul16" class="md-nav__link">
+    1F80104Eh+N*10h - SIO#_BAUD (R/W) (eg. 00DCh --> 9600 bps; when Factor=MUL16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sio_tx_data-notes" class="md-nav__link">
+    SIO_TX_DATA Notes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sio_rx_data-notes" class="md-nav__link">
+    SIO_RX_DATA Notes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interrupt-acknowledge-notes" class="md-nav__link">
+    Interrupt Acknowledge Notes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sio1-link-cable-games" class="md-nav__link">
+    SIO1 link cable games
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        Expansion Port (PIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        Memory Control
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        CPU Specifications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        PSX Dev-Board Chipsets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1f801040hn10h-sio_tx_data-w" class="md-nav__link">
+    1F801040h+N*10h - SIO#_TX_DATA (W)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801040hn10h-sio_rx_data-r" class="md-nav__link">
+    1F801040h+N*10h - SIO#_RX_DATA (R)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801044hn10h-sio_stat-r" class="md-nav__link">
+    1F801044h+N*10h - SIO#_STAT (R)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801048hn10h-sio_mode-rw-eg-004eh-8n1-with-factormul16" class="md-nav__link">
+    1F801048h+N*10h - SIO#_MODE (R/W) (eg. 004Eh --> 8N1 with Factor=MUL16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80104ahn10h-sio_ctrl-rw" class="md-nav__link">
+    1F80104Ah+N*10h - SIO#_CTRL (R/W)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80105ch-sio1_misc-rw" class="md-nav__link">
+    1F80105Ch - SIO1_MISC (R/W)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80104ehn10h-sio_baud-rw-eg-00dch-9600-bps-when-factormul16" class="md-nav__link">
+    1F80104Eh+N*10h - SIO#_BAUD (R/W) (eg. 00DCh --> 9600 bps; when Factor=MUL16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sio_tx_data-notes" class="md-nav__link">
+    SIO_TX_DATA Notes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sio_rx_data-notes" class="md-nav__link">
+    SIO_RX_DATA Notes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interrupt-acknowledge-notes" class="md-nav__link">
+    Interrupt Acknowledge Notes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sio1-link-cable-games" class="md-nav__link">
+    SIO1 link cable games
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="serial-interfaces-sio">Serial Interfaces (SIO)</h1>
+<p>The console has two serial interfaces, SIO0 (connected to the controller and
+memory card ports) and SIO1 (connected to the serial port). SIO0 is hardwired to
+run in synchronous mode, while SIO1 can only operate in asynchronous mode. Both
+units are fairly similar, although not identical, and seem to be vaguely based
+on the Intel 8251A USART chip.<br/></p>
+<h4 id="1f801040hn10h-sio_tx_data-w">1F801040h+N*10h - SIO#_TX_DATA (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-7   Data to be sent
+  8-31  Not used
+</code></pre></div>
+Writing to this register starts a transfer (if, or as soon as, TXEN=1 and CTS=on
+and SIO_STAT.2=Ready). Writing to this register while SIO_STAT.0=Busy causes
+the old value to be overwritten.<br/>
+The "TXEN=1" condition is a bit more complex: Writing to SIO_TX_DATA latches
+the current TXEN value, and the transfer DOES start if the current TXEN value
+OR the latched TXEN value is set (ie. if TXEN gets cleared after writing to
+SIO_TX_DATA, then the transfer may STILL start if the old latched TXEN value
+was set; this appears for SIO transfers in Wipeout 2097).<br/></p>
+<h4 id="1f801040hn10h-sio_rx_data-r">1F801040h+N*10h - SIO#_RX_DATA (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-7   Received Data      (1st RX FIFO entry) (oldest entry)
+  8-15  Preview            (2nd RX FIFO entry)
+  16-23 Preview            (3rd RX FIFO entry)
+  24-31 Preview            (4th RX FIFO entry) (5th..8th cannot be previewed)
+</code></pre></div>
+A data byte can be read when SIO_STAT.1=1. Some emulators behave incorrectly
+when this register is read using a 16/32-bit memory access, so it should only
+be accessed as an 8-bit register.<br/></p>
+<h4 id="1f801044hn10h-sio_stat-r">1F801044h+N*10h - SIO#_STAT (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  0     TX FIFO Not Full       (1=Ready for new byte)  (depends on CTS) (TX requires CTS)
+  1     RX FIFO Not Empty      (0=Empty, 1=Data available)
+  2     TX Idle                (1=Idle/Finished)       (depends on TXEN and on CTS)
+  3     RX Parity Error        (0=No, 1=Error; Wrong Parity, when enabled) (sticky)
+  4     SIO1 RX FIFO Overrun   (0=No, 1=Error; received more than 8 bytes) (sticky)
+  5     SIO1 RX Bad Stop Bit   (0=No, 1=Error; Bad Stop Bit) (when RXEN)   (sticky)
+  6     SIO1 RX Input Level    (0=Normal, 1=Inverted) ;only AFTER receiving Stop Bit
+  7     DSR Input Level        (0=Off, 1=On) (remote DTR) ;DSR not required to be on
+  8     SIO1 CTS Input Level   (0=Off, 1=On) (remote RTS) ;CTS required for TX
+  9     Interrupt Request      (0=None, 1=IRQ) (See SIO_CTRL.Bit4,10-12)   (sticky)
+  10    Unknown                (always zero)
+  11-31 Baudrate Timer         (15-21 bit timer, decrementing at 33MHz)
+</code></pre></div>
+Bit 0 gets set after sending the start bit, bit 2 is set after sending all bits
+including the stop bit if any.<br/>
+On SIO0, DSR is wired to the /ACK pin on the controller and memory card ports;
+bit 7 is thus set when /ACK is low (asserted) and cleared when it is high. Bits
+4-6 and 8 are always zero.<br/>
+The number of bits actually used by the baud rate timer is probably affected by
+the reload factor set in SIO_MODE.<br/></p>
+<h4 id="1f801048hn10h-sio_mode-rw-eg-004eh-8n1-with-factormul16">1F801048h+N*10h - SIO#_MODE (R/W) (eg. 004Eh --> 8N1 with Factor=MUL16)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-1   Baudrate Reload Factor     (1=MUL1, 2=MUL16, 3=MUL64) (or 0=MUL1 on SIO0, STOP on SIO1)
+  2-3   Character Length           (0=5 bits, 1=6 bits, 2=7 bits, 3=8 bits)
+  4     Parity Enable              (0=No, 1=Enable)
+  5     Parity Type                (0=Even, 1=Odd) (seems to be vice-versa...?)
+  6-7   SIO1 stop bit length       (0=Reserved/1bit, 1=1bit, 2=1.5bits, 3=2bits)
+  8     SIO0 clock polarity (CPOL) (0=High when idle, 1=Low when idle)
+  9-15  Not used (always zero)
+</code></pre></div>
+Bits 6-7 on SIO0 and bit 8 on SIO1 are always zero. On SIO0 the character length
+shall be set to 8, the clock polarity should be set to high-when-idle and parity
+should be disabled, as all controllers and memory cards expect these settings.</br></p>
+<h4 id="1f80104ahn10h-sio_ctrl-rw">1F80104Ah+N*10h - SIO#_CTRL (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0     TX Enable (TXEN)      (0=Disable, 1=Enable)
+  1     DTR Output Level      (0=Off, 1=On)
+  2     RX Enable (RXEN)      (SIO1: 0=Disable, 1=Enable)  ;Disable also clears RXFIFO
+                              (SIO0: 0=only receive when /CS low, 1=force receiving single byte)
+  3     SIO1 TX Output Level  (0=Normal, 1=Inverted, during Inactivity &amp; Stop bits)
+  4     Acknowledge           (0=No change, 1=Reset SIO_STAT.Bits 3,4,5,9)      (W)
+  5     SIO1 RTS Output Level (0=Off, 1=On)
+  6     Reset                 (0=No change, 1=Reset most registers to zero) (W)
+  7     SIO1 unknown?         (read/write-able when FACTOR non-zero) (otherwise always zero)
+  8-9   RX Interrupt Mode     (0..3 = IRQ when RX FIFO contains 1,2,4,8 bytes)
+  10    TX Interrupt Enable   (0=Disable, 1=Enable) ;when SIO_STAT.0-or-2 ;Ready
+  11    RX Interrupt Enable   (0=Disable, 1=Enable) ;when N bytes in RX FIFO
+  12    DSR Interrupt Enable  (0=Disable, 1=Enable) ;when SIO_STAT.7  ;DSR high or /ACK low
+  13    SIO0 port select      (0=port 1, 1=port 2) (/CS pulled low when bit 1 set)
+  14-15 Not used              (always zero)
+</code></pre></div>
+On SIO0, DTR is wired to the /CS pin on the controller and memory card ports;
+bit 1 will pull (assert) /CS low when set. Bit 13 is used to select which port's
+/CS shall be asserted (all other signals are wired in parallel).<br/>
+Bit 2 behaves differently on SIO0: when not set, incoming data will be ignored
+unless bit 1 is also set. When set, data will be received regardless of whether
+/CS is asserted, however bit 2 will be automatically cleared after a byte is
+received.<br/>
+Note that some emulators do not implement all SIO0 interrupts, as the kernel's
+controller driver only ever uses the DSR (/ACK) interrupt.<br/></p>
+<h4 id="1f80105ch-sio1_misc-rw">1F80105Ch - SIO1_MISC (R/W)</h4>
+<p>This is an internal register, which usually shouldn't be accessed by software.
+Messing with it has rather strange effects: After writing a value "X" to this
+register, reading returns "X ROR 8" eventually "ANDed with 1F1Fh and ORed with
+C0C0h or 8080h" (depending on the character length in SIO_MODE). SIO0 does not
+have this register.<br/></p>
+<h4 id="1f80104ehn10h-sio_baud-rw-eg-00dch-9600-bps-when-factormul16">1F80104Eh+N*10h - SIO#_BAUD (R/W) (eg. 00DCh --> 9600 bps; when Factor=MUL16)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-15  Baudrate Reload value for decrementing Baudrate Timer
+</code></pre></div>
+The timer is decremented on every clock cycle and reloaded when writing to this
+register and when it reaches zero. Upon reload, the 16-bit Reload value is
+multiplied by the Baudrate Factor (see SIO_MODE.Bit0-1), divided by 2, and then
+copied to the 21-bit Baudrate Timer (SIO_MODE.Bit11-31). The resulting transfer
+rate can be calculated as follows:<br/>
+<div class="highlight"><pre><span></span><code>  SIO0: BitsPerSecond = 33868800 / MIN(((Reload*Factor) AND NOT 1),1)
+  SIO1: BitsPerSecond = 33868800 / MIN(((Reload*Factor) AND NOT 1),Factor)
+</code></pre></div>
+According to the original nocash page, the way this register works is actually
+slightly different for SIO0 vs. SIO1:<br/>
+<div class="highlight"><pre><span></span><code>  SIO0_BAUD is multiplied by Factor, and does then elapse &quot;2&quot; times per bit.
+  SIO1_BAUD is NOT multiplied, and, instead, elapses &quot;2*Factor&quot; times per bit.
+</code></pre></div>
+The standard baud rate for SIO0 devices, including both controllers and memory
+cards, is ~250 kHz, with SIO0_BAUD being set to 0088h (serial clock high for
+44h cycles then low for 44h cycles).<br/></p>
+<h4 id="sio_tx_data-notes">SIO_TX_DATA Notes</h4>
+<p>The hardware can hold (almost) 2 bytes in the TX direction (one being currently
+transferred, and, once when the start bit was sent, another byte can be stored
+in SIO_TX_DATA). When writing to SIO_TX_DATA, both SIO_STAT.0 and SIO_STAT.2
+become zero. As soon as the transfer starts, SIO_STAT.0 becomes set (indicating
+that one can write a new byte to SIO_TX_DATA; although the transmission is
+still busy). As soon as the transfer of the most recently written byte ends,
+SIO_STAT.2 becomes set.<br/></p>
+<h4 id="sio_rx_data-notes">SIO_RX_DATA Notes</h4>
+<p>The hardware can hold 8 bytes in the RX direction (when receiving further
+byte(s) while the RX FIFO is full, then the last FIFO entry will by overwritten
+by the new byte, and SIO_STAT.4 gets set; the hardware does NOT automatically
+disable RTS when the FIFO becomes full). The RX FIFO overrun flag is not
+accessible on SIO0.<br/>
+Data can be read from SIO_RX_DATA when SIO_STAT.1 is set, that flag gets
+automatically cleared after reading from SIO_RX_DATA (unless there are still
+further bytes in the RX FIFO). Note: The hardware does always store incoming
+data in RX FIFO (even when Parity or Stop bits are invalid).<br/>
+Note: A 16bit read allows to read two FIFO entries at once; nethertheless, it
+removes only ONE entry from the FIFO. On the contrary, a 32bit read DOES remove
+FOUR entries (although, there's nothing that'd indicate if the FIFO did
+actually contain four entries).<br/>
+Reading from Empty RX FIFO returns either the most recently received byte or
+zero (the hardware stores incoming data in ALL unused FIFO entries; eg. if five
+entries are used, then the data gets stored thrice, after reading 6 bytes, the
+FIFO empty flag gets set, but nethertheless, the last byte can be read two more
+times, but doing further reads returns 00h).<br/></p>
+<h4 id="interrupt-acknowledge-notes">Interrupt Acknowledge Notes</h4>
+<p>First reset I_STAT.8, then set SIO.CTRL.4 (when doing it vice-versa, the
+hardware may miss a new IRQ which may occur immediately after setting
+SIO.CTRL.4) (and I_STAT.8 is edge triggered, so that bit can be reset even
+while SIO_STAT.9 is still set).<br/>
+When acknowledging via SIO_CTRL.4 with the enabled condition(s) in
+SIO_CTRL.10-12 still being true (eg. the RX FIFO is still not empty): the IRQ
+does trigger again (almost) immediately (it goes off only for a very short
+moment; barely enough to allow I_STAT.8 to sense a edge).<br/></p>
+<h4 id="note">Note</h4>
+<p>For more details on how SIO0 is used to communicate with controllers and memory
+cards, see:<br/>
+<a href="../controllersandmemorycards/#controller-and-memory-card-overview">Controller and Memory Card Overview</a><br/>
+For serial port pinouts, PSone SIO1 upgrading, and for building RS232 adaptors,
+see:<br/>
+<a href="../pinouts/#pinouts-sio-pinouts">Pinouts - SIO Pinouts</a><br/>
+Aside from the internal SIO port, the PSX BIOS supports two additional external
+serial ports, connected to the expansion port.<br/>
+<a href="../expansionportpio/#exp2-dual-serial-port-for-tty-debug-terminal">EXP2 Dual Serial Port (for TTY Debug Terminal)</a><br/></p>
+<h4 id="sio1-link-cable-games">SIO1 link cable games</h4>
+<p>The serial ports on two consoles can be connected with an SCPH-1040 Link Cable
+(known as Taisen Cable, or "Fight Cable" in Japan) for multiplayer functionality
+on games that support this method. This was used by a small number of games in
+the console's lifecycle, but inconveniently required a second console and copy
+of the game.</p>
+<p>Two-Console Link Cable Games (Incomplete List):
+<div class="highlight"><pre><span></span><code>Andretti Racing
+Armored Core (and Armored Core &quot;Link Versus Demo&quot; disc)
+Armored Core Project Phantasma
+Armored Core Master of Arena
+Assault Rigs
+Ayrton Senna Kart Duel
+Blast Radius
+Bogey Dead 6
+Burning Road
+Bushido Blade
+Bushido Blade 2
+C1 -Circuit-
+CART World Series
+Command &amp; Conquer Red Alert
+Command &amp; Conquer Red Alert Retaliation
+Cool Boarders 2
+Dead in the Water
+Descent
+Descent Maximum
+Destruction Derby
+Duke Nukem Total Meltdown
+Dodgem Arena
+Doom
+Dune 2000
+Explosive Racing (X Racing in NTSC-J)
+Final Doom
+Formula 1
+Formula 1 98
+Grand Tour Racing &#39;98 (Gekisou!! Grand Racing -Total Driving&#39;- in NTSC-J, Total Drivin in PAL)
+Independence Day
+Krazy Ivan
+Leading Jockey Highbred
+Metal Jacket
+Mobile Suit Z-Gundam
+Monaco Grand Prix Racing Simulation 2 (Monaco Grand Prix in NTSC-U/C)
+Motor Toon Grand Prix (reportedly NTSC-U/C version only)
+Motor Toon Grand Prix 2
+Motor Toon Grand Prix USA Edition
+The Need for Speed (Over Drivin&#39; DX in NTSC-J)
+PrePre Vol. 2
+Pro Pinball Big Race USA
+RacinGroovy
+Real Robots Final Attack
+Red Asphalt (Rock &amp; Roll Racing 2 Red Asphalt in PAL)
+Ridge Racer Revolution
+R4 Ridge Racer Type 4
+Robo Pit
+Rogue Trip Vacation 2012
+San Francisco Rush Extreme Racing (reportedly PAL version only)
+Shutokou Battle R
+Sidewinder
+Sidewinder USA
+Soukou Kihei Votoms Gaiden: Ao no Kishi Berserga Monogatari
+Streak Hoverboard Racing
+Test Drive 4
+Test Drive Off-Road (reportedly NTSC-U/C only)
+TOCA 2 Touring Car Challenge (TOCA 2 Touring Cars in PAL)
+Trick&#39;N Snowboarder (Tricky Sliders Freestyle Snowboard in NTSC-J)
+Twisted Metal III
+Wing Over
+Wipeout
+Wipeout 3 Special Edition
+Wipeout XL (Wipeout 2097 in PAL)
+Zero Pilot Ginyoku no Senshi
+</code></pre></div></p>
+<p>The serial port is used (for 2-player link) by Wipeout 2097 (that game
+accidently assumes BAUDs based on 64*1024*1025 Hz rather than on 600h*44100
+Hz).<br/>
+Ridge Racer Revolution is also said to support 2P link.<br/>
+Keitai Eddy seems to allow to connect a mobile phone to the SIO port (the games
+CD cover suggests so; this seems to be something different than the "normal"
+I-Mode adaptor, which would connect to controller port, not to SIO port).<br/></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>

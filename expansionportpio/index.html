@@ -1,0 +1,2359 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/expansionportpio/">
+      
+      
+        <link rel="prev" href="../serialinterfacessio/">
+      
+      
+        <link rel="next" href="../memorycontrol/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.4">
+    
+    
+      
+        <title>Expansion Port (PIO) - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.240905d7.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#expansion-port-pio" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Expansion Port (PIO)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        Memory Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        I/O Map
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        Graphics Processing Unit (GPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        Geometry Transformation Engine (GTE)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        Macroblock Decoder (MDEC)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        Sound Processing Unit (SPU)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        Interrupts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        DMA Channels
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        Timers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        CDROM Drive
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        CDROM Format
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        CDROM File Formats
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        Controllers and Memory Cards
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        Pocketstation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        Serial Interfaces (SIO)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Expansion Port (PIO)
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Expansion Port (PIO)
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sizebus-width" class="md-nav__link">
+    Size/Bus-Width
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-1-exp1-intended-to-contain-rom" class="md-nav__link">
+    Expansion 1 - EXP1 - Intended to contain ROM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-2-exp2-intended-to-contain-io-ports" class="md-nav__link">
+    Expansion 2 - EXP2 - Intended to contain I/O Ports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-3-exp3-intended-to-contain-ram" class="md-nav__link">
+    Expansion 3 - EXP3 - Intended to contain RAM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-expansions" class="md-nav__link">
+    Other Expansions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#missing-expansion-port" class="md-nav__link">
+    Missing Expansion Port
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#latched-address-bus" class="md-nav__link">
+    Latched Address Bus
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp1-expansion-rom-header" class="md-nav__link">
+    EXP1 Expansion ROM Header
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP1 Expansion ROM Header">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expansion-1-rom-header-accessed-with-8bit-databus-setting" class="md-nav__link">
+    Expansion 1 - ROM Header (accessed with 8bit databus setting)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-boot-function" class="md-nav__link">
+    Pre-Boot Function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-boot-function" class="md-nav__link">
+    Post-Boot Function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mid-boot-hook" class="md-nav__link">
+    Mid-Boot Hook
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-dual-serial-port-for-tty-debug-terminal" class="md-nav__link">
+    EXP2 Dual Serial Port (for TTY Debug Terminal)
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 Dual Serial Port (for TTY Debug Terminal)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scn2681-dual-asynchronous-receivertransmitter-duart" class="md-nav__link">
+    SCN2681 Dual Asynchronous Receiver/Transmitter (DUART)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802023hread-rhra-duart-rx-holding-register-a-fifo-r" class="md-nav__link">
+    1F802023h/Read - RHRA - DUART Rx Holding Register A (FIFO) (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202bhread-rhrb-duart-rx-holding-register-b-fifo-r" class="md-nav__link">
+    1F80202Bh/Read - RHRB - DUART Rx Holding Register B (FIFO) (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802023hwrite-thra-duart-tx-holding-register-a-w" class="md-nav__link">
+    1F802023h/Write - THRA - DUART Tx Holding Register A (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202bhwrite-thrb-duart-tx-holding-register-b-w" class="md-nav__link">
+    1F80202Bh/Write - THRB - DUART Tx Holding Register B (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802020hfirstaccess-mr1a-duart-mode-register-1a-rw" class="md-nav__link">
+    1F802020h/FirstAccess - MR1A - DUART Mode Register 1.A (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802028hfirstaccess-mr1b-duart-mode-register-1b-rw" class="md-nav__link">
+    1F802028h/FirstAccess - MR1B - DUART Mode Register 1.B (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802020hsecondaccess-mr2a-duart-mode-register-2a-rw" class="md-nav__link">
+    1F802020h/SecondAccess - MR2A - DUART Mode Register 2.A (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802028hsecondaccess-mr2b-duart-mode-register-2b-rw" class="md-nav__link">
+    1F802028h/SecondAccess - MR2B - DUART Mode Register 2.B (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802021hwrite-csra-duart-clock-select-register-a-w" class="md-nav__link">
+    1F802021h/Write - CSRA - DUART Clock Select Register A (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802029hwrite-csrb-duart-clock-select-register-b-w" class="md-nav__link">
+    1F802029h/Write - CSRB - DUART Clock Select Register B (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802022hwrite-cra-duart-command-register-a-w" class="md-nav__link">
+    1F802022h/Write - CRA - DUART Command Register A (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ahwrite-crb-duart-command-register-b-w" class="md-nav__link">
+    1F80202Ah/Write - CRB - DUART Command Register B (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802025hread-isr-duart-interrupt-status-register-r" class="md-nav__link">
+    1F802025h/Read - ISR - DUART Interrupt Status Register (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802025hwrite-imr-duart-interrupt-mask-register-w" class="md-nav__link">
+    1F802025h/Write - IMR - DUART Interrupt Mask Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802021hread-sra-duart-status-register-a-r" class="md-nav__link">
+    1F802021h/Read - SRA - DUART Status Register A (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802029hread-srb-duart-status-register-b-r" class="md-nav__link">
+    1F802029h/Read - SRB - DUART Status Register B (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802024hwrite-acr-duart-aux-control-register-w" class="md-nav__link">
+    1F802024h/Write - ACR - DUART Aux. Control Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802024hread-ipcr-duart-input-port-change-register-r" class="md-nav__link">
+    1F802024h/Read - IPCR - DUART Input Port Change Register (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202dhread-ip-duart-input-port-r" class="md-nav__link">
+    1F80202Dh/Read - IP - DUART Input Port (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ehwrite-duart-set-output-port-bits-command-set-means-outlow" class="md-nav__link">
+    1F80202Eh/Write - DUART Set Output Port Bits Command (Set means Out=LOW)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202fhwrite-duart-reset-output-port-bits-command-reset-means-outhigh" class="md-nav__link">
+    1F80202Fh/Write - DUART Reset Output Port Bits Command (Reset means Out=HIGH)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202dhwrite-opcr-duart-output-port-configuration-register-w" class="md-nav__link">
+    1F80202Dh/Write - OPCR - DUART Output Port Configuration Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802022hread-duart-toggle-baud-rate-generator-test-mode-readstrobe" class="md-nav__link">
+    1F802022h/Read - - DUART Toggle Baud Rate Generator Test Mode (Read=Strobe)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ahread-duart-toggle-1x16x-test-mode-readstrobe" class="md-nav__link">
+    1F80202Ah/Read - - DUART Toggle 1X/16X Test Mode (Read=Strobe)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ehread-ct_start-duart-start-counter-command-readstrobe" class="md-nav__link">
+    1F80202Eh/Read - CT_START - DUART Start Counter Command (Read=Strobe)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202fhread-ct_stop-duart-stop-counter-command-readstrobe" class="md-nav__link">
+    1F80202Fh/Read - CT_STOP - DUART Stop Counter Command (Read=Strobe)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802026hread-ctu-duart-countertimer-current-value-upperbit15-8-r" class="md-nav__link">
+    1F802026h/Read - CTU - DUART Counter/Timer Current Value, Upper/Bit15-8 (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802027hread-ctl-duart-countertimer-current-value-lowerbit7-0-r" class="md-nav__link">
+    1F802027h/Read - CTL - DUART Counter/Timer Current Value, Lower/Bit7-0 (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802026hwrite-ctur-duart-countertimer-reload-value-upperbit15-8-w" class="md-nav__link">
+    1F802026h/Write - CTUR - DUART Counter/Timer Reload Value, Upper/Bit15-8 (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802027hwrite-ctlr-duart-countertimer-reload-value-lowerbit7-0-w" class="md-nav__link">
+    1F802027h/Write - CTLR - DUART Counter/Timer Reload Value, Lower/Bit7-0 (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ch-na-duart-reserved-register-neither-r-nor-w" class="md-nav__link">
+    1F80202Ch - N/A - DUART Reserved Register (neither R nor W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chip-versions" class="md-nav__link">
+    Chip versions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-dtl-h2000-io-ports" class="md-nav__link">
+    EXP2 DTL-H2000 I/O Ports
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 DTL-H2000 I/O Ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f802000h-dtl-h2000-exp2-atcons-stat-r" class="md-nav__link">
+    1F802000h - DTL-H2000: EXP2:  - ATCONS STAT (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802002h-dtl-h2000-exp2-atcons-data-r-and-w" class="md-nav__link">
+    1F802002h - DTL-H2000: EXP2:  - ATCONS DATA (R and W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802004h-dtl-h2000-exp2-16bit-" class="md-nav__link">
+    1F802004h - DTL-H2000: EXP2:  - 16bit - ?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802030h-dtl-h2000-secondary-irq10-controller-irq-flags" class="md-nav__link">
+    1F802030h - DTL-H2000: Secondary IRQ10 Controller (IRQ Flags)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802032h-dtl-h2000-exp2-maybe-irq-enable" class="md-nav__link">
+    1F802032h - DTL-H2000: EXP2:  - maybe IRQ enable?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802040h-dtl-h2000-exp2-1-byte-dip-switch" class="md-nav__link">
+    1F802040h - DTL-H2000: EXP2: 1-byte - DIP Switch?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802042h-dtl-h2000-exp2-postled-rw" class="md-nav__link">
+    1F802042h - DTL-H2000: EXP2: POST/LED (R/W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-post-registers" class="md-nav__link">
+    EXP2 Post Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 Post Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f802041h-post-external-7-segment-display-w" class="md-nav__link">
+    1F802041h - POST - External 7-segment Display (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802042h-dtl-h2000-exp2-postled-rw_1" class="md-nav__link">
+    1F802042h - DTL-H2000: EXP2: POST/LED (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802070h-post2-unknown-w-ps2" class="md-nav__link">
+    1F802070h - POST2 - Unknown? (W) - PS2
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1fa00000h-post3-external-7-segment-display-w-ps2" class="md-nav__link">
+    1FA00000h - POST3 - External 7-segment Display (W) - PS2
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-nocash-emulation-expansion" class="md-nav__link">
+    EXP2 Nocash Emulation Expansion
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 Nocash Emulation Expansion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f802060h-emu-expansion-id1-e-r" class="md-nav__link">
+    1F802060h Emu-Expansion ID1 "E" (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802061h-emu-expansion-id2-x-r" class="md-nav__link">
+    1F802061h Emu-Expansion ID2 "X" (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802062h-emu-expansion-id3-p-r" class="md-nav__link">
+    1F802062h Emu-Expansion ID3 "P" (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802063h-emu-expansion-version-01h-r" class="md-nav__link">
+    1F802063h Emu-Expansion Version (01h) (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802064h-emu-expansion-enable1-o-rw" class="md-nav__link">
+    1F802064h Emu-Expansion Enable1 "O" (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802065h-emu-expansion-enable2-n-rw" class="md-nav__link">
+    1F802065h Emu-Expansion Enable2 "N" (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802066h-emu-expansion-halt-r" class="md-nav__link">
+    1F802066h Emu-Expansion Halt (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802067h-emu-expansion-turbo-mode-flags-rw" class="md-nav__link">
+    1F802067h Emu-Expansion Turbo Mode Flags (R/W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-pcsx-redux-emulation-expansion" class="md-nav__link">
+    EXP2 PCSX-Redux Emulation Expansion
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 PCSX-Redux Emulation Expansion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f802080h-4-redux-expansion-id-pcsx-r" class="md-nav__link">
+    1F802080h 4 Redux-Expansion ID "PCSX" (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802080h-1-redux-expansion-console-putchar-w" class="md-nav__link">
+    1F802080h 1 Redux-Expansion Console putchar (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802081h-1-redux-expansion-debug-break-w" class="md-nav__link">
+    1F802081h 1 Redux-Expansion Debug break (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802082h-1-redux-expansion-exit-code-w" class="md-nav__link">
+    1F802082h 1 Redux-Expansion Exit code (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802084h-4-redux-expansion-notification-message-pointer-w" class="md-nav__link">
+    1F802084h 4 Redux-Expansion Notification message pointer (W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        Memory Control
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        Unpredictable Things
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        CPU Specifications
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        Kernel (BIOS)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        Arcade Cabinets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        Konami System 573
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        Cheat Devices
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        PSX Dev-Board Chipsets
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        Hardware Numbers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        Pinouts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        About & Credits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        CDROM Video CDs (VCD)
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        CDROM Internal Info on PSX CDROM Controller
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sizebus-width" class="md-nav__link">
+    Size/Bus-Width
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-1-exp1-intended-to-contain-rom" class="md-nav__link">
+    Expansion 1 - EXP1 - Intended to contain ROM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-2-exp2-intended-to-contain-io-ports" class="md-nav__link">
+    Expansion 2 - EXP2 - Intended to contain I/O Ports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expansion-3-exp3-intended-to-contain-ram" class="md-nav__link">
+    Expansion 3 - EXP3 - Intended to contain RAM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-expansions" class="md-nav__link">
+    Other Expansions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#missing-expansion-port" class="md-nav__link">
+    Missing Expansion Port
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#latched-address-bus" class="md-nav__link">
+    Latched Address Bus
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp1-expansion-rom-header" class="md-nav__link">
+    EXP1 Expansion ROM Header
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP1 Expansion ROM Header">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expansion-1-rom-header-accessed-with-8bit-databus-setting" class="md-nav__link">
+    Expansion 1 - ROM Header (accessed with 8bit databus setting)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-boot-function" class="md-nav__link">
+    Pre-Boot Function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-boot-function" class="md-nav__link">
+    Post-Boot Function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mid-boot-hook" class="md-nav__link">
+    Mid-Boot Hook
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    Note
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-dual-serial-port-for-tty-debug-terminal" class="md-nav__link">
+    EXP2 Dual Serial Port (for TTY Debug Terminal)
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 Dual Serial Port (for TTY Debug Terminal)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scn2681-dual-asynchronous-receivertransmitter-duart" class="md-nav__link">
+    SCN2681 Dual Asynchronous Receiver/Transmitter (DUART)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802023hread-rhra-duart-rx-holding-register-a-fifo-r" class="md-nav__link">
+    1F802023h/Read - RHRA - DUART Rx Holding Register A (FIFO) (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202bhread-rhrb-duart-rx-holding-register-b-fifo-r" class="md-nav__link">
+    1F80202Bh/Read - RHRB - DUART Rx Holding Register B (FIFO) (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802023hwrite-thra-duart-tx-holding-register-a-w" class="md-nav__link">
+    1F802023h/Write - THRA - DUART Tx Holding Register A (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202bhwrite-thrb-duart-tx-holding-register-b-w" class="md-nav__link">
+    1F80202Bh/Write - THRB - DUART Tx Holding Register B (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802020hfirstaccess-mr1a-duart-mode-register-1a-rw" class="md-nav__link">
+    1F802020h/FirstAccess - MR1A - DUART Mode Register 1.A (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802028hfirstaccess-mr1b-duart-mode-register-1b-rw" class="md-nav__link">
+    1F802028h/FirstAccess - MR1B - DUART Mode Register 1.B (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802020hsecondaccess-mr2a-duart-mode-register-2a-rw" class="md-nav__link">
+    1F802020h/SecondAccess - MR2A - DUART Mode Register 2.A (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802028hsecondaccess-mr2b-duart-mode-register-2b-rw" class="md-nav__link">
+    1F802028h/SecondAccess - MR2B - DUART Mode Register 2.B (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802021hwrite-csra-duart-clock-select-register-a-w" class="md-nav__link">
+    1F802021h/Write - CSRA - DUART Clock Select Register A (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802029hwrite-csrb-duart-clock-select-register-b-w" class="md-nav__link">
+    1F802029h/Write - CSRB - DUART Clock Select Register B (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802022hwrite-cra-duart-command-register-a-w" class="md-nav__link">
+    1F802022h/Write - CRA - DUART Command Register A (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ahwrite-crb-duart-command-register-b-w" class="md-nav__link">
+    1F80202Ah/Write - CRB - DUART Command Register B (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802025hread-isr-duart-interrupt-status-register-r" class="md-nav__link">
+    1F802025h/Read - ISR - DUART Interrupt Status Register (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802025hwrite-imr-duart-interrupt-mask-register-w" class="md-nav__link">
+    1F802025h/Write - IMR - DUART Interrupt Mask Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802021hread-sra-duart-status-register-a-r" class="md-nav__link">
+    1F802021h/Read - SRA - DUART Status Register A (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802029hread-srb-duart-status-register-b-r" class="md-nav__link">
+    1F802029h/Read - SRB - DUART Status Register B (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802024hwrite-acr-duart-aux-control-register-w" class="md-nav__link">
+    1F802024h/Write - ACR - DUART Aux. Control Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802024hread-ipcr-duart-input-port-change-register-r" class="md-nav__link">
+    1F802024h/Read - IPCR - DUART Input Port Change Register (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202dhread-ip-duart-input-port-r" class="md-nav__link">
+    1F80202Dh/Read - IP - DUART Input Port (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ehwrite-duart-set-output-port-bits-command-set-means-outlow" class="md-nav__link">
+    1F80202Eh/Write - DUART Set Output Port Bits Command (Set means Out=LOW)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202fhwrite-duart-reset-output-port-bits-command-reset-means-outhigh" class="md-nav__link">
+    1F80202Fh/Write - DUART Reset Output Port Bits Command (Reset means Out=HIGH)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202dhwrite-opcr-duart-output-port-configuration-register-w" class="md-nav__link">
+    1F80202Dh/Write - OPCR - DUART Output Port Configuration Register (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802022hread-duart-toggle-baud-rate-generator-test-mode-readstrobe" class="md-nav__link">
+    1F802022h/Read - - DUART Toggle Baud Rate Generator Test Mode (Read=Strobe)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ahread-duart-toggle-1x16x-test-mode-readstrobe" class="md-nav__link">
+    1F80202Ah/Read - - DUART Toggle 1X/16X Test Mode (Read=Strobe)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ehread-ct_start-duart-start-counter-command-readstrobe" class="md-nav__link">
+    1F80202Eh/Read - CT_START - DUART Start Counter Command (Read=Strobe)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202fhread-ct_stop-duart-stop-counter-command-readstrobe" class="md-nav__link">
+    1F80202Fh/Read - CT_STOP - DUART Stop Counter Command (Read=Strobe)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802026hread-ctu-duart-countertimer-current-value-upperbit15-8-r" class="md-nav__link">
+    1F802026h/Read - CTU - DUART Counter/Timer Current Value, Upper/Bit15-8 (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802027hread-ctl-duart-countertimer-current-value-lowerbit7-0-r" class="md-nav__link">
+    1F802027h/Read - CTL - DUART Counter/Timer Current Value, Lower/Bit7-0 (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802026hwrite-ctur-duart-countertimer-reload-value-upperbit15-8-w" class="md-nav__link">
+    1F802026h/Write - CTUR - DUART Counter/Timer Reload Value, Upper/Bit15-8 (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802027hwrite-ctlr-duart-countertimer-reload-value-lowerbit7-0-w" class="md-nav__link">
+    1F802027h/Write - CTLR - DUART Counter/Timer Reload Value, Lower/Bit7-0 (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f80202ch-na-duart-reserved-register-neither-r-nor-w" class="md-nav__link">
+    1F80202Ch - N/A - DUART Reserved Register (neither R nor W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chip-versions" class="md-nav__link">
+    Chip versions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-dtl-h2000-io-ports" class="md-nav__link">
+    EXP2 DTL-H2000 I/O Ports
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 DTL-H2000 I/O Ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f802000h-dtl-h2000-exp2-atcons-stat-r" class="md-nav__link">
+    1F802000h - DTL-H2000: EXP2:  - ATCONS STAT (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802002h-dtl-h2000-exp2-atcons-data-r-and-w" class="md-nav__link">
+    1F802002h - DTL-H2000: EXP2:  - ATCONS DATA (R and W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802004h-dtl-h2000-exp2-16bit-" class="md-nav__link">
+    1F802004h - DTL-H2000: EXP2:  - 16bit - ?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802030h-dtl-h2000-secondary-irq10-controller-irq-flags" class="md-nav__link">
+    1F802030h - DTL-H2000: Secondary IRQ10 Controller (IRQ Flags)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802032h-dtl-h2000-exp2-maybe-irq-enable" class="md-nav__link">
+    1F802032h - DTL-H2000: EXP2:  - maybe IRQ enable?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802040h-dtl-h2000-exp2-1-byte-dip-switch" class="md-nav__link">
+    1F802040h - DTL-H2000: EXP2: 1-byte - DIP Switch?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802042h-dtl-h2000-exp2-postled-rw" class="md-nav__link">
+    1F802042h - DTL-H2000: EXP2: POST/LED (R/W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-post-registers" class="md-nav__link">
+    EXP2 Post Registers
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 Post Registers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f802041h-post-external-7-segment-display-w" class="md-nav__link">
+    1F802041h - POST - External 7-segment Display (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802042h-dtl-h2000-exp2-postled-rw_1" class="md-nav__link">
+    1F802042h - DTL-H2000: EXP2: POST/LED (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802070h-post2-unknown-w-ps2" class="md-nav__link">
+    1F802070h - POST2 - Unknown? (W) - PS2
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1fa00000h-post3-external-7-segment-display-w-ps2" class="md-nav__link">
+    1FA00000h - POST3 - External 7-segment Display (W) - PS2
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-nocash-emulation-expansion" class="md-nav__link">
+    EXP2 Nocash Emulation Expansion
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 Nocash Emulation Expansion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f802060h-emu-expansion-id1-e-r" class="md-nav__link">
+    1F802060h Emu-Expansion ID1 "E" (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802061h-emu-expansion-id2-x-r" class="md-nav__link">
+    1F802061h Emu-Expansion ID2 "X" (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802062h-emu-expansion-id3-p-r" class="md-nav__link">
+    1F802062h Emu-Expansion ID3 "P" (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802063h-emu-expansion-version-01h-r" class="md-nav__link">
+    1F802063h Emu-Expansion Version (01h) (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802064h-emu-expansion-enable1-o-rw" class="md-nav__link">
+    1F802064h Emu-Expansion Enable1 "O" (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802065h-emu-expansion-enable2-n-rw" class="md-nav__link">
+    1F802065h Emu-Expansion Enable2 "N" (R/W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802066h-emu-expansion-halt-r" class="md-nav__link">
+    1F802066h Emu-Expansion Halt (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802067h-emu-expansion-turbo-mode-flags-rw" class="md-nav__link">
+    1F802067h Emu-Expansion Turbo Mode Flags (R/W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exp2-pcsx-redux-emulation-expansion" class="md-nav__link">
+    EXP2 PCSX-Redux Emulation Expansion
+  </a>
+  
+    <nav class="md-nav" aria-label="EXP2 PCSX-Redux Emulation Expansion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1f802080h-4-redux-expansion-id-pcsx-r" class="md-nav__link">
+    1F802080h 4 Redux-Expansion ID "PCSX" (R)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802080h-1-redux-expansion-console-putchar-w" class="md-nav__link">
+    1F802080h 1 Redux-Expansion Console putchar (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802081h-1-redux-expansion-debug-break-w" class="md-nav__link">
+    1F802081h 1 Redux-Expansion Debug break (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802082h-1-redux-expansion-exit-code-w" class="md-nav__link">
+    1F802082h 1 Redux-Expansion Exit code (W)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1f802084h-4-redux-expansion-notification-message-pointer-w" class="md-nav__link">
+    1F802084h 4 Redux-Expansion Notification message pointer (W)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="expansion-port-pio">Expansion Port (PIO)</h1>
+<p>Expansion Port can contain ROM, RAM, I/O Ports, etc. For ROM, the first 256
+bytes would contain the expansion ROM header.<br/></p>
+<p>For region 1, the CPU outputs a chip select signal (CPU Pin 98, /EXP).<br/>
+For region 2, the CPU doesn't produce a chip select signal (the region is
+intended to contain multiple I/O ports, which require an address decoder
+anyways, that address decoder could treat any /RD or /WR with A13=Hi and A23=Hi
+and A22=Lo as access to expansion region 2 (for /WR, A22 may be ignored;
+assuming that the BIOS is read-only).<br/></p>
+<h4 id="sizebus-width">Size/Bus-Width</h4>
+<p>The BIOS initalizes Expansion Region 1 to 512Kbyte with 8bit bus, and Region 2
+to 128 bytes with 8bit bus. However, the size and data bus-width of these
+regions can be changed, see:<br/>
+<a href="../memorycontrol/">Memory Control</a><br/>
+For Region 1, 32bit reads are supported even in 8bit mode (eg. 32bit opcode
+fetches are automatically processed as four 8bit reads).<br/>
+For Region 2, only 8bit access seems to be supported (except that probably
+16bit mode allows 16bit access), anyways, larger accesses seem to cause
+exceptions... not sure if that can be disabled...?<br/></p>
+<h4 id="expansion-1-exp1-intended-to-contain-rom">Expansion 1 - EXP1 - Intended to contain ROM</h4>
+<p><a href="./#exp1-expansion-rom-header">EXP1 Expansion ROM Header</a><br/></p>
+<h4 id="expansion-2-exp2-intended-to-contain-io-ports">Expansion 2 - EXP2 - Intended to contain I/O Ports</h4>
+<p><a href="./#exp2-dual-serial-port-for-tty-debug-terminal">EXP2 Dual Serial Port (for TTY Debug Terminal)</a><br/>
+<a href="./#exp2-dtl-h2000-io-ports">EXP2 DTL-H2000 I/O Ports</a><br/>
+<a href="./#exp2-post-registers">EXP2 Post Registers</a><br/>
+<a href="./#exp2-nocash-emulation-expansion">EXP2 Nocash Emulation Expansion</a><br/></p>
+<h4 id="expansion-3-exp3-intended-to-contain-ram">Expansion 3 - EXP3 - Intended to contain RAM</h4>
+<p>Not used by BIOS nor by any games. Seems to contain 1Mbyte RAM with 16bit
+databus (ie. 512Kx16) in DTL-H2000.<br/></p>
+<h4 id="other-expansions">Other Expansions</h4>
+<p>Aside from the above, the Expansion regions can be used for whatever purpose,
+however, mind that the BIOS is reading from the ROM header region, and is
+writing to the POST register (so 1F000000h-1F0000FFh and 1F802041h should be
+used only if the hardware isn't disturbed by those accesses).<br/>
+Most arcade boards have their custom I/O registers (and sometimes game ROMs)
+mapped into the EXP1 and/or EXP2 regions.<br/></p>
+<h4 id="missing-expansion-port">Missing Expansion Port</h4>
+<p>The expansion port is installed only on older PSX boards, newer PSX boards and
+all PSone boards don't have that port. However, the CPU should still output all
+expansion signals, and there should be big soldering points on the board, so
+it'd be easy to upgrade the console.<br/></p>
+<h4 id="latched-address-bus">Latched Address Bus</h4>
+<p>Note that A0..A23 are latched outputs, so they can be used as general purpuse
+24bit outputs, provided that the system bus isn't used for other purposes (such
+like /BIOS, /SPU, /CD accesses) (A0..A23 are not affected by Main RAM and GPU
+addressing, nor by internal I/O ports like Timer and IRQ registers).<br/></p>
+<h2 id="exp1-expansion-rom-header">EXP1 Expansion ROM Header</h2>
+<h4 id="expansion-1-rom-header-accessed-with-8bit-databus-setting">Expansion 1 - ROM Header (accessed with 8bit databus setting)</h4>
+<p><div class="highlight"><pre><span></span><code>  Address  Size Content
+  1F000000h 4   Post-Boot Entrypoint (eg. 1F000100h and up)
+  1F000004h 2Ch Post-Boot ID (&quot;Licensed by Sony Computer Entertainment Inc.&quot;)
+  1F000030h 50h Post-Boot TTY Message (must contain at least one 00h byte)
+  1F000080h 4   Pre-Boot Entrypoint  (eg. 1F000100h and up)
+  1F000084h 2Ch Pre-Boot ID  (&quot;Licensed by Sony Computer Entertainment Inc.&quot;)
+  1F0000B0h 50h Not used     (should be zero, but may contain code/data/io)
+  1F000100h ..  Code, Data, I/O Ports, etc.
+</code></pre></div>
+The entrypoints are called if their corresonding ID strings are present, return
+address to BIOS is passed in R31, so the expansion ROM may return control to
+BIOS, if that should be desired.<br/>
+Aside from verifying the IDs, the BIOS will also display the Post-Boot ID
+string (and the following message string) via TTY (done right before calling
+the Post-Boot Entrypoint).<br/></p>
+<h4 id="pre-boot-function">Pre-Boot Function</h4>
+<p>The Pre-Boot function is called almost immediately after Reset, with only some
+Memory Control registers initialized, the BIOS function vectors at A0h, B0h,
+and C0h are NOT yet initialized, so the Pre-Boot function can't use them.<br/></p>
+<h4 id="post-boot-function">Post-Boot Function</h4>
+<p>The Post-Boot function gets called while showing the "PS" logo, but before
+loading the .EXE file. The BIOS function vectors at A0h, B0h, and C0h are
+already installed and can be used by the Post-Boot Function.<br/>
+Note that the Post-Boot Function is called ONLY when the "PS" logo is shown
+(ie. not if the CDROM drive is empty, or if it contains an Audio CD).<br/></p>
+<h4 id="mid-boot-hook">Mid-Boot Hook</h4>
+<p>One common trick to hook the Kernel after BIOS initialization, but before CDROM
+loading is to use the Pre-Boot handler to set a COP0 opcode fetch hardware
+breakpoint at 80030000h (after returning from the Pre-Boot handler, the Kernel
+will initialize important things like A0h/B0h/C0h tables, and will then break
+again when starting the GUI code at 80030000h) (this trick is used by Action
+Replay v2.0 and up).<br/></p>
+<h4 id="note">Note</h4>
+<p>Expansion ROMs are most commonly used in cheat devices,<br/>
+<a href="../cheatdevices/">Cheat Devices</a><br/></p>
+<h2 id="exp2-dual-serial-port-for-tty-debug-terminal">EXP2 Dual Serial Port (for TTY Debug Terminal)</h2>
+<h4 id="scn2681-dual-asynchronous-receivertransmitter-duart">SCN2681 Dual Asynchronous Receiver/Transmitter (DUART)</h4>
+<p>The PSX/PSone retail BIOS contains some TTY Debug Terminal code; using an
+external SCN2681 chip which can be connected to the expansion port.<br/>
+Whilst supported by all PSX/PSone retail BIOSes on software side, there aren't
+any known PSX consoles/devboards/expansions actually containing DUARTs on
+hardware side.<br/></p>
+<h4 id="1f802023hread-rhra-duart-rx-holding-register-a-fifo-r">1F802023h/Read - RHRA - DUART Rx Holding Register A (FIFO) (R)</h4>
+<h4 id="1f80202bhread-rhrb-duart-rx-holding-register-b-fifo-r">1F80202Bh/Read - RHRB - DUART Rx Holding Register B (FIFO) (R)</h4>
+<h4 id="1f802023hwrite-thra-duart-tx-holding-register-a-w">1F802023h/Write - THRA - DUART Tx Holding Register A (W)</h4>
+<h4 id="1f80202bhwrite-thrb-duart-tx-holding-register-b-w">1F80202Bh/Write - THRB - DUART Tx Holding Register B (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  7-0  Data (aka Character)
+</code></pre></div>
+The hardware can hold max 2 Tx characters per channel (1 in the THR register,
+and one currently processed in the Tx Shift Register), and max 4 Rx characters
+(3 in the RHR FIFO, plus one in the Rx Shift Register) (when receiving a 5th
+character, the "old newest" value in the Rx Shift Register is lost, and the
+overrun flag is set).<br/></p>
+<h4 id="1f802020hfirstaccess-mr1a-duart-mode-register-1a-rw">1F802020h/FirstAccess - MR1A - DUART Mode Register 1.A (R/W)</h4>
+<h4 id="1f802028hfirstaccess-mr1b-duart-mode-register-1b-rw">1F802028h/FirstAccess - MR1B - DUART Mode Register 1.B (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  7    RxRTS Control       (0=No, 1=Yes)
+  6    RxINT Select        (0=RxRDY, 1=FFULL)
+  5    Error Mode          (0=Char, 1=Block)
+  4-3  Parity Mode   (0=With Parity, 1=Force Parity, 2=No Parity, 3=Multidrop)
+  2    Parity Type         (0=Even, 1=Odd)
+  1-0  Bits per Character  (0=5bit, 1=6bit, 2=7bit, 3=8bit)
+</code></pre></div>
+Note: In block error mode, block error conditions must be cleared by using the
+error reset command (command 4) or a receiver reset (command 2).<br/></p>
+<h4 id="1f802020hsecondaccess-mr2a-duart-mode-register-2a-rw">1F802020h/SecondAccess - MR2A - DUART Mode Register 2.A (R/W)</h4>
+<h4 id="1f802028hsecondaccess-mr2b-duart-mode-register-2b-rw">1F802028h/SecondAccess - MR2B - DUART Mode Register 2.B (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  7-6  Channel Mode       (0=Normal, 1=Auto-Echo, 2=Local loop, 3=Remote loop)
+  5    TxRTS Control      (0=No, 1=Yes) (when 1 --&gt; OP0=RTSA / OP1=RTSB)
+  4    CTS Enable         (0=No, 1=Yes) (when 1 --&gt; IP0=CTSA / IP1=CTSB)
+  3-0  Tx Stop Bit Length (00h..0Fh = see below)
+</code></pre></div>
+Stop Bit Lengths:<br/>
+<div class="highlight"><pre><span></span><code>  0=0.563  1=0.625  2=0.688  3=0.750  4=0.813  5=0.875  6=0.938  7=1.000
+  8=1.563  9=1.625  A=1.688  B=1.750  C=1.813  D=1.875  E=1.938  F=2.000
+</code></pre></div>
+Add 0.5 to values shown for 0..7 if channel is programmed for 5 bits/char.<br/></p>
+<h4 id="1f802021hwrite-csra-duart-clock-select-register-a-w">1F802021h/Write - CSRA - DUART Clock Select Register A (W)</h4>
+<h4 id="1f802029hwrite-csrb-duart-clock-select-register-b-w">1F802029h/Write - CSRB - DUART Clock Select Register B (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  7-4  Rx Clock Select  (0..0Ch=See Table, 0Dh=Timer, 0Eh=16xIP, 0Fh=1xIP)
+  3-0  Tx Clock Select  (0..0Ch=See Table, 0Dh=Timer, 0Eh=16xIP, 0Fh=1xIP)
+</code></pre></div>
+The 2681 has some sets of predefined baud rates (set1/set2 selected via ACR.7),
+additionally, in BRG Test Mode, set3/set4 are used instead of set1/set2), the
+baud rates for selections 00h..0Dh are:<br/>
+<div class="highlight"><pre><span></span><code>  Rate 00h  01h 02h   03h   04h   05h   06h    07h  08h   09h  0Ah   0Bh  0Ch
+  Set1 50   110 134.5 200   300   600   1200   1050 2400  4800 7200  9600 38400
+  Set2 75   110 134.5 150   300   600   1200   2000 2400  4800 1800  9600 19200
+  Set3 4800 880 1076  19200 28800 57600 115200 1050 57600 4800 57600 9600 38400
+  Set4 7200 880 1076  14400 28800 57600 115200 2000 57600 4800 14400 9600 19200
+</code></pre></div>
+Selection 0Eh/0Fh are using an external clock source (derived from
+IP3,IP4,IP5,IP6 pins; for TxA,RxA,TxB,RxB respectively).<br/></p>
+<h4 id="1f802022hwrite-cra-duart-command-register-a-w">1F802022h/Write - CRA - DUART Command Register A (W)</h4>
+<h4 id="1f80202ahwrite-crb-duart-command-register-b-w">1F80202Ah/Write - CRB - DUART Command Register B (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  7    Not used    (should be 0)
+  6-4  Miscellaneous Commands (0..7 = see below)
+  3    Disable Tx  (0=No change, 1=Disable)
+  2    Enable Tx   (0=No change, 1=Enable) ;Don&#39;t use with Command 3 (Reset Rx)
+  1    Disable Rx  (0=No change, 1=Disable)
+  0    Enable Rx   (0=No change, 1=Enable) ;Don&#39;t use with Command 2 (Reset Tx)
+</code></pre></div>
+The command values for CRA (or CRB) are:<br/>
+<div class="highlight"><pre><span></span><code>  0 No command          ;no effect
+  1 Reset MR pointer    ;force &quot;FirstAccess&quot; state for MR1A (or MR1B) access
+  2 Reset receiver      ;reset RxA (or RxB) registers, disable Rx, flush Fifo
+  3 Reset transmitter   ;reset TxA (or TxB) registers
+  4 Reset Error Flags           ;reset SRA.7-4 (or SRB.7-4) to zero
+  5 Reset Break-Change IRQ Flag ;reset ISR.2 (or ISR.6) to zero
+  6 Start break  ;after current char, pause Tx with TxDA=Low (or TxDB=Low)
+  7 Stop break   ;output one High bit, then continue Tx (ie. undo pause)
+</code></pre></div>
+Access to the upper four bits of the command register should be separated by 3
+edges of the X1 clock. A disabled transmitter cannot be loaded.<br/></p>
+<h4 id="1f802025hread-isr-duart-interrupt-status-register-r">1F802025h/Read - ISR - DUART Interrupt Status Register (R)</h4>
+<h4 id="1f802025hwrite-imr-duart-interrupt-mask-register-w">1F802025h/Write - IMR - DUART Interrupt Mask Register (W)</h4>
+<div class="highlight"><pre><span></span><code>  7    Input Port Change   (0=No, 1=Yes) (Ack via reading IPCR) ;see ACR.3-0
+  6    Break Change B      (0=No, 1=Yes) (Ack via CRB/Command5)
+  5    RxRDYB/FFULLB       (0=No, 1=Yes) (Ack via reading data) ;see MR1B.6
+  4    THRB Empty (TxRDYB) (0=No, 1=Yes) (Ack via writing data) ;same as SRB.2
+  3    Counter Ready       (0=No, 1=Yes) (Ack via CT_STOP)
+  2    Break Change A      (0=No, 1=Yes) (Ack via CRA/Command5)
+  1    RxRDYA/FFULLA       (0=No, 1=Yes) (Ack via reading data) ;see MR1A.6
+  0    THRA Empty (TxRDYA) (0=No, 1=Yes) (Ack via writing data) ;same as SRA.2
+</code></pre></div>
+<h4 id="1f802021hread-sra-duart-status-register-a-r">1F802021h/Read - SRA - DUART Status Register A (R)</h4>
+<h4 id="1f802029hread-srb-duart-status-register-b-r">1F802029h/Read - SRB - DUART Status Register B (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  7    Rx Received Break*        (0=No, 1=Yes) ;received 00h without stop bit
+  6    Rx Framing Error*         (0=No, 1=Yes) ;received data without stop bit
+  5    Rx Parity Error*          (0=No, 1=Yes) ;received data with bad parity
+  4    Rx Overrun Error          (0=No, 1=Yes) ;Rx FIFO full + RxShiftReg full
+  3    Tx Underrun  (TxEMT)      (0=No, 1=Yes) ;both TxShiftReg and THR empty
+  2    Tx THR Empty (TxRDY)      (0=No, 1=Yes) ;same as ISR.0 / ISR.4
+  1    Rx FIFO Full (FFULL)      (0=No, 1=Yes) ;set upon 3 or more characters
+  0    Rx FIFO Not Empty (RxRDY) (0=No, 1=Yes) ;set upon 1 or more characters
+</code></pre></div>
+Bit7-5 are appended to the corresponding data character in the receive FIFO. A
+read of the status provides these bits (7:5) from the top of the FIFO together
+with bits (4:0). These bits are cleared by a "reset error status" command. In
+character mode they are discarded when the corresponding data character is read
+from the FIFO. In block error mode, block error conditions must be cleared by
+using the error reset command (command 4x) or a receiver reset.<br/></p>
+<h4 id="1f802024hwrite-acr-duart-aux-control-register-w">1F802024h/Write - ACR - DUART Aux. Control Register (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  7    Select Baud Rate Generator (BRG) Set   (0=Set1/Set3, 1=Set2/Set4)
+  6-4  Counter/Timer Mode and Source          (see below)
+  3-0  IP3..IP0 Change Interrupt Enable Flags (0=Off, 1=On)
+</code></pre></div>
+Counter/Timer Mode and Clock Source Settings:<br/>
+<div class="highlight"><pre><span></span><code>  Num  Mode      Clock Source
+  0h   Counter   External (IP2)
+  1h   Counter   TxCA - 1x clock of Channel A transmitter
+  2h   Counter   TxCB - 1x clock of Channel B transmitter
+  3h   Counter   Crystal or external clock (x1/CLK) divided by 16
+  4h   Timer     External (IP2)
+  5h   Timer     External (IP2) divided by 16
+  6h   Timer     Crystal or external clock (x1/CLK)
+  7h   Timer     Crystal or external clock (x1/CLK) divided by 16
+</code></pre></div>
+In Counter Mode, the Counter Ready flag is set on any underflow, and the
+counter wraps to FFFFh and keeps running (but may get stopped by software).<br/>
+In Timer Mode, automatic reload occurs on any underflow, the counter flag
+(which can be output to OP3) is toggled on any underflow, but the Counter Ready
+flag is set only on each 2nd underflow (unlike as in Counter mode).<br/></p>
+<h4 id="1f802024hread-ipcr-duart-input-port-change-register-r">1F802024h/Read - IPCR - DUART Input Port Change Register (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  7-4  IP3..IP0 Change Occured Flags (0=No, 1=Yes)    ;auto reset after read
+  3-0  Current IP3-IP0 Input states  (0=Low, 1=High)  ;Same as IP.3-0
+</code></pre></div>
+Reading from this register automatically resets IPCR.7-4 and ISR.7.<br/></p>
+<h4 id="1f80202dhread-ip-duart-input-port-r">1F80202Dh/Read - IP - DUART Input Port (R)</h4>
+<p><div class="highlight"><pre><span></span><code>  7    Not used (always 1)
+  6-0  Current IP6-IP0 Input states (0=Low, 1=High)  ;LSBs = Same as IPCR.3-0
+</code></pre></div>
+IP0-6 can be used as general purpose inputs, or for following special purposes:<br/>
+<div class="highlight"><pre><span></span><code>  IP6 External RxB Clock     ;see CSRB.7-4
+  IP5 External TxB Clock     ;see CSRB.3-0
+  IP4 External RxA Clock     ;see CSRA.7-4
+  IP3 External TxA Clock     ;see CSRA.3-0
+  IP2 External Timer Input   ;see AUX.6-4
+  IP1 Clear to Send B (CTSB) ;see MR2B.5
+  IP0 Clear to Send A (CTSA) ;see MR2A.5
+</code></pre></div>
+Note: The 24pin chip doesn't have any inputs, the 28pin chip has only one input
+(IP2), the 40pin/44pin chips have seven inputs (IP0-IP6).<br/></p>
+<h4 id="1f80202ehwrite-duart-set-output-port-bits-command-set-means-outlow">1F80202Eh/Write - DUART Set Output Port Bits Command (Set means Out=LOW)</h4>
+<h4 id="1f80202fhwrite-duart-reset-output-port-bits-command-reset-means-outhigh">1F80202Fh/Write - DUART Reset Output Port Bits Command (Reset means Out=HIGH)</h4>
+<p><div class="highlight"><pre><span></span><code>  7-0  Change &quot;OPR&quot; OP7-OP0 Output states (0=No change, 1=Set/Reset)
+</code></pre></div>
+Note: The 24pin chip doesn't have any outputs, the 28pin chip has only two
+outputs (OP0,OP1), the 40pin/44pin chips have eight outputs (OP0-OP7).<br/></p>
+<h4 id="1f80202dhwrite-opcr-duart-output-port-configuration-register-w">1F80202Dh/Write - OPCR - DUART Output Port Configuration Register (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  7    OP7      (0=OPR.7, 1=TxRDYB)
+  6    OP6      (0=OPR.6, 1=TxRDYA)
+  5    OP5      (0=OPR.5, 1=RxRDY/FFULLB)
+  4    OP4      (0=OPR.4, 1=RxRDY/FFULLA)
+  3-2  OP3      (0=OPR.3, 1=Clock/Timer Output, 2=TxCB(1x), 3=RxCB(1x))
+  1-0  OP2      (0=OPR.2, 1=TxCA(16x), 2=TxCA(1x), 3=RxCA(1x))
+</code></pre></div>
+Additionally, the OP0 and OP1 outputs are controlled via MR2A.5 and MR2B.5.<br/></p>
+<h4 id="1f802022hread-duart-toggle-baud-rate-generator-test-mode-readstrobe">1F802022h/Read - - DUART Toggle Baud Rate Generator Test Mode (Read=Strobe)</h4>
+<h4 id="1f80202ahread-duart-toggle-1x16x-test-mode-readstrobe">1F80202Ah/Read - - DUART Toggle 1X/16X Test Mode (Read=Strobe)</h4>
+<p><div class="highlight"><pre><span></span><code>  7-0  Not used (just issue a dummy-read to toggle the test mode on/off)
+</code></pre></div>
+BGR Test switches between Baud Rate Set1/Set2 and Set3/Set4.<br/>
+1X/16X Test switches between whatever...?<br/></p>
+<h4 id="1f80202ehread-ct_start-duart-start-counter-command-readstrobe">1F80202Eh/Read - CT_START - DUART Start Counter Command (Read=Strobe)</h4>
+<h4 id="1f80202fhread-ct_stop-duart-stop-counter-command-readstrobe">1F80202Fh/Read - CT_STOP - DUART Stop Counter Command (Read=Strobe)</h4>
+<p><div class="highlight"><pre><span></span><code>  7-0  Not used (just issue a dummy-read to strobe start/stop command)
+</code></pre></div>
+Start: Forces reload (copies CTLR/CTUR to CTL/CTU), and starts the timer.<br/>
+Stop-in-Counter-Mode: Resets ISR.3, and stops the timer.<br/>
+Stop-in-Timer-Mode: Resets ISR.3, but doesn't stop the timer.<br/></p>
+<h4 id="1f802026hread-ctu-duart-countertimer-current-value-upperbit15-8-r">1F802026h/Read - CTU - DUART Counter/Timer Current Value, Upper/Bit15-8 (R)</h4>
+<h4 id="1f802027hread-ctl-duart-countertimer-current-value-lowerbit7-0-r">1F802027h/Read - CTL - DUART Counter/Timer Current Value, Lower/Bit7-0 (R)</h4>
+<h4 id="1f802026hwrite-ctur-duart-countertimer-reload-value-upperbit15-8-w">1F802026h/Write - CTUR - DUART Counter/Timer Reload Value, Upper/Bit15-8 (W)</h4>
+<h4 id="1f802027hwrite-ctlr-duart-countertimer-reload-value-lowerbit7-0-w">1F802027h/Write - CTLR - DUART Counter/Timer Reload Value, Lower/Bit7-0 (W)</h4>
+<p>The CTLR/CTUR reload value is copied to CTL/CTU upon Start Counter Command. In
+Timer mode (not in Counter mode), it is additionally copied automatically when
+the timer undeflows.<br/></p>
+<h4 id="1f80202ch-na-duart-reserved-register-neither-r-nor-w">1F80202Ch - N/A - DUART Reserved Register (neither R nor W)</h4>
+<p>Reserved.<br/></p>
+<h4 id="chip-versions">Chip versions</h4>
+<p>The SCN2681 is manufactured with 24..44 pins, the differences are:<br/>
+<div class="highlight"><pre><span></span><code>  24pin basic cut-down version          ;without IP0-1/OP0-1 = without CTS/RTS
+  28pin additional IP2,OP0,OP1,X2       ;without IP0-1 = without CTS
+  40pin additional IP0-IP6,OP0-OP7,X2   ;full version
+  44pin same as 40pin with four NC pins ;full version (SMD)
+</code></pre></div>
+Unknown which of them is supposed to be used with the PSX?<br/>
+Note: The Motorola 68681 should be the same as the Philips/Signetics 2681.<br/></p>
+<h4 id="notes">Notes</h4>
+<p>Unknown if the Interrupt signal is connected to the PSX... there seems to be no
+spare IRQ for it, though it \&lt;might> share an IRQ with whatever other
+hardware...?<br/>
+The BIOS seems to use only one of the two channels; for the std_io functions:<br/>
+<a href="../kernelbios/#bios-tty-console-std_io">BIOS TTY Console (std_io)</a><br/>
+Aside from the external DUART, the PSX additionally contains an internal UART,<br/>
+<a href="../serialinterfacessio/">Serial Interfaces (SIO)</a><br/>
+The DTL-H2000 devboard uses a non-serial "ATCONS" channel for TTY stuff,<br/>
+<a href="./#exp2-dtl-h2000-io-ports">EXP2 DTL-H2000 I/O Ports</a><br/></p>
+<h2 id="exp2-dtl-h2000-io-ports">EXP2 DTL-H2000 I/O Ports</h2>
+<p>The DTL-H2000 contains extended 8Mbyte Main RAM (instead of normal 2Mbyte),
+plus additional 1MByte RAM in Expansion Area at 1FA00000h, plus some I/O ports
+at 1F8020xxh:<br/></p>
+<h4 id="1f802000h-dtl-h2000-exp2-atcons-stat-r">1F802000h - DTL-H2000: EXP2:  - ATCONS STAT (R)</h4>
+<div class="highlight"><pre><span></span><code>  0    Unknown, used for something
+  1    Unknown/unused
+  2    Unknown, used for something
+  3    TTY/Atcons TX Ready     (0=Busy, 1=Ready)
+  4    TTY/Atcons RX Available (0=None, 1=Yes)
+  5-7  Unknown/unused
+</code></pre></div>
+<h4 id="1f802002h-dtl-h2000-exp2-atcons-data-r-and-w">1F802002h - DTL-H2000: EXP2:  - ATCONS DATA (R and W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-7  TTY/Atcons RX/TX Data
+</code></pre></div>
+TTY channel for message output (TX) and debug console keyboard input (RX). The
+DTL-H2000 is using this "ATCONS" stuff instead of the DUART stuff used in
+retail console BIOSes ("CONS" seems to refer to "Console", and "AT" might refer
+to PC/AT or whatever).<br/></p>
+<h4 id="1f802004h-dtl-h2000-exp2-16bit-">1F802004h - DTL-H2000: EXP2:  - 16bit - ?</h4>
+<div class="highlight"><pre><span></span><code>  0-15 Data...?
+</code></pre></div>
+<h4 id="1f802030h-dtl-h2000-secondary-irq10-controller-irq-flags">1F802030h - DTL-H2000: Secondary IRQ10 Controller (IRQ Flags)</h4>
+<p>This register does expand IRQ10 (Lightgun) to more than one IRQ source. The
+register contains only Secondary IRQ Flags (there seem to be no Secondary IRQ
+Enable bits; at least not for Lightguns).<br/>
+<div class="highlight"><pre><span></span><code>  0     ... used for something
+  1    Lightgun IRQ (write: 0=No change, 1=Acknowledge) (read: 0=None, 1=IRQ)
+  2-3  Unknown/unused (write: 0=Normal)
+  4     ... acknowledged at 1FA00B04h, otherwise unused
+  5     ... TTY RX ?
+  6-7  Unknown/unused (write: 0=Normal)
+  8-31 Not used by DTL-H2000 BIOS (but Lightgun games write 0 to these bits)
+</code></pre></div>
+Retail games that support IRQ10-based "Konami" Lightguns are containing code
+for detecting and accessing port 1F802030h. The detection works by examining a
+value in the BIOS ROM like so:<br/>
+<div class="highlight"><pre><span></span><code>  IF [BFC00104h]=00002000h then Port 1F802030h does exist     (DTL-H2000)
+  IF [BFC00104h]=00002500h then Port 1F802030h does NOT exist
+  IF [BFC00104h]=00000003h then Port 1F802030h does NOT exist (default)
+  IF [BFC00104h]= &lt;other&gt;  then Port 1F802030h does NOT exist
+</code></pre></div>
+Normal consoles don't include Port 1F802030h, and IRQ10 is wired directly to
+the controller port, and the value at [BFC00104h] is always 00000003h.
+Accordingly, one cannot upgrade the console just by plugging a Secondary IRQ10
+controller to the expansion port (instead, one would need to insert the
+controller between the CPU and controller plug, and to install a BIOS with
+[BFC00104h]=00002000h).<br/>
+The DTL-H2000 BIOS accesses 1F802030h with 8bit load/store opcodes, however,
+the Lightgun games use 32bit load/store - which is theoretically overlapping
+port 1F802032h, though maybe the memory system does ignore the upper bits.<br/></p>
+<h4 id="1f802032h-dtl-h2000-exp2-maybe-irq-enable">1F802032h - DTL-H2000: EXP2:  - maybe IRQ enable?</h4>
+<div class="highlight"><pre><span></span><code>  0    Used for something (CLEARED on some occassions)
+  1-3  Unknown/unused
+  4    Used for something (SET on some occassions)
+  5-7  Unknown/unused
+</code></pre></div>
+<h4 id="1f802040h-dtl-h2000-exp2-1-byte-dip-switch">1F802040h - DTL-H2000: EXP2: 1-byte - DIP Switch?</h4>
+<p><div class="highlight"><pre><span></span><code>  0-7  DIP Value (00h..FFh, but should be usually 00h..02h)
+</code></pre></div>
+This register selects the DTL-H2000 boot mode, for whatever reason it's called
+"DIP Switch" register, although the DTL-H2000 boards don't seem to contain any
+such DIP Switches (instead, it's probably configured via some I/O ports on PC
+side). Possible values are:<br/>
+<div class="highlight"><pre><span></span><code>  DIP=0 --&gt; .. long delay before TTY?   with &quot;PSX&gt;&quot; prompt, throws CDROM cmds
+  DIP=1 --&gt; .. long delay before TTY?   no &quot;PSX&gt;&quot; prompt           PSY-Q?
+  DIP=2 --&gt; .. instant TTY?             with &quot;PSX&gt;&quot; prompt
+  DIP=3 --&gt; Lockup
+  DIP=04h..FFh --&gt; Lockup with POST=04h..FFh
+</code></pre></div></p>
+<h4 id="1f802042h-dtl-h2000-exp2-postled-rw">1F802042h - DTL-H2000: EXP2: POST/LED (R/W)</h4>
+<p><a href="./#exp2-post-registers">EXP2 Post Registers</a><br/></p>
+<h2 id="exp2-post-registers">EXP2 Post Registers</h2>
+<h4 id="1f802041h-post-external-7-segment-display-w">1F802041h - POST - External 7-segment Display (W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-3  Current Boot Status (00h..0Fh)
+  4-7  Not used by BIOS    (always set to 0)
+</code></pre></div>
+During boot, the BIOS writes incrementing values to this register, allowing to
+display the current boot status on an external 7 segment display (much the same
+as Port 80h used in PC BIOSes).<br/></p>
+<h4 id="1f802042h-dtl-h2000-exp2-postled-rw_1">1F802042h - DTL-H2000: EXP2: POST/LED (R/W)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-7 Post/LED value
+</code></pre></div>
+8bit wide, otherwise same as POST 1F802041h on retail consoles.<br/></p>
+<h4 id="1f802070h-post2-unknown-w-ps2">1F802070h - POST2 - Unknown? (W) - PS2</h4>
+<p>Might be a configuration port, or it's another POST register (which is used
+prior to writing the normal POST bytes to 1FA00000h).<br/>
+The first write to 1F802070h is 32bit, all further writes seem to be 8bit.<br/></p>
+<h4 id="1fa00000h-post3-external-7-segment-display-w-ps2">1FA00000h - POST3 - External 7-segment Display (W) - PS2</h4>
+<p>Similar to POST, but PS2 BIOS uses this address.<br/></p>
+<h2 id="exp2-nocash-emulation-expansion">EXP2 Nocash Emulation Expansion</h2>
+<h4 id="1f802060h-emu-expansion-id1-e-r">1F802060h Emu-Expansion ID1 "E" (R)</h4>
+<h4 id="1f802061h-emu-expansion-id2-x-r">1F802061h Emu-Expansion ID2 "X" (R)</h4>
+<h4 id="1f802062h-emu-expansion-id3-p-r">1F802062h Emu-Expansion ID3 "P" (R)</h4>
+<h4 id="1f802063h-emu-expansion-version-01h-r">1F802063h Emu-Expansion Version (01h) (R)</h4>
+<p>Contains ID and Version.<br/></p>
+<h4 id="1f802064h-emu-expansion-enable1-o-rw">1F802064h Emu-Expansion Enable1 "O" (R/W)</h4>
+<h4 id="1f802065h-emu-expansion-enable2-n-rw">1F802065h Emu-Expansion Enable2 "N" (R/W)</h4>
+<p>Activates the Halt and Turbo Registers (when set to "ON").<br/></p>
+<h4 id="1f802066h-emu-expansion-halt-r">1F802066h Emu-Expansion Halt (R)</h4>
+<p>When enabled (see above), doing an 8bit read from this address stops the CPU
+emulation unless/until an Interrupt occurs (when "CAUSE AND SR AND FF00h"
+becomes nonzero). Can be used to reduce power consumption, and to make the
+emulation faster.<br/></p>
+<h4 id="1f802067h-emu-expansion-turbo-mode-flags-rw">1F802067h Emu-Expansion Turbo Mode Flags (R/W)</h4>
+<p>When enabled (see above), writing to this register activates/deactivates
+"turbo" mode, which is causing new data to arrive immediately after
+acknowledging the previous interrupt.<br/>
+<div class="highlight"><pre><span></span><code>  0   CDROM Turbo       (0=Normal, 1=Turbo)
+  1   Memory Card Turbo (0=Normal, 1=Turbo)
+  2   Controller Turbo  (0=Normal, 1=Turbo)
+  3-7 Reserved (must be zero)
+</code></pre></div></p>
+<h2 id="exp2-pcsx-redux-emulation-expansion">EXP2 PCSX-Redux Emulation Expansion</h2>
+<p>PCSX-Redux contains some specific hardware registers for the purpose of testing and debugging.
+They are located past the 1F802080h address, which means that accessing them on the real
+hardware will cause an exception, unless the <a href="https://psx-spx.consoledev.net/memorycontrol/#1f80101ch-expansion-2-delaysize-usually-00070777h-128-bytes-8bit-bus">1F80101Ch register</a> has been set to
+be at least twice its normal size.</p>
+<h4 id="1f802080h-4-redux-expansion-id-pcsx-r">1F802080h 4 Redux-Expansion ID "PCSX" (R)</h4>
+<p>Identification string. Use this to query that your binary is running under PCSX-Redux.</p>
+<h4 id="1f802080h-1-redux-expansion-console-putchar-w">1F802080h 1 Redux-Expansion Console putchar (W)</h4>
+<p>Adds this character to the console output. This is an easier way to write to the console than using the BIOS.</p>
+<p>This port is also available on Duckstation.</p>
+<h4 id="1f802081h-1-redux-expansion-debug-break-w">1F802081h 1 Redux-Expansion Debug break (W)</h4>
+<p>Causes a debug breakpoint to be triggered. PCSX-Redux will pause and the user will be alerted of a software breakpoint.</p>
+<h4 id="1f802082h-1-redux-expansion-exit-code-w">1F802082h 1 Redux-Expansion Exit code (W)</h4>
+<p>Sets the exit code for the program. When in test mode, PCSX-Redux will exit with this code.</p>
+<h4 id="1f802084h-4-redux-expansion-notification-message-pointer-w">1F802084h 4 Redux-Expansion Notification message pointer (W)</h4>
+<p>Displays a pop-up message to the user with the specified string.</p>
+<p>See <a href="https://pcsx-redux.consoledev.net/mips_api/">PCSX-Redux's documentation</a> for more details and examples.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.19047be9.min.js"></script>
+      
+    
+  </body>
+</html>
