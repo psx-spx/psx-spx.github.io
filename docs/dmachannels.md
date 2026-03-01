@@ -132,10 +132,15 @@ priority setting, then the priority is determined by the channel number
 IRQ flags in bit (24+n) are set upon DMAn completion - but caution - they are
 set ONLY if enabled in bit (16+n) (unlike interrupt flags in I_STAT, which are
 always set regardless of whether the respective IRQ is masked).<br/>
-Bit 31 is a simple readonly flag that follows the following rules:<br/>
+Bit 31 is a simple readonly flag that is recalculated on every write to DICR:<br/>
 ```
   IF b15=1 OR (b23=1 AND b(24-30)>0) THEN b31=1 ELSE b31=0
 ```
+Note that the per-channel enable bits (b16-22) do not factor into the bit 31
+calculation. They only gate whether a DMA completion sets the corresponding flag
+bit (b24-30). Once a flag bit is set, it contributes to the master flag
+regardless of whether the channel enable is still on. Flag bits persist until
+explicitly acknowledged by writing 1 to them.<br/>
 Upon 0-to-1 transition of Bit 31, the IRQ3 flag in I\_STAT gets set.<br/>
 Bits 24-30 are acknowledged (reset to zero) when writing a "1" to that bits (and
 additionally, IRQ3 must be acknowledged via I\_STAT).<br/>
