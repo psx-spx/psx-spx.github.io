@@ -3094,7 +3094,7 @@ internal message array.
 
 Labelled RGB out, this is following the usual VGA pinout but it is not VGA compatible as
 it uses 15 KHz C-Sync instead of 31 KHz H/V-Sync and a nominal resolution of 320x240p
-comapared to 640x480p.
+compared to 640x480p.
 
 | Pin | Name      | Dir |
 | --: | :-------- | :-- |
