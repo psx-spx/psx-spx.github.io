@@ -3090,11 +3090,11 @@ internal message array.
 
 ### Main board pinouts (`GX700-PWB(A)`)
 
-### RGB Output ('DB15')
+#### RGB Output ('DB15')
 
 Labelled RGB out, this is following the usual VGA pinout but it is not VGA compatible as
 it uses 15 KHz C-Sync instead of 31 KHz H/V-Sync and a nominal resolution of 320x240p
-comapred to 640x480p.
+comapared to 640x480p.
 
 | Pin | Name      | Dir |
 | --: | :-------- | :-- |
@@ -3114,8 +3114,8 @@ comapred to 640x480p.
 |  14 | `V-Sync*` | O   |
 |  15 | `NC`      |     |
 
-Note *: Pin 14 signal is not normally present. There is a an unmarked two-pin header near the 
-RGB out port which when bridged will join this pin to V-Sync
+Note *: Pin 14 signal is not normally present. There is an unmarked two-pin header near the 
+RGB out port which when bridged will join this pin to V-Sync.
 
 #### Analog input port (`ANALOG`, `CN3`)
 
