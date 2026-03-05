@@ -700,6 +700,21 @@ Video clock unit used depends on console region, regardless of NTSC/PAL video
 mode set by GP1(08h).3; see section on [nominal video clocks](#nominal-video-clock)
 for values.<br/>
 
+For official games, X1 and X2 seem to vary based on resolution.<br/>
+The following values are used for the fullscreen range:<br/>
+| Width    | X1  | X2   | Range |
+| -------: | :-- | :--- | :---- |
+| NTSC 256 | 590 | 3150 | 2560  |
+| NTSC 320 | 600 | 3160 | 2560  |
+| NTSC 368 | 539 | 3227 | 2688  |
+| NTSC 512 | 615 | 3175 | 2560  |
+| NTSC 640 | 620 | 3180 | 2560  |
+| PAL 256  | 610 | 3170 | 2560  |
+| PAL 320  | 624 | 3184 | 2560  |
+| PAL 368  | 560 | 3248 | 2688  |
+| PAL 512  | 635 | 3195 | 2560  |
+| PAL 640  | 640 | 3200 | 2560  |
+
 #### GP1(07h) - Vertical Display range (on Screen)
 ```
   0-9   Y1 (NTSC=88h-(240/2), (PAL=A3h-(288/2))  ;\scanline numbers on screen,
