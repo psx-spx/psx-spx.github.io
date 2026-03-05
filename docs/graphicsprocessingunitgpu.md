@@ -701,7 +701,8 @@ mode set by GP1(08h).3; see section on [nominal video clocks](#nominal-video-clo
 for values.<br/>
 
 For official games, X1 and X2 seem to vary based on resolution.<br/>
-The following values are used for the fullscreen range:<br/>
+The following values are used for the fullscreen range:
+
 | Width    | X1  | X2   | Range |
 | -------: | :-- | :--- | :---- |
 | NTSC 256 | 590 | 3150 | 2560  |
