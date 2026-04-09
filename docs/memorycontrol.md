@@ -223,6 +223,27 @@ and LATE-PU-8 (but works on PU-18 through PM-41).<br/>
 Documented in chapter 14 of the datasheet for LSI's L64360, which specifically
 states it "includes the LR33300 Family Control Registers described in the
 CW33300 manual".<br/>
+IBLKSZ (bits 8-9) controls the i-cache refill burst length. With the default
+value of 1 (4-word), a cache miss at word 0 fills the entire 4-word line. With
+IBLKSZ=0 (2-word), a miss at word 0 fills only words 0 and 1. Misses at words
+1, 2, or 3 always fill from the accessed word to end-of-line regardless of
+IBLKSZ. See the [i-Cache](memorymap.md#i-cache) section for details on fill
+behavior and per-word valid bits.<br/>
+When TAG is set and IsC is set in COP0 SR, stores to the cache address space
+write to the i-cache tag memory. The stored value is:
+```
+  tag = (data AND 0Fh) OR (offset AND FFFFF000h)
+```
+The low 4 bits of the write data become the per-word valid bits. The upper
+address bits come from the **write offset**, not the data. Writing 0 at each
+line's base address (offset = line * 16) clears the valid bits while setting
+the address portion to 0, effectively invalidating the line. Code words are not
+affected by tag writes.<br/>
+TAG mode reads (loads with TAG set in BCC and IsC set) return the valid bits in
+bits [3:0] and a tag match result in bit [4]. Bit 4 is set if the stored tag's
+address field matches the read address. The upper bits [31:5] contain code word
+data that leaks through and should be ignored. TAG mode reads are primarily
+useful for diagnostics, not for normal cache management.<br/>
 Used primarily by the BIOS to flush the i-cache in combination with the COP0
 status register, like so:<br/>
 ```c

@@ -595,11 +595,16 @@ ExcCode values:
             interrupts are allowed to cause an exception.
   16    Isc Isolate Cache (0=No, 1=Isolate)
               When isolated, all load and store operations are targetted
-              to the Data cache, and never the main memory.
-              (Used by PSX Kernel, in combination with Port FFFE0130h)
+              to the cache instead of main memory. Which cache is accessed
+              depends on the BCC register (FFFE0130h): with TAG+IS1, stores
+              go to i-cache tag memory; with IS1 only, stores go to i-cache
+              code words. (Used by PSX Kernel, in combination with Port
+              FFFE0130h)
   17    Swc Swapped cache mode (0=Normal, 1=Swapped)
-              Instruction cache will act as Data cache and vice versa.
-              Use only with Isc to access & invalidate Instr. cache entries.
+              Documented as swapping instruction and data caches. Hardware
+              testing shows no observable effect on PSX: IsC+SwC produces
+              identical results to IsC alone for both TAG and code word
+              reads/writes. The PSX kernel does not use this bit.
               (Not used by PSX Kernel)
   18    PZ  When set cache parity bits are written as 0.
   19    CM  Shows the result of the last load operation with the D-cache

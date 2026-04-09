@@ -42,10 +42,51 @@ remaining 1.5GB causes an exception).<br/>
 #### i-Cache
 The i-Cache can hold 4096 bytes, or 1024 instructions.<br/>
 It is only active in the cached regions (KUSEG and KSEG0).<br/>
-There are reportedly some restrictions... not sure there... eventually it is
-using the LSBs of the address as cache-line number... so, for example, it
-couldn't simultaneously memorize opcodes at BOTH address 80001234h, AND at
-address 800F1234h (?)<br/>
+The cache is direct-mapped with 256 lines of 4 words (16 bytes) each. The cache
+line index is determined by address bits [11:4], meaning addresses that differ
+only in bits [31:12] map to the same line. For example, 80001234h and 800F1234h
+both map to line 23h and cannot be cached simultaneously.<br/>
+
+##### Tag format
+Each cache line has a tag that stores the physical address and per-word valid
+bits:
+```
+  Tag = physical_address[31:12] | valid[3:0]
+```
+The tag stores the **physical** address, not the virtual address. KUSEG
+(00000000h) and KSEG0 (80000000h) accesses to the same physical location
+produce identical tags. KSEG1 (A0000000h) bypasses the cache entirely.<br/>
+The 4 valid bits correspond to the 4 words in the line. Bit 0 = word 0, bit 3 =
+word 3. A set bit means that word contains valid cached data. After a full line
+fill, all 4 bits are set (0Fh). After a tag-only flush, valid bits are cleared
+but code words remain in the cache SRAM.<br/>
+
+##### Fill behavior
+On a cache miss, the CPU fills the line sequentially **from the accessed word to
+the end of the line**, with no wrapping:
+```
+  Entry at word 0: fills words 0,1,2,3  (valid = 0Fh)
+  Entry at word 1: fills words 1,2,3    (valid = 0Eh)
+  Entry at word 2: fills words 2,3      (valid = 0Ch)
+  Entry at word 3: fills word 3 only    (valid = 08h)
+```
+The IBLKSZ field in the [BIU/Cache Configuration Register](memorycontrol.md#fffe0130h---bcc-biucache-configuration-register-rw)
+(bits 8-9 of FFFE0130h) limits the maximum burst length. With IBLKSZ=0 (2-word
+refill), entry at word 0 fills only words 0 and 1 (valid = 03h). Entry at words
+1, 2, or 3 is unaffected by IBLKSZ and always fills to end-of-line.<br/>
+When the tag matches but a specific word's valid bit is 0, the CPU treats it as
+a miss and performs a **full line refill** from RAM, replacing all 4 code words
+and setting valid to 0Fh. Consecutive fills to the same line (with matching
+tags) OR into the valid bits, progressively filling the line.<br/>
+
+##### Isolation and self-modifying code
+Store instructions (SW etc.) to RAM addresses do **not** affect the i-cache.
+The i-cache is completely independent of the data write path. Writing new code
+to a cached address (via either KSEG0 or KSEG1) leaves the i-cache contents
+unchanged. The CPU will continue to execute the stale cached instructions until
+the cache is explicitly flushed. This behavior is relied upon by some games
+(e.g. Formula One 2001) that loads new code over itself and expect the cache to
+serve old instructions until an explicit FlushCache syscall.<br/>
 
 #### Scratchpad
 MIPS CPUs usually have a d-Cache, but, in the PSX, Sony has assigned it as
