@@ -216,6 +216,207 @@ The control register uses a bank-switching scheme to access multiple internal re
   Address space: 26-bit frame address, shifted left 4 for byte address
 ```
 
+#### PA Capture Frame Format
+Each captured frame is 16 bytes (128 bits), representing a single clock cycle snapshot of the PlayStation's bus state. The hardware passively captures raw electrical signal levels - all bus type classification (idle, refresh, DMA, etc.) is performed in software by LIBPA.DLL through state machines that track RAS/CAS sequences, chip selects, and write enables across consecutive frames.
+
+The bit assignments below were reverse-engineered from LIBPA.DLL and PA32.EXE (PSY-Q SDK 4.4). Assignments marked with (?) are inferred from access patterns but not confirmed against hardware. Bits not listed are not accessed by the software and may be unused capture lines, reserved, or internal PA hardware state.
+```
+  Word 0 (bytes 0-3) - SDRAM Bus and Control Signals
+  ---------------------------------------------------
+  Bytes 0-1 (16-bit LE):
+    SDRAM multiplexed address lines (active during RAS and CAS phases).
+    The software reconstructs full SDRAM addresses by capturing the row
+    address during RAS then the column address during CAS. The exact
+    mapping from raw bits to logical address bits involves non-trivial
+    rearrangement in the DLL and has not been fully decoded.
+
+  Byte 1:
+    Bit 4 (0x10)   Main bus access strobe (active during bus transactions)
+    Bit 7 (0x80)   SBus direction (1=read, 0=write)
+    Bits 0-3,5,6   Part of SDRAM muxed address (exact mapping not decoded)
+
+  Byte 2:
+    Bit 0 (0x01)   SBus device select
+    Bit 1 (0x02)   Waveform signal A (?) - one of: SIO1 RXD, DSR, or CTS
+    Bit 2 (0x04)   Waveform signal B (?) - one of: SIO1 RXD, DSR, or CTS
+    Bit 3 (0x08)   VRAM port 0 access strobe
+    Bit 4 (0x10)   VRAM port 1 access strobe
+    Bit 5           Not accessed by software
+    Bit 6 (0x40)   VRAM clock edge A (toggles on VRAM bus activity)
+    Bit 7 (0x80)   VRAM clock edge B (toggles on VRAM bus activity)
+
+  Byte 3:
+    Bit 0 (0x01)   RAM chip select
+    Bits 2-1       Transaction boundary (both set = end of bus cycle)
+    Bits 6-3       nMWEN[3:0] - SDRAM byte write enables (active-low,
+                   one per byte lane, active count = bytes written)
+    Bit 7           Not accessed by software
+
+
+  Word 1 (bytes 4-7) - Address Bus and SBus Selects
+  --------------------------------------------------
+  Bytes 4-7 (32-bit LE):
+    Bits 28-5      24-bit bus address (valid during addressed transactions)
+
+  Byte 4:
+    Bit 0 (0x01)   SBus control flag
+    Bit 2 (0x04)   PIO device select
+    Bit 4 (0x10)   Waveform signal C (?) - one of: VBLNK, GUNINT,
+                   SIO1 RXD, DSR, or CTS
+
+  Byte 7:
+    Bit 5 (0x20)   SPU chip select
+    Bit 6 (0x40)   GPU / DMA bus arbitration
+
+
+  Word 2 (bytes 8-11) - VRAM Bus and Peripheral Signals
+  ------------------------------------------------------
+  Bytes 8-10 (from 32-bit LE):
+    Bits 16-8      9-bit VRAM X coordinate, port 0 (half-pixel units)
+    Bits 25-17     9-bit VRAM X coordinate, port 1 (half-pixel units)
+    VRAM Y coordinates are accumulated by software across frames,
+    not directly present in the raw capture.
+
+  Byte 8:
+    Bit 1 (0x02)   Waveform signal D (?) - one of: VBLNK, GUNINT,
+                   SIO1 RXD, DSR, or CTS
+    Bit 2 (0x04)   PIO flag (sub-bus)
+    Bit 6 (0x40)   CD device select
+    Bits 0,3,4,5,7 Not accessed by software
+
+  Byte 11:
+    Bit 2 (0x04)   VRAM transfer active A
+    Bit 3 (0x08)   VRAM transfer active B
+    Bit 4 (0x10)   VRAM vertical sync (used by VRAM decoder for frame sync)
+    Bit 6 (0x40)   VRAM read/write direction
+    Bit 7 (0x80)   Waveform signal E (?) - one of: VBLNK, GUNINT,
+                   SIO1 RXD, DSR, or CTS
+    Bits 0,1,5     Not accessed by software
+
+
+  Word 3 (bytes 12-15) - GPU Data Bus
+  ------------------------------------
+  Full 32-bit capture of the GPU data bus. Interpretation depends on
+  what the GPU is doing at the time of capture:
+    During OT traversal:  Bits 31-24 = GP0 command byte
+                          Bits 23-0  = next OT pointer (0xFFFFFF = end)
+    During vertex data:   Bits 15-0  = X coordinate
+                          Bits 31-16 = Y coordinate
+    During color data:    Bits 7-0   = Red
+                          Bits 15-8  = Green
+                          Bits 23-16 = Blue
+  The GP0 command byte identifies the GPU primitive type:
+    0x20 POLY_F3     0x24 POLY_FT3    0x28 POLY_F4     0x2C POLY_FT4
+    0x30 POLY_G3     0x34 POLY_GT3    0x38 POLY_G4     0x3C POLY_GT4
+    0x40 LINE_F2     0x48 LINE_F3     0x4C LINE_F4
+    0x50 LINE_G2     0x58 LINE_G3     0x5C LINE_G4
+    0x60 TILE_any    0x64 SPRT_any    0x70 TILE_1      0x74 TILE_8
+    0x78 TILE_16     0x7C SPRT_8/16
+    0x02 BlockFill
+    0xE0+ GP1 commands (display control)
+```
+
+#### PA Waveform Signals
+The PA captures five individual digital signal lines, displayed as waveforms in the PA32 GUI. These are extracted by LIBPA.DLL from five specific bits scattered across the capture frame (byte 2 bits 1-2, byte 4 bit 4, byte 8 bit 1, byte 11 bit 7). The five signals are VBLNK, GUNINT, SIO1 RXD, SIO1 DSR, and SIO1 CTS, but the exact assignment of which signal maps to which bit position has not been confirmed - the order shown in the PA32 GUI may not match the extraction order in the DLL.
+
+#### PA Decoded Analysis Views
+The PA software (PA32.EXE + LIBPA.DLL) decodes the raw frames into several analysis views:
+```
+  Main RAM Bus (Time)   - Transaction type per cycle: Idle, Refresh, RAS Precharge,
+                          PIO DMA Write/Read, CD Write/Read, SPU DMA Write/Read,
+                          Internal DMA Write/Read, GPU DMA Write/Read,
+                          Data Write/Read, Inst Burst Read
+  Sub Bus (Time)        - Peripheral bus activity: Idle, Read/Write PIO,
+                          Read/Write CD, Read/Write SPU, Read/Write RAM,
+                          Read/Write Others
+  Video RAM Bus         - VRAM transfer type: Idle, Read, Write, Block Write,
+                          Read Modify Write, Texture Read, CLUT Read A/B
+  GPU Packets           - Decoded GPU primitives: polygon types, lines, sprites,
+                          tiles, block fills, null packets, commands
+  Waveform Signals      - Five digital signal traces (see above)
+```
+The bus type classification is not stored in the capture data. It is derived at display time by multi-frame state machines in LIBPA.DLL that track SDRAM RAS/CAS sequences, chip select transitions, and write enable patterns across consecutive frames.
+
+#### PA Not Yet Documented
+The following aspects of the PA hardware and software have not been reverse-engineered:
+```
+  - SDRAM address bit scrambling (the exact rearrangement of raw bits in bytes 0-1
+    to reconstruct logical addresses through RAS/CAS phases)
+  - Trigger configuration (the meaning of the registers in banks 1-10 that
+    control what conditions start and stop a capture)
+  - Waveform signal-to-bit assignment (which of the five bit positions
+    corresponds to which named signal)
+  - The VRAM bus decoder's full state machine (multi-cycle classification of
+    Read vs Write vs Block Write vs Read-Modify-Write vs Texture Read vs CLUT Read)
+  - 15 bits in the capture frame not accessed by the software
+    (byte 2 bit 5, byte 3 bit 7, byte 8 bits 0/3/4/5/7, byte 11 bits 0/1/5)
+  - Physical signal line mapping to PA daughterboard pins
+```
+
+#### PA Capture File Format (.PAD)
+PA32.EXE saves and loads capture data in `.PAD` files. The format uses MFC CArchive serialization with 32-bit tagged fields, followed by a bulk dump of raw capture frames. Two format versions exist: "PAD2.02" and "PAD2.03" - differences between them are unknown.
+```
+  File Structure:
+    Header (variable length, typically ~13KB for the included tutorial)
+    Raw frame data (16 bytes per frame, up to 64MB)
+    End marker (4 bytes: 0x0001FFFF) (?)
+
+  Header Tags (32-bit little-endian, format: category<<16 | field):
+    Category 1 - File metadata:
+      0x10001   String: format identifier ("PAD2.02" or "PAD2.03")
+      0x10002   String: version string
+      0x10003   uint16: unknown
+      0x10004   uint32: unknown
+      0x10005   uint32: unknown (stored at internal offset 0x1004C4)
+      0x10006   uint32: unknown (stored at internal offset 0x1004C8)
+      0x10007   uint32: unknown (stored at internal offset 0x1004CC)
+      0x10008   uint16: unknown
+      0x10009   uint16: unknown
+      0x1000A   uint16: unknown
+      0x1000B   String: label (e.g. "[Sampled on ]")
+      0x1000C   Serialized object: additional metadata
+      0x1000D   uint32: unknown
+      0x1000E   uint16: unknown
+
+    Category 2 - Trigger configuration:
+      Internal structure not decoded.
+
+    Category 3:
+      0x30001   uint16: unknown
+
+    Category 4 - Symbol map:
+      Contains segment and function names with address ranges from the
+      .MAP file. Used for address-to-symbol resolution during analysis.
+      Per-entry serialization format not decoded.
+
+    Category 5 - Capture data:
+      0x50001   uint32: unknown (stored at internal offset 0x1004C4)
+      0x50002   uint32: unknown (stored at internal offset 0x1004C8)
+      0x50003   uint32: total frame count (stored at 0x1004CC, confirmed)
+      0x50004   uint16: unknown (stored at 0x1004D0)
+      0x50005   uint16: has raw data flag (stored at 0x1004D4, confirmed:
+                if nonzero, tag 0x50014 contains frame data)
+      0x50006-  uint16 values: configuration (stored at 0x1004D8-0x100500)
+      0x50013
+      0x50014   Bulk raw frame data (confirmed):
+                No explicit length - reader uses frame count from 0x50003.
+                Data is written/read in chunks of 0x400 (1024) frames.
+                Each chunk is 0x4000 (16384) bytes of raw 16-byte frames.
+                No per-chunk headers - pure concatenated raw frames.
+      0x50015   uint16: unknown (stored at 0x100510)
+      0x50016   uint16: unknown (stored at 0x100514)
+      0x50017   uint16: unknown (stored at 0x100518)
+
+    0x1FFFF   End marker (terminates the tag loop)
+
+  Serialization notes:
+    Strings: length-prefixed (1 byte for short strings; MFC CArchive may
+    use 2-byte or 4-byte lengths for longer strings - not fully traced).
+    Integer values are little-endian. Tag parsing reads 4 bytes at a time
+    from the MFC CArchive stream.
+```
+The included tutorial capture (`PA/DATA/TUTO3.PAD`, 18MB) has a 13,156-byte header followed by 1,132,544 raw 16-byte frames (18,120,704 bytes) and 4 trailing bytes.
+
 #### PA Software
 ```
   PA32.EXE    Windows GUI for capture visualization and analysis
