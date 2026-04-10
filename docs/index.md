@@ -46,6 +46,7 @@ To discuss the contents of this document, or hang out with likely minded people 
 [Konami System 573](konamisystem573.md)<br/>
 [Cheat Devices](cheatdevices.md)<br/>
 [PSX Dev-Board Chipsets](psxdevboardchipsets.md)<br/>
+[PSX Dev-Board Protocol](psxdevboardprotocol.md)<br/>
 [Hardware Numbers](hardwarenumbers.md)<br/>
 [Pinouts](pinouts.md)<br/>
 [About &amp; Credits](aboutcredits.md)<br/>

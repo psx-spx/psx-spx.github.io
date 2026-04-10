@@ -174,18 +174,24 @@ daughterboard with Controller ports).<br/>
   X302     3pin 4.000MHz (for sub-cpu)
 ```
 
-#### Sony DTL-H2700 Dev board (ISA bus) (CPU, ANALYZER ...?)
-Another revision of the DTL-H2000/DTL-H2500 boards. Consists of a single ISA
-card stacked together with two huge daughterboards, and probably additionally
-having a small connector daughterboard. Exact chipset is unknown (there might
-be components on both sides of the PCBs, most of them not visible due to the
-PCB stacking, so taking photos/scans of the PCBs would require advanced
-techniques with screwdrivers).<br/>
-Currently the only known chip name is an EPROM (MX 27C1000DC-90, with sticker
-"Title=DTL-H2700, Ver=1.00, Date=96.12.4, Sum=046B No."). The ISA card is
-having markings: "SONY HCD MWB-7? MADE IN JAPAN, PA47 1-589-003-01 1642E03A0".<br/>
-One uncommon feature is an extra connector for a "trigger switch" (foot pedal),
-which is reportedly used for activating performance analyzer logging.<br/>
+#### Sony DTL-H2700 Dev board (ISA bus) (CPU + Performance Analyzer)
+An ISA-bus development board identical to the DTL-H2000 but with an additional
+Performance Analyzer (bus logic analyzer) on two daughterboards. Consists of a
+main ISA card stacked with two large daughterboards (the PA hardware) and a
+small connector daughterboard. Occupies the equivalent of three ISA slots.
+Exact chipset is mostly unknown due to PCB stacking making components
+inaccessible.<br/>
+Known chips: EPROM (MX 27C1000DC-90, sticker "Title=DTL-H2700, Ver=1.00,
+Date=96.12.4, Sum=046B No."). ISA card markings: "SONY HCD MWB-7? MADE IN
+JAPAN, PA47 1-589-003-01 1642E03A0".<br/>
+Uses ISA I/O ports at a DIP-switch configurable base address (factory default
+0x1340). The DECI debugger uses 8 ports at base+0 through base+7 (shared with
+DTL-H2000). The Performance Analyzer uses 2 additional ports at base+0xC and
+base+0xE. No DMA is required. IRQ is optional (valid: 10, 11, 12, 15).<br/>
+An extra connector provides input for a "trigger switch" (foot pedal) used to
+activate performance analyzer capture.<br/>
+For the DECI protocol, PCDRV, and Performance Analyzer interface details, see
+[PSX Dev-Board Protocol](psxdevboardprotocol.md).<br/>
 
 #### Sony DTL-H201A / DT-HV - Graphic Artist Board (IBM PC/ATs to NTSC video)
 ```
