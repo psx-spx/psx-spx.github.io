@@ -31,11 +31,11 @@ The ISA-bus boards use a set of I/O ports at a configurable base address. The ba
 
 #### Control Register A (base+4, write)
 ```
-  0x01      Initialize / acknowledge
-  0x10      Trigger pending command
-  0x20      Acknowledge result
-  0x71      Reset sequence
+  0x01      Initialize / finalize connection (written after successful connect)
+  0x20      Acknowledge result (written after reading result from port base+1)
+  0x71      Reset sequence trigger
 ```
+Note: DECI commands are triggered by writing the complete command buffer to port base+2. Neither port base+4 nor the pending flag on port base+5 is needed. Port base+4 is only used for acknowledgment (0x20), connection finalization (0x01), and reset (0x71). The pending flag on port base+5 bit 4 is only used during the connection sequence.
 
 #### Mode Register (base+5, read/write)
 ```
@@ -55,48 +55,112 @@ Valid IRQs: 10, 11, 12, 15. Configurable via jumper on the board, `/I` command l
 #### DECI Protocol Overview
 Communication between the host PC and the PlayStation target uses the DECI (DEbugging Communication Interface) protocol. All commands follow a master-slave model where the host initiates and the target responds.
 
+#### Boot Modes
+The value written to port base+6 during reset selects the boot mode:
+```
+  Mode 0    Boot from CD-ROM (loads cdrom:PSX.EXE;1)
+  Mode 1    Debug stub (initializes SRAM at 1FA00000, enters DECI handler)
+  Mode 2    Console (interactive ROM monitor with PSX> prompt)
+```
+Mode 1 is the standard development mode. The BIOS calls entry points in SRAM at 0x1FA00000 to initialize the debug stub, then the CPU executes a BREAK instruction to enter the debug handler. This stub services DECI commands (memory read/write, register access, program execution) by polling the ATCONS registers from the PS1 side. On H2500/H2700, the stub is loaded from flash automatically. On H2000, the stub must be uploaded via SNPATCH after each reset (see below).
+
+Mode 2 boots the PS1 kernel with TTY enabled, then enters the ROM monitor - an interactive text console accessible through the ISA ports. The monitor supports commands like `dw` (dump word), `sw` (set word), `dr`/`sr` (dump/set registers), `go` (execute), `di` (disassemble), `help` (list commands), etc. Console I/O uses a simple byte-at-a-time protocol through port base+1 (see Console Mode below).
+
+Mode 0 boots the kernel, initializes CD-ROM, and attempts to load and execute PSX.EXE from disc. With no CD present, it blocks waiting for the disc.
+
+All three boards (H2000, H2500, H2700) have SRAM at 0x1FA00000 and a built-in debug stub in the board's BIOS ROM. During boot, `loadAndInitKernel` (at 0xBFC00428 in the H2000 BIOS) copies the stub from ROM at 0xBFC20000 into SRAM at 0x1FA00000. This happens for all boot modes, before the mode 0/1/2 branch. In mode 1, the BIOS then calls the stub's entry points to initialize it and enters the DECI handler. The built-in stub provides basic DECI functionality (memory read/write, register access).
+
+SNPATCH is an upgraded replacement for the built-in stub. It provides improved kernel patching (fixing cache coherency bugs in the older PATCHX), PCDRV host file system support, and the full DECI debug protocol. On H2500/H2700, the upgraded stub can be stored in flash memory (initialized once via the `FLASH` utility) so it persists across resets. On H2000, SNPATCH must be uploaded after every reset.
+
 #### Connection Sequence
 ```
   1. Write 0x04 to port base+1 (command byte)
   2. Set bit 4 of port base+5 (pending command flag)
-  3. Write 0x01 to port base+4 (trigger command)
-  4. Poll port base+0 bit 4 until set (command complete)
-  5. Read port base+1 (result byte)
+  3. Poll port base+0 bit 4 until set (command complete)
+  4. Read port base+1 (result byte)
+  5. Write 0x20 to port base+4 (acknowledge result)
   6. If result == 2, target is connected
+  7. Write 0x01 to port base+4 (finalize connection)
 ```
+The connection handshake does not use port base+4 as a trigger before polling. Only the pending flag on port base+5 is needed. The 0x01 write to port base+4 occurs after a successful connection, not before.
 
 #### Reset Sequence
 ```
   1. Disable IRQ (if configured)
-  2. Write 0x01 to port base+6
+  2. Write mode to port base+6 (0=CD, 1=debug, 2=console)
   3. Write 0x71 to port base+4
   4. Write 0x01 to port base+5
+  5. Wait for boot (typically 2-3 seconds)
 ```
 
+#### POST Codes (port base+7)
+During boot, port base+7 reflects the PlayStation BIOS POST progress. The values cycle through a predictable sequence that completes within approximately 125ms after reset:
+```
+  0x0F -> 0x01 -> 0x04 -> 0x02 -> 0x0B -> 0x0C -> 0x0D -> 0x00
+```
+Port base+4 transitions from 0x00 to 0x01 when initialization is complete (~124ms after reset). The POST code values correspond to the `BIOS_trace()` calls in the PlayStation kernel (documented in the OpenBIOS source).
+
 #### DECI Command Buffer Format
-Each command sends a 6-byte or 10-byte buffer through the data port (base+2), written as 16-bit words:
+Each command sends a 6-byte or 10-byte buffer through the data port (base+2), written as 16-bit words. The buffer is sent as `bufferSize/2` word writes - each word is read as two consecutive bytes from the buffer and written via `outw()`.
 ```
   Byte 0    DECI command code
   Byte 1    Unit/target ID (variable for PS1 target ops, 0x80 for host-side ops)
-  Byte 2-3  Parameter (big-endian, typically length)
-  Byte 4-5  Parameter (big-endian)
-  Byte 6-9  Address parameter (10-byte commands only, big-endian)
+  Byte 2-3  Parameter (zeros for most commands)
+  Byte 4-5  Length in bytes (big-endian: high byte first)
+  Byte 6-9  Address (10-byte commands only, big-endian: bits 31-24, 23-16, 15-8, 7-0)
+```
+On an x86 host, `outw()` writes the low byte first (little-endian bus), so each word written to port base+2 places byte N at the low position and byte N+1 at the high position. For example, writing bytes `{0x20, 0x00}` (DECI cmd 0x20, unit 0) is done as `outw(0x0020)`.
+
+For the 10-byte write memory command (DECI 0x20), DEXBIOS fills the buffer from x86 registers:
+```
+  cmd[0] = 0x20          cmd[1] = AL (unit)
+  cmd[2] = 0             cmd[3] = 0
+  cmd[4] = CH            cmd[5] = CL            (length, CX register)
+  cmd[6] = DH            cmd[7] = DL            (address high word, DX register)
+  cmd[8] = BH            cmd[9] = BL            (address low word, BX register)
 ```
 
 #### Command Send/Receive Flow
-After writing the command buffer to the data port, the host polls the status register and reads the result byte from port base+1 to determine what the target needs:
+To send a DECI command:
 ```
-  Result 0  Target requests data: write payload words to data port (poll bit 2)
-  Result 1  Target has data: read payload words from data port (poll bit 1/0)
-  Result 2  Command complete
-  Result 3  Extended status: read status byte from data port
-              0xFF = send PSY-Q copyright string
-  Result 5  Target disconnected
-  Result 7  Flow control: read byte from data port
-              0x7E = override timeout
-              0x00 = command acknowledged
+  1. Poll port base+0 bit 2 (write ready)
+  2. Write command buffer as 16-bit words to port base+2
+     (buffer size / 2 words, reading two bytes at a time from the buffer)
+  3. Set bit 4 of port base+5 (pending command flag)
+  4. Enter result polling loop (see below)
 ```
-Bulk data transfers are done word-at-a-time through the data port, with up to 0x800 words (4KB) per burst when status bit 1 is set.
+Note: no trigger write to port base+4 is needed to initiate a DECI command, and no pending flag is set on port base+5. The act of writing the complete command buffer to port base+2 is itself sufficient to trigger the command. DEXBIOS uses `REP OUTSW` to blast the buffer in a single instruction, then immediately polls for the result. This differs from the connection sequence, which does use the pending flag on port base+5.
+
+The host then repeatedly polls for the command complete flag and reads the result byte:
+```
+  1. Poll port base+0 bit 4 until set (command complete)
+  2. Read result byte from port base+1
+  3. Write 0x20 to port base+4 (acknowledge)
+  4. Handle result (see below)
+  5. Loop back to step 1 unless result indicates completion
+```
+Result codes:
+```
+  Result 0  Target requests data: write payload words to port base+2.
+            Poll port base+0 bit 2 (write ready) between bursts.
+            Maximum burst size: 0x800 words (4KB). If more data remains,
+            poll bit 2 again and send the next burst.
+  Result 1  Target has data: read payload words from port base+2.
+            If remaining bytes > 0xFFF: poll bit 1, read 0x800-word bursts.
+            If remaining bytes <= 0xFFF: poll bit 0 (single word) or
+            bit 4 (FIFO complete), read words individually.
+  Result 2  Command complete. Exit the loop.
+  Result 3  Extended status: the follow-up byte is read using the same
+            CDONE/port1/ack mechanism (poll bit 4, read port base+1,
+            ack with 0x20 to port base+4). NOT read from the data port.
+              0xFF = target requests PSY-Q copyright string (40 bytes
+                     via port base+2)
+              Other = stored as error/status code
+  Result 5  Target disconnected. Mark connection as lost.
+  Result 7  Flow control: follow-up byte read via same CDONE mechanism.
+              0x7E = override timeout (extend wait period)
+              0x00 = command acknowledged, continue normally
+```
 
 #### DECI Command Table
 These are the BIOS-level opcodes and their corresponding DECI command codes. The BIOS opcodes are what programs like RUN.exe and DEXBIOS.COM use, while the DECI command codes are the bytes that appear in the command buffer on the wire.
@@ -162,6 +226,79 @@ SNPATCH copies approximately 240KB of code into three regions:
 After copying, it flushes the instruction cache and transfers control to the patched entry points.
 
 SNPATCH replaces both PATCHX.CPE (which had cache coherency bugs) and NEWDEX (which installed the debug stub separately). Three variants exist: SNPATCH.CPE (standard), SNPATCHJ.CPE (Japanese fonts), SNPATCHW.CPE (Western fonts including Latin diacritics, Greek, Cyrillic).
+
+On the DTL-H2500 and DTL-H2700, the debug stub is stored in the board's flash memory and is loaded into SRAM automatically during mode 1 boot - SNPATCH upload is not required after each reset. The flash must be initialized once using the `FLASH` utility included in the SDK. On the older DTL-H2000, which has no flash, SNPATCH (or the older PATCH.CPE) must be uploaded after every reset.
+
+The BIOS boot sequence in mode 1 calls three entry points in the SRAM region:
+```
+  0x1FA00008    Returns required memory allocation size
+  0x1FA00020    Debug stub initialization (first pass)
+  0x1FA00028    Debug stub initialization (second pass)
+```
+After these calls, the BIOS flushes the instruction cache, executes `BREAK 0x101` and `BREAK 0x406`, then the debug stub takes over. In mode 2 (console) these SRAM calls are not made - the SRAM region may contain uninitialized data.
+
+#### Console Mode (Mode 2)
+When the board boots in mode 2, the PlayStation runs the ROM monitor - an interactive text console. Console I/O uses a byte-at-a-time protocol through port base+1, distinct from the DECI command protocol:
+
+Reading console output:
+```
+  1. Poll port base+0 bit 4 (command complete)
+  2. Read character from port base+1
+  3. Write 0x20 to port base+4 (acknowledge)
+  Character 0x04 (EOT) marks end of a transmission block.
+  ESC sequences (ANSI terminal) may appear in the output.
+```
+
+Sending console input:
+```
+  1. Write character byte to port base+1
+  2. Write 0x20 to port base+4 (acknowledge)
+```
+
+After boot, the console outputs the kernel and ROM monitor banners, then presents a `PSX>` prompt. The ROM monitor version on the H2700 is "PS-X ROM monitor Ver.2.6" with copyright dates through 1997.
+
+The connect sequence (write 0x04 to port1, set pending, poll) still works in mode 2, but returns a different result value (0x0A instead of 0x02). Console I/O works regardless of whether a connect has been performed.
+
+The ROM monitor accepts commands via text input. Key commands include:
+```
+  help            Display command list (case-sensitive, "help" not "h")
+  dw ADDR [N]     Dump N words at address (uppercase hex required)
+  di ADDR [N]     Disassemble N instructions
+  dr              Dump all registers
+  sr REG VALUE    Set register (register names: zero,at,v0-v1,a0-a3,
+                  t0-t9,s0-s7,k0-k1,gp,sp,fp,ra,epc,hi,lo,sr,cr)
+  go              Execute at current EPC
+  ds              Dump COP0 status/cause register details
+  dip             Read DIP switch setting
+  mem             Memory map information
+```
+Addresses must be uppercase hexadecimal without a "0x" prefix. The `dw` count parameter specifies the number of 32-bit words to display.
+
+#### PCI Detection (DTL-H2500 only)
+The H2500 is a PCI board and can be auto-detected via PCI BIOS (INT 1Ah):
+```
+  Vendor ID:  0x104D (Sony Corporation)
+  Device ID:  0x8004
+  BAR0:       I/O base address (after masking and shifting)
+```
+DOS tools like RESETPS use PCI BIOS calls (AX=B102h Find PCI Device) to locate the H2500 when DEXBIOS is not loaded. The BAR0 value at PCI config offset 0x10 contains the I/O base address. The H2700 is ISA-only and uses DIP switches for address configuration - PCI detection does not apply.
+
+#### PS1-Side Registers (ATCONS)
+The PlayStation CPU accesses the development hardware through memory-mapped registers in the expansion region:
+```
+  0x1F802000    ATCONS_STAT   Status register (8-bit)
+  0x1F802002    ATCONS_FIFO   Data FIFO (8-bit, character I/O)
+  0x1F802030    ATCONS_IRQ    IRQ control (8-bit)
+  0x1F802032    ATCONS_IRQ2   IRQ control 2 (8-bit)
+```
+The PS1-side console driver (from the DTL-H2000 BIOS) uses these registers:
+```
+  Read character:  Poll ATCONS_STAT bit 4, read ATCONS_FIFO,
+                   ack via ATCONS_IRQ=0x20 and ATCONS_IRQ[2]|=0x10
+  Write character: Poll ATCONS_STAT bit 3, write ATCONS_FIFO,
+                   signal via ATCONS_IRQ[2]|=0x10
+```
+The DECI debug stub (loaded from flash or SNPATCH) also uses these registers to communicate with the host, but through the structured DECI protocol rather than raw character I/O.
 
 #### Performance Analyzer (DTL-H2700 only)
 The DTL-H2700 includes a bus logic analyzer on two daughterboards, accessible through two additional I/O ports at base+0xC and base+0xE. The analyzer can capture main RAM bus, sub bus, and video RAM bus activity.
