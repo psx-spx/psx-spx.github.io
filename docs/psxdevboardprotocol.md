@@ -139,6 +139,8 @@ The host then repeatedly polls for the command complete flag and reads the resul
   4. Handle result (see below)
   5. Loop back to step 1 unless result indicates completion
 ```
+Note: the built-in debug stub may only process one command per connection. After a command completes, the stub returns to waiting for a new 0x04 connection byte. For multiple operations, reconnect (repeat the connection sequence) or perform a full reset between each command. The stub's state machine is fragile - if a command leaves the stub in an unexpected state, a full reset may be required before the next command will be accepted.
+
 Result codes:
 ```
   Result 0  Target requests data: write payload words to port base+2.
