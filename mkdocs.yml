@@ -50,6 +50,7 @@ nav:
   - iomap.md
   - graphicsprocessingunitgpu.md
   - geometrytransformationenginegte.md
+  - gtepipelinetimings.md
   - macroblockdecodermdec.md
   - soundprocessingunitspu.md
   - interrupts.md

@@ -7,6 +7,7 @@
 [GTE General Purpose Calculation Commands](geometrytransformationenginegte.md#gte-general-purpose-calculation-commands)<br/>
 [GTE Color Calculation Commands](geometrytransformationenginegte.md#gte-color-calculation-commands)<br/>
 [GTE Division Inaccuracy](geometrytransformationenginegte.md#gte-division-inaccuracy)<br/>
+[GTE Pipeline Timings](gtepipelinetimings.md)<br/>
 
 
 
@@ -426,6 +427,7 @@ in the FLAG register gets set; that happens if the vertex is exceeding the
 at the camara position (SZ3=0), or behind the camera (negative Z coordinates
 are saturated to SZ3=0). For details on the division, see:<br/>
 [GTE Division Inaccuracy](geometrytransformationenginegte.md#gte-division-inaccuracy)<br/>
+[GTE Pipeline Timings](gtepipelinetimings.md)<br/>
 For "far plane clipping", one can use the SZ3 saturation flag (MaxZ=FFFFh), or
 the IR3 saturation flag (MaxZ=7FFFh) (eg. used by Wipeout 2097), or one can
 compare the SZ3 value with any desired MaxZ value by software.<br/>
