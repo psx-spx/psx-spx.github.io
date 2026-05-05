@@ -92,9 +92,15 @@ serve old instructions until an explicit FlushCache syscall.<br/>
 MIPS CPUs usually have a d-Cache, but, in the PSX, Sony has assigned it as
 what's referenced as the "Scratchpad",  mapped to a fixed memory location at
 1F800000h..1F8003FFh, ie. it's used as Fast RAM, rather than as cache.<br/>
-There \<might\> be a way to disable that behavior (via Port FFFE0130h or
-so), but, the Kernel is accessing I/O ports via KUSEG, so activating Data Cache
-would cause the Kernel to access cached I/O ports.<br/>
+The scratchpad SRAM and the data cache hardware can be reconfigured via Port
+FFFE0130h: with bit 3 (RAM) cleared and bit 7 (DS) set, the scratchpad becomes
+a tag-less write-on-load buffer where every cached load spills its result into
+scratchpad at slot `(load_addr >> 2) AND 0FFh`. See the
+[BIU/Cache Configuration Register](memorycontrol.md#fffe0130h---bcc-biucache-configuration-register-rw)
+section for the full hardware-verified behavior. This mode is incompatible
+with normal kernel operation - the BIOS accesses I/O ports through KUSEG
+(cached) addresses, and activating the d-cache kernel-wide would attempt to
+cache I/O port reads.<br/>
 The purpose of the scratchpad is to have a more flexible cache system available
 to the programmer. Neither the kernel nor the Sony libraries will try to make use
 of it, so it is therefore completely up for grabs to the programmer. A good example

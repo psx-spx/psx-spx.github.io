@@ -287,11 +287,37 @@ COP0_SR = sr;
 ```
 A usable version of this code
 [is available](https://github.com/pcsx-redux/nugget/blob/main/common/hardware/flushcache.s).<br/>
+##### "D-cache" mode (RAM=0, DS=1)
 Bit 3 may be cleared to unmap the scratchpad from memory and use it as a data
-cache instead, however doing so will result in erratic behavior due to it not
-being equipped with tag memory; each cache line's "tag" seems to be hardcoded to
-its respective scratchpad address instead. With bit 3 cleared, data in the
-scratchpad will be updated during CPU loads but no cache hits will ever occur.<br/>
-Bits 4-5 seem to have no effect whatsoever. The CPU will always fetch one word
-at a time from RAM, rather than attempting to prefetch an entire line using a
-burst read (as it does with the i-cache).<br/>
+cache instead, however doing so produces an unusual fill behavior due to the
+scratchpad SRAM not being equipped with tag memory; each cache line's "tag" is
+hardcoded to its respective scratchpad address. The address tag of any
+non-scratchpad load will therefore never match, and every load is a cache miss
+that fills scratchpad as a side effect.<br/>
+The miss-fill writes the loaded word into scratchpad at slot
+`(load_byte_addr >> 2) AND 0FFh`. The fill is **word-granular** regardless of
+load width: `lb`, `lh`, and `lw` all populate the full word containing the
+accessed byte/half. Each load produces exactly one word fill - there is no
+burst behavior. The most useful pattern in this mode is loading a 1KB block
+from main RAM into scratchpad with a sequence of `lw` instructions, saving
+the explicit `sw` to scratchpad that a manual copy would require.<br/>
+The mechanism has several specific characteristics, all hardware-verified on
+SCPH-5501:<br/>
+- The cache **never produces a true hit**. Every load is a miss-fill, even
+immediately after a previous load filled the same slot. If main RAM is
+modified between two loads of the same address (e.g. via the uncached KSEG1
+mirror), the second load sees the new RAM value.
+- **KSEG1 (uncached) loads bypass the d-cache entirely.** They do not fill
+scratchpad.
+- **Stores do not spill into scratchpad.** Only loads do. Stores in this mode
+go to main RAM (or the targeted I/O) without touching scratchpad.
+- Reads or writes targeting the scratchpad address range
+(1F800000h..1F8003FFh) **deadlock the bus** in this mode. With scratchpad
+disabled by RAM=0, those addresses no longer have a normal responder.
+Recovery requires a power cycle.
+- Bits 4-5 (DBLKSZ) have no effect on fill behavior in this mode, and seem
+to have no effect in normal scratchpad mode either. The CPU will always
+fetch one word at a time from RAM, rather than attempting to prefetch an
+entire line using a burst read (as it does with the i-cache).
+- Bits 0-2 (LOCK / INV / TAG) are inert when COP0 SR.IsC is clear.
+- COP0 SR.SwC has no observable effect on this behavior.<br/>
