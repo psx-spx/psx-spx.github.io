@@ -64,6 +64,7 @@ nav:
   - serialinterfacessio.md
   - expansionportpio.md
   - memorycontrol.md
+  - partialwordwrites.md
   - unpredictablethings.md
   - cpuspecifications.md
   - kernelbios.md

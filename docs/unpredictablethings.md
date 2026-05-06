@@ -4,6 +4,12 @@ Normally, I/O ports should be accessed only at their corresponding size (ie.
 addresses should be used. When not recursing that rules, some more or less
 (un-)predictable things may happen...<br/>
 
+For the exact bus-level semantics behind the `(w16)`/`(w32)` and `CROP` /
+`IGNORE` notations in the table below (what actually lands in the
+register when you do an `sb` or `sh` to a wider port, including the
+SPU's asymmetric `/WR0` vs `/WR1` strobe behavior), see
+[Partial-Word Writes to MMIO](partialwordwrites.md).<br/>
+
 #### I/O Write Datasize
 ```
   Address               Content         W.8bit  W.16bit W.32bit
