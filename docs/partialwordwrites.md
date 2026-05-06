@@ -23,17 +23,26 @@ register sits on:
   the 32-bit data fabric internal to the CPU package. Byte enables
   are ignored; partial-word stores latch a shifted source word in
   full.
-- **SBUS** (SPU, CD-ROM, BIOS ROM, Expansion 1/2) is a 16-bit-wide
-  off-die system bus. The bus interface unit decomposes 32-bit
-  CPU accesses into one or two 16-bit transactions following a
-  specific dispatch policy. The SPU latches halfwords whenever
-  `SBUS./WR0` strobes; `SBUS./WR1` alone is ignored.
+- **SBUS** (SPU, CD-ROM, BIOS ROM, Expansion 1/2) is an off-die
+  system bus whose data path width is per-device, configured via
+  bit 12 of each device's Delay/Size register (see
+  [Memory Control](memorycontrol.md)). CD-ROM and BIOS ROM are
+  configured as 8-bit; SPU is configured as 16-bit; expansion
+  ports can use either. For a 32-bit CPU access, the bus interface
+  unit decomposes the access into either 2 (16-bit device) or 4
+  (8-bit device) consecutive transactions, keeping `!CS` active
+  and stepping the address. The SPU specifically latches halfwords
+  whenever `SBUS./WR0` strobes; `SBUS./WR1` alone is ignored.
 
 The practical upshot is that idioms like "write one byte of a
 register" do not work for hardware registers, and an `sw` to a
 16-bit SPU register also writes the neighboring register.
 
 All numbers below are hardware-verified on a single SCPH-5501.
+The SBUS rules below were measured against SPU registers only;
+behavior at CD-ROM and BIOS ROM (8-bit-configured) is expected
+to differ in the number of transactions per access and has not
+been measured here.
 
 
 
@@ -121,19 +130,33 @@ transaction; the register is unchanged.
 
 
 ##   SBUS behavior
-The SBUS is a 16-bit-wide system bus shared by SPU
+The SBUS is the off-die system bus shared by SPU
 (`SBUS./CS4`), CD-ROM (`/CS5`), BIOS ROM (`/CS2`), and
-Expansion 1/2 (`/CS0`, `/CS3`). Data lines are
-`SBUS.D[15:0]`; address lines are `SBUS.A[23:0]`; write
-strobes are `SBUS./WR0` (lower byte of halfword) and
-`SBUS./WR1` (upper byte). `SBUS./WR1` is wired only to
-the expansion port and not to other SBUS devices; the
-SPU does not consume it.
+Expansion 1/2 (`/CS0`, `/CS3`). Address lines are
+`SBUS.A[23:0]`. Data lines are `SBUS.D[15:0]`, but each
+device is independently configured as 8-bit or 16-bit
+via bit 12 of its Delay/Size register (see
+[Memory Control](memorycontrol.md)): an 8-bit device uses
+only `SBUS.D[7:0]`. Write strobes are `SBUS./WR0` (lower
+byte of halfword) and `SBUS./WR1` (upper byte).
+`SBUS./WR1` is wired only to the expansion port and not
+to other SBUS devices; the SPU and the 8-bit devices do
+not consume it.
 
-Because SBUS is 16 bits wide, a 32-bit CPU access cannot
-fit in one bus cycle. The bus interface unit (BIU) decomposes
-each CPU access into one or two SBUS transactions according to
-the following rules.
+Because the SBUS data path is at most 16 bits wide, a
+32-bit CPU access cannot fit in one bus cycle. The bus
+interface unit (BIU) decomposes each CPU access into a
+sequence of consecutive transactions: 2 transactions for
+a 32-bit access on a 16-bit device, 4 transactions for
+the same on an 8-bit device, with `!CS` held active and
+the address stepped between transactions.
+
+The rules in this section were measured against SPU
+registers (16-bit configured). The 16-bit-bus dispatch
+rules apply unchanged for any 16-bit-configured SBUS
+device that latches on `/WR0`. The 8-bit case (CD-ROM,
+BIOS ROM) was not measured here and would be a separate
+matrix.
 
 ###   BIU dispatch rules
 
@@ -218,7 +241,7 @@ Per-op behavior at every byte offset, for the two bus types.
 with the full bus payload regardless of byte enables. "drop"
 means the register is unchanged.
 
-| op   | offset | on-die 32-bit MMIO          | SBUS 16-bit (e.g. SPU)                  |
+| op   | offset | on-die 32-bit MMIO          | SBUS 16-bit-configured (e.g. SPU)       |
 |------|--------|-----------------------------|-----------------------------------------|
 | `sw` | +0     | full word latched           | both halfwords latched (incl. neighbor) |
 | `sh` | +0     | full word, hi half from bus | low halfword latched                    |
@@ -274,8 +297,11 @@ means the register is unchanged.
 - Only IMASK, DPCR, and SPU registers (MAINVOL_L and voice 0
   volumes) were tested directly. The on-die behavior is
   expected to apply uniformly to all on-die MMIO; the SBUS
-  behavior is expected to apply uniformly to all SPU registers
-  but has not been verified for CD-ROM or BIOS ROM access.
+  behavior is expected to apply to other 16-bit-configured
+  SBUS devices but has not been verified there. CD-ROM and
+  BIOS ROM are 8-bit-configured (Delay/Size bit 12 = 0) so the
+  number of transactions per CPU access differs - their write
+  semantics were not measured.
 - GPU GP0/GP1 (VBUS, 32-bit, single decoded address bit, no
   byte masking) and timer mode registers (R/W with side
   effects) were not tested.
