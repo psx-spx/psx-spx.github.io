@@ -266,10 +266,15 @@ means the register is unchanged.
 
 - Setting one byte of a 32-bit MMIO register via `sb` does not
   work. The whole register is overwritten.
-- Read-modify-write idioms like `*reg |= mask` are safe only
-  when the compiler emits a 32-bit `lw`+`sw` (for on-die MMIO)
-  or a 16-bit `lh`+`sh` (for SBUS). Sub-word degradation
-  silently smashes or no-ops the register.
+- Read-modify-write idioms like `*reg |= mask` work as expected
+  when `reg` is typed as `volatile uint32_t *` for an on-die
+  32-bit register, or `volatile uint16_t *` for an SPU register:
+  the compiler emits a matching-width load and store, and the
+  partial-word rules above never come into play. The hazard is
+  aliasing an MMIO register through a different-width pointer
+  (e.g., a `volatile uint8_t *` to a 32-bit register) - the load
+  is harmless but the store becomes an `sb` and clobbers the
+  entire register per the rules above.
 - `sw` to a 16-bit SPU register also writes the neighboring
   register. Use `sh` for single-register writes.
 - `sb` to the high byte of a halfword in any SBUS region (lane
