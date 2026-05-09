@@ -535,7 +535,16 @@ Param=3F1h..3FFh is rounded-up and handled as Xsiz=400h.<br/>
 
 Note that because of the height (Ysiz) masking, a maximum of 511 rows can be
 filled in a single command. Calling a fill with a full VRAM height of 512 rows
-will be ineffective as the height will be masked to 0.
+will be ineffective as the height will be masked to 0.<br/>
+
+The 9-bit Ysiz mask is intrinsic to GP0(02h) and applies regardless of the
+GP1(09h) state on 2 MB systems. Even with the upper bank enabled, a single
+fast-fill can only cover 511 rows at a time; covering the full 1024-row
+2 MB VRAM requires two or more fills with appropriate Ypos values. The Ypos
+field separately follows the GP1(09h) gating: with bit 0 = 0 it is masked to
+9 bits (mirror), with bit 0 = 1 the full 10-bit range is honored. A fill
+whose (Ypos + Ysiz) exceeds the addressable VRAM size wraps to the opposite
+edge per the Wrapping note below.
 
 #### Masking for COPY Commands parameters
 ```
@@ -545,7 +554,20 @@ will be ineffective as the height will be masked to 0.
   Ysiz=((Ysiz-1) AND 1FFh)+1                 ;range 1..200h
 ```
 Parameters are just clipped to 10bit/9bit range, the only special case is that
-Size=0 is handled as Size=max.<br/>
+Size=0 is handled as Size=max. Ysiz is therefore in the range 1..512, and the
+formula gives a non-monotone result for raw Ysiz values that have bit 9 set:
+e.g. raw Ysiz=513 produces an effective transfer of 1 row, raw Ysiz=520
+produces 8 rows, and raw Ysiz=1024 produces 512 rows. Software issuing a
+transfer should match the data phase to the effective Ysiz, otherwise the
+extra CPU writes will overflow into the GP0 command stream and corrupt the
+GPU state.<br/>
+
+On 2 MB systems, the Ypos 9-bit mask above is the masking that applies with
+GP1(09h).0=0; with GP1(09h).0=1 the upper Y bit is also honored and Ypos
+covers the full 0..1023 range. The Ysiz mask is unchanged. Source / destination
+regions may therefore straddle the Y=512 bank boundary cleanly when GP1(09h)
+is enabled, including the case where both the source and the destination of a
+GP0(80h) blit are on opposite sides of the boundary.<br/>
 
 #### Notes
 The coordinates for the above VRAM transfer commands are absolute framebuffer
@@ -559,8 +581,10 @@ Ordering Table works even outside V-Blank).<br/>
 
 #### Wrapping
 If the Source/Dest starting points plus the width/height value exceed the
-1024x512 pixel VRAM size, then the Copy/Fill operations wrap to the opposite
-memory edge (without any carry-out from X to Y, nor from Y to X).<br/>
+addressable VRAM size, then the Copy/Fill operations wrap to the opposite
+memory edge (without any carry-out from X to Y, nor from Y to X). The
+addressable VRAM size is 1024x512 with GP1(09h).0=0 (the default after a
+GP1(00h) reset), and 1024x1024 on 2 MB systems with GP1(09h).0=1.<br/>
 
 
 
@@ -670,13 +694,19 @@ capable of about 330 pixels horizontal, and 272 vertical in 320\*240 mode)"<br/>
 #### GP1(05h) - Start of Display area (in VRAM)
 ```
   0-9   X (0-1023)    (halfword address in VRAM)  (relative to begin of VRAM)
-  10-18 Y (0-511)     (scanline number in VRAM)   (relative to begin of VRAM)
-  19-23 Not used (zero)
+  10-18 Y (0-511)     ;\on v0 GPU, or with GP1(09h).0=0
+  19-23 Not used (zero)         ;/
+  10-19 Y (0-1023)    ;\on v2 GPU with 2 MB VRAM and GP1(09h).0=1
+  20-23 Not used (zero)         ;/
 ```
 Upper/left Display source address in VRAM. The size and target position on
 screen is set via Display Range registers; target=X1,Y2;
 size=(X2-X1/cycles\_per\_pix), (Y2-Y1).<br/>
-Unknown if using Y values in 512-1023 range is supported (with 2 MB VRAM).<br/>
+On v2 GPUs with 2 MB VRAM enabled via GP1(09h).0=1, the Y field is 10-bit
+and the full 0..1023 range is honored. If the displayed area would extend
+past Y=1023 the read address wraps modulo 1024, so a display starting at
+Y=1023 shows row 1023 followed by row 0 onwards rather than a black
+scanline.<br/>
 
 #### GP1(06h) - Horizontal Display range (on Screen)
 ```
@@ -800,12 +830,17 @@ registers.<br/>
   0     Allow Y coordinates in 512-1023 range (0=No/wrap to 0-511, 1=Yes)
   1-23  Unknown (seems to have no effect)
 ```
-Controls whether or not GP0(E1h).bit11 can be used to reference textures in the
-second half of VRAM on systems with 2 MB VRAM (possibly affects drawing/display
-area commands and DMA transfers as well). The GPU has two separate chip select
-outputs for the first and second half; on a retail console only the first output
-is used, so enabling this feature will result in textures disappearing if
-GP0(E1h).bit11 is also set.<br/>
+Gates whether the upper Y address bit reaches the VRAM address decoder. With
+bit 0 = 0 (the default after a GP1(00h) reset) all Y addressing is masked to
+9 bits and the upper half of VRAM appears as a mirror of the lower half on
+2 MB systems, or as open bus on retail systems where the second half is not
+populated. With bit 0 = 1 the full 10-bit Y range is honored: GP0(E1h).bit11
+can reference textures in the second half of VRAM, drawing area / drawing
+offset / display area registers all accept Y values in 0..1023, and the
+Copy / Fill commands address Y across the full bank. The GPU has two
+separate chip select outputs for the first and second half; on a retail
+console only the first output is used, so enabling this feature on a 1 MB
+system will result in textures disappearing if GP0(E1h).bit11 is also set.<br/>
 GP1(09h) is supported only on v2 GPUs; v0 GPUs don't support 2 MB VRAM at all
 and v1 seems to use command GP1(20h) instead.<br/>
 
