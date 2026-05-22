@@ -655,7 +655,7 @@ the GTE's unr\_table[000h..100h] consists of following values:<br/>
   07h,07h,06h,06h,05h,05h,04h,04h,03h,03h,02h,02h,01h,01h,00h,00h ;/
   00h    ;<-- one extra table entry (for "(d-7FC0h)/80h"=100h)    ;-100h
 ```
-Above can be generated as "unr\_table[i]=min(0,(40000h/(i+100h)+1)/2-101h)".<br/>
+Above can be generated as "unr\_table[i]=max(0,(40000h/(i+100h)+1)/2-101h)".<br/>
 Some special cases: NNNNh/0001h uses a big multiplier (d=20000h), in practice,
 this can occur only for 0000h/0001h and 0001h/0001h (due to the H\<SZ3\*2
 overflow check).<br/>
