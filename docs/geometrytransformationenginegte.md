@@ -567,7 +567,7 @@ kept read from RGBC as usually), so, after DPCT execution, the RGB0,RGB1,RGB2
 Fifo entries are modified.<br/>
 
 #### COP2 190003Dh - 5 Cycles - GPF(sf,lm) - General purpose Interpolation
-#### COP2 1A0003Eh - 5 Cycles - GPL(sf,?) - General Interpolation with base
+#### COP2 1A0003Eh - 5 Cycles - GPL(sf,lm) - General Interpolation with base
 ```
   [MAC1,MAC2,MAC3] = [0,0,0]                            ;<--- for GPF only
   [MAC1,MAC2,MAC3] = [MAC1,MAC2,MAC3] SHL (sf*12)       ;<--- for GPL only
