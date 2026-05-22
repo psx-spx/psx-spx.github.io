@@ -535,6 +535,9 @@ unknown?<br/>
 #### Init - Command 0Ah --\> INT3(stat) --\> INT2(stat)
 Multiple effects at once. Sets mode=20h, activates drive motor, Standby, abort
 all commands.<br/>
+If an Init command is already in progress (its second response is still pending),
+a new Init command is silently dropped with no response (neither INT3 nor INT5
+is generated).<br/>
 
 #### Reset - Command 1Ch,(...) --\> INT3(stat) --\> Delay(1/8 seconds)
 ```
@@ -554,6 +557,7 @@ ignoring the /POS0 signal...?<br/>
 Activates the drive motor, works ONLY if the motor was off (otherwise fails
 with INT5(stat,20h); that error code would normally indicate "wrong number of
 parameters", but means "motor already on" in this case).<br/>
+If no disc is present, the command fails with INT5(stat,80h).<br/>
 Commands like Read, Seek, and Play are automatically starting the Motor when
 needed (which makes the MotorOn command rather useless, and it's rarely used by
 any games).<br/>
@@ -579,6 +583,9 @@ maintains the current location within reasonable error.<br/>
 The first response returns the current status (still with bit5 set if a Read
 command was active), the second response returns the new status (with bit5
 cleared).<br/>
+During certain phases of a seek operation, Pause will fail with
+INT5(stat,80h). This applies to explicit SeekL/SeekP seeks, and also to the
+implicit seek at the beginning of ReadN/ReadS/Play.<br/>
 
 #### Data/ADPCM Sector Filtering/Delivery
 The PSX CDROM BIOS is first trying to send sectors to the ADPCM decoder, and,
@@ -617,6 +624,8 @@ The amm,ass,asect parameters refer to the entire disk (not to the current
 track). Note that each of these parameters is encoded as BCD values, not binary.
 To seek to a specific location within a specific track, use GetTD to
 get the start address of the track, and add the desired time offset to it.<br/>
+All three parameters must be valid packed BCD, with ss &lt; 60h and ff &lt; 75h;
+invalid or out-of-range values return INT5(stat,10h).<br/>
 
 #### SeekL - Command 15h --\> INT3(stat) --\> INT2(stat)
 Seek to Setloc's location in data mode (using data sector header position data,
@@ -644,7 +653,7 @@ new Play command (without parameters) to start playback at the seeked location.<
 #### SetSession - Command 12h,session --\> INT3(stat) --\> INT2(stat)
 Seeks to session (ie. moves the drive head to the session, with stat bit6 set
 during the seek phase).<br/>
-When issued during active-play, the command returns error code 80h.<br/>
+When issued during active-read or active-play, the command returns error code 80h.<br/>
 When issued during play-spin-up, play is aborted.<br/>
 ```
   ___Errors___
@@ -686,7 +695,9 @@ indicating an invalid command. This can be avoided by first unlocking the drive.
 Unknown which responses are sent in case of read errors?<br/>
 ====<br/>
 Sectors on Audio CDs can be read only when CDDA is enabled
-via Setmode (otherwise error code 40h is returned).<br/>
+via Setmode (otherwise error code 40h is returned). Similarly, discs whose
+region does not match the console region will also return error code 40h unless
+CDDA mode is enabled.<br/>
 ====<br/>
 Actually, Read seems to work on unlicensed CD-R's, but the returned data is the
 whole sector or so (the 2048 data bytes preceeded by a 12byte header, and
@@ -915,7 +926,8 @@ session, and "last track of previous session plus 1" in further sessions.<br/>
 #### GetTD - Command 14h,track --\> INT3(stat,mm,ss) ;BCD
 For a disk with NN tracks, parameter values 01h..NNh return the start of the
 specified track, parameter value 00h returns the end of the last track, and
-parameter values bigger than NNh return error code 10h.<br/>
+parameter values bigger than NNh return error code 10h. Non-BCD parameter
+values also return error code 10h.<br/>
 The GetTD values are relative to Index=1 and are rounded down to second
 boundaries (eg. if track=N Index=0 starts at 12:34:56, and Track=N Index=1
 starts at 12:36:56, then GetTD(N) will return 12:36, ie. the sector number is
