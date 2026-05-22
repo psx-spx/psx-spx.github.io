@@ -675,7 +675,7 @@ capable of about 330 pixels horizontal, and 272 vertical in 320\*240 mode)"<br/>
 ```
 Upper/left Display source address in VRAM. The size and target position on
 screen is set via Display Range registers; target=X1,Y2;
-size=(X2-X1/cycles\_per\_pix), (Y2-Y1).<br/>
+size=((X2-X1)/cycles\_per\_pix), (Y2-Y1).<br/>
 Unknown if using Y values in 512-1023 range is supported (with 2 MB VRAM).<br/>
 
 #### GP1(06h) - Horizontal Display range (on Screen)

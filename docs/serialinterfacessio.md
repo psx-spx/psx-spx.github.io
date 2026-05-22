@@ -65,7 +65,7 @@ the reload factor set in SIO\_MODE.<br/>
 ```
 Bits 6-7 on SIO0 and bit 8 on SIO1 are always zero. On SIO0 the character length
 shall be set to 8, the clock polarity should be set to high-when-idle and parity
-should be disabled, as all controllers and memory cards expect these settings.</br>
+should be disabled, as all controllers and memory cards expect these settings.<br/>
 
 #### 1F80104Ah+N\*10h - SIO#\_CTRL (R/W)
 ```
@@ -112,8 +112,8 @@ multiplied by the Baudrate Factor (see SIO\_MODE.Bit0-1), divided by 2, and then
 copied to the 21-bit Baudrate Timer (SIO\_MODE.Bit11-31). The resulting transfer
 rate can be calculated as follows:<br/>
 ```
-  SIO0: BitsPerSecond = 33868800 / MIN(((Reload*Factor) AND NOT 1),1)
-  SIO1: BitsPerSecond = 33868800 / MIN(((Reload*Factor) AND NOT 1),Factor)
+  SIO0: BitsPerSecond = 33868800 / MAX(((Reload*Factor) AND NOT 1),1)
+  SIO1: BitsPerSecond = 33868800 / MAX(((Reload*Factor) AND NOT 1),Factor)
 ```
 According to the original nocash page, the way this register works is actually
 slightly different for SIO0 vs. SIO1:<br/>

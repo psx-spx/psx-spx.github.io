@@ -195,7 +195,7 @@ The 72bit data regions are, depending on the ADR value...<br/>
   8    Track number (fixed, must be 00h=Lead-in)
   8    Point (01h..99h or A0h..A2h, see last three bytes for more info)
   24   MSF address (incrementing address within the Lead-in area)
-         Note: On some disks, these values are choosen so that the lead-in
+         Note: On some disks, these values are chosen so that the lead-in
          <starts> at 00:00:00, on other disks so that it <ends> at 99:59:74.
   8    Reserved (00h)
 ```
