@@ -409,8 +409,8 @@ ability to convert stereo CD output to mono, or to swap left/right channels).<br
     ELSE IF ShiftValue >= 11 THEN
       CounterIncrement /= 4 ; SHR 2
     ELSE
-      AdsrStep /= 4 ; SHR 2
-      CounterIncrement /= 4 ; SHR 2
+      AdsrStep /= 2 ; SHR 1
+      CounterIncrement /= 2 ; SHR 1
   ELSE IF exponential AND decrease THEN
     AdsrStep=AdsrStep*AdsrLevel/8000h
 
