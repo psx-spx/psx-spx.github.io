@@ -270,8 +270,9 @@ See GTE Saturation chapter.<br/>
 Maths overflows are indicated in FLAG register. In most cases, the result is
 saturated to MIN/MAX values (except MAC0,MAC1,MAC2,MAC3 which aren't
 saturated). For IR1,IR2,IR3 many commands allow to select the MIN value via
-"lm" bit of the GTE opcode (though not all commands, RTPS/RTPT always act as if
-lm=0).<br/>
+"lm" bit of the GTE opcode (though for RTPS/RTPT, only the IR3 saturation flag
+(FLAG.22) always acts as if lm=0; the stored values of IR1, IR2, and IR3 all
+respect the lm bit).<br/>
 
 #### cop2r63 (cnt31) - FLAG - Returns any calculation errors.
 ```
@@ -431,10 +432,11 @@ are saturated to SZ3=0). For details on the division, see:<br/>
 For "far plane clipping", one can use the SZ3 saturation flag (MaxZ=FFFFh), or
 the IR3 saturation flag (MaxZ=7FFFh) (eg. used by Wipeout 2097), or one can
 compare the SZ3 value with any desired MaxZ value by software.<br/>
-Note: The command does saturate IR1,IR2,IR3 to -8000h..+7FFFh (regardless of lm
-bit). When using RTP with sf=0, then the IR3 saturation flag (FLAG.22) gets set
-\<only\> if "MAC3 SAR 12" exceeds -8000h..+7FFFh (although IR3 is saturated
-when "MAC3" exceeds -8000h..+7FFFh).<br/>
+Note: IR1 and IR2 are saturated per the lm bit as normal. The IR3 saturation
+flag (FLAG.22) is always checked as if lm=0, while the stored IR3 is clamped
+from MAC3 per the actual lm bit. When using RTP with sf=0, FLAG.22 gets set
+\<only\> if "MAC3 SAR 12" exceeds -8000h..+7FFFh (although IR3 is set from
+MAC3 using the lm-dependent range).<br/>
 
 #### COP2 1400006h - 8 Cycles - NCLIP - Normal clipping
 ```
