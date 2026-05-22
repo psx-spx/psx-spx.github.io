@@ -327,7 +327,7 @@ conversion).<br/>
   0-10   X-coordinate (signed, -1024..+1023)
   11-15  Not used (usually sign-extension, but ignored by hardware)
   16-26  Y-coordinate (signed, -1024..+1023)
-  26-31  Not used (usually sign-extension, but ignored by hardware)
+  27-31  Not used (usually sign-extension, but ignored by hardware)
 ```
 Size Restriction: The maximum distance between two vertices is 1023
 horizontally, and 511 vertically. Polygons and lines that are exceeding that
