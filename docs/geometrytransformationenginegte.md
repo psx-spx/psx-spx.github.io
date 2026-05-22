@@ -549,7 +549,7 @@ BK=Background color, and, for CDP, IR0=Interpolation value, FC=Far color.<br/>
 
 #### COP2 0680029h - 8 Cycles - DCPL - Depth Cue Color light
 #### COP2 0780010h - 8 Cycles - DPCS - Depth Cueing (single)
-#### COP2 0x8002Ah - 17 Cycles - DPCT - Depth Cueing (triple)
+#### COP2 0F8002Ah - 17 Cycles - DPCT - Depth Cueing (triple)
 #### COP2 0980011h - 8 Cycles - INTPL - Interpolation of a vector and far color
 In: [IR1,IR2,IR3]=Vector, FC=Far Color, IR0=Interpolation value, CODE=MSB of
 RGBC, and, for DCPL, R,G,B=LSBs of RGBC.<br/>
