@@ -434,7 +434,7 @@ the IR3 saturation flag (MaxZ=7FFFh) (eg. used by Wipeout 2097), or one can
 compare the SZ3 value with any desired MaxZ value by software.<br/>
 Note: IR1 and IR2 are saturated per the lm bit as normal. The IR3 saturation
 flag (FLAG.22) is always checked as if lm=0, while the stored IR3 is clamped
-from MAC3 per the actual lm bit. When using RTP with sf=0, FLAG.22 gets set
+from MAC3 per the actual lm bit. When using RTPS/RTPT with sf=0, FLAG.22 gets set
 \<only\> if "MAC3 SAR 12" exceeds -8000h..+7FFFh (although IR3 is set from
 MAC3 using the lm-dependent range).<br/>
 
@@ -485,9 +485,9 @@ color matrix and then adds the translation vector or background color vector.<br
 The GTE also allows selection of the far color vector (FC), but this vector is
 not added correctly by the hardware: The return values are reduced to the last
 two portions of the formula, ie. MAC1=(Mx12\*Vx2+Mx13\*Vx3) SAR (sf\*12), and similar for MAC2
-and MAC3, nethertheless, some bits in the FLAG register seem to be adjusted as
+and MAC3, nevertheless, some bits in the FLAG register seem to be adjusted as
 if the full operation would have been executed. Setting Mx=3 selects a garbage
-matrix (with elements -R*10h, +R*10h, IR0, RT13, RT13, RT13, RT22, RT22, RT22),
+matrix (with elements `-R*10h, +R*10h, IR0, RT13, RT13, RT13, RT22, RT22, RT22`),
 where R is the red component of RGBC (ie. RGBC[0] multiplied by 10h, negated for
 the first element).<br/>
 
