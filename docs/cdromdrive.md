@@ -624,7 +624,7 @@ The amm,ass,asect parameters refer to the entire disk (not to the current
 track). Note that each of these parameters is encoded as BCD values, not binary.
 To seek to a specific location within a specific track, use GetTD to
 get the start address of the track, and add the desired time offset to it.<br/>
-All three parameters must be valid packed BCD, with ss &lt; 60h and ff &lt; 75h;
+All three parameters must be valid packed BCD, with ass &lt; 60h and asect &lt; 75h;
 invalid or out-of-range values return INT5(stat,10h).<br/>
 
 #### SeekL - Command 15h --\> INT3(stat) --\> INT2(stat)
