@@ -394,7 +394,7 @@ And, maybe unlicensed:<br/>
 
 #### Newer hardware add-ons?
 ```
-  SCEH-0001 SingStar (USB to Microfon) (for PS2)
+  SCEH-0001 SingStar (USB to Microphone) (for PS2)
 ```
 
 #### Note
@@ -408,7 +408,7 @@ SLEH-00003 is SLEH-0003; unlike as shown in the above list).<br/>
   ESPM-NNNNN Sony Music Entertainment Japan (Music Video Discs)
   LSP-NNNNNN Lightspan series (non-retail educational games)
   PAPX-NNNNN Japanese Demos/Rental Editions/Taikenban
-  PBPX-NNNNN Official Playstation Sampler Discs (USA/UK)
+  PBPX-NNNNN Official PlayStation Sampler Discs (USA/UK)
   PCPX-NNNNN Japanese Otameshi Discs (Samplers)
   PEPX-NNNNN Analog Controller Service Disc
   PUPX-NNNNN Analog controller Service Disc
@@ -429,7 +429,7 @@ SLEH-00003 is SLEH-0003; unlike as shown in the above list).<br/>
   SLPM-NNNNN Sony Licensed Japan ... ?
   SLPS-NNNNN Sony Licensed Japan Software
   SLUS-NNNNN Sony Licensed USA Software
-  SPUS-NNNNN Sony Playstation US ...? (Playstation Picks Disc)
+  SPUS-NNNNN Sony PlayStation US ...? (PlayStation Picks Disc)
 ```
 Note: Multi-disc games have more than one game code. The game code for Disc 1
 is also printed on the CD cover, and used in memory card filenames. The

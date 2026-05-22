@@ -184,7 +184,7 @@ IRQ (even though BFEMPT and BFWRDY are never used).<br/>
 ```
   0-2 CLRINT     Acknowledge HC05 interrupt "flags" (0=no change, 1=clear)
   3   CLRBFEMPT  Acknowledge BFEMPT                 (0=no change, 1=clear)
-  4   CLRBFWRDY  Acknowledge BFBFWRDY               (0=no change, 1=clear)
+  4   CLRBFWRDY  Acknowledge BFWRDY                 (0=no change, 1=clear)
   5   SMADPCLR   Clear sound map XA-ADPCM buffer    (0=no change, 1=clear/stop playback)
   6   CLRPRM     Clear parameter FIFO               (0=no change, 1=clear)
   7   CHPRST     Reset decoder chip                 (0=no change, 1=reset)
@@ -860,7 +860,7 @@ user to open the shell, causing the disc to stop. The game can then send Nop com
 looping until bit 4 is cleared to detect when the new disc has been inserted.<br/>
 
 #### Stat Seek/Play/Read bits
-There's is only max ONE of the three Seek/Play/Read bits set at a time, ie.
+There is only max ONE of the three Seek/Play/Read bits set at a time, ie.
 during Seek, ONLY the seek bit is set (and Read or Play doesn't get until seek
 completion), that is important for Gran Turismo 1, which checks for seek
 completion by waiting for READ getting set (rather than waiting for SEEK

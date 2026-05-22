@@ -217,12 +217,12 @@ does it have a move-on-write function...<br/>
 ```
 Used as Output for RTPS/RTPT, and as Input for various commands.<br/>
 
-#### XX...
+#### MAC0 - Sum of Products Value 0 (R/W)
 ```
   cop2r24  MAC0  rw|MAC0 1,31,0            | Sum of products value 0
 ```
 
-#### XX...
+#### MAC1..MAC3 - Sum of Products Values 1-3 (R/W)
 ```
   cop2r25  MAC1  rw|MAC1 1,31,0            | Sum of products value 1
   cop2r26  MAC2  rw|MAC2 1,31,0            | Sum of products value 2
@@ -391,9 +391,9 @@ sorted by their fake numbers gives a more or less well arranged list:<br/>
   1Eh  -          N/A
   1Fh  -          N/A
 ```
-For the sort-effect, DCPT should use fake=08h, but Sony seems to have
-accidently numbered it fake=0Fh in their devkit (giving it the same fake number
-as for NCDT). Also, "Wipeout 2097" accidently uses 0140006h (fake=01h and
+For the sort-effect, DPCT should use fake=08h, but Sony seems to have
+accidentally numbered it fake=0Fh in their devkit (giving it the same fake number
+as for NCDT). Also, "Wipeout 2097" accidentally uses 0140006h (fake=01h and
 distorted bit18) instead of 1400006h (fake=14h) for NCLIP.<br/>
 
 #### Additional Functions

@@ -701,7 +701,7 @@ capable of about 330 pixels horizontal, and 272 vertical in 320\*240 mode)"<br/>
 ```
 Upper/left Display source address in VRAM. The size and target position on
 screen is set via Display Range registers; target=X1,Y2;
-size=(X2-X1/cycles\_per\_pix), (Y2-Y1).<br/>
+size=((X2-X1)/cycles\_per\_pix), (Y2-Y1).<br/>
 On v2 GPUs with 2 MB VRAM enabled via GP1(09h).0=1, the Y field is 10-bit
 and the full 0..1023 range is honored. If the displayed area would extend
 past Y=1023 the read address wraps modulo 1024, so a display starting at

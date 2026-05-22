@@ -433,7 +433,7 @@ Reading this register returns A0h (on PSX/PSone with 52pin chips).<br/>
 ```
 
 #### HC05 Port 16h - OC1H - Timer 1 Output Compare 1 High (undoc)
-#### HC05 Port 17h - OC1H - Timer 1 Output Compare 1 Low (undoc)
+#### HC05 Port 17h - OC1L - Timer 1 Output Compare 1 Low (undoc)
 ```
   0-15 Compare Value
 ```
@@ -499,7 +499,7 @@ These ports are unused/reserved. Trying to read them on a PSone does return 20h
 (possibly the prefetched next opcode value from the RAM test command). Other
 HC05 variants contain some extra features in these ports:<br/>
 [CDROM Internal HC05 On-Chip I/O Ports - Extras](cdrominternalinfoonpsxcdromcontroller.md#cdrom-internal-hc05-on-chip-io-ports-extras)<br/>
-The PSX CDROM BIOS doesn't use any of these ports - execpt, it is writing
+The PSX CDROM BIOS doesn't use any of these ports - except, it is writing
 [20h]=2Eh (possibly to disable unused LCD hardware; which might be actually
 present in the huge 80pin HC05 chips on old PU-7 mainboards).<br/>
 

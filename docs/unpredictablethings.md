@@ -1,7 +1,7 @@
 #   Unpredictable Things
 Normally, I/O ports should be accessed only at their corresponding size (ie.
 16bit read/write for 16bit ports), and of course, only existing memory and I/O
-addresses should be used. When not recursing that rules, some more or less
+addresses should be used. When not respecting these rules, some more or less
 (un-)predictable things may happen...<br/>
 
 For the exact bus-level semantics behind the `(w16)`/`(w32)` and `CROP` /
@@ -113,7 +113,7 @@ Exception handlers cannot preserve all registers, before returning, they must
 load the return address into a general purpose register (conventionally R26 aka
 K0), so be careful not to use that register, unless you are 100% sure that no
 interrupts and no other exceptions can occur. Some exception handlers might
-also destroy R27 aka K1 (though execption handler in the PSX Kernel leaves that
+also destroy R27 aka K1 (though exception handler in the PSX Kernel leaves that
 register unchanged).<br/>
 Some assemblers (not a22i in nocash syntax mode) are internally using R1 aka AT
 as scratch register for some pseudo opcodes, including for a "sw rx,imm32"
@@ -122,7 +122,7 @@ rx,imm16" opcode), be careful not to use R1, unless you can trust your
 assembler not to destroy that register behind your back.<br/>
 The PSX Kernel uses "Full-Decrementing-Wasted-Stack", where "Wasted" means that
 when calling a sub-function with N parameters, then the caller must
-pre-allocate N works on stack, and the sub-function may freely use and destroy
+pre-allocate N words on stack, and the sub-function may freely use and destroy
 these words; at [SP+0..N\*4-1].<br/>
 
 #### Locked Locations in Memory and I/O Area

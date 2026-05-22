@@ -235,7 +235,7 @@ can transfer all fragments of Rt at once (including for odd 24bit amounts). The
 transferred data is not zero- or sign-expanded, eg. when transferring 8bit
 data, the other 24bit of Rt and [mem] will remain intact.<br/>
 
-Note: The aligned variant can also misused for blocking memory access on
+Note: The aligned variant can also be misused for blocking memory access on
 aligned addresses (in that case, if the address is known to be aligned, only
 one of the opcodes are needed, either LWL or LWR).... Uhhhhhhhm, OR is that NOT
 allowed... more PROBABLY that doesn't work?<br/>
