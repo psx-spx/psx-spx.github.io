@@ -484,10 +484,12 @@ Multiplies a vector with either the rotation matrix, the light matrix or the
 color matrix and then adds the translation vector or background color vector.<br/>
 The GTE also allows selection of the far color vector (FC), but this vector is
 not added correctly by the hardware: The return values are reduced to the last
-portion of the formula, ie. MAC1=(Mx13\*Vx3) SAR (sf\*12), and similar for MAC2
+two portions of the formula, ie. MAC1=(Mx12\*Vx2+Mx13\*Vx3) SAR (sf\*12), and similar for MAC2
 and MAC3, nethertheless, some bits in the FLAG register seem to be adjusted as
 if the full operation would have been executed. Setting Mx=3 selects a garbage
-matrix (with elements -60h, +60h, IR0, RT13, RT13, RT13, RT22, RT22, RT22).<br/>
+matrix (with elements -R*10h, +R*10h, IR0, RT13, RT13, RT13, RT22, RT22, RT22),
+where R is the red component of RGBC (ie. RGBC[0] multiplied by 10h, negated for
+the first element).<br/>
 
 #### COP2 0A00428h+sf\*80000h - 5 Cycles - SQR(sf) - Square vector
 ```
