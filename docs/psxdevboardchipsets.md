@@ -356,7 +356,7 @@ ordered 1,2,3,4,..,39,40, but on DTL-H2010 side they should be ordered
 2,1,4,3,..,40,39.<br/>
 
 #### Sony DTL-H2510 (Gray Internal CDROM Drive)
-This is some sort of a mimmicked front loading PC CDROM drive (consisting of a
+This is some sort of a mimicked front loading PC CDROM drive (consisting of a
 tray that contains a normal (top-loading) PSX cdrom drive unit).<br/>
 ```
   IC309 80pin Sony CXD2510Q (CDROM Signal Processor)
@@ -368,7 +368,7 @@ tray that contains a normal (top-loading) PSX cdrom drive unit).<br/>
 There is no eject button, unknown if there's some eject motor, or if one
 needs to push/pull the drive tray manually.<br/>
 
-#### Sony SCPH-9903 (Gray SCEx-free Playstation)
-A rare SCEx-free Playstation that can boot from CDR's without SCEx strings;
+#### Sony SCPH-9903 (Gray SCEx-free PlayStation)
+A rare SCEx-free PlayStation that can boot from CDR's without SCEx strings;
 maybe intended for beta-testers. Marked "Property of Sony Computer
 Entertainment", "U/C".<br/>

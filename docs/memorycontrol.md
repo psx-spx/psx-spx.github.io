@@ -152,7 +152,7 @@ values or so).<br/>
 #### 1F801060h - RAM\_SIZE (R/W) (usually 00000B88h) (or 00000888h)
 ```
   0-2   Unknown (no effect)
-  3     Crashes when zero (except PU-7 and EARLY-PU-8, which <do> set bit3=0)
+  3     Crashes when zero (except PU-7 and EARLY-PU-8, which do set bit3=0)
   4-6   Unknown (no effect)
   7     Delay on simultaneous CODE+DATA fetch from RAM (0=None, 1=One Cycle)
   8     Unknown (no effect) (should be set for 8MB, cleared for 2MB)

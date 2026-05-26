@@ -419,7 +419,7 @@ Note: Reportedly CAPTnn.DAT can exist on VCDs and SVCDs (although the same
 person reported that VCDs do not support subtitles, so that info sounds wrong).<br/>
 
 #### CDDA\AUDIOnn.DAT (pointers to uncompressed CD Audio Tracks)
-These filesystem entries contain pointers to uncompressed audio tracks tracks
+These filesystem entries contain pointers to uncompressed audio tracks
 (that is, outside of the ISO area on Track 1).<br/>
 Most VCDs don't have audio tracks (though some VCDs do contain empty CDDA
 folders).<br/>
@@ -741,7 +741,7 @@ Coding Type values:<br/>
   |               |               |               |
   I-Frame         P-frames        I-Frame         P-frames
 ```
-The B-fames require to know the next P- (or I-) frame in advance, for that
+The B-frames require to know the next P- (or I-) frame in advance, for that
 reason, the frames are stored as "PBBB" (although being played as "BBBP"):<br/>
 ```
   STORAGE ORDER:

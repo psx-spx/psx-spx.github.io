@@ -409,8 +409,8 @@ ability to convert stereo CD output to mono, or to swap left/right channels).<br
     ELSE IF ShiftValue >= 11 THEN
       CounterIncrement /= 4 ; SHR 2
     ELSE
-      AdsrStep /= 4 ; SHR 2
-      CounterIncrement /= 4 ; SHR 2
+      AdsrStep /= 2 ; SHR 1
+      CounterIncrement /= 2 ; SHR 1
   ELSE IF exponential AND decrease THEN
     AdsrStep=AdsrStep*AdsrLevel/8000h
 
@@ -594,8 +594,8 @@ the hardware is overwriting that value).<br/>
 ```
   15-0  Address in sound buffer divided by eight
 ```
-Used for manual write and DMA read/write SPU memory. Writing to this registers
-stores the written value in 1F801DA6h, and does additional store the value
+Used for manual write and DMA read/write SPU memory. Writing to this register
+stores the written value in 1F801DA6h, and does additionally store the value
 (multiplied by 8) in another internal "current address" register (that internal
 register does increment during transfers, whilst the 1F801DA6h value DOESN'T
 increment).<br/>
@@ -1078,7 +1078,7 @@ By looking at the signal of the SPU RAM chip, it is possible to figure out what 
 
 When doing the analysis from data, it is possible to figure out what are the operations, in what order they are done.
 But it is not possible to figure out what is the FIRST operation in the loop.
-So we arbitrarely decide to start the loop at 'Voice 1' (voice being from 1 to 24).
+So we arbitrarily decide to start the loop at 'Voice 1' (voice being from 1 to 24).
 
 - Voice 1
 - Write CD Left

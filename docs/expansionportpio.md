@@ -10,7 +10,7 @@ and A22=Lo as access to expansion region 2 (for /WR, A22 may be ignored;
 assuming that the BIOS is read-only).<br/>
 
 #### Size/Bus-Width
-The BIOS initalizes Expansion Region 1 to 512Kbyte with 8bit bus, and Region 2
+The BIOS initializes Expansion Region 1 to 512Kbyte with 8bit bus, and Region 2
 to 128 bytes with 8bit bus. However, the size and data bus-width of these
 regions can be changed, see:<br/>
 [Memory Control](memorycontrol.md)<br/>
@@ -67,7 +67,7 @@ addressing, nor by internal I/O ports like Timer and IRQ registers).<br/>
   1F0000B0h 50h Not used     (should be zero, but may contain code/data/io)
   1F000100h ..  Code, Data, I/O Ports, etc.
 ```
-The entrypoints are called if their corresonding ID strings are present, return
+The entrypoints are called if their corresponding ID strings are present, return
 address to BIOS is passed in R31, so the expansion ROM may return control to
 BIOS, if that should be desired.<br/>
 Aside from verifying the IDs, the BIOS will also display the Post-Boot ID
@@ -250,7 +250,7 @@ flag is set only on each 2nd underflow (unlike as in Counter mode).<br/>
 
 #### 1F802024h/Read - IPCR - DUART Input Port Change Register (R)
 ```
-  7-4  IP3..IP0 Change Occured Flags (0=No, 1=Yes)    ;auto reset after read
+  7-4  IP3..IP0 Change Occurred Flags (0=No, 1=Yes)    ;auto reset after read
   3-0  Current IP3-IP0 Input states  (0=Low, 1=High)  ;Same as IP.3-0
 ```
 Reading from this register automatically resets IPCR.7-4 and ISR.7.<br/>
@@ -407,9 +407,9 @@ port 1F802032h, though maybe the memory system does ignore the upper bits.<br/>
 
 #### 1F802032h - DTL-H2000: EXP2:  - maybe IRQ enable?
 ```
-  0    Used for something (CLEARED on some occassions)
+  0    Used for something (CLEARED on some occasions)
   1-3  Unknown/unused
-  4    Used for something (SET on some occassions)
+  4    Used for something (SET on some occasions)
   5-7  Unknown/unused
 ```
 

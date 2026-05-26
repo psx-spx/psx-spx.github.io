@@ -78,7 +78,7 @@ Thanks to Exophase, Orion, Fezzik, Dr.Hell for Pocketstation info.<br/>
 ##   Pocketstation I/O Map
 #### Memory and Memory-Control Registers
 ```
-  00000000h RAM        (2KB RAM) (first 512 bytes bytes reserved for kernel)
+  00000000h RAM        (2KB RAM) (first 512 bytes reserved for kernel)
   02000000h FLASH1     Flash ROM (virtual file-mapped addresses in this region)
   04000000h BIOS_ROM      Kernel and GUI (16KB)
   06000000h F_CTRL        Control of Flash ROM

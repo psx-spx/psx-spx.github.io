@@ -633,7 +633,7 @@ followed by N\*6 fragments with Len=40Ah.<br/>
 This is internally using the standard "TurboGetMem" function; preceeded by
 Rx(Addr32). Whereas Addr is the source address of the actual data (just pass
 the Rx'ed address to the Tx part).<br/>
-For GetDirectoy, Len should be max 800h (actual/data data is only 4B0h bytes,
+For GetDirectory, Len should be max 800h (actual/data data is only 4B0h bytes,
 ie. 258h bytes per memcard, aka 28h bytes per directory entry). For
 GetFileHeader, Len should be max 80h.<br/>
 

@@ -130,8 +130,8 @@ priority setting, then the priority is determined by the channel number
   31    Master interrupt flag (R)
 ```
 IRQ flags in bit (24+n) are set upon DMAn completion - but caution - they are
-set ONLY if enabled in bit (16+n) (unlike interrupt flags in I_STAT, which are
-always set regardless of whether the respective IRQ is masked).<br/>
+set ONLY if BOTH bit (16+n) AND bit 23 are enabled (unlike interrupt flags in
+I_STAT, which are always set regardless of whether the respective IRQ is masked).<br/>
 Bit 31 is a simple readonly flag that is recalculated on every write to DICR:<br/>
 ```
   IF b15=1 OR (b23=1 AND b(24-30)>0) THEN b31=1 ELSE b31=0
