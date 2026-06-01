@@ -317,6 +317,11 @@ The "incomplete" board reportedly requires to solder one wire to the multiout
 port to make it fully functional... though no idea which wire... looks like the
 +5V supply? Also, the capacitors near multiout are arranged slightly
 differently.<br/>
+The PM-41 board absorbed its external RAM across sub-revisions: -11..-51 use an
+external VRAM chip + external SPU-RAM chip (CXD8561 GPU + CXD2938Q SPU/CDROM);
+-61 switches to the CXD9500Q GPU with on-chip VRAM (but keeps the external
+SPU-RAM + CXD2938Q); only -71 ("PM-41(2)") adds the CXD2941R with on-chip
+SPU-RAM. So GPU-RAM was integrated one sub-revision before SPU-RAM.<br/>
 
 #### CPU chips
 ```
@@ -335,7 +340,7 @@ These chips contain the MIPS CPU, COP0, and COP2 (aka GTE), MDEC and DMA.<br/>
   IC203 - 208pin - "SONY CXD8561Q"   ;seen on LATE-PU-8 board
   IC203 - 208pin - "SONY CXD8561BQ"  ;seen on PU-18, PU-20 boards
   IC203 - 208pin - "SONY CXD8561CQ"  ;seen on PM-41 board
-  IC203 - 208pin - "SONY CXD9500Q"   ;with on-chip RAM ;for PM-41(2) board
+  IC203 - 208pin - "SONY CXD9500Q"   ;with on-chip RAM ;PM-41 -61 and PM-41(2) -71 boards
   IC21  - 208pin - "SONY CXD8538Q"   ;seen on GP-11 (namco System 11) boards
   IC103 - 208pin - "SONY CXD8654Q"   ;seen on GP-15 (namco System 12) boards
 ```
@@ -345,18 +350,20 @@ These chips contain the MIPS CPU, COP0, and COP2 (aka GTE), MDEC and DMA.<br/>
   IC308 - 100pin - "SONY CXD2922Q" (SPU)               ;PU-7 and EARLY-PU-8
   IC308 - 100pin - "SONY CXD2922BQ"(SPU)               ;EARLY-PU-8
   IC308 - 100pin - "SONY CXD2925Q" (SPU)               ;LATE-PU-8, PU-18, PU-20
-  IC732 - 208pin - "SONY CXD2938Q" (SPU+CDROM)         ;PSone/PM-41 Board
-  IC732 - 176pin - "SONY CXD2941R" (SPU+CDROM+SPU_RAM) ;PSone/PM-41(2) Board
+  IC732 - 208pin - "SONY CXD2938Q" (SPU+CDROM)         ;PU-23 (PSX), PSone/PM-41 -11..-61
+  IC732 - 176pin - "SONY CXD2941R" (SPU+CDROM+SPU_RAM) ;PSone/PM-41(2) (-71) Board
   IC402 - 24pin  - "AKM AK4309VM"  (Serial 2x16bit DAC);older boards only
   IC405 - 8pin   - "NJM2100E (TE2)" Audio Amplifier    ;PU-8 and PU-22 boards
   IC405 - 14pin  - "NJM2174" Audio Amplifier with Mute ;later boards
+  IC405 - 14pin  - "NJM2790V (TE2)" Audio Amplifier    ;PM-41(2) (-71) board only
 ```
 
 #### IC106 CPU-RAM / Main RAM chips
 ```
   IC106/IC107/IC108/IC109 - NEC 424805AL-A60 (28pin, 512Kx8) (PU-8 board)
   IC106 - "Samsung K4Q153212M-JC60" (70pin, 512Kx32) (newer boards)
-  IC106 - "Toshiba T7X16 (70pin, 512Kx32) (newer boards, too)
+  IC106 - "Toshiba T7X16 (70pin, 512Kx32) (newer boards, too)  ;PU-23 (SCPH-9000)
+  IC106 - "Toshiba TC51V18325BJ-60S" (2MB) (PM-41 / PSone)
 ```
 
 #### GPU-RAM / Video RAM chips
@@ -371,12 +378,14 @@ These chips contain the MIPS CPU, COP0, and COP2 (aka GTE), MDEC and DMA.<br/>
 Note: The older 64pin VRAM chips are special dual-ported DRAM, the newer 100pin
 VRAM chips are just regular DRAM.<br/>
 Note: The PM-41 board uses a 2MB VRAM chip (but allows to access only 1MB)<br/>
-Note: The PM-41(2) board has on-chip RAM in the GPU (no external memory chip)<br/>
+Note: The CXD9500Q GPU has on-chip RAM (no external VRAM); used from PM-41 -61 onwards (incl. PM-41(2) -71).<br/>
 
 #### IC310 - SPU-RAM - Sound RAM chips
 ```
   IC310 - 40pin - "TOSHIBA TC51V4260DJ-70"  ;seen on PU-8 board
   IC310 - 40pin - EliteMT M11B416256A-35J (256K x 16bit)
+  IC310 - "Fujitsu MB814260-70PJER" (256Kx16) ;PU-23, PM-41 (-11..-61)
+  IC310 - "NN514267 ATT-50" (256Kx16)         ;PU-23 (PU23-11/-21/-31/-51)
 ```
 Note: The PM-41(2) board has on-chip RAM in the SPU (no external memory chip)<br/>
 
@@ -389,24 +398,29 @@ Note: The PM-41(2) board has on-chip RAM in the SPU (no external memory chip)<br
   IC102 - 32pin - "SONY 2030"         ;seen on PU-18 board
   IC102 - 32pin - "SONY M534031E-47"  ;seen on PM-41 board and PM-41(2)
   IC102 - 32pin - "SONY M27V401D-41"  ;seen on PM-41 board, too
+  IC102 - 32pin - "OKI MSM534031E-07GS / -10GS" ;PU-23 (SCPH-9000)
+  IC102 - 32pin - "Samsung KM23V4000DG-15"      ;PU-23 alternate source (SCPH-9000)
+  IC102 - 32pin - "OKI MSM534031E-45/46/47GS"   ;PM-41 by model: 45=SCPH-100(JP), 46=101/103(US/Asia), 47=102(PAL)
 ```
 
 #### Oscillators and Clock Multiplier/Divider
 ```
   X101 - 4pin - "67.737" (NTSC, presumably)         ;PU-7 .. PU-20
   X201 - 2pin - "17.734" (PAL) or "14.318" (NTSC)   ;PU-22 .. PM-41(2)
-  IC204 - 8pin - "2294A" (PAL) or <unknown?> (NTSC) ;PU-22 .. PM-41(2)
+  IC204 - 8pin - "CY2081SL-500T" (NTSC) or "CY2081SL-509T" (PAL, marked "2294A") ;PU-22 .. PM-41(2)
 ```
 
 #### Voltage Converter (for +7.5V to +5.0V conversion)
 ```
   IC601 - 3pin - "78M05" or "78005"  ;used in PSone
+  IC601 - "Toshiba TA78M05F (TE16L)" (PU-23) or "MC78M05CDTRK" (PM-41) ;+5V regulator
 ```
 
 #### Pulse-Width-Modulation Power-Control Chip
 ```
   IC606 16pin/10mm "TL594CD" (alternately to IC607) ;seen on PM-41 board
   IC607 16pin/5mm  "T594"    (alternately to IC606) ;seen on PM-41 board, too
+  IC606/607/608 - PM-41 rev-dependent: "BA00AS" (-11), "TL594CD-R2" (-21), "TL594CPWR" (-31..-71), "MM1562FFBE" (-61/-71)
 ```
 The PM-41 board has locations for both IC606 and IC607, some boards have the
 bigger IC606 (10mm) installed, others the smaller IC607 (5mm), both chips have
@@ -417,6 +431,8 @@ exactly the same pinouts, the only difference is the size.<br/>
   IC002 - 8pin - <not installed> (would be alternately to IC003) ;\on PSone
   IC003 - 5pin - <usually installed>                             ;/
   IC101 - 5pin - M51957B (Reset Generator) (on PSX-power supply boards)
+  IC002/IC003 - "M51957BFP-600D" (reset/voltage detector) ;PM-41 (-11/-21)
+  IC002/IC003 - "RN5VD13AA-TL"   (voltage detector)       ;PM-41 (-31..-71), replaces M51957B
 ```
 
 #### CDROM Chips
@@ -437,12 +453,23 @@ exactly the same pinouts, the only difference is the size.<br/>
   IC722 - 28pin - "BA6397FP"            ;seen on late PU-8
   IC722 - 28pin - "BA5947FP"            ;seen on PM-41 and various boards
   IC722 - 28pin - "Panasonic AN8732SB"  ;seen on PM-41 board
+  IC722 - 28pin - "Rohm BA5977FP-E2"    ;seen on PU-23 (SCPH-9000)
+  IC722 - 28pin - "Rohm BA5947FP-E2"    ;seen on PM-41 (SCPH-100, confirms BA5947FP above)
   ICxxx - 20pin  SONY CXA1571N    (RF Amplifier) (on DTL-H2010 drives)
   IC703 - 20pin  SONY CXA1791N    (RF Amplifier) (on PU-18 boards)
   IC723 - 20pin  SONY CXA2575N-T4 (RF Matrix Amplifier) (on PU-22 .. PM-41(2))
 ```
 Note: The SUB-CPU contains an on-chip BIOS (which does exist in at least seven
 versions, plus US/JP/PAL-region variants, plus region-free debug variants).<br/>
+Known IC304 (MC68HC05G6) mask-ROM part numbers by region (...2=JP/Asia, ...3=PAL, ...4=US):<br/>
+```
+  SC430942PB ;SCPH-9000/9003 (PU-23), SCPH-100/103 (PM-41 -11..-61)
+  SC430943PB ;SCPH-9002 (PU-23, PAL), SCPH-102 (PM-41, PAL)
+  SC430944PB ;SCPH-9001 (PU-23, US),  SCPH-101 (PM-41, US)
+  SC430947PB ;SCPH-100/103 (PM-41(2) -71) ;new rev for CXD2941R
+  SC430948PB ;SCPH-102     (PM-41(2) -71, PAL)
+  SC430949PB ;SCPH-101     (PM-41(2) -71, US)
+```
 
 #### RGB Chips
 ```
@@ -457,7 +484,7 @@ versions, plus US/JP/PAL-region variants, plus region-free debug variants).<br/>
 #### MISC
 ```
   CDROM Drive: "KSM-440BAM" ;seen used with PM-41 board
-  IC602 5pin           "L/\1B" or "<symbol> 3DR"
+  IC602 5pin "National LP2985IM5X-3.5" (3.5V LDO; top-marked "L/\1B" or "3DR") ;PU-23, PM-41 (-11..-61)
 ```
 
 #### Controller/Memory Card Chips
