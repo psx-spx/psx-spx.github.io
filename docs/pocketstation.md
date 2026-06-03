@@ -10,6 +10,7 @@
 [Pocketstation IO Memory-Control](pocketstation.md#pocketstation-io-memory-control)<br/>
 [Pocketstation IO Communication Ports](pocketstation.md#pocketstation-io-communication-ports)<br/>
 [Pocketstation IO Power Control](pocketstation.md#pocketstation-io-power-control)<br/>
+[Pocketstation Official Sony Kernel and SWI Reference](pocketstation.md#pocketstation-official-sony-kernel-and-swi-reference)<br/>
 [Pocketstation SWI Function Summary](pocketstation.md#pocketstation-swi-function-summary)<br/>
 [Pocketstation SWI Misc Functions](pocketstation.md#pocketstation-swi-misc-functions)<br/>
 [Pocketstation SWI Communication Functions](pocketstation.md#pocketstation-swi-communication-functions)<br/>
@@ -1130,6 +1131,127 @@ video, infrared, cpu speed, and sleep mode...?<br/>
 The pocketstation can be also powered through the VCC pin (ie. when docked to
 the PSX, then it's working even if the battery is empty; or even without
 battery).<br/>
+
+
+
+##   Pocketstation Official Sony Kernel and SWI Reference
+The SWI documentation below is the community reverse-engineered view of the
+actual BIOS. Sony's official *PDA Kernel Specification* (Developer Reference 1.5,
+November 1998) documents the same kernel under canonical names. The official SWI
+numbers are identical to the numbers used below (the official decimal number
+equals the hex number here), and the official names, arguments and return values
+are tabulated here for cross-reference.<br/>
+
+#### Official system call table
+
+| SWI | Official name | Arguments | Return value | Reverse-engineered name |
+|---|---|---|---|---|
+| 0 | Software reset | - | - | Reset |
+| 1 | Set user callback | r0 = interrupt type (0=software, 1=IRQ, 2=FIQ, 3=file-transfer display), r1 = callback address | previous callback address | SetCallbacks |
+| 2 | Invoke user callback | none (r0-r10 passed through) | callback return value | CustomSwi2 |
+| 3 | Write to flash memory (relative sectors) | r0 = destination (relative sector), r1 = source | 0=ok, 1=fail | FlashWriteVirtual |
+| 4 | Set system clock frequency | r0 = frequency (1=62kHz ... 7=4MHz, 8=8MHz) | previous frequency | SetCpuSpeed |
+| 5 | Switch kernel mode | none | - | SenseAutoCom (RE: "purpose unknown") |
+| 6 | Get PDA status | none | address of status buffer | GetPtrToComFlags |
+| 8 | Application block number control | r0 = get/set, r1 = block number (1-15), r2 = application argument | get/set block number | PrepareExecute |
+| 9 | Terminate/suspend application | r0 = restart method (0=coldstart, 1=resume), r1 = parameter | - | DoExecute |
+| 10 | Read serial number | none | serial number | FlashReadSerial |
+| 11 | Terminate file transfer with PlayStation | none | - | ClearComFlagsBit10 |
+| 12 | Write real-time clock | r0 = year/month/day, r1 = day-of-week/hour/minute/second (BCD) | - | SetBcdDateTime |
+| 13 | Read calendar | none | BCD YYYYMMDD | GetBcdDate |
+| 14 | Read clock | none | BCD DDHHMMSS (DD: 1-7 = Sun-Sat) | GetBcdTime |
+| 15 | Write serial number | r0 = serial number (32-bit) | - | FlashWriteSerial |
+| 16 | Write flash memory (absolute number) | r0 = destination (absolute sector), r1 = source | 0=ok, 1=fail | FlashWritePhysical |
+| 17 | Control PlayStation communication | r0 = 0 (stopped) / 1 (started) | - | SetComOnOff |
+| 18 | Get application status | r0 = block number (1-15) | 0=coldstart, 1=resume | TestSnapshot |
+| 19 | Get user interface status | none | address of UI status buffer | GetPtrToAlarmSetting |
+| 20 | Get system call table | none | address where the table address is stored | GetPtrToPtrToSwiTable |
+| 22 | Get application block number | none | block number of active application | GetDirIndex |
+| 24 | Get PDA application flag | r0 = block number (1-15) | flag (byte at FAT offset 126) | FlashReadWhateverByte |
+
+The official spec documents only this public subset. SWI numbers 7, 21 and 23 are
+absent from it but exist in the BIOS - they are the internal, undocumented calls
+covered by the reverse-engineered entries below (ChangeAutoDocking, MakeAlternateDirIndex,
+GetPtrToFunc3addr). One detail confirms the numbering: the official "Get PDA
+application flag" reads "offset 126 of the FAT", and the reverse-engineered
+FlashReadWhateverByte reads sector offset 7Eh - 126 = 0x7E.<br/>
+Note on swi 4: in spec version 1.4 and earlier, argument 0 selected 32KHz, but
+that was found to malfunction and was removed in 1.5. To select 32KHz, write
+PMFrequency.FREQ = 0 directly instead.<br/>
+
+#### Official PDA status buffer (swi 6) (kernel spec v1.5)
+
+This is the official layout of the status word whose address swi 6 returns. It
+differs from the reverse-engineered "ComFlags" layout documented under
+[SWI 06h](pocketstation.md#pocketstation-swi-misc-functions) below; the two
+likely reflect different BIOS versions (this is kernel spec 1.5; the
+reverse-engineered view is from retail C061/C110), so neither supersedes the
+other.<br/>
+```
+  0   Write to flash memory         (0=Enabled, 1=Disabled)
+  1   Speaker output                (0=Enabled, 1=Disabled)
+  2   LED light                     (0=Enabled, 1=Disabled)
+  3   Transmit infrared             (0=Enabled, 1=Disabled)
+  8   Insertion/removal from PS     (0=Inactive, 1=Active)
+  9   Communication with PS         (0=Not possible, 1=Possible)
+  10  File transfer status with PS  (0=Exited, 1=In transfer)
+  11  PDA application exited         (0=No, 1=Yes)
+```
+Bits 0-3 are initialized to Enabled and set to Disabled when the PDA is inserted
+into the PlayStation; the PlayStation application re-enables a device only if its
+current draw is within budget, so a PDA application must check this status before
+using a device. The insertion/removal flag (bit 8) is cleared by swi 5; the
+communication flag (bit 9) is controlled by swi 17; the application-exited flag
+(bit 11) is set when the PlayStation application requests termination.<br/>
+
+#### Official user-interface status buffer (swi 19)
+
+swi 19 returns the address of a 64-bit user-interface status buffer (this is the
+buffer the reverse-engineered docs call the "Alarm Setting"). Its layout is:<br/>
+```
+  47-32  Font data starting address  (relative to 0x4000000)
+  23     Clock setting flag          (0=Not set, 1=Set)
+  22-20  Area code                   (0=Japan, 1=North America, 2=Europe)
+  19-18  Speaker volume              (0=high, 1=low, 2=off)
+  17     Keylock                     (0=Off, 1=On)
+  16     Alarm                       (0=Off, 1=On)
+  15-8   Alarm hour                  (2-digit BCD)
+  7-0    Alarm minute                (2-digit BCD)
+```
+Audio output is scaled to 1/4 when the speaker volume shown on the clock screen
+is set to Low, and left unchanged when set to High.<br/>
+
+#### File transfer control callback (swi 1, interrupt type 3)
+
+The PlayStation library (libmcx) notifies a PDA application when a data transfer
+starts and completes, by invoking the callback registered with swi 1 (interrupt
+type 3). Parameters are passed in r0:<br/>
+```
+  23-16  Transfer direction  (0=PDA->PS, 1=PS->PDA)
+  15-8   Transfer control    (0=Start, non-0=Stop)
+  7-0    Timeout interval    (number of seconds)
+```
+The companion "device entry callback" (declared in the file header, called from
+libmcx) receives a 32-bit status whose low bits are: 0 Read, 1 Write, 2 Data
+transfer error, 3 Parameter passing, 4 Data transfer finished.<br/>
+
+#### Initial settings after reset
+
+Per the kernel spec, immediately after a reset the kernel leaves the PDA with
+PIO01 configured as an output port, the system clock at 4MHz, the low-voltage
+detector active, and the LCD turned on at a 64Hz frame rate. All other device
+registers are left in their reset states. When an application starts, communication
+with the PlayStation is disabled and must be restarted with swi 17 (and will not
+start at all if the PDA is not inserted in the PlayStation).<br/>
+
+#### Start-up application font data
+
+The kernel ships a built-in bitmap font used by the "Start-up Application" (the
+clock/selector GUI). Its base address is the value returned in bits 47-32 of the
+swi 19 user-interface status buffer. The official appendix lists every glyph as
+DCD words with pixel images, in two categories: fontdata88 (8x8 glyphs, two words
+each) and fontdata48 (4x8 glyphs, one word each; for fontdata48 the high-order
+byte is reserved and must be masked when used as font data).<br/>
 
 
 
