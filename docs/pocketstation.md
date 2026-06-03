@@ -1,6 +1,7 @@
 #   Pocketstation
 [Pocketstation Overview](pocketstation.md#pocketstation-overview)<br/>
 [Pocketstation I/O Map](pocketstation.md#pocketstation-io-map)<br/>
+[Pocketstation Official Sony Register Names](pocketstation.md#pocketstation-official-sony-register-names)<br/>
 [Pocketstation Memory Map](pocketstation.md#pocketstation-memory-map)<br/>
 [Pocketstation IO Video and Audio](pocketstation.md#pocketstation-io-video-and-audio)<br/>
 [Pocketstation IO Interrupts and Buttons](pocketstation.md#pocketstation-io-interrupts-and-buttons)<br/>
@@ -253,6 +254,134 @@ Note: The garbage\_byte is "used" by the pocketstation "Rockman" series games.<b
 
 
 
+##   Pocketstation Official Sony Register Names
+The register descriptions above are the community reverse-engineered view. Sony's
+official *PDA Hardware Specification* (Developer Reference v2.2, November 1998)
+documents the same registers under canonical names, with reset values and
+bit-field names. The tables below cross-reference the official names against the
+addresses and the informal names used above, resolving several formerly-unknown
+registers. Bit fields are listed LSB-first.<br/>
+
+#### Memory and Flash control
+
+| Address | Official name | Access | Reset | Informal name | Bit fields |
+|---|---|---|---|---|---|
+| 06000000h | REGRemap | R/W | 0 | F_CTRL | 0 GENREM (1=after-remap, RAM over ROM vectors), 1 FLASHVIR (1=enable virtual flash) |
+| 06000004h | FLASHREMAPStatus | R | 0 | F_STAT | 0 MULTIPLE, 1 NOACTIVE, 2 DABORT, 3 FABORT (auto-clears on read) |
+| 06000008h | FLASHACTIVEBlocks | R/W | 0 | F_BANK_FLG | 0..15 IS0..IS15 (1=physical block mapped into virtual region) |
+| 06000010h | FLASHDataController | R/W | 14h | F_WAIT2 | 0 ENPRG, 1 LOCK, 2 BUSY (R), 3 STDBY, 4 WAIT, 5 LOADPAGE, 6 LOADSGN |
+| 06000100h-0600013Ch | FLASHVIRTUALAddr0..15 | R/W | 0 | F_BANK_VAL | 0..3 VIRTUALADDR (virtual base = 02000000h + VIRTUALADDR\<\<13) |
+
+The reverse-engineered F\_WAIT1 (0600000Ch) is not present in the official register
+list. FLASHDataController.BUSY (bit2) flags flash-write completion, and WAIT (bit4)
+inserts one wait cycle for flash access at the 8MHz system clock.<br/>
+
+#### Interrupt controller
+
+| Address | Official name | Access | Informal name | Function |
+|---|---|---|---|---|
+| 0A000000h | INTStatus | R | INT_LATCH | Latched-and-masked interrupt status |
+| 0A000004h | INTRawStatus | R | INT_INPUT | Raw interrupt signal levels |
+| 0A000008h | INTEnableSet | R/W | INT_MASK_SET / INT_MASK_READ | Write 1=enable; read=current mask |
+| 0A00000Ch | INTEnableReset | W | INT_MASK_CLR | Write 1=disable interrupt |
+| 0A000010h | INTSourceClear | W | INT_ACK | Write 1=clear interrupt source |
+
+All five registers share one bit layout (interrupt "source numbers"):<br/>
+```
+  Bit  Symbol   Vector  Type           Source
+  0    EXT0IRQ  IRQ     Level          Enter / Fire button
+  1    EXT1IRQ  IRQ     Level          Right button
+  2    EXT2IRQ  IRQ     Level          Left button
+  3    EXT3IRQ  IRQ     Level          Down button
+  4    EXT4IRQ  IRQ     Level          Up button
+  5    EXT5IRQ  IRQ     Level          Unused
+  6    SPIIRQ   FIQ     Positive edge  Synchronous Serial Comms (PSX COM port)
+  7    TC0IRQ   IRQ     Positive edge  Timer 0
+  8    TC1IRQ   IRQ     Positive edge  Timer 1
+  9    RTCIRQ   IRQ     Positive edge  Real-time clock
+  10   VOLIRQ   IRQ     Positive edge  Low-voltage detection
+  11   BATIRQ   IRQ     Double edge    PS interface power line (docking)
+  12   IFIRQ    IRQ     Double edge    Infrared Communications module
+  13   TC2FIQ   FIQ     Positive edge  Timer 2
+```
+Docking (BATIRQ) and infrared (IFIRQ) are genuine double-edged hardware interrupt
+sources - they fire on both the rising and falling transition by design. That
+confirms the kernel's use of IRQ-11 for both dock and undock detection is a real
+hardware feature, not (as the description above speculates) a switch-bounce trick.<br/>
+
+#### Counters / timers (three channels)
+
+| Address (T0/T1/T2) | Official name | Access | Reset | Informal name | Bit fields |
+|---|---|---|---|---|---|
+| 0A800000h/10h/20h | TIMER[0..2]Load | R/W | 0000FFFFh | T_RELOAD | 0..15 TL (initial count) |
+| 0A800004h/14h/24h | TIMER[0..2]Value | R | 0000FFFFh | T_COUNT | 0..15 TV (current count) |
+| 0A800008h/18h/28h | TIMER[0..2]Control | R/W | 0 | T_MODE | 0-1 CLKDIV (0=div2, 1=div32, 2=div512, 3=undef), 2 ENTIMER |
+
+#### System clock / power management
+
+| Address | Official name | Access | Informal name | Bit fields |
+|---|---|---|---|---|
+| 0B000000h | PMFrequency | R/W | CLK_MODE | 0-3 FREQ (0=32.768KHz ... 7=4MHz, 8+=8MHz), 4 LOCK (R, PLL locked) |
+| 0B000004h | PMStandby | W | CLK_STOP | 0 STDBY (1=enter stand-by) |
+
+#### Real-time clock
+
+| Address | Official name | Access | Reset | Informal name | Bit fields |
+|---|---|---|---|---|---|
+| 0B800000h | RTCControl | R/W | 0 | RTC_MODE | 0 PRGSEL (0=1Hz normal, 1=4KHz program mode), 1-3 CNTSEL (0=sec..6=year, 7=none) |
+| 0B800004h | RTCInc | W | 0 | RTC_ADJUST | 0 INCCNT (1=increment selected counter) |
+| 0B800008h | RTCClock | R | 04000000h | RTC_TIME | 0-6 SEC, 8-14 MIN, 16-21 HOUR, 24-26 DAY (1=Sun..7=Sat); BCD |
+| 0B80000Ch | RTCCalendar | R | 00980101h | RTC_DATE | 0-5 DATE, 8-12 MONTH, 16-23 YEAR; BCD |
+
+RTCCalendar's reset value 00980101h corresponds to 1998-01-01 (BCD). The 4KHz
+"program mode" (PRGSEL=1) is what the description above calls "pausing" the RTC; in
+that mode RTCInc steps the CNTSEL-selected counter.<br/>
+
+#### Infrared Communications module
+
+| Address | Official name | Access | Reset | Informal name | Bit fields |
+|---|---|---|---|---|---|
+| 0C800000h | IFStaticControl | R/W | 2h | IRDA_MODE | 0 IFMODE (0=rx,1=tx), 1 STDBY, 2 BGEN (0=enable 40KHz gen), 3 BFLT (0=enable filter) |
+| 0C800004h | IFDynamicControl | R/W | 0 | IRDA_DATA | 0 T_EN (1=enable transmit output waveform) |
+
+#### Liquid crystal display
+
+| Address | Official name | Access | Informal name | Bit fields |
+|---|---|---|---|---|
+| 0D000000h | LCDControl | R/W | LCD_MODE | 0-2 DISMOD (region select), 3 CPEN (charge pump), 4-5 FR (0=off, 1=64Hz, 2=32Hz, 3=16Hz), 6 DISON, 7 ROT |
+| 0D000100h-0D00017Ch | BackPlane0..31 | R/W | LCD_VRAM | 0..31 FP0..FP31 (one 32-pixel scanline per word) |
+
+#### General-purpose IO ports
+
+| Address | Official name | Access | Informal name | Bit fields |
+|---|---|---|---|---|
+| 0D800000h | PIOControl | R/W | IOP_CTRL | 0-3 P0DIR..P3DIR (0=input, 1=output); BIOS sets 0Fh on reset |
+| 0D800004h | PIOSetOutputData | W | IOP_STOP | drive high: 1 PIO1 (LED off), 5 PIO5 (speaker stand-by), 6 PIO6 (IR high output) |
+| 0D800008h | PIOClearOutputData | W | IOP_START | drive low: 1 PIO1 (LED on), 5 PIO5 (speaker active), 6 PIO6 (IR low output) |
+| 0D80000Ch | PIOReadInputData | R | IOP_DATA | 0-3 PIO0..PIO3, 4 PIO4 (1=docked to PSX; reads 0 if PSX is off) |
+
+PIO0/PIO2/PIO3 are bi-directional but unused; the LED is on PIO1 (active low), the
+speaker stand-by/active switch is PIO5, and the IR module output-level select is
+PIO6. PIO4 is the read-only PlayStation-connection sense line (interrupt source 11).<br/>
+
+#### Sound
+
+| Address | Official name | Access | Informal name | Bit fields |
+|---|---|---|---|---|
+| 0D800010h | DACControl | R/W | DAC_CTRL | 0 STDBY (0=stand-by, 1=active) |
+| 0D800014h | DACData | W | DAC_DATA | 6-15 DACV (10bit two's complement; bits 0-5 = 0) |
+
+DACData.DACV is a 10-bit signed value: +maximum = 1FFh, center = 000h, -maximum =
+200h (in the bit6-15 field). This supersedes the earlier 8-bit (bit8-15) guess.<br/>
+
+#### Low-voltage detection
+
+| Address | Official name | Access | Reset | Informal name | Bit fields |
+|---|---|---|---|---|---|
+| 0D800020h | LVDControl | R/W | 3h | BATT_CTRL | 0 BGSTBY (band-gap standby, also gates LCD ref voltage), 1 COMPSTBY (comparator standby), 2 AUTCNT (auto 1-second low-voltage detection) |
+
+
+
 ##   Pocketstation Memory Map
 #### Overall Memory Map
 ```
@@ -395,13 +524,15 @@ Note: Aside from the bit in DAC\_CTRL, audio must be also enabled/disabled via
 IOP\_STOP/IOP\_START bit5. Unknown if/which different purposes that bits have.<br/>
 
 #### 0D800014h - DAC\_DATA - Audio D/A Converter
-Unknown how many bits are passed to the D/A converter, probably bit8-15, ie. 8
-bits...?<br/>
+The official Sony devref names this register DACData and defines the output as a
+10bit two's complement value DACV in bit6-15 (bit0-5 should be zero):<br/>
 ```
-  0-7   Probably unused, usually zero (or fractional part when lowered volume)
-  8-15  Signed Audio Outut Level (usually -7Fh..+7Fh) (probably -80h works too)
+  0-5   Should be zero (per official devref)
+  6-15  DACV - Signed 10bit output level (+max=1FFh, center=000h, -max=200h)
   16-31 Probably unused, usually sign-expanded from bit15
 ```
+The earlier reverse-engineered guess placed the level in bit8-15 (8bit); the
+official 10bit bit6-15 definition supersedes it.<br/>
 The Pocketstation doesn't have any square wave or noise generator (nor a sound
 DMA channel). So the output levels must be written to DAC\_DATA by software,
 this is usually done via Timer1/IRQ-8 (to reduce CPU load caused by high audio
@@ -572,14 +703,18 @@ IR is used in Final Fantasy 8's Chocobo World (press Left/Right in the Map
 screen to go to the IR menu), and in Metal Gear Solid Integral (Press Up in the
 main screen), and in PDA Remote 1 & 2 (one-directional TV remote control).<br/>
 
-#### 0C800000h - IRDA\_MODE - Controlling the protocol - send/recv, etc. (R/W)
+#### 0C800000h - IRDA\_MODE - Infrared control (official: IFStaticControl) (R/W)
 ```
-  0    Transfer Direction  (0=Receive, 1=Transmit)
-  1    Disable IRDA        (0=Enable, 1=Disable)
-  2    Unknown (reportedly IR_SEND_READY, uh?)
-  3    Unknown (reportedly IR_RECV_READY, uh?)
+  0    IFMODE  Transfer Direction      (0=Receive, 1=Transmit)
+  1    STDBY   Module stand-by         (0=Active, 1=Stand-by) (nocash: "Disable IRDA")
+  2    BGEN    40KHz pulse generator   (0=Enable generation, 1=Disable)
+  3    BFLT    Input waveform filter   (0=Enable filter, 1=Disable)
   4-31 Unknown (should be zero)
 ```
+The official Sony devref resolves bit2/bit3: they are BGEN (40KHz subcarrier pulse
+generator enable) and BFLT (receive waveform filter enable), not the previously
+guessed IR\_SEND\_READY/IR\_RECV\_READY. Reset value is 00000002h (STDBY set). Note
+the active-low sense: writing 0 enables the generator/filter.<br/>
 
 #### 0C800004h - IRDA\_DATA - Infrared TX Data
 ```
@@ -615,9 +750,11 @@ Reportedly, Bit4 of Port 0D80000Ch (IOP\_DATA) is also somewhat IR related...?<b
 
 
 ##   Pocketstation IO Memory-Control
-#### 06000000h - F\_CTRL
+#### 06000000h - F\_CTRL - Memory Map Register (official: REGRemap)
 ```
-  0-31  Unknown
+  0     GENREM   Switch to "after remap" mode  (1=RAM replaces ROM vectors at 0)
+  1     FLASHVIR Enable virtual flash mapping  (1=enable) (see F_BANK_xxx)
+  2-31  Unknown/unused
 ```
 Written values are:<br/>
 ```
@@ -626,16 +763,24 @@ Written values are:<br/>
   00000002h  Used after setting virtual bank enable bits
   03h        Replace ROM at 00000000h by RAM (used after reset)
 ```
+Per the official Sony devref these are bit0 GENREM (RAM-remap) and bit1 FLASHVIR
+(virtual flash enable), so 02h enables virtual flash mapping and 03h additionally
+remaps RAM over the ROM vectors at 00000000h.<br/>
 The GUI does additionally read from this register (and gets itself trapped in a
 bizarre endless loop if bit0 was zero). Unknown if it's possible to re-enable
 ROM at location 00000000h by writing any other values to this register?<br/>
 
-#### 06000004h F\_STAT
+#### 06000004h F\_STAT - Flash Remap Status (official: FLASHREMAPStatus) (R)
 ```
-  0-31  Unknown
+  0     MULTIPLE  Multiple blocks assigned to the same virtual base address
+  1     NOACTIVE  No virtual base address was specified
+  2     DABORT    Data access to an unmapped virtual flash region (data abort)
+  3     FABORT    Instruction fetch from an unmapped virtual flash region
+  4-31  Unused
 ```
-The kernel issues a dummy read from this address (before setting F\_CTRL to
-00000001h).<br/>
+Read-only; reflects validation of the virtual-flash settings when REGRemap.FLASHVIR
+is set, and is automatically cleared on read. The kernel issues a dummy read from
+this address (before setting F\_CTRL to 00000001h).<br/>
 
 #### 06000008h F\_BANK\_FLG  ;FLASH virtual bank mapping enable flags (16 bits)(R/W)
 ```
@@ -961,13 +1106,18 @@ Connection...? This register is read by Rewrite ID, and by Harvest Moon. Maybe
 bit4 doesn't mean \<if\> IR connection exist, but rather \<contains\>
 the received IR data level...?<br/>
 
-#### 0D800020h - BATT\_CTRL - Battery Monitor Control?
-Unknown. Somehow battery saving related. Upon reset, and upon leaving sleep
-mode, the BIOS does set BATT\_CTRL=00000000h. Before entering sleep mode, it
-does set BATT\_CTRL=BATT\_CTRL AND FFFFFFFCh, whereas, assuming that BATT\_CTRL
-was 00000000h, ANDing it with FFFFFFFCh would simply leave it unchanged...
-unless the hardware (or maybe a game) sets some bits in BATT\_CTRL to nonzero
-values...?<br/>
+#### 0D800020h - BATT\_CTRL - Low-Voltage Detection Control (official: LVDControl)
+The official Sony devref names this LVDControl (reset value 00000003h):<br/>
+```
+  0     BGSTBY    Band-gap standby   (1=stand-by) (also gates the LCD reference voltage)
+  1     COMPSTBY  Comparator standby (1=stand-by)
+  2     AUTCNT    Automatic low-voltage detection (1=active, 1-second intervals)
+  3-31  Unused
+```
+Upon reset, and upon leaving sleep mode, the BIOS does set BATT\_CTRL=00000000h.
+Before entering sleep mode, it does set BATT\_CTRL=BATT\_CTRL AND FFFFFFFCh - which
+now reads cleanly: that clears BGSTBY and COMPSTBY (suspending the band-gap and
+comparator to save power) while leaving AUTCNT untouched.<br/>
 
 #### Battery Low Interrupt
 ```
