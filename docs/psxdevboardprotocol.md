@@ -178,8 +178,8 @@ These are the BIOS-level opcodes and their corresponding DECI command codes. The
   15       0x05      Send/receive data (bidirectional, lengths in CX/DX)
   19       0x21      Read target memory (address in DX:BX, length in CX)
   1a       0x20      Write target memory (address in DX:BX, length in CX)
-  1b       0x0C      Target command, no data
-  1c       0x0D      Target command, no data
+  1b       0x0C      Halt-load: arm target but do not start it (RUN /h)
+  1c       0x0D      Start/execute target (resume into the loaded program)
   22       -         Reset PlayStation (direct port I/O to base+6)
   30       0x22      Read memory, alternate format (flag=0x80)
   39       0xC6      mkdir (host-side, unit=0x80)
@@ -238,6 +238,50 @@ The BIOS boot sequence in mode 1 calls three entry points in the SRAM region:
   0x1FA00028    Debug stub initialization (second pass)
 ```
 After these calls, the BIOS flushes the instruction cache, executes `BREAK 0x101` and `BREAK 0x406`, then the debug stub takes over. In mode 2 (console) these SRAM calls are not made - the SRAM region may contain uninitialized data.
+
+#### Target Execution and the Saved Register Block
+The execute command (DECI 0x0D) carries no address - it does not say where to start. The entry point and the rest of the initial CPU context are established beforehand. The host loads the program with write-memory commands (DECI 0x20, BIOS opcode 0x1a), then writes the target's register context - including the program counter - into a saved-register block maintained by the debug stub in SRAM. Register-setting records in the uploaded CPE supply these values (see CPE Executable Format below); the PC is register 0x90.
+
+When the host then issues 0x0D, the stub does not parse any argument. It checks a run-mode flag, restores the full saved register context (all general registers, HI/LO, and the COP0 Status register) from the saved-register block, restores the saved exception PC, and performs an exception return into the target program. Two adjacent stub commands set the run-mode flag first: one marks "run" and one marks "break on entry" (stop at the entry point under debugger control); the plain 0x0D path leaves the flag as-is. This is the same saved-context-restore-and-return mechanism the ROM monitor's `go` and `call` commands use.
+
+The practical consequence is that "load and run" is two protocol steps, not one: write the image and the register block (with PC), then execute. RUN.exe automates this - a CPE record that sets register 0x90 flags the target as armed, and after all records are processed RUN issues 0x0D (or 0x0C for /h) to launch each armed target.
+
+This description is reverse-engineered from the static debug-stub image and the host tools; it has not yet been confirmed against live hardware.
+
+#### CPE Executable Format
+CPE is the SN Systems / PSY-Q executable and command-script format used by the development tools (RUN.exe, SNPATCH.CPE, etc.). Unlike PS-EXE, which is a fixed header plus one code blob, a CPE file is a stream of typed records: it can load several blocks to different addresses, set CPU registers, and select a target. Loading a CPE is effectively replaying a short script of memory writes and register sets onto the development board.
+```
+  Header:
+    4 bytes   Magic "CPE\x01" (0x01 0x45 0x50 0x43 little-endian = 0x01455043)
+    2 bytes   Reserved / unit field
+
+  Then a stream of records until a type-0 record. Each record is:
+    1 byte    Record type, followed by a type-specific payload.
+
+  Record types:
+    0x00  End of file. No payload. Stops processing.
+    0x01  Load. addr:u32, size:u32, then <size> bytes of data.
+          Writes the data block to target memory at addr.
+    0x02  Set register (implicit PC), value:u32. Sets the program counter
+          register to the 32-bit value. (Some loaders, e.g. pcsx-redux's,
+          read and ignore this record.)
+    0x03  Set register. reg:u16, value:u32.
+    0x04  Set register. reg:u16, value:u16.
+    0x05  Set register. reg:u16, value:u8.
+    0x06  Set register. reg:u16, value:u16, high:u8  (24-bit value = u16 | high<<16).
+    0x07  Reserved. u32 payload, ignored.
+    0x08  Select target/unit. unit:u8. Switches which target subsequent
+          records apply to (multi-target development setups).
+
+  Register numbers follow the debug protocol's register map; register 0x90
+  is the program counter. Setting the PC register arms the target for
+  execution (see Target Execution above).
+
+  All scalars are little-endian on the wire.
+```
+The format is byte-compatible across loaders, but interpretation varies: a full debugger loader (RUN.exe) acts on every record including register sets and target selection, while a minimal loader that only needs to load-and-run one program may treat the register records (other than the PC) and the target-select record as no-ops. The record stream stays in sync either way because every record's payload length is fixed by its type.
+
+Record types 0x02-0x06 are all "set register" variants differing only in value width; this lets a CPE encode register values compactly. SNPATCH.CPE, for example, uses a type-0x03 record to set register 0x90 (PC) to its main-RAM entry point, several type-0x01 records to load the stub into SRAM, and a type-0x00 record to terminate.
 
 #### Console Mode (Mode 2)
 When the board boots in mode 2, the PlayStation runs the ROM monitor - an interactive text console. Console I/O uses a byte-at-a-time protocol through port base+1, distinct from the DECI command protocol:
@@ -479,6 +523,30 @@ The PA software (PA32.EXE + LIBPA.DLL) decodes the raw frames into several analy
                           tiles, block fills, null packets, commands
   Waveform Signals      - Five digital signal traces (see above)
 ```
+In addition to the bus-activity views above, LIBPA derives several
+performance-penalty views - the PA's actual purpose, locating where cycles
+are lost. Each is a per-cycle decoder run over the same raw frames:
+```
+  Read/Write Penalty    - Cycles stalled on main-RAM read/write access
+                          contention.
+  Write Buffer Penalty  - Stalls caused by the CPU write buffer draining;
+                          tracks recent writes to an address range and flags
+                          a penalty when a new access hits a not-yet-drained
+                          entry within a configurable window.
+  Polygon Penalty       - GPU stall cycles attributed to polygon rendering.
+  Polygon Cull/Waste    - Per GPU polygon packet, classifies geometry that
+                          produces no or reduced output: fully off-screen
+                          (all vertices outside the drawing area), partially
+                          off-screen, back-facing (rejected by the signed-area
+                          winding test, with a configurable winding convention),
+                          or degenerate (coincident vertices / collapsed edges).
+                          Surfaces overdraw and wasted GPU work.
+```
+Penalty values are held on screen for a fixed number of frames after the
+triggering event, so a penalty trace appears wider than the instantaneous
+stall. These views, like the bus views, are decoded by LIBPA from the raw
+frames; the classification is not stored in the capture.
+
 The bus type classification is not stored in the capture data. It is derived at display time by multi-frame state machines in LIBPA.DLL that track SDRAM RAS/CAS sequences, chip select transitions, and write enable patterns across consecutive frames.
 
 #### PA Not Yet Documented
