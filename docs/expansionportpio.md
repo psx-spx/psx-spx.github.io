@@ -351,13 +351,18 @@ at 1F8020xxh:<br/>
 
 #### 1F802000h - DTL-H2000: EXP2:  - ATCONS STAT (R)
 ```
-  0    Unknown, used for something
+  0    Atcons RX Word Avail    (0=None, 1=Yes)   ;16bit word readable at 1F802004h
   1    Unknown/unused
-  2    Unknown, used for something
-  3    TTY/Atcons TX Ready     (0=Busy, 1=Ready)
-  4    TTY/Atcons RX Available (0=None, 1=Yes)
+  2    Atcons TX Word Ready    (0=Busy, 1=Ready) ;can write 16bit word at 1F802004h
+  3    TTY/Atcons TX Ready     (0=Busy, 1=Ready) ;can write 8bit byte at 1F802002h
+  4    TTY/Atcons RX Available (0=None, 1=Yes)   ;8bit byte readable at 1F802002h
   5-7  Unknown/unused
 ```
+There are two parallel data channels: an 8bit channel at 1F802002h (status bits
+3/4) and a 16bit channel at 1F802004h (status bits 0/2). The console TTY uses the
+8bit channel; the DECI debug protocol uses the 8bit channel for the connect
+handshake and result codes, and the 16bit channel for command and bulk data
+words (see [DTL-H2000 devboard protocol](psxdevboardprotocol.md)).
 
 #### 1F802002h - DTL-H2000: EXP2:  - ATCONS DATA (R and W)
 ```
@@ -368,10 +373,15 @@ DTL-H2000 is using this "ATCONS" stuff instead of the DUART stuff used in
 retail console BIOSes ("CONS" seems to refer to "Console", and "AT" might refer
 to PC/AT or whatever).<br/>
 
-#### 1F802004h - DTL-H2000: EXP2:  - 16bit - ?
+#### 1F802004h - DTL-H2000: EXP2:  - ATCONS DATA16 (R and W)
 ```
-  0-15 Data...?
+  0-15 Atcons 16bit RX/TX Data Word
 ```
+16bit data channel, parallel to the 8bit channel at 1F802002h. Handshake via
+1F802000h bit0 (RX word available) and bit2 (TX word ready). The DECI debug
+protocol moves command headers and bulk data (memory blocks, register frames)
+through this register, reading words with LHU and writing them with SH. The 8bit
+channel at 1F802002h carries the connect byte and the single-byte result codes.
 
 #### 1F802030h - DTL-H2000: Secondary IRQ10 Controller (IRQ Flags)
 This register does expand IRQ10 (Lightgun) to more than one IRQ source. The

@@ -203,7 +203,7 @@
 ```
   1F802000h 1 DTL-H2000: ATCONS STAT (R)
   1F802002h 1 DTL-H2000: ATCONS DATA (R and W)
-  1F802004h 2 DTL-H2000: Whatever 16bit data ?
+  1F802004h 2 DTL-H2000: ATCONS DATA16 (R and W) (DECI command/bulk data words)
   1F802030h 1/4 DTL-H2000: Secondary IRQ10 Flags
   1F802032h 1 DTL-H2000: Whatever IRQ Control ?
   1F802040h 1 DTL-H2000: Bootmode "Dip switches" (R)
