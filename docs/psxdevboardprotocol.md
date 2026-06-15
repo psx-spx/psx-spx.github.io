@@ -141,6 +141,8 @@ The host then repeatedly polls for the command complete flag and reads the resul
 ```
 Note: the built-in debug stub may only process one command per connection. After a command completes, the stub returns to waiting for a new 0x04 connection byte. For multiple operations, reconnect (repeat the connection sequence) or perform a full reset between each command. The stub's state machine is fragile - if a command leaves the stub in an unexpected state, a full reset may be required before the next command will be accepted.
 
+Read-path caveat (observed on H2700, mechanism not yet pinned): a read command (DECI 0x21) issued after other commands within the same connection can return its payload shifted by one 16-bit word - an apparent leading 0x0000 with the trailing word truncated - as if a stale word from the prior command's tail were consumed as the first data word. A read performed immediately after a fresh reset+connect returns cleanly. Tooling that reads target memory back mid-session should account for this (drain/resynchronize before the read, or cross-check against a fresh-connection read); a load-and-run path that never reads memory back is unaffected.
+
 Result codes:
 ```
   Result 0  Target requests data: write payload words to port base+2.
@@ -179,7 +181,10 @@ These are the BIOS-level opcodes and their corresponding DECI command codes. The
   19       0x21      Read target memory (address in DX:BX, length in CX)
   1a       0x20      Write target memory (address in DX:BX, length in CX)
   1b       0x0C      Halt-load: arm target but do not start it (RUN /h)
-  1c       0x0D      Start/execute target (resume into the loaded program)
+  1c       0x0D      Commit the loaded target state (NOT the launch - see below)
+  ??       0x8001    Launch: restore the saved register block and exception-return
+                     into the target (the actual "go"). Wire-confirmed on H2700;
+                     BIOS-op origin / exact decode not yet pinned.
   22       -         Reset PlayStation (direct port I/O to base+6)
   30       0x22      Read memory, alternate format (flag=0x80)
   39       0xC6      mkdir (host-side, unit=0x80)
@@ -240,13 +245,22 @@ The BIOS boot sequence in mode 1 calls three entry points in the SRAM region:
 After these calls, the BIOS flushes the instruction cache, executes `BREAK 0x101` and `BREAK 0x406`, then the debug stub takes over. In mode 2 (console) these SRAM calls are not made - the SRAM region may contain uninitialized data.
 
 #### Target Execution and the Saved Register Block
-The execute command (DECI 0x0D) carries no address - it does not say where to start. The entry point and the rest of the initial CPU context are established beforehand. The host loads the program with write-memory commands (DECI 0x20, BIOS opcode 0x1a), then writes the target's register context - including the program counter - into a saved-register block maintained by the debug stub in SRAM. Register-setting records in the uploaded CPE supply these values (see CPE Executable Format below); the PC is register 0x90.
+Launching a loaded program does not use a "jump to address" command - no opcode carries a target start address. The entry point and the rest of the initial CPU context are established beforehand. The host loads the program image with write-memory commands (DECI 0x20, BIOS opcode 0x1a), then writes the target's register context - including the program counter - into a saved-register block the debug stub maintains in SRAM. The block is not at a fixed address - it lives in the debug stub's per-target data at a constant offset from the stub's global pointer (gp + 0x7c on the H2700), so its absolute location changes between resets. The host finds it by issuing DECI 0x00 (BIOS op 0x11, "get target info"): the command's response carries a pointer to the saved-register block. The host then reads the block with DECI 0x21 to capture the current context, patches it (the PC at least), and writes it back with DECI 0x20 - both addressed at the returned pointer. The program counter occupies offset 0x90 within the block. This is the same 0x90 used as the register number in a CPE Set-Value record (see CPE Executable Format below) - so a CPE "set register 0x90" record is literally an instruction to patch the saved PC slot. The PC correspondence is confirmed on silicon; whether every CPE register number equals its block offset is a reasonable inference, but only the PC has been checked.
 
-When the host then issues 0x0D, the stub does not parse any argument. It checks a run-mode flag, restores the full saved register context (all general registers, HI/LO, and the COP0 Status register) from the saved-register block, restores the saved exception PC, and performs an exception return into the target program. Two adjacent stub commands set the run-mode flag first: one marks "run" and one marks "break on entry" (stop at the entry point under debugger control); the plain 0x0D path leaves the flag as-is. This is the same saved-context-restore-and-return mechanism the ROM monitor's `go` and `call` commands use.
+Launch is two distinct commands, confirmed on DTL-H2700 silicon:
+```
+  1. DECI 0x0D   - commit. Finalizes the loaded state. Carries no address and
+                   does NOT itself transfer control.
+  2. DECI 0x8001 - go. Restores the full saved register context (all general
+                   registers, HI/LO, the COP0 Status register) and the saved
+                   exception PC from the block, then performs an exception
+                   return into the target. This is what actually starts it.
+```
+An earlier revision of this page attributed execution to 0x0D; live-hardware tracing shows 0x0D only commits, and the separate 0x8001 performs the jump. The 0x8001 encoding is unusual - the high bit is set, unlike the byte-sized command codes elsewhere in the table - and its exact decode (which BIOS opcode emits it, how the command/unit bytes are read) is not yet pinned; only its on-the-wire effect is confirmed. The stub also carries a run-mode flag with "run" and "break on entry" variants (the latter stops at the entry point under debugger control); RUN.exe's plain launch path runs. This restore-and-exception-return is the same mechanism the ROM monitor's `go` and `call` commands use.
 
-The practical consequence is that "load and run" is two protocol steps, not one: write the image and the register block (with PC), then execute. RUN.exe automates this - a CPE record that sets register 0x90 flags the target as armed, and after all records are processed RUN issues 0x0D (or 0x0C for /h) to launch each armed target.
+The practical shape of "load and run" is: load image -> write the register block with PC at offset 0x90 -> commit (0x0D) -> go (0x8001). RUN.exe automates it - a CPE record setting register 0x90 arms the target, and after all records are processed RUN commits and launches each armed target (0x0C instead of 0x0D for /h, halt-load).
 
-This description is reverse-engineered from the static debug-stub image and the host tools; it has not yet been confirmed against live hardware.
+Confirmed on DTL-H2700 silicon: a sentinel program uploaded and launched by this exact sequence executed on the CPU, verified by an unforgeable value the running code wrote to scratchpad RAM.
 
 #### CPE Executable Format
 CPE is the SN Systems / PSY-Q executable and command-script format used by the development tools (RUN.exe, SNPATCH.CPE, etc.). Unlike PS-EXE, which is a fixed header plus one code blob, a CPE file is a stream of typed records: it can load several blocks to different addresses, set CPU registers, and select a target. Loading a CPE is effectively replaying a short script of memory writes and register sets onto the development board.
@@ -282,6 +296,17 @@ CPE is the SN Systems / PSY-Q executable and command-script format used by the d
 The format is byte-compatible across loaders, but interpretation varies: a full debugger loader (RUN.exe) acts on every record including register sets and target selection, while a minimal loader that only needs to load-and-run one program may treat the register records (other than the PC) and the target-select record as no-ops. The record stream stays in sync either way because every record's payload length is fixed by its type.
 
 Record types 0x02-0x06 are all "set register" variants differing only in value width; this lets a CPE encode register values compactly. SNPATCH.CPE, for example, uses a type-0x03 record to set register 0x90 (PC) to its main-RAM entry point, several type-0x01 records to load the stub into SRAM, and a type-0x00 record to terminate.
+
+The reason the format is shaped this way is that its record vocabulary maps directly onto the DECI load-and-run sequence (see Target Execution above). Loading a CPE is nothing more than replaying its records onto the board in order:
+```
+  CPE record                  DECI side
+  0x01 Load (addr, data)   -> write-memory (0x20): write data to addr
+  0x02-0x06 Set register   -> a patch to the saved-register block at the
+       (reg 0x90 = PC)         register's offset (reg 0x90 = the PC slot)
+  0x00 End of file         -> commit (0x0D), then launch (go 0x8001;
+                              or arm-only 0x0C for halt-load)
+```
+A loader walks the records in order: each Load becomes a memory write, the Set-Value records become patches to the saved-register block (the block is read once with 0x21, the patches applied, then written back with 0x20), and end-of-file triggers the commit and launch. Nothing program-specific is required - the CPE file already encodes the exact operation order the protocol has to perform. That is why RUN.exe, and any minimal load-and-run path, can replay an arbitrary CPE without bespoke per-program logic: the format and the protocol are the same sequence of steps.
 
 #### Console Mode (Mode 2)
 When the board boots in mode 2, the PlayStation runs the ROM monitor - an interactive text console. Console I/O uses a byte-at-a-time protocol through port base+1, distinct from the DECI command protocol:
@@ -334,6 +359,8 @@ The PlayStation CPU accesses the development hardware through memory-mapped regi
 ```
   0x1F802000    ATCONS_STAT   Status register (8-bit)
   0x1F802002    ATCONS_FIFO   Data FIFO (8-bit, character I/O)
+  0x1F802004    ATCONS_DATA16 16-bit data channel used by the structured DECI
+                              command protocol (command buffers, bulk transfers)
   0x1F802030    ATCONS_IRQ    IRQ control (8-bit)
   0x1F802032    ATCONS_IRQ2   IRQ control 2 (8-bit)
 ```
