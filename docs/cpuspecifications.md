@@ -177,6 +177,45 @@ opcode, in that case the load would complete during IRQ handling, and so, the
 next opcode would receive the NEW value).<br/>
 MFC2/CFC2 also have a 1-instruction delay until the target register is loaded with its new value (more info in the GTE section).<br/>
 
+#### Load Timing
+As mentioned above, the PSX has no data cache, so every load reads through to
+memory and halts the CPU until the data arrives. The number of CPU cycles per
+lw (including the 1-cycle issue; the load-delay slot is separate) depends on
+what is accessed (measured on hardware):
+```
+  Scratchpad (1F800000h..)      1 cycle    ;on-chip SRAM, no bus access
+  On-die I/O (IRQ/DMA/timers)   5 cycles   ;one shared decoder
+  Main RAM (KUSEG/KSEG0/KSEG1)  7 cycles   ;plus occasional DRAM-refresh stalls
+  BIOS ROM (1FC00000h..)        27..33     ;8bit ROM, programmable bus delay
+```
+The scratchpad is the (otherwise unused) data-cache SRAM addressed directly, so
+it reads as fast as a register. All on-die I/O registers read at the same 5
+cycles regardless of which one, as they share a single decoder. Cached (KSEG0)
+and uncached (KSEG1) accesses to main RAM cost the same, as there's no data
+cache to speed up the "cached" mirror. The main RAM figure is slightly variable:
+DRAM refresh cycles occasionally collide with a read and stall it for a few
+extra cycles, so a tight read loop averages a little above 7 cycles. The BIOS
+ROM figure varies between consoles, as the ROM bus delay is programmable via the
+memory-control registers.<br/>
+
+#### Load Shadow
+The "CPU halted until the data arrives" above is only partly true for a slow
+load: the bus access overlaps the following instructions, as long as they don't
+use the loaded register and don't start another bus access. The overlap is not
+complete, though. Following an on-die load (5 cycles back-to-back) with N
+independent nops, and measuring the cost beyond those nops:
+```
+  lw + 0 nop     +4 cycles/load   ;back-to-back, nothing to overlap
+  lw + 1..3 nop  falling
+  lw + 4 nop     +2 cycles/load   ;overlap saturated
+  lw + 7 nop     +2 cycles/load   ;no further improvement
+```
+So roughly half of the access hides behind trailing independent instructions,
+and about 2 cycles/load of bus occupancy remains no matter how much unrelated
+work follows (saturating after about 4 instructions). A load followed by enough
+unrelated work therefore costs about 3 cycles (1 issue plus ~2 irreducible)
+rather than the full 5.<br/>
+
 #### Store instructions
 ```
   sb  rt,imm(rs)    [imm+rs]=(rt AND FFh)   ;store 8bit
