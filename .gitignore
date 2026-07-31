@@ -1,3 +1,4 @@
 site/
 # generated at build time by tools/bitfields/hook.py
 docs/diagrams/
+__pycache__/
