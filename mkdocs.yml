@@ -26,6 +26,9 @@ theme:
   icon:
     logo: material/sony-playstation
 
+hooks:
+  - tools/bitfields/hook.py
+
 plugins:
   - search
   - with-pdf:
