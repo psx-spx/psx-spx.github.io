@@ -292,11 +292,22 @@ The Gauss table contains the following values (in hex):<br/>
 The PSX table is a bit different as the SNES table: Values up to 3569h are
 smaller as on SNES, the remaining values are bigger as on SNES, and the width
 of the PSX table entries is 4bit higher as on SNES.<br/>
-The PSX table is slightly bugged: Theoretically, each four values
-(gauss[000h+i], gauss[0FFh-i], gauss[100h+i], gauss[1FFh-i]) should sum up to
-8000h, but in practice they do sum up to 7F7Fh..7F81h (fortunately the PSX sum
-doesn't exceed the 8000h limit; meaning that the PSX interpolations won't
-overflow, which has been a hardware glitch on the SNES).<br/>
+The PSX table is normalized to 255/256 rather than to unity: each four values
+(gauss[000h+i], gauss[0FFh-i], gauss[100h+i], gauss[1FFh-i]) sum up to 7F80h,
+which is exactly 8000h*255/256, and per-entry rounding spreads the actual sums
+over 7F7Fh..7F81h. That 1/256 shortfall is headroom rather than an error: it
+guarantees the interpolation cannot exceed the 8000h limit, which is the
+hardware glitch the SNES suffers from.<br/>
+The table is a four-term cosine window of the Nuttall family, not a gaussian
+despite the name; it carries a small negative lobe (the first sixteen entries
+are -1) that no gaussian reproduces. Writing x = (511.5-n)/256, a least-squares
+fit of c0+c1*cos(pi*x/2)+c2*cos(pi*x)+c3*cos(3*pi*x/2) tracks the table to a
+maximum error of 6 on a 59B3h peak. The four taps sit a quarter period apart,
+so every non-DC harmonic cancels between them and the sum above collapses to
+4*c0; the fitted c0 is 8160.0039, giving 4*c0 = 32640.0155 against 7F80h =
+32640. The normalization is the window's DC term. No cosine series in that
+basis with fewer than fifteen coefficients reproduces all 512 entries exactly,
+so the table is best kept literal.<br/>
 
 #### Waveform Examples
 ```
