@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="180" viewBox="0 0 769 180" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="725" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="746.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,746.5,97)">TX Enable</text>
+<text x="725" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="677" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="698.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,698.5,97)">DTR Output Level</text>
+<text x="677" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="629" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="650.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,650.5,97)">RX Enable</text>
+<text x="629" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="581" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="602.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,602.5,97)">SIO1 TX Output Level</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="533" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="554.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,554.5,97)">Acknowledge</text>
+<text x="533" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="485" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="506.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,506.5,97)">SIO1 RTS Output Level</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="437" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="458.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,458.5,97)">Reset</text>
+<text x="437" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="389" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="410.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,410.5,97)">SIO1 unknown?</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<rect x="293" y="15" width="91" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="338.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,97)">RX Interrupt Mode</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">9</text>
+<text x="384" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+<rect x="245" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="266.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,266.5,97)">TX Interrupt Enable</text>
+<text x="245" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">10</text>
+<rect x="197" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="218.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,218.5,97)">RX Interrupt Enable</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<rect x="149" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="170.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,170.5,97)">DSR Interrupt Enable</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">12</text>
+<rect x="101" y="15" width="43" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="122.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,122.5,97)">SIO0 port select</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<rect x="5" y="15" width="91" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,97)">Not used</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<text x="96" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">14</text>
+</svg>

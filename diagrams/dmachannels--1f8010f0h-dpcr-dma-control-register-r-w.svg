@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="312" viewBox="0 0 769 312" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="701" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="734.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,734.5,163)">DMA0, MDECin Priority</text>
+<text x="701" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="677" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="686.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,686.5,163)">DMA0, MDECin Master Enable</text>
+<text x="677" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="605" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="638.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,638.5,163)">DMA1, MDECout Priority</text>
+<text x="605" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<text x="672" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">4</text>
+<rect x="581" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="590.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,590.5,163)">DMA1, MDECout Master Enable</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<rect x="509" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="542.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,542.5,163)">DMA2, GPU Priority</text>
+<text x="509" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">10</text>
+<text x="576" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+<rect x="485" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="494.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,494.5,163)">DMA2, GPU Master Enable</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<rect x="413" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="446.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,446.5,163)">DMA3, CDROM Priority</text>
+<text x="413" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<text x="480" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">12</text>
+<rect x="389" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="398.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,398.5,163)">DMA3, CDROM Master Enable</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="317" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="350.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,350.5,163)">DMA4, SPU Priority</text>
+<text x="317" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">18</text>
+<text x="384" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">16</text>
+<rect x="293" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="302.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,302.5,163)">DMA4, SPU Master Enable</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">19</text>
+<rect x="221" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="254.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,254.5,163)">DMA5, PIO Priority</text>
+<text x="221" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">22</text>
+<text x="288" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">20</text>
+<rect x="197" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="206.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,206.5,163)">DMA5, PIO Master Enable</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<rect x="125" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="158.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,163)">DMA6, OTC Priority</text>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">26</text>
+<text x="192" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">24</text>
+<rect x="101" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="110.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,163)">DMA6, OTC Master Enable</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">27</text>
+<rect x="29" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="62.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,62.5,163)">CPU memory access priority</text>
+<text x="29" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">30</text>
+<text x="96" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">28</text>
+<rect x="5" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="14.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,14.5,163)">No effect, should be CPU memory access...</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+</svg>

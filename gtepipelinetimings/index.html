@@ -1,0 +1,2200 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/gtepipelinetimings/">
+      
+      
+        <link rel="prev" href="../geometrytransformationenginegte/">
+      
+      
+        <link rel="next" href="../macroblockdecodermdec/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>GTE Pipeline Timings - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gte-pipeline-timings" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GTE Pipeline Timings
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Graphics Processing Unit (GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geometry Transformation Engine (GTE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    GTE Pipeline Timings
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    GTE Pipeline Timings
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methodology
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#result-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Result tables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Result tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perspective-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perspective transforms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lighting-single-vertex" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lighting (single-vertex)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lighting-triple-vertex" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lighting (triple-vertex)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color" class="md-nav__link">
+    <span class="md-ellipsis">
+      Color
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#depth-cue" class="md-nav__link">
+    <span class="md-ellipsis">
+      Depth-cue
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#math" class="md-nav__link">
+    <span class="md-ellipsis">
+      Math
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Misc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mvmva" class="md-nav__link">
+    <span class="md-ellipsis">
+      MVMVA
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-gte-snapshots-its-inputs-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      The GTE snapshots its inputs early
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#triple-vertex-variants-extend-the-boundary-by-3-nops" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triple-vertex variants extend the boundary by ~3 nops
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rgbc-for-ncct-class-triples-latches-mid-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      RGBC for NCCT-class triples latches mid-execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#depth-queue-inputs-latch-latest-among-rtps-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Depth-queue inputs latch latest among RTPS inputs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#far-color-fc-latching-depends-on-instruction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Far Color (FC) latching depends on instruction
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caveats-and-methodology-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caveats and methodology limits
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caveats and methodology limits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#icache-layout-sensitivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      icache layout sensitivity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-console-caveat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single-console caveat
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saturation-collapse" class="md-nav__link">
+    <span class="md-ellipsis">
+      Saturation collapse
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#doesnt-affect-output-vs-internal-latch-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Doesn't affect output" vs "internal latch cycle"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lwc2-excluded" class="md-nav__link">
+    <span class="md-ellipsis">
+      LWC2 excluded
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gas-does-not-auto-insert-nops" class="md-nav__link">
+    <span class="md-ellipsis">
+      GAS does not auto-insert nops
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Macroblock Decoder (MDEC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sound Processing Unit (SPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interrupts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DMA Channels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Drive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM File Formats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers and Memory Cards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pocketstation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serial Interfaces (SIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../partialwordwrites/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Partial-Word Writes to MMIO
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unpredictable Things
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Specifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kernel (BIOS)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arcade Cabinets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Konami System 573
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cheat Devices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Chipsets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardprotocol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hardware Numbers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About & Credits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Video CDs (VCD)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Internal Info on PSX CDROM Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methodology
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#result-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Result tables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Result tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perspective-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perspective transforms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lighting-single-vertex" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lighting (single-vertex)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lighting-triple-vertex" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lighting (triple-vertex)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color" class="md-nav__link">
+    <span class="md-ellipsis">
+      Color
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#depth-cue" class="md-nav__link">
+    <span class="md-ellipsis">
+      Depth-cue
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#math" class="md-nav__link">
+    <span class="md-ellipsis">
+      Math
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Misc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mvmva" class="md-nav__link">
+    <span class="md-ellipsis">
+      MVMVA
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-gte-snapshots-its-inputs-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      The GTE snapshots its inputs early
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#triple-vertex-variants-extend-the-boundary-by-3-nops" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triple-vertex variants extend the boundary by ~3 nops
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rgbc-for-ncct-class-triples-latches-mid-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      RGBC for NCCT-class triples latches mid-execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#depth-queue-inputs-latch-latest-among-rtps-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Depth-queue inputs latch latest among RTPS inputs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#far-color-fc-latching-depends-on-instruction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Far Color (FC) latching depends on instruction
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caveats-and-methodology-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caveats and methodology limits
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caveats and methodology limits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#icache-layout-sensitivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      icache layout sensitivity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-console-caveat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single-console caveat
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saturation-collapse" class="md-nav__link">
+    <span class="md-ellipsis">
+      Saturation collapse
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#doesnt-affect-output-vs-internal-latch-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Doesn't affect output" vs "internal latch cycle"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lwc2-excluded" class="md-nav__link">
+    <span class="md-ellipsis">
+      LWC2 excluded
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gas-does-not-auto-insert-nops" class="md-nav__link">
+    <span class="md-ellipsis">
+      GAS does not auto-insert nops
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="gte-pipeline-timings">GTE Pipeline Timings</h1>
+<p><a href="./#overview">Overview</a><br/>
+<a href="./#methodology">Methodology</a><br/>
+<a href="./#result-tables">Result tables</a><br/>
+<a href="./#patterns">Patterns</a><br/>
+<a href="./#caveats-and-methodology-limits">Caveats and methodology limits</a><br/></p>
+<h2 id="overview">Overview</h2>
+<p>Each GTE instruction has a documented total cycle count, but games have
+historically treated the period between issuing a <code>cop2 imm25</code> opcode and
+its completion as opaque - the SDK and most documentation only say "do not
+modify input registers while a GTE instruction is in flight". In practice
+the GTE samples each input register at a deterministic offset within
+that execution window. After the latch, the input register file is no
+longer read by the in-flight op and is safe to overwrite.</p>
+<p>This page documents, for each (instruction, input register), the smallest
+number <code>N</code> of nops between the GTE op and an <code>MTC2</code>/<code>CTC2</code> to that input
+register such that the <code>MTC2</code>/<code>CTC2</code> does <strong>not</strong> change the GTE's
+output. That <code>N</code> is the practical "instruction slots required between
+the cop2 op and the next write to this input" - the actionable number a
+developer needs to know if they want to overlap CPU work with GTE work.</p>
+<p>All numbers are hardware-verified on a single SCPH-5501 console. Other
+PSX revisions have not been measured; some 1-2 cycle drift is plausible
+across silicon revisions.</p>
+<h2 id="methodology">Methodology</h2>
+<p>The premise: <code>MTC2</code>/<code>CTC2</code> does not stall while a GTE instruction is in
+flight (the CPU continues issuing instructions immediately). The write
+reaches the GTE's register file after a small fixed delay. By varying
+the number of CPU instructions between the cop2 op and a perturbing
+<code>MTC2</code>/<code>CTC2</code>, the read site of any given input register becomes
+visible: the smallest <code>N</code> at which the perturbation no longer affects
+the output is the latch boundary.</p>
+<p>For each (instruction, register) pair, the test runs:
+<div class="highlight"><pre><span></span><code>  scene_setup           ; reset all GTE inputs to a known baseline
+  cop2 op_imm           ; fire the GTE instruction
+  nop  x N              ; vary N from 0 upward
+  mtc2 canary, $reg     ; perturb the target register
+  nop  x 60             ; let the GTE complete
+  mfc2 ...              ; read RGB FIFO, MAC, IR, FLAG, SXY/SZ FIFOs
+</code></pre></div>
+The result is compared against a <strong>baseline</strong> captured by running the
+same shape with the perturbing write happening long after the GTE
+completes (80 nops of drain before <code>MTC2</code>).</p>
+<p>A <strong>canary-pre sanity check</strong> also runs: writing the canary BEFORE the
+cop2 op confirms that the canary value would change the result if it
+landed in time during execution. This pinpoints cases where the chosen
+canary value happens to produce the same saturated output as the
+baseline (which would otherwise look like a false N=0 boundary).</p>
+<p>Each sweep runs twice with the first iteration discarded for icache
+warmup, and CPU IRQs are masked across the sweep so a stray interrupt
+cannot stretch the gap between the cop2 op and the perturbing <code>MTC2</code>.</p>
+<p>The full test source is in pcsx-redux at
+<a href="https://github.com/nicolasnoble/pcsx-redux/tree/main/src/mips/tests"><code>src/mips/tests/gte-latency*/</code></a>.</p>
+<h2 id="result-tables">Result tables</h2>
+<p>Boundary <code>N</code> is the smallest number of nops between <code>cop2 imm25</code> and an
+<code>MTC2</code>/<code>CTC2</code> to the listed register at which the perturbation no
+longer affects any GTE output. <code>N=0</code> means the register was already
+read by the time the very first nop slot would have run - it is safe
+to clobber the register from one instruction after the cop2 op onward.</p>
+<p>A dash (-) means the instruction does not read that register.</p>
+<h4 id="perspective-transforms">Perspective transforms</h4>
+<table>
+<thead>
+<tr>
+<th>Input register</th>
+<th style="text-align: right;">RTPS (15c)</th>
+<th style="text-align: right;">RTPT (23c)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VXY0 / VZ0</td>
+<td style="text-align: right;">0/0</td>
+<td style="text-align: right;">0/0</td>
+</tr>
+<tr>
+<td>VXY1 / VZ1</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">3/0</td>
+</tr>
+<tr>
+<td>VXY2 / VZ2</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">2/0</td>
+</tr>
+<tr>
+<td>RT11RT12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>RT13RT21</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>RT22RT23</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>RT31RT32</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>RT33</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>TRX / TRY / TRZ</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">1/4/1</td>
+</tr>
+<tr>
+<td>OFX / OFY</td>
+<td style="text-align: right;">1/0</td>
+<td style="text-align: right;">5/4</td>
+</tr>
+<tr>
+<td>H</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>DQA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td>DQB</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table>
+<h4 id="lighting-single-vertex">Lighting (single-vertex)</h4>
+<table>
+<thead>
+<tr>
+<th>Input register</th>
+<th style="text-align: right;">NCS (14c)</th>
+<th style="text-align: right;">NCCS (17c)</th>
+<th style="text-align: right;">NCDS (19c)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VXY0 / VZ0</td>
+<td style="text-align: right;">0/0</td>
+<td style="text-align: right;">0/1</td>
+<td style="text-align: right;">0/1</td>
+</tr>
+<tr>
+<td>RGBC</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>L11L12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>L13L21</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>L22L23</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>L31L32</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>L33</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>LR1LR2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>LR3LG1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>LG2LG3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>LB1LB2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>LB3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>RBK / GBK / BBK</td>
+<td style="text-align: right;">0/2/1</td>
+<td style="text-align: right;">0/2/1</td>
+<td style="text-align: right;">0/2/1</td>
+</tr>
+<tr>
+<td>RFC / GFC / BFC</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">2/3/4</td>
+</tr>
+</tbody>
+</table>
+<h4 id="lighting-triple-vertex">Lighting (triple-vertex)</h4>
+<table>
+<thead>
+<tr>
+<th>Input register</th>
+<th style="text-align: right;">NCT (30c)</th>
+<th style="text-align: right;">NCCT (39c)</th>
+<th style="text-align: right;">NCDT (44c)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VXY0 / VZ0</td>
+<td style="text-align: right;">0/2</td>
+<td style="text-align: right;">0/2</td>
+<td style="text-align: right;">0/0</td>
+</tr>
+<tr>
+<td>VXY1 / VZ1</td>
+<td style="text-align: right;">0/1</td>
+<td style="text-align: right;">0/1</td>
+<td style="text-align: right;">0/1</td>
+</tr>
+<tr>
+<td>VXY2 / VZ2</td>
+<td style="text-align: right;">1/3</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">3/4</td>
+</tr>
+<tr>
+<td>RGBC</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr>
+<td>L11L12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>L13L21</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>L22L23</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>L31L32</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>L33</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>LR1LR2</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>LR3LG1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>LG2LG3</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td>LB1LB2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td>LB3</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>RBK / GBK / BBK</td>
+<td style="text-align: right;">8/9/9</td>
+<td style="text-align: right;">9/6/9</td>
+<td style="text-align: right;">7/7/7</td>
+</tr>
+<tr>
+<td>RFC / GFC / BFC</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">13/14/14</td>
+</tr>
+</tbody>
+</table>
+<h4 id="color">Color</h4>
+<table>
+<thead>
+<tr>
+<th>Input register</th>
+<th style="text-align: right;">CC (11c)</th>
+<th style="text-align: right;">CDP (13c)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RGBC</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>IR0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>IR1 / IR2 / IR3</td>
+<td style="text-align: right;">1/2/2</td>
+<td style="text-align: right;">2/3/2</td>
+</tr>
+<tr>
+<td>LR1LR2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>LR3LG1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>LG2LG3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>LB1LB2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>LB3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>RBK / GBK / BBK</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">0/0/0</td>
+</tr>
+<tr>
+<td>RFC / GFC / BFC</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0/2/0</td>
+</tr>
+</tbody>
+</table>
+<h4 id="depth-cue">Depth-cue</h4>
+<table>
+<thead>
+<tr>
+<th>Input register</th>
+<th style="text-align: right;">DPCS (8c)</th>
+<th style="text-align: right;">DPCT (17c)</th>
+<th style="text-align: right;">DCPL (8c)</th>
+<th style="text-align: right;">INTPL (8c)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RGBC</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>RGB0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>RGB1</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>RGB2</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>IR0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>IR1 / IR2 / IR3</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">1/0/1</td>
+<td style="text-align: right;">0/1/0</td>
+</tr>
+<tr>
+<td>RFC / GFC / BFC</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">1/2/3</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">0/0/0</td>
+</tr>
+</tbody>
+</table>
+<h4 id="math">Math</h4>
+<table>
+<thead>
+<tr>
+<th>Input register</th>
+<th style="text-align: right;">SQR (5c)</th>
+<th style="text-align: right;">OP (6c)</th>
+<th style="text-align: right;">NCLIP (8c)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IR1 / IR2 / IR3</td>
+<td style="text-align: right;">0/0/1</td>
+<td style="text-align: right;">0/1/0</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>RT11RT12</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>RT22RT23</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>RT33</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>SXY0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>SXY1</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>SXY2</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+<h4 id="misc">Misc</h4>
+<table>
+<thead>
+<tr>
+<th>Input register</th>
+<th style="text-align: right;">AVSZ3 (5c)</th>
+<th style="text-align: right;">AVSZ4 (6c)</th>
+<th style="text-align: right;">GPF (5c)</th>
+<th style="text-align: right;">GPL (5c)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SZ0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>SZ1 / SZ2 / SZ3</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>ZSF3 / ZSF4</td>
+<td style="text-align: right;">0 / -</td>
+<td style="text-align: right;">- / 0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>IR0</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>IR1 / IR2 / IR3</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">0/0/0</td>
+</tr>
+<tr>
+<td>MAC1/2/3</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">0/0/0</td>
+</tr>
+</tbody>
+</table>
+<h4 id="mvmva">MVMVA</h4>
+<p>MVMVA is parameterized over (mx, v, cv); 8 cycles regardless of
+parameter selection. Three documented parameter combinations were
+probed:</p>
+<table>
+<thead>
+<tr>
+<th>Input register</th>
+<th style="text-align: right;">(RT, V0, TR)</th>
+<th style="text-align: right;">(LL, V0, BK)</th>
+<th style="text-align: right;">(LC, IR, BK)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VXY0 / VZ0</td>
+<td style="text-align: right;">0/0</td>
+<td style="text-align: right;">0/2</td>
+<td style="text-align: right;">-</td>
+</tr>
+<tr>
+<td>IR1 / IR2 / IR3</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">-</td>
+<td style="text-align: right;">1/0/1</td>
+</tr>
+<tr>
+<td>Selected matrix</td>
+<td style="text-align: right;">all 0</td>
+<td style="text-align: right;">max 1</td>
+<td style="text-align: right;">max 1</td>
+</tr>
+<tr>
+<td>TR / BK</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">0/0/0</td>
+<td style="text-align: right;">0/0/0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="patterns">Patterns</h2>
+<h4 id="the-gte-snapshots-its-inputs-early">The GTE snapshots its inputs early</h4>
+<p>For nearly every instruction, every input register has a boundary in
+the first ~4 cycles. The GTE essentially snapshots its input register
+file at the start of execution and works from internal pipeline storage
+afterward. From the developer's perspective, the documented per-instruction
+cycle count is misleading as a "do not touch the inputs" window: the
+"actually reading the inputs" window is much shorter.</p>
+<h4 id="triple-vertex-variants-extend-the-boundary-by-3-nops">Triple-vertex variants extend the boundary by ~3 nops</h4>
+<p>NCCT, NCT, NCDT, RTPT, DPCT all push V2's boundary 2-4 nops later than
+single-vertex variants. The GTE walks V0 -&gt; V1 -&gt; V2 over the first
+several cycles before the matrix multiplies start in earnest.</p>
+<h4 id="rgbc-for-ncct-class-triples-latches-mid-execution">RGBC for NCCT-class triples latches mid-execution</h4>
+<p>Unlike the matrices and BK (latched in the first ~4 cycles), RGBC for
+NCCT, NCDT latches at cycle 12-15. The first sub-pass's color stage is
+the read site. The sweep also shows a clean two-step transition: at one
+N value the V0 result reverts to baseline (V0's color stage finished
+reading RGBC); at the next N value the V1 and V2 results revert
+together. This suggests the hardware reads RGBC twice during a
+triple-vertex op - once for V0, once covering V1+V2 - rather than
+re-reading per sub-pass.</p>
+<h4 id="depth-queue-inputs-latch-latest-among-rtps-inputs">Depth-queue inputs latch latest among RTPS inputs</h4>
+<p>DQA / DQB are read at cycle 3-4 of RTPS (cycle 6-7 of RTPT). They are
+used at the end of the projection pipeline to compute IR0 from depth.</p>
+<h4 id="far-color-fc-latching-depends-on-instruction">Far Color (FC) latching depends on instruction</h4>
+<p>DPCS, DCPL, INTPL all latch FC by N=0 (depth-cue is the bulk of these
+8-cycle ops, and FC is read very early). NCDS / NCDT spread the reads
+across the per-vertex depth-cue stages and push the boundary out
+(NCDT BFC = 14). DPCT shows progressive boundaries 1/2/3 for RFC/GFC/BFC,
+matching its per-channel pipelining.</p>
+<h2 id="caveats-and-methodology-limits">Caveats and methodology limits</h2>
+<h4 id="icache-layout-sensitivity">icache layout sensitivity</h4>
+<p>Boundaries fluctuate by 1-2 nops between code-layout variants of the
+test (the alignment of the probe block within the icache page matters).
+The numbers in this table reflect a single test build's results;
+treat single-cycle differences as noise.</p>
+<h4 id="single-console-caveat">Single-console caveat</h4>
+<p>All measurements are from one SCPH-5501. Other PSX revisions (PAL, late
+SCPH, PSone, PS2 backwards-compat) have not been verified. The
+short-instruction <code>N=0</code> results should be very stable; the long
+instructions and triple variants are more likely to drift between
+silicon revisions.</p>
+<h4 id="saturation-collapse">Saturation collapse</h4>
+<p>If the canary perturbation drives the output to the same saturated
+value as the baseline (e.g. canary saturates IR to 0x7fff which is the
+same as baseline IR), the test would report a false N=0 boundary. The
+canary-pre sanity check catches this and forces the test to fail
+loudly. The canary values used here are chosen smaller than the
+baseline so the perturbed pipeline produces a distinguishable result.</p>
+<h4 id="doesnt-affect-output-vs-internal-latch-cycle">"Doesn't affect output" vs "internal latch cycle"</h4>
+<p>The boundary measures when the GTE finished reading the register <em>as
+observable through the output</em>. If a register is read into an internal
+pipeline that gets multiplied by zero (e.g., <code>R12</code> multiplied against
+<code>V0_X = 0</code>), the test reports <code>N=0</code> because no perturbation can change
+the output - even if the GTE is internally still reading <code>R12</code> later.
+The methodology measures the practical "safe to clobber" cycle, not
+the internal hardware read schedule.</p>
+<h4 id="lwc2-excluded"><code>LWC2</code> excluded</h4>
+<p><code>LWC2</code> is excluded from the methodology. The memory-side latency (DRAM
+controller, BIU state) would smear the boundary measurement. <code>MTC2</code> is
+the clean probe because the CPU-to-COP2 path is deterministic.</p>
+<h4 id="gas-does-not-auto-insert-nops">GAS does not auto-insert nops</h4>
+<p>Verified by disassembling the probe code: <code>cop2 imm25; .rept N\n nop\n .endr; mtc2</code>
+emits exactly N nops between the cop2 op and the mtc2. The
+psyq SDK's habit of conservatively padding <code>cop2</code> with surrounding nops
+does not apply to inline assembly using <code>.rept</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>

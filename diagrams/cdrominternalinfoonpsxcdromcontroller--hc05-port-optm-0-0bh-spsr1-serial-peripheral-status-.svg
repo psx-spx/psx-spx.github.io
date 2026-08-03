@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="481" height="259" viewBox="0 0 481 259" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="197" y="15" width="283" height="243" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="338.5" y="136.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,136.5)">Not used</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<text x="480" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="101" y="15" width="91" height="243" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="136.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,136.5)">DCOLn SPI Data Collision Occurred</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="5" y="15" width="91" height="243" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="136.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,136.5)">SPIFn SPI Transfer Complete Flag</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+</svg>
