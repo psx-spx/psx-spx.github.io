@@ -70,7 +70,7 @@ the end of the line**, with no wrapping:
   Entry at word 2: fills words 2,3      (valid = 0Ch)
   Entry at word 3: fills word 3 only    (valid = 08h)
 ```
-The IBLKSZ field in the [BIU/Cache Configuration Register](memorycontrol.md#fffe0130h---bcc-biucache-configuration-register-rw)
+The IBLKSZ field in the [BIU/Cache Configuration Register](memorycontrol.md#fffe0130h-bcc-biucache-configuration-register-rw)
 (bits 8-9 of FFFE0130h) limits the maximum burst length. With IBLKSZ=0 (2-word
 refill), entry at word 0 fills only words 0 and 1 (valid = 03h). Entry at words
 1, 2, or 3 is unaffected by IBLKSZ and always fills to end-of-line.<br/>
@@ -96,7 +96,7 @@ The scratchpad SRAM and the data cache hardware can be reconfigured via Port
 FFFE0130h: with bit 3 (RAM) cleared and bit 7 (DS) set, the scratchpad becomes
 a tag-less write-on-load buffer where every cached load spills its result into
 scratchpad at slot `(load_addr >> 2) AND 0FFh`. See the
-[BIU/Cache Configuration Register](memorycontrol.md#fffe0130h---bcc-biucache-configuration-register-rw)
+[BIU/Cache Configuration Register](memorycontrol.md#fffe0130h-bcc-biucache-configuration-register-rw)
 section for the full hardware-verified behavior. This mode is incompatible
 with normal kernel operation - the BIOS accesses I/O ports through KUSEG
 (cached) addresses, and activating the d-cache kernel-wide would attempt to
