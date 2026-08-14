@@ -904,6 +904,44 @@ memory) gets negated (this is a pretty strange feature, it is NOT a simple
 overflow bug, it does affect the "+[mLSAME-2]" addition; although that part
 normally shouldn't be affected by the "\*vIIR" multiplication). Similar effects
 might (?) occur on some other volume registers when they are set to -8000h.<br/>
+Measured on a SCPH-1001: vLIN/vRIN=-8000h (as used by the standard Room preset)
+behaves as an ordinary multiply by -1.0, without the negation effect that
+vIIR=-8000h exhibits.<br/>
+
+#### Reverb Precision
+The formula above is algebraically correct, but the exact bit-level evaluation
+order of the hardware datapath is unknown, and the factored form matters:
+computing "(X-[mLSAME-2])\*vIIR+[mLSAME-2]" versus
+"X\*vIIR+[mLSAME-2]\*(8000h-vIIR)" rounds in different places. Constraints
+measured against a SCPH-1001 (digital I2S tap between SPU and DAC,
+logic-analyzer capture, free-running single-keyon tone through the Room preset,
+exact per-sample comparison; the wet component isolated by complex subtraction
+of a reverb-disabled capture):<br/>
+
+- All feedback state passes through the 16bit reverb buffer once per 22050Hz
+  tick; no wider accumulator survives across ticks. Emulating a whole tick in
+  exact-width arithmetic, quantizing only at buffer writes, changes the output
+  by less than 1 LSB versus quantizing every product to 16bit - so internal
+  accumulator width is not observable from outside.
+- Intermediate values DO saturate to the -8000h..+7FFFh range inside the
+  datapath, not only at buffer writes: without intermediate saturation,
+  emulated output diverges by up to ~200 LSBs at signal peaks once the
+  accumulator leaves that range; with it, worst-case deviation more than
+  halves.
+- The alternate left/right cycle processing (see above) is measurable in the
+  output at the 1-2 LSB level.
+- The combined input+output resampler delay equals 38 samples at 44100Hz,
+  consistent with 19+19 from the two centred 39-tap filters, verified by phase
+  measurement to within 0.01 samples on both channels. Getting the output
+  interpolator's polyphase alignment wrong by one sample shifts the whole wet
+  signal relative to dry, and is by far the largest error mode: the wet output
+  sits near anti-phase with the dry signal on a reverb-heavy channel, so one
+  sample of offset produced a ~15% amplitude error against hardware.
+- After matching all of the above, residual deviation from silicon is ~24 LSB
+  mean on a wet-dominated channel and ~2 LSB on a dry-dominated one (Room
+  preset). The remainder presumably encodes the exact per-stage rounding and
+  saturation positions, which remain unknown.
+
 
 #### Speed of Sound
 The speed of sound is circa 340 meters per second (in dry air, at room
