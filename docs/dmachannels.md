@@ -183,11 +183,13 @@ is formatted like this:<br/>
   24-31 Number of extra words to transfer for this node
 ```
 
-The transfer is stopped once an end marker is reached. On some (earlier?) CPU
-revisions any address with bit 23 set will be interpreted as an end marker,
-while on other revisions all bits must be set (i.e. the address must be FFFFFF).
-This change was probably necessary as later CPU versions added support for up to
-16 MB RAM addressing, which made addresses in the 800000-FFFFFC range valid.<br/>
+The transfer is stopped once an end marker is reached, or an error occurs. The
+normal end marker is when all bits of the address is set, aka FFFFFFh. On a
+console with its default memory settings, any address above 8MB is invalid,
+so it is possible to stop a transfer by toggling the high bit to 1. This will
+trigger a DMA error, reflected into the DICR register. Some games might use
+this to end a DMA chain instead of the normal FFFFFFh marker, which obviously
+can't work when the memory settings of the console is set to 16MB.<br/>
 
 #### DMA Transfer Rates
 ```
