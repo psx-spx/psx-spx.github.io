@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="577" height="266" viewBox="0 0 577 266" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="293" y="15" width="283" height="250" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="434.5" y="140" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,140)">Reserved</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<text x="576" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="197" y="15" width="91" height="250" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="242.5" y="140" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,242.5,140)">SMEN Sound map (manual XA-ADPCM...</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="101" y="15" width="91" height="250" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="140" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,140)">BFWR Request sector buffer write</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="5" y="15" width="91" height="250" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="140" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,140)">BFRD Request sector buffer read</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+</svg>

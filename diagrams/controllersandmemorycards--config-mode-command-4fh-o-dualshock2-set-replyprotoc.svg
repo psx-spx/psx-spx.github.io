@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="553" height="332" viewBox="0 0 553 332" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="545" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="548.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,548.5,173)">LSB of digital buttons (0=No, 1=Yes) 4th...</text>
+<text x="545" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="533" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="536.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,536.5,173)">MSB of digital buttons (0=No, 1=Yes) 5th...</text>
+<text x="533" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="521" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="524.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,524.5,173)">RightJoyX (0=No, 1=Yes) 6th byte</text>
+<text x="521" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="509" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="512.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,512.5,173)">RightJoyY (0=No, 1=Yes) 7th byte</text>
+<text x="509" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="497" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="500.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,500.5,173)">LeftJoyX (0=No, 1=Yes) 8th byte</text>
+<text x="497" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="485" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="488.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,488.5,173)">LeftJoyY (0=No, 1=Yes) 9th byte</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="473" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="476.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,476.5,173)">DPAD Right (0=No, 1=Yes) button 00h 10th...</text>
+<text x="473" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="461" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="464.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,464.5,173)">DPAD Left (0=No, 1=Yes) button 01h 11th byte</text>
+<text x="461" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<rect x="449" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="452.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,452.5,173)">DPAD Up (0=No, 1=Yes) button 02h 12th byte</text>
+<text x="449" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">8</text>
+<rect x="437" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="440.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,440.5,173)">DPAD Down (0=No, 1=Yes) button 03h 13th byte</text>
+<text x="437" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">9</text>
+<rect x="425" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="428.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,428.5,173)">Button /\ (0=No, 1=Yes) button 04h 14th byte</text>
+<text x="425" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">10</text>
+<rect x="413" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="416.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,416.5,173)">Button () (0=No, 1=Yes) button 05h 15th byte</text>
+<text x="413" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<rect x="401" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="404.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,404.5,173)">Button &gt;&lt; (0=No, 1=Yes) button 06h 16th byte</text>
+<text x="401" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">12</text>
+<rect x="389" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="392.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,392.5,173)">Button [] (0=No, 1=Yes) button 07h 17th byte</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<rect x="377" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="380.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,380.5,173)">Button L1 (0=No, 1=Yes) button 08h 18th byte</text>
+<text x="377" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="365" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="368.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,368.5,173)">Button R1 (0=No, 1=Yes) button 09h 19th byte</text>
+<text x="365" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="353" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="356.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,356.5,173)">Button L2 (0=No, 1=Yes) button 0Ah 20th byte</text>
+<text x="353" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">16</text>
+<rect x="341" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="344.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,344.5,173)">Button R2 (0=No, 1=Yes) button 0Bh 21st byte</text>
+<text x="341" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">17</text>
+<rect x="77" y="15" width="259" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="206.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,206.5,173)">Must be 0</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">39</text>
+<text x="336" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">18</text>
+<rect x="41" y="15" width="31" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="56.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,56.5,173)">Unknown</text>
+<text x="41" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">47</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">40</text>
+<rect x="5" y="15" width="31" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">63</text>
+<text x="36" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">48</text>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="332" viewBox="0 0 769 332" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="485" y="15" width="283" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="626.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,173)">INTSTS Interrupt &quot;flags&quot; from HC05</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="389" y="15" width="91" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="434.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,173)">BFEMPT Sound map XA-ADPCM buffer empty</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="293" y="15" width="91" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="338.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,173)">BFWRDY Sound map XA-ADPCM buffer write ready</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="5" y="15" width="283" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,173)">Reserved</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<text x="288" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">5</text>
+</svg>

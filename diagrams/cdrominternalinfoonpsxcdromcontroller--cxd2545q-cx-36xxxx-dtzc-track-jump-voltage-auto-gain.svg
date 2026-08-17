@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="279" viewBox="0 0 769 279" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="549" y="15" width="219" height="263" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="658.5" y="146.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,658.5,146.5)">7bit TG AGT Convergence Gain Setting</text>
+<text x="549" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="517" y="15" width="27" height="263" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="530.5" y="146.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,530.5,146.5)">1bit Zero</text>
+<text x="517" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<rect x="325" y="15" width="187" height="263" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="418.5" y="146.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,418.5,146.5)">6bit TJ Track Jump voltage</text>
+<text x="325" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<text x="512" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+<rect x="293" y="15" width="27" height="263" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="306.5" y="146.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,306.5,146.5)">1bit DTZC DTZC Delay</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="261" y="15" width="27" height="263" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="274.5" y="146.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,274.5,146.5)">1bit Zero</text>
+<text x="261" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="5" y="15" width="251" height="263" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="130.5" y="146.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,130.5,146.5)">8bit Command</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<text x="256" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">16</text>
+</svg>

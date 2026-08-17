@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="273" viewBox="0 0 769 273" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="677" y="15" width="91" height="257" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="722.5" y="143.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,722.5,143.5)">CI Error in 4th Subheader byte</text>
+<text x="677" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="581" y="15" width="91" height="257" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="626.5" y="143.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,143.5)">SUBMODE Error in 3rd Subheader byte</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="485" y="15" width="91" height="257" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="530.5" y="143.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,530.5,143.5)">CHANNEL Error in 2nd Subheader byte</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="389" y="15" width="91" height="257" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="434.5" y="143.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,143.5)">FILE Error in 1st Subheader byte</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="293" y="15" width="91" height="257" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="338.5" y="143.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,143.5)">MODE Error in 4th Header byte</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="197" y="15" width="91" height="257" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="242.5" y="143.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,242.5,143.5)">BLOCK Error in 3rd Header byte</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="101" y="15" width="91" height="257" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="143.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,143.5)">SEC Error in 2nd Header byte</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="5" y="15" width="91" height="257" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="143.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,143.5)">MIN Error in 1st Header byte</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+</svg>

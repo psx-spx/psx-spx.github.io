@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="553" height="213" viewBox="0 0 553 213" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="461" y="15" width="91" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="506.5" y="113.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,506.5,113.5)">Alarm minute</text>
+<text x="461" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<text x="552" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="365" y="15" width="91" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="410.5" y="113.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,410.5,113.5)">Alarm hour</text>
+<text x="365" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<text x="456" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+<rect x="353" y="15" width="7" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="356.5" y="113.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,356.5,113.5)">Alarm</text>
+<text x="353" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">16</text>
+<rect x="341" y="15" width="7" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="344.5" y="113.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,344.5,113.5)">Keylock</text>
+<text x="341" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">17</text>
+<rect x="317" y="15" width="19" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="326.5" y="113.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,326.5,113.5)">Speaker volume</text>
+<text x="317" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">19</text>
+<text x="336" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">18</text>
+<rect x="281" y="15" width="31" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="296.5" y="113.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,296.5,113.5)">Area code</text>
+<text x="281" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">22</text>
+<text x="312" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">20</text>
+<rect x="269" y="15" width="7" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="272.5" y="113.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,272.5,113.5)">Clock setting flag</text>
+<text x="269" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<rect x="233" y="15" width="31" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="233" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+<text x="264" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">24</text>
+<rect x="41" y="15" width="187" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="134.5" y="113.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,134.5,113.5)">Font data starting address</text>
+<text x="41" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">47</text>
+<text x="228" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">32</text>
+<rect x="5" y="15" width="31" height="197" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">63</text>
+<text x="36" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">48</text>
+</svg>

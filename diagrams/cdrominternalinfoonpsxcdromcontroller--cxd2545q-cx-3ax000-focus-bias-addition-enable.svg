@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="266" viewBox="0 0 769 266" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="325" y="15" width="443" height="250" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="546.5" y="140" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,546.5,140)">14bit Zero</text>
+<text x="325" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="293" y="15" width="27" height="250" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="306.5" y="140" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,306.5,140)">1bit FBON: FBIAS register addition</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="261" y="15" width="27" height="250" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="274.5" y="140" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,274.5,140)">1bit Zero</text>
+<text x="261" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="5" y="15" width="251" height="250" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="130.5" y="140" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,130.5,140)">8bit Command</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<text x="256" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">16</text>
+</svg>
