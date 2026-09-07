@@ -2600,8 +2600,8 @@ hold game-specific connectors and instead has a fixed set of ports exposed:
   four are also exposed on the JAMMA connector. Wired to `CN5` on the
   motherboard.
 - **Reel connector** (back side): 3x3 Molex connector wired to the
-  `GE765-PWB(B)A` fishing controller I/O board. Probably missing on systems that
-  that did not come with Fisherman's Bait.
+  `GE765-PWB(B)A` fishing controller I/O board included on systems that
+  that came with Fisherman's Bait.
 
 ### DDR I/O connectors
 
