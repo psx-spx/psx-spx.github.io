@@ -401,7 +401,16 @@ The LZCS/LZCR registers offer a Count-Leading-Zeroes/Leading-Ones function.<br/>
 The IRGB/ORGB registers allow to convert between 48bit and 15bit RGB colors.<br/>
 These registers work without needing to send any COP2 commands. However, unlike
 for commands (which do automatically halt the CPU when needed), one must insert
-dummy opcodes between writing and reading the registers.<br/>
+dummy opcodes between writing and reading the registers. This is the general cop2
+register store delay, see "Caution - Store Delay" in the CPU chapter.<br/>
+For LZCS/LZCR the required gap was measured on hardware as 2 cached opcodes (or 1
+uncached opcode) between the MTC2 and the MFC2. With fewer, the MFC2 returns the
+result of the PREVIOUS LZCS write, and does so silently - the stale value is always
+a well-formed count in range 1..32, never a partial result.<br/>
+The count does not depend on the input value: leading-zero and leading-one runs of
+1..32 were swept, with popcount varied at fixed run length, and none of them move
+it. Verified on SCPH-1000, SCPH-1001, SCPH-5501 and SCPH-7001; not verified on PAL
+units. Note the measured unit is opcodes rather than cycles.<br/>
 
 
 
@@ -513,6 +522,9 @@ can be translated to "cross product", "vector product", or "outer product".<br/>
 
 #### LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones
 The LZCS/LZCR registers offer a Count-Leading-Zeroes/Leading-Ones function.<br/>
+The execution time above is unknown. Separately from it, the write to LZCS is
+subject to the cop2 store delay: 2 cached opcodes before reading LZCR. See
+"Additional Functions" above and "Caution - Store Delay" in the CPU chapter.<br/>
 
 
 
