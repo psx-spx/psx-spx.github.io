@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="332" viewBox="0 0 769 332" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="741" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="754.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,754.5,173)">1bit TLC0 VC level compensation for...</text>
+<text x="741" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="709" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="722.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,722.5,173)">1bit TLC1 Tracking zero level compensatio...</text>
+<text x="709" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="677" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="690.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,690.5,173)">1bit TLC2 Traverse center compensation...</text>
+<text x="677" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="645" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="658.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,658.5,173)">1bit FLC1 Focus zero level compensation...</text>
+<text x="645" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="613" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="626.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,173)">1bit TCLM Tracking zero level measurement...</text>
+<text x="613" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="581" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="594.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,594.5,173)">1bit TBLM Traverse center measurement on/off</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="549" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="562.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,562.5,173)">1bit LKSW Lock switch</text>
+<text x="549" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="517" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="530.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,530.5,173)">1bit DFSW Defect switch disable</text>
+<text x="517" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<rect x="485" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="498.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,498.5,173)">1bit AGT Tracking automatic gain...</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">8</text>
+<rect x="453" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="466.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,466.5,173)">1bit AGF Focus automatic gain adjustment...</text>
+<text x="453" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">9</text>
+<rect x="421" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="434.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,173)">1bit RFLC RF zero level compensation on/off</text>
+<text x="421" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">10</text>
+<rect x="389" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="402.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,402.5,173)">1bit RFLM RF zero level measurement on/off</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<rect x="357" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="370.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,370.5,173)">1bit FLC0 Focus zero level compensation...</text>
+<text x="357" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">12</text>
+<rect x="325" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="338.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,173)">1bit FLM Focus zero level measurement on/off</text>
+<text x="325" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<rect x="293" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="306.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,306.5,173)">1bit VCLC VC level compensation for...</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="261" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="274.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,274.5,173)">1bit VCLM VC level measurement on/off</text>
+<text x="261" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="5" y="15" width="251" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="130.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,130.5,173)">8bit Command</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<text x="256" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">16</text>
+</svg>

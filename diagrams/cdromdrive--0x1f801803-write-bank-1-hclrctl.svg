@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="312" viewBox="0 0 769 312" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="485" y="15" width="283" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="626.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,163)">CLRINT Acknowledge HC05 interrupt &quot;flags&quot;</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="389" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="434.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,163)">CLRBFEMPT Acknowledge BFEMPT</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="293" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="338.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,163)">CLRBFWRDY Acknowledge BFWRDY</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="197" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="242.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,242.5,163)">SMADPCLR Clear sound map XA-ADPCM buffer</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="101" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,163)">CLRPRM Clear parameter FIFO</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="5" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,163)">CHPRST Reset decoder chip</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="332" viewBox="0 0 769 332" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="545" y="15" width="223" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="656.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,656.5,173)">19bit Size/N</text>
+<text x="545" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">18</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="485" y="15" width="55" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="512.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,512.5,173)">5bit Channel Number</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<text x="540" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">19</text>
+<rect x="449" y="15" width="31" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="464.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,464.5,173)">3bit Channel Interval</text>
+<text x="449" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">26</text>
+<text x="480" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">24</text>
+<rect x="437" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="440.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,440.5,173)">1bit Video Flag</text>
+<text x="437" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">27</text>
+<rect x="425" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="428.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,428.5,173)">1bit Audio Flag</text>
+<text x="425" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">28</text>
+<rect x="413" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="416.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,416.5,173)">1bit Always 1</text>
+<text x="413" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">29</text>
+<rect x="401" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="404.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,404.5,173)">1bit Unknown</text>
+<text x="401" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">30</text>
+<rect x="389" y="15" width="7" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="392.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,392.5,173)">1bit Always 1</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+<rect x="5" y="15" width="379" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="194.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,194.5,173)">32bit Offset/800h in ACE.BPB or ACE.SPB file</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">63</text>
+<text x="384" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">32</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="233" viewBox="0 0 769 233" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="197" y="15" width="571" height="217" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="482.5" y="123.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,482.5,123.5)">rgb first color value</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="173" y="15" width="19" height="217" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="173" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">24</text>
+<rect x="149" y="15" width="19" height="217" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="158.5" y="123.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,123.5)">1/0 semi-transparent / opaque</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">25</text>
+<rect x="125" y="15" width="19" height="217" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">26</text>
+<rect x="101" y="15" width="19" height="217" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="110.5" y="123.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,123.5)">1/0 polyline / single line</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">27</text>
+<rect x="77" y="15" width="19" height="217" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="86.5" y="123.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,123.5)">1/0 gouraud / flat shading</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">28</text>
+<rect x="5" y="15" width="67" height="217" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="123.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,123.5)">010 line render</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">29</text>
+</svg>

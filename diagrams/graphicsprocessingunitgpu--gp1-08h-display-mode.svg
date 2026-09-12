@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="353" height="200" viewBox="0 0 353 200" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="293" y="15" width="59" height="184" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="322.5" y="107" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,322.5,107)">Horizontal Resolution 1</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<text x="352" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="261" y="15" width="27" height="184" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="274.5" y="107" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,274.5,107)">Vertical Resolution</text>
+<text x="261" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="229" y="15" width="27" height="184" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="242.5" y="107" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,242.5,107)">Video Mode</text>
+<text x="229" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="197" y="15" width="27" height="184" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="210.5" y="107" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,210.5,107)">Display Area Color Depth</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="165" y="15" width="27" height="184" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="178.5" y="107" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,178.5,107)">Vertical Interlace</text>
+<text x="165" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="133" y="15" width="27" height="184" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="107" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,107)">Horizontal Resolution 2</text>
+<text x="133" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="101" y="15" width="27" height="184" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="114.5" y="107" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,114.5,107)">Flip screen horizontally</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<rect x="5" y="15" width="91" height="184" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="107" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,107)">Not used</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<text x="96" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+</svg>

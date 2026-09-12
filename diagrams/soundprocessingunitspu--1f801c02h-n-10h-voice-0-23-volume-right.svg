@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="673" height="141" viewBox="0 0 673 141" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="581" y="15" width="91" height="125" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="626.5" y="77.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,77.5)">Sweep Step</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<text x="672" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="341" y="15" width="235" height="125" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="458.5" y="77.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,458.5,77.5)">Sweep Shift</text>
+<text x="341" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<text x="576" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">2</text>
+<rect x="197" y="15" width="139" height="125" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="266.5" y="77.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,266.5,77.5)">Not used?</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<text x="336" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">7</text>
+<rect x="149" y="15" width="43" height="125" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="170.5" y="77.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,170.5,77.5)">Sweep Phase</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">12</text>
+<rect x="101" y="15" width="43" height="125" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="122.5" y="77.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,122.5,77.5)">Sweep Direction</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<rect x="53" y="15" width="43" height="125" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="74.5" y="77.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,74.5,77.5)">Sweep Mode</text>
+<text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="5" y="15" width="43" height="125" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="26.5" y="77.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,26.5,77.5)">Must be set</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+</svg>

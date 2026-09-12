@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="169" height="325" viewBox="0 0 169 325" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="149" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="158.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,169.5)">MULTIPLE Multiple blocks assigned to the...</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="125" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="134.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,134.5,169.5)">NOACTIVE No virtual base address was...</text>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="101" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="110.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,169.5)">DABORT Data access to an unmapped...</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="77" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="86.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,169.5)">FABORT Instruction fetch from an...</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="5" y="15" width="67" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,169.5)">Unused</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">4</text>
+</svg>
