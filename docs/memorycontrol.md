@@ -200,6 +200,23 @@ Assault 2 does actually use the "8MB" space (with stacktop in mirrored RAM at
 Clearing bit7 causes many games to hang during CDROM loading on both EARLY-PU-8
 and LATE-PU-8 (but works on PU-18 through PM-41).<br/>
 
+#### Main RAM array organization
+The 2MB main RAM is organized as 2048 rows of 256 columns, 4 bytes per column,
+ie. 1024 bytes per row.<br/>
+The CPU address maps onto the array linearly:<br/>
+```
+  row    = addr[20:10]
+  column = addr[9:2]
+```
+So a 1KB-aligned block is exactly one DRAM row, and crossing a 1KB boundary
+crosses a row.<br/>
+The controller uses a closed-page policy between transactions: a fresh row
+address is emitted on every transaction, even when the previous transaction
+touched the same row. Fast-page mode applies only within a single burst, so
+there is no page-hit bonus for two separate accesses to the same row.<br/>
+Refresh is distributed, one row every 256 CPU cycles, sweeping all 2048 rows in
+roughly 15.5ms.<br/>
+
 #### FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)
 ```
   0     LOCK   Enable cache lock mode              (when COP0_SR.IsC=1)
