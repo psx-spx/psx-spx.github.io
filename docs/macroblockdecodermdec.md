@@ -107,6 +107,10 @@ unsigned parameter bytes for the Color Quant Table (used for Cb and Cr).<br/>
 The command is followed by 64 signed halfwords with 14bit fractional part, the
 values should be usually/always the same values (based on the standard JPEG
 constants, although, MDEC(3) allows to use other values than that constants).<br/>
+There is no usable scale matrix until MDEC(3) has been issued: software that
+never sends one decodes to flat mid-grey, so the table is not left in place by
+the BIOS. On the other hand, the Reset bit does NOT clear the scale matrix nor
+the quant tables, so they only need uploading once, not after every reset.<br/>
 
 #### MDEC(0) - No function
 This command has no function. Command bits 25-28 are reflected to Status bits
