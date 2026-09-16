@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="577" height="226" viewBox="0 0 577 226" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="293" y="15" width="283" height="210" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="434.5" y="120" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,120)">Not used</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<text x="576" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="197" y="15" width="91" height="210" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="242.5" y="120" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,242.5,120)">XOSCR XOSC Feedback Resistor</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="101" y="15" width="91" height="210" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="120" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,120)">OSCR OSC Feedback Resistor</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="5" y="15" width="91" height="210" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="120" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,120)">RSTR /RESET Pullup Resistor</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+</svg>

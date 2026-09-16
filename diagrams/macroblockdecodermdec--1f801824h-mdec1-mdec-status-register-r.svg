@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="745" height="325" viewBox="0 0 745 325" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="365" y="15" width="379" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="554.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,554.5,169.5)">Number of Parameter Words remaining minus 1</text>
+<text x="365" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<text x="744" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="293" y="15" width="67" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="326.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,326.5,169.5)">Current Block</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">18</text>
+<text x="360" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">16</text>
+<rect x="221" y="15" width="67" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="254.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,254.5,169.5)">Not used</text>
+<text x="221" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">22</text>
+<text x="288" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">19</text>
+<rect x="197" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="206.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,206.5,169.5)">Data Output Bit15</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<rect x="173" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="182.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,182.5,169.5)">Data Output Signed</text>
+<text x="173" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">24</text>
+<rect x="125" y="15" width="43" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,169.5)">Data Output Depth</text>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">26</text>
+<text x="168" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">25</text>
+<rect x="101" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="110.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,169.5)">Data-Out Request</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">27</text>
+<rect x="77" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="86.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,169.5)">Data-In Request</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">28</text>
+<rect x="53" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="62.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,62.5,169.5)">Command Busy</text>
+<text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">29</text>
+<rect x="29" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,169.5)">Data-In Fifo Full</text>
+<text x="29" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">30</text>
+<rect x="5" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="14.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,14.5,169.5)">Data-Out Fifo Empty</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+</svg>

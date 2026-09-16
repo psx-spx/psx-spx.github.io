@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="265" height="325" viewBox="0 0 265 325" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="245" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="254.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,254.5,169.5)">... used for something</text>
+<text x="245" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="221" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="230.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,230.5,169.5)">Lightgun IRQ</text>
+<text x="221" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="173" y="15" width="43" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="194.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,194.5,169.5)">Unknown/unused</text>
+<text x="173" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<text x="216" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">2</text>
+<rect x="149" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="158.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,169.5)">... acknowledged at 1FA00B04h, otherwise...</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="125" y="15" width="19" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="134.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,134.5,169.5)">... TTY RX ?</text>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="77" y="15" width="43" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="98.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,98.5,169.5)">Unknown/unused</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<text x="120" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">6</text>
+<rect x="5" y="15" width="67" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,169.5)">Not used by DTL-H2000 BIOS</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+</svg>

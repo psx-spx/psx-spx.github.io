@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="145" height="246" viewBox="0 0 145 246" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="77" y="15" width="67" height="230" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="110.5" y="130" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,130)">Unknown/Not used - usually zero</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">28</text>
+<text x="144" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="53" y="15" width="19" height="230" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="62.5" y="130" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,62.5,130)">Enable Data-Out Request</text>
+<text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">29</text>
+<rect x="29" y="15" width="19" height="230" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="130" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,130)">Enable Data-In Request</text>
+<text x="29" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">30</text>
+<rect x="5" y="15" width="19" height="230" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="14.5" y="130" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,14.5,130)">Reset MDEC</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+</svg>

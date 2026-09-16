@@ -1,0 +1,1795 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/partialwordwrites/">
+      
+      
+        <link rel="prev" href="../memorycontrol/">
+      
+      
+        <link rel="next" href="../unpredictablethings/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Partial-Word Writes to MMIO - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#partial-word-writes-to-mmio" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Partial-Word Writes to MMIO
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../graphicsprocessingunitgpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Graphics Processing Unit (GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geometrytransformationenginegte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geometry Transformation Engine (GTE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gtepipelinetimings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GTE Pipeline Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../macroblockdecodermdec/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Macroblock Decoder (MDEC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soundprocessingunitspu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sound Processing Unit (SPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interrupts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DMA Channels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromdrive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Drive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromformat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromfileformats/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM File Formats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllersandmemorycards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers and Memory Cards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pocketstation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pocketstation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialinterfacessio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serial Interfaces (SIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansionportpio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorycontrol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Partial-Word Writes to MMIO
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Partial-Word Writes to MMIO
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methodology
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-die-mmio-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      On-die MMIO behavior
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sbus-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBUS behavior
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SBUS behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#biu-dispatch-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      BIU dispatch rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sbus-writes-to-mainvol_l" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBUS writes to MAINVOL_L
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical implications
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caveats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caveats
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unpredictable Things
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpuspecifications/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Specifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernelbios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kernel (BIOS)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arcadecabinets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arcade Cabinets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../konamisystem573/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Konami System 573
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheatdevices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cheat Devices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardchipsets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Chipsets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../psxdevboardprotocol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardwarenumbers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hardware Numbers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aboutcredits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About & Credits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdromvideocdsvcd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Video CDs (VCD)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Internal Info on PSX CDROM Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methodology
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-die-mmio-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      On-die MMIO behavior
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sbus-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBUS behavior
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SBUS behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#biu-dispatch-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      BIU dispatch rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sbus-writes-to-mainvol_l" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBUS writes to MAINVOL_L
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical implications
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caveats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caveats
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="partial-word-writes-to-mmio">Partial-Word Writes to MMIO</h1>
+<p><a href="./#overview">Overview</a><br/>
+<a href="./#methodology">Methodology</a><br/>
+<a href="./#on-die-mmio-behavior">On-die MMIO behavior</a><br/>
+<a href="./#sbus-behavior">SBUS behavior</a><br/>
+<a href="./#summary-table">Summary table</a><br/>
+<a href="./#practical-implications">Practical implications</a><br/>
+<a href="./#caveats">Caveats</a><br/></p>
+<h2 id="overview">Overview</h2>
+<p>The MIPS R3000A asserts byte-enable signals on <code>sb</code>/<code>sh</code>/<code>swl</code>/<code>swr</code>
+stores, but the PS1's bus fabric does not honor them as a programmer
+would expect on RAM. The result is that partial-word writes to
+hardware registers behave very differently from partial-word writes
+to RAM, and the exact behavior depends on which bus the target
+register sits on:</p>
+<ul>
+<li><strong>On-die MMIO</strong> (IRQ control at <code>0x1F801070-77h</code>, DMA control
+  registers at <code>0x1F8010F0-F7h</code>, GPU control, MDEC, etc.) sits on
+  the 32-bit data fabric internal to the CPU package. Byte enables
+  are ignored; partial-word stores latch a shifted source word in
+  full.</li>
+<li><strong>SBUS</strong> (SPU, CD-ROM, BIOS ROM, Expansion 1/2) is an off-die
+  system bus whose data path width is per-device, configured via
+  bit 12 of each device's Delay/Size register (see
+  <a href="../memorycontrol/">Memory Control</a>). CD-ROM and BIOS ROM are
+  configured as 8-bit; SPU is configured as 16-bit; expansion
+  ports can use either. For a 32-bit CPU access, the bus interface
+  unit decomposes the access into either 2 (16-bit device) or 4
+  (8-bit device) consecutive transactions, keeping <code>!CS</code> active
+  and stepping the address. The SPU specifically latches halfwords
+  whenever <code>SBUS./WR0</code> strobes; <code>SBUS./WR1</code> alone is ignored.</li>
+</ul>
+<p>The practical upshot is that idioms like "write one byte of a
+register" do not work for hardware registers, and an <code>sw</code> to a
+16-bit SPU register also writes the neighboring register.</p>
+<p>All numbers below are hardware-verified on a single SCPH-5501.
+The SBUS rules below were measured against SPU registers only;
+behavior at CD-ROM and BIOS ROM (8-bit-configured) is expected
+to differ in the number of transactions per access and has not
+been measured here.</p>
+<h2 id="methodology">Methodology</h2>
+<p>For each (target register, op, byte offset, baseline pattern,
+source pattern) the test:</p>
+<div class="highlight"><pre><span></span><code>  set_baseline(target, baseline)        ; full-width store
+  $a2 = source                          ; distinguishable bytes
+  &lt;op&gt; $a2, off(target_addr)            ; verbatim asm trampoline
+  result = readback(target)             ; full-width load
+</code></pre></div>
+<p>Three baselines (<code>0x00000000</code>, <code>0xFFFFFFFF</code>, <code>0x11223344</code>) and
+two source patterns (<code>0xAABBCCDD</code>, <code>0xFEDCBA98</code>) per (target,
+op, offset) triple. The asm trampolines force the exact opcode
+the C compiler would otherwise legalize. Misaligned <code>sh</code> traps
+are caught by an installed AdES handler that records the trap
+and skips the faulting instruction.</p>
+<p>Targets:</p>
+<ul>
+<li><code>IMASK</code> (<code>0x1F801074</code>): on-die, 32-bit, low 11 bits valid.</li>
+<li><code>DPCR</code>  (<code>0x1F8010F0</code>): on-die, 32-bit, all bits R/W. The
+  cleanest readback target.</li>
+<li><code>SPU_VOL_MAIN_LEFT</code> (<code>0x1F801D80</code>): SBUS, 16-bit, R/W after
+  muting the SPU. Neighbor is <code>SPU_VOL_MAIN_RIGHT</code> at <code>+2</code>.</li>
+<li>Voice 0 left volume (<code>0x1F801C00</code>): SBUS, 16-bit. Confirms
+  the behavior is a property of the bus path, not of any
+  individual SPU register.</li>
+</ul>
+<h2 id="on-die-mmio-behavior">On-die MMIO behavior</h2>
+<p>For 32-bit on-die registers the CPU drives a shifted source word on
+the 32-bit data bus and the decoder latches the entire word,
+regardless of which byte enables are asserted.</p>
+<p>The shift is determined by the op and the byte offset:</p>
+<table>
+<thead>
+<tr>
+<th>op</th>
+<th>bus value driven on <code>D[31:0]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sw</code></td>
+<td><code>src</code></td>
+</tr>
+<tr>
+<td><code>sb +N</code></td>
+<td><code>src &lt;&lt; (N * 8)</code></td>
+</tr>
+<tr>
+<td><code>sh +0</code></td>
+<td><code>src</code></td>
+</tr>
+<tr>
+<td><code>sh +2</code></td>
+<td><code>src &lt;&lt; 16</code></td>
+</tr>
+<tr>
+<td><code>swl +N</code></td>
+<td><code>src &gt;&gt; ((3 - N) * 8)</code></td>
+</tr>
+<tr>
+<td><code>swr +N</code></td>
+<td><code>src &lt;&lt; (N * 8)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Example with <code>src = 0xAABBCCDD</code> against <code>DPCR</code>:</p>
+<table>
+<thead>
+<tr>
+<th>op</th>
+<th>offset</th>
+<th>got after readback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sw</code></td>
+<td>+0</td>
+<td><code>0xAABBCCDD</code></td>
+</tr>
+<tr>
+<td><code>sb</code></td>
+<td>+0</td>
+<td><code>0xAABBCCDD</code></td>
+</tr>
+<tr>
+<td><code>sb</code></td>
+<td>+1</td>
+<td><code>0xBBCCDD00</code></td>
+</tr>
+<tr>
+<td><code>sb</code></td>
+<td>+2</td>
+<td><code>0xCCDD0000</code></td>
+</tr>
+<tr>
+<td><code>sb</code></td>
+<td>+3</td>
+<td><code>0xDD000000</code></td>
+</tr>
+<tr>
+<td><code>sh</code></td>
+<td>+0</td>
+<td><code>0xAABBCCDD</code></td>
+</tr>
+<tr>
+<td><code>sh</code></td>
+<td>+2</td>
+<td><code>0xCCDD0000</code></td>
+</tr>
+<tr>
+<td><code>swl</code></td>
+<td>+0</td>
+<td><code>0x000000AA</code></td>
+</tr>
+<tr>
+<td><code>swl</code></td>
+<td>+1</td>
+<td><code>0x0000AABB</code></td>
+</tr>
+<tr>
+<td><code>swl</code></td>
+<td>+2</td>
+<td><code>0x00AABBCC</code></td>
+</tr>
+<tr>
+<td><code>swl</code></td>
+<td>+3</td>
+<td><code>0xAABBCCDD</code></td>
+</tr>
+<tr>
+<td><code>swr</code></td>
+<td>+0</td>
+<td><code>0xAABBCCDD</code></td>
+</tr>
+<tr>
+<td><code>swr</code></td>
+<td>+1</td>
+<td><code>0xBBCCDD00</code></td>
+</tr>
+<tr>
+<td><code>swr</code></td>
+<td>+2</td>
+<td><code>0xCCDD0000</code></td>
+</tr>
+<tr>
+<td><code>swr</code></td>
+<td>+3</td>
+<td><code>0xDD000000</code></td>
+</tr>
+</tbody>
+</table>
+<p>In every case the register is fully overwritten with the bus
+value. The pre-write contents do not contribute - results are
+identical with baselines <code>0x00000000</code>, <code>0xFFFFFFFF</code>, and
+<code>0x11223344</code>. Byte enables do not gate the latch.</p>
+<p><code>IMASK</code> follows the same pattern in its 11 valid bits. The
+upper 21 bits read as <code>0xBF800xxx</code>, the upper half of the
+IMASK address itself echoing on open-bus lanes during the
+read phase.</p>
+<p>Misaligned <code>sh</code> (<code>+1</code> and <code>+3</code>) traps with <code>cause=0x10000014</code>
+(ExcCode 5, AdES). The exception fires before the bus
+transaction; the register is unchanged.</p>
+<h2 id="sbus-behavior">SBUS behavior</h2>
+<p>The SBUS is the off-die system bus shared by SPU
+(<code>SBUS./CS4</code>), CD-ROM (<code>/CS5</code>), BIOS ROM (<code>/CS2</code>), and
+Expansion 1/2 (<code>/CS0</code>, <code>/CS3</code>). Address lines are
+<code>SBUS.A[23:0]</code>. Data lines are <code>SBUS.D[15:0]</code>, but each
+device is independently configured as 8-bit or 16-bit
+via bit 12 of its Delay/Size register (see
+<a href="../memorycontrol/">Memory Control</a>): an 8-bit device uses
+only <code>SBUS.D[7:0]</code>. Write strobes are <code>SBUS./WR0</code> (lower
+byte of halfword) and <code>SBUS./WR1</code> (upper byte).
+<code>SBUS./WR1</code> is wired only to the expansion port and not
+to other SBUS devices; the SPU and the 8-bit devices do
+not consume it.</p>
+<p>Because the SBUS data path is at most 16 bits wide, a
+32-bit CPU access cannot fit in one bus cycle. The bus
+interface unit (BIU) decomposes each CPU access into a
+sequence of consecutive transactions: 2 transactions for
+a 32-bit access on a 16-bit device, 4 transactions for
+the same on an 8-bit device, with <code>!CS</code> held active and
+the address stepped between transactions.</p>
+<p>The rules in this section were measured against SPU
+registers (16-bit configured). The 16-bit-bus dispatch
+rules apply unchanged for any 16-bit-configured SBUS
+device that latches on <code>/WR0</code>. The 8-bit case (CD-ROM,
+BIOS ROM) was not measured here and would be a separate
+matrix.</p>
+<h3 id="biu-dispatch-rules">BIU dispatch rules</h3>
+<p><strong>Number of transactions:</strong></p>
+<ul>
+<li>4-byte CPU access (<code>sw</code>, <code>swl +3</code>, <code>swr +0</code>): TWO transactions,
+  one per halfword.</li>
+<li>1-, 2-, or 3-byte access (<code>sb</code>, <code>sh</code>, all other <code>swl</code>/<code>swr</code>):
+  ONE transaction, at the halfword containing the lowest enabled
+  byte. Bytes outside that halfword are silently dropped.</li>
+</ul>
+<p><strong>Strobe assertion per issued halfword:</strong></p>
+<ul>
+<li>1-byte access (<code>sb</code>, <code>swl +0</code>, <code>swr +3</code>): asserts only <code>/WR0</code>
+  or <code>/WR1</code> per the addressed lane (lane 0 or lane 2 -&gt; <code>/WR0</code>;
+  lane 1 or lane 3 -&gt; <code>/WR1</code>).</li>
+<li>2-or-more-byte access: asserts BOTH <code>/WR0</code> and <code>/WR1</code> on each
+  issued halfword, regardless of which CPU-side lanes were
+  enabled within it.</li>
+</ul>
+<p><strong>SPU latch rule:</strong> the SPU latches the full 16 bits of <code>SBUS.D</code>
+into the addressed register whenever <code>/WR0</code> strobes. <code>/WR1</code>
+strobing alone does nothing.</p>
+<h3 id="sbus-writes-to-mainvol_l">SBUS writes to MAINVOL_L</h3>
+<p>Test target: <code>SPU_VOL_MAIN_LEFT</code> at <code>0x1F801D80</code>. Neighbor:
+<code>SPU_VOL_MAIN_RIGHT</code> at <code>0x1F801D82</code>. Source <code>0xAABBCCDD</code>,
+baseline <code>0x0000</code> for both registers.</p>
+<table>
+<thead>
+<tr>
+<th>op</th>
+<th>bytes</th>
+<th>issued halfword</th>
+<th>strobe</th>
+<th>bus halfword</th>
+<th>reg got</th>
+<th>neighbor got</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sh +0</code></td>
+<td>2</td>
+<td>low (MAINVOL_L)</td>
+<td>both</td>
+<td><code>0xCCDD</code></td>
+<td><code>0xCCDD</code></td>
+<td><code>0x0000</code></td>
+</tr>
+<tr>
+<td><code>sb +0</code></td>
+<td>1</td>
+<td>low</td>
+<td><code>/WR0</code> only</td>
+<td><code>0xCCDD</code></td>
+<td><code>0xCCDD</code></td>
+<td><code>0x0000</code></td>
+</tr>
+<tr>
+<td><code>sb +1</code></td>
+<td>1</td>
+<td>low</td>
+<td><code>/WR1</code> only</td>
+<td><code>0xDD00</code></td>
+<td><code>0x0000</code></td>
+<td><code>0x0000</code></td>
+</tr>
+<tr>
+<td><code>sb +2</code></td>
+<td>1</td>
+<td>high (MAINVOL_R)</td>
+<td><code>/WR0</code> only</td>
+<td><code>0xCCDD</code></td>
+<td><code>0x0000</code></td>
+<td><code>0xCCDD</code></td>
+</tr>
+<tr>
+<td><code>sb +3</code></td>
+<td>1</td>
+<td>high</td>
+<td><code>/WR1</code> only</td>
+<td><code>0xCC00</code></td>
+<td><code>0x0000</code></td>
+<td><code>0x0000</code></td>
+</tr>
+<tr>
+<td><code>swl +0</code></td>
+<td>1</td>
+<td>low</td>
+<td><code>/WR0</code> only</td>
+<td><code>0x00AA</code></td>
+<td><code>0x00AA</code></td>
+<td><code>0x0000</code></td>
+</tr>
+<tr>
+<td><code>swl +1</code></td>
+<td>2</td>
+<td>low</td>
+<td>both</td>
+<td><code>0xAABB</code></td>
+<td><code>0xAABB</code></td>
+<td><code>0x0000</code></td>
+</tr>
+<tr>
+<td><code>swl +2</code></td>
+<td>3</td>
+<td>low</td>
+<td>both</td>
+<td><code>0xBBCC</code></td>
+<td><code>0xBBCC</code></td>
+<td><code>0x0000</code></td>
+</tr>
+<tr>
+<td><code>swl +3</code></td>
+<td>4</td>
+<td>both</td>
+<td>both x2</td>
+<td>both</td>
+<td><code>0xCCDD</code></td>
+<td><code>0xAABB</code></td>
+</tr>
+<tr>
+<td><code>swr +0</code></td>
+<td>4</td>
+<td>both</td>
+<td>both x2</td>
+<td>both</td>
+<td><code>0xCCDD</code></td>
+<td><code>0xAABB</code></td>
+</tr>
+<tr>
+<td><code>swr +1</code></td>
+<td>3</td>
+<td>low</td>
+<td>both</td>
+<td><code>0xDD00</code></td>
+<td><code>0xDD00</code></td>
+<td><code>0x0000</code></td>
+</tr>
+<tr>
+<td><code>swr +2</code></td>
+<td>2</td>
+<td>high</td>
+<td>both</td>
+<td><code>0xCCDD</code></td>
+<td><code>0x0000</code></td>
+<td><code>0xCCDD</code></td>
+</tr>
+<tr>
+<td><code>swr +3</code></td>
+<td>1</td>
+<td>high</td>
+<td><code>/WR1</code> only</td>
+<td><code>0xDD00</code></td>
+<td><code>0x0000</code></td>
+<td><code>0x0000</code></td>
+</tr>
+</tbody>
+</table>
+<p>Reading the table:</p>
+<ul>
+<li><code>sb +1</code> and <code>sb +3</code> are silent no-ops because their single
+  transaction asserts only <code>/WR1</code>, which the SPU does not
+  consume. The register is unchanged regardless of baseline.</li>
+<li><code>sb +2</code> lands in MAINVOL_R, not MAINVOL_L. A "byte 2" address
+  decodes to the high halfword on SBUS, so the transaction
+  targets MAINVOL_R.</li>
+<li><code>swl +2</code> writes 3 bytes (bytes 0+1+2). The lowest enabled byte
+  is byte 0, so the transaction issues at the low halfword. The
+  byte 2 portion that would have spanned into MAINVOL_R is
+  silently dropped.</li>
+<li><code>swr +1</code> symmetrically writes 3 bytes (bytes 1+2+3) and issues
+  at the low halfword. The byte 2+3 portion that would have
+  spanned into MAINVOL_R is dropped.</li>
+<li><code>swr +0</code> (full 32-bit access) splits into two transactions and
+  hits both registers. This is why an <code>sw</code> to a 16-bit SPU
+  register also clobbers its neighbor.</li>
+</ul>
+<p>The behavior is identical when the target is voice 0 left volume
+at <code>0x1F801C00</code>. It is a property of the SBUS path, not of the
+specific register.</p>
+<p>When <code>/WR0</code> strobes, the entire 16-bit SBUS data halfword lands
+in the addressed register, even on <code>sb</code>. With baseline <code>0xFFFF</code>
+and source <code>0xAABBCCDD</code>, an <code>sb +0</code> produces got <code>0xCCDD</code>, not
+<code>0xFFDD</code> - the high byte of the register is overwritten by the
+high byte of the bus data, even though the byte-enable was only
+on lane 0. The SPU does not byte-mask within a halfword.</p>
+<h2 id="summary-table">Summary table</h2>
+<p>Per-op behavior at every byte offset, for the two bus types.
+"latch full word/halfword" means the register is overwritten
+with the full bus payload regardless of byte enables. "drop"
+means the register is unchanged.</p>
+<table>
+<thead>
+<tr>
+<th>op</th>
+<th>offset</th>
+<th>on-die 32-bit MMIO</th>
+<th>SBUS 16-bit-configured (e.g. SPU)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sw</code></td>
+<td>+0</td>
+<td>full word latched</td>
+<td>both halfwords latched (incl. neighbor)</td>
+</tr>
+<tr>
+<td><code>sh</code></td>
+<td>+0</td>
+<td>full word, hi half from bus</td>
+<td>low halfword latched</td>
+</tr>
+<tr>
+<td><code>sh</code></td>
+<td>+2</td>
+<td>full word, lo half from bus</td>
+<td>high halfword latched (in neighbor)</td>
+</tr>
+<tr>
+<td><code>sh</code></td>
+<td>+1/+3</td>
+<td>AdES</td>
+<td>AdES</td>
+</tr>
+<tr>
+<td><code>sb</code></td>
+<td>+0</td>
+<td>full word latched</td>
+<td>low halfword latched</td>
+</tr>
+<tr>
+<td><code>sb</code></td>
+<td>+1</td>
+<td>full word latched</td>
+<td>drop</td>
+</tr>
+<tr>
+<td><code>sb</code></td>
+<td>+2</td>
+<td>full word latched</td>
+<td>high halfword latched (in neighbor)</td>
+</tr>
+<tr>
+<td><code>sb</code></td>
+<td>+3</td>
+<td>full word latched</td>
+<td>drop</td>
+</tr>
+<tr>
+<td><code>swl</code></td>
+<td>+0</td>
+<td>full word latched</td>
+<td>low halfword latched</td>
+</tr>
+<tr>
+<td><code>swl</code></td>
+<td>+1</td>
+<td>full word latched</td>
+<td>low halfword latched</td>
+</tr>
+<tr>
+<td><code>swl</code></td>
+<td>+2</td>
+<td>full word latched</td>
+<td>low halfword latched (byte 2 dropped)</td>
+</tr>
+<tr>
+<td><code>swl</code></td>
+<td>+3</td>
+<td>full word latched</td>
+<td>both halfwords latched</td>
+</tr>
+<tr>
+<td><code>swr</code></td>
+<td>+0</td>
+<td>full word latched</td>
+<td>both halfwords latched</td>
+</tr>
+<tr>
+<td><code>swr</code></td>
+<td>+1</td>
+<td>full word latched</td>
+<td>low halfword latched (bytes 2+3 dropped)</td>
+</tr>
+<tr>
+<td><code>swr</code></td>
+<td>+2</td>
+<td>full word latched</td>
+<td>high halfword latched (in neighbor)</td>
+</tr>
+<tr>
+<td><code>swr</code></td>
+<td>+3</td>
+<td>full word latched</td>
+<td>drop</td>
+</tr>
+</tbody>
+</table>
+<h2 id="practical-implications">Practical implications</h2>
+<ul>
+<li>Setting one byte of a 32-bit MMIO register via <code>sb</code> does not
+  work. The whole register is overwritten.</li>
+<li>Read-modify-write idioms like <code>*reg |= mask</code> work as expected
+  when <code>reg</code> is typed as <code>volatile uint32_t *</code> for an on-die
+  32-bit register, or <code>volatile uint16_t *</code> for an SPU register:
+  the compiler emits a matching-width load and store, and the
+  partial-word rules above never come into play. The hazard is
+  aliasing an MMIO register through a different-width pointer
+  (e.g., a <code>volatile uint8_t *</code> to a 32-bit register) - the load
+  is harmless but the store becomes an <code>sb</code> and clobbers the
+  entire register per the rules above.</li>
+<li><code>sw</code> to a 16-bit SPU register also writes the neighboring
+  register. Use <code>sh</code> for single-register writes.</li>
+<li><code>sb</code> to the high byte of a halfword in any SBUS region (lane
+  1 or lane 3 within the addressed word) is a silent no-op on
+  the SPU. Other SBUS devices (CD-ROM, BIOS ROM) may behave
+  differently; only the SPU was tested directly.</li>
+<li><code>swl</code> and <code>swr</code> to MMIO are well-defined but not particularly
+  useful for register access: they latch a shifted source
+  identical to <code>sb</code>/<code>sh</code> patterns, and on SBUS they drop bytes
+  that span halfword boundaries.</li>
+<li>Misaligned <code>sh</code> (<code>+1</code>/<code>+3</code>) AdES-traps cleanly without
+  modifying the target register.</li>
+</ul>
+<h2 id="caveats">Caveats</h2>
+<ul>
+<li>Hardware-verified on a single retail SCPH-5501. Other PSX
+  revisions have not been measured. The on-die MMIO behavior
+  is expected to be identical across revisions; the SBUS
+  dispatch rules are properties of the bus interface unit on
+  the CPU die and should also be revision-stable, but the
+  per-strobe SPU latch behavior may differ on SPU revisions
+  shipped in other consoles.</li>
+<li>Only IMASK, DPCR, and SPU registers (MAINVOL_L and voice 0
+  volumes) were tested directly. The on-die behavior is
+  expected to apply uniformly to all on-die MMIO; the SBUS
+  behavior is expected to apply to other 16-bit-configured
+  SBUS devices but has not been verified there. CD-ROM and
+  BIOS ROM are 8-bit-configured (Delay/Size bit 12 = 0) so the
+  number of transactions per CPU access differs - their write
+  semantics were not measured.</li>
+<li>GPU GP0/GP1 (VBUS, 32-bit, single decoded address bit, no
+  byte masking) and timer mode registers (R/W with side
+  effects) were not tested.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>

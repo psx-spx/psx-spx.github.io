@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="289" height="306" viewBox="0 0 289 306" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="101" y="15" width="187" height="290" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="194.5" y="160" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,194.5,160)">Command number</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<text x="288" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="77" y="15" width="19" height="290" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="86.5" y="160" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,160)">Do not store Alarm setting in Kernel RAM</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">8</text>
+<rect x="5" y="15" width="67" height="290" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="160" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,160)">Not used</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">9</text>
+</svg>

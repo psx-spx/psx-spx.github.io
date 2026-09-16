@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="286" viewBox="0 0 769 286" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="677" y="15" width="91" height="270" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="722.5" y="150" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,722.5,150)">Not used</text>
+<text x="677" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="581" y="15" width="91" height="270" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="626.5" y="150" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,150)">PDH Select Port D</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="485" y="15" width="91" height="270" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="530.5" y="150" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,530.5,150)">PEL Select Port E</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="389" y="15" width="91" height="270" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="434.5" y="150" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,150)">PEH Select Port E</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="293" y="15" width="91" height="270" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="338.5" y="150" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,150)">Not used</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="101" y="15" width="187" height="270" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="194.5" y="150" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,194.5,150)">DUTY LCD Duty Select</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<text x="288" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">5</text>
+<rect x="5" y="15" width="91" height="270" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="150" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,150)">LCDE LCD Output Enable BP and FP pins</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+</svg>
