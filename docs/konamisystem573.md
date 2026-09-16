@@ -784,7 +784,12 @@ In order to perform a JVS transaction the 573 must:
     packet and wait for a response from a device on the bus.
 4.  Wait for the status code to become 0, signalling a valid response has been
     received and can be read out. A timeout should be implemented here, as the
-    MCU will wait for a response indefinitely even if no device is present.
+    MCU will wait for a response indefinitely even if no device is present. The
+    MCU has no concept of a broadcast, so this also applies to the JVS reset
+    command: nothing on the bus answers a reset, so the MCU blocks on it forever
+    and `JVSDRDY` never drops again. The status and error codes read 1 and 3
+    throughout - busy, no error - and no further packet will be written out. The
+    only way out is resetting the MCU through bit 8 of `0x1f400000`.
 5.  Read the packet, again two bytes at a time, from `0x1f40000a`, waiting for
     `JVSIRDY` to go high before each read and clearing it by writing to
     `0x1f520000` after each read. The status code will be set to 2 after the
