@@ -1,35 +1,35 @@
 #   Expansion Port (PIO)
 Expansion Port can contain ROM, RAM, I/O Ports, etc. For ROM, the first 256
-bytes would contain the expansion ROM header.<br/>
+bytes would contain the expansion ROM header.
 
-For region 1, the CPU outputs a chip select signal (CPU Pin 98, /EXP).<br/>
-For region 2, the CPU doesn't produce a chip select signal (the region is
-intended to contain multiple I/O ports, which require an address decoder
-anyways, that address decoder could treat any /RD or /WR with A13=Hi and A23=Hi
-and A22=Lo as access to expansion region 2 (for /WR, A22 may be ignored;
-assuming that the BIOS is read-only).<br/>
+- For DEV0, the CPU outputs a chip select signal (CPU Pin 98).
+- For DEV8, the CPU doesn't produce a chip select signal (the region is intended
+  to contain multiple I/O ports, which require an address decoder anyways, that
+  address decoder could treat any /RD or /WR with A13=Hi and A23=Hi and A22=Lo
+  as access to DEV8 (for /WR, A22 may be ignored; assuming that the BIOS is
+  read-only).
 
 #### Size/Bus-Width
-The BIOS initializes Expansion Region 1 to 512Kbyte with 8bit bus, and Region 2
-to 128 bytes with 8bit bus. However, the size and data bus-width of these
-regions can be changed, see:<br/>
+The BIOS initializes DEV0 to 512Kbyte with 8bit bus, and DEV8 to 128 bytes with
+8bit bus. However, the size and data bus-width of these regions can be changed,
+see:<br/>
 [Memory Control](memorycontrol.md)<br/>
-For Region 1, 32bit reads are supported even in 8bit mode (eg. 32bit opcode
-fetches are automatically processed as four 8bit reads).<br/>
-For Region 2, only 8bit access seems to be supported (except that probably
-16bit mode allows 16bit access), anyways, larger accesses seem to cause
-exceptions... not sure if that can be disabled...?<br/>
+For DEV0, 32bit reads are supported even in 8bit mode (eg. 32bit opcode fetches
+are automatically processed as four 8bit reads).<br/>
+For DEV8, only 8bit access seems to be supported (except that probably 16bit
+mode allows 16bit access), anyways, larger accesses seem to cause exceptions...
+not sure if that can be disabled...?<br/>
 
-#### Expansion 1 - EXP1 - Intended to contain ROM
-[EXP1 Expansion ROM Header](expansionportpio.md#exp1-expansion-rom-header)<br/>
+#### DEV0 - Intended to contain ROM
+[DEV0 Expansion ROM Header](expansionportpio.md#dev0-expansion-rom-header)<br/>
 
-#### Expansion 2 - EXP2 - Intended to contain I/O Ports
-[EXP2 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#exp2-dual-serial-port-for-tty-debug-terminal)<br/>
-[EXP2 DTL-H2000 I/O Ports](expansionportpio.md#exp2-dtl-h2000-io-ports)<br/>
-[EXP2 Post Registers](expansionportpio.md#exp2-post-registers)<br/>
-[EXP2 Nocash Emulation Expansion](expansionportpio.md#exp2-nocash-emulation-expansion)<br/>
+#### DEV8 - Intended to contain I/O Ports
+[DEV8 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#dev8-dual-serial-port-for-tty-debug-terminal)<br/>
+[DEV8 DTL-H2000 I/O Ports](expansionportpio.md#dev8-dtl-h2000-io-ports)<br/>
+[DEV8 Post Registers](expansionportpio.md#dev8-post-registers)<br/>
+[DEV8 Nocash Emulation Expansion](expansionportpio.md#dev8-nocash-emulation-expansion)<br/>
 
-#### Expansion 3 - EXP3 - Intended to contain RAM
+#### DEV1 - Intended to contain RAM
 Not used by BIOS nor by any games. Seems to contain 1Mbyte RAM with 16bit
 databus (ie. 512Kx16) in DTL-H2000.<br/>
 
@@ -39,7 +39,7 @@ however, mind that the BIOS is reading from the ROM header region, and is
 writing to the POST register (so 1F000000h-1F0000FFh and 1F802041h should be
 used only if the hardware isn't disturbed by those accesses).<br/>
 Most arcade boards have their custom I/O registers (and sometimes game ROMs)
-mapped into the EXP1 and/or EXP2 regions.<br/>
+mapped into the DEV0 and/or DEV8 regions.<br/>
 
 #### Missing Expansion Port
 The expansion port is installed only on older PSX boards, newer PSX boards and
@@ -55,8 +55,8 @@ addressing, nor by internal I/O ports like Timer and IRQ registers).<br/>
 
 
 
-##   EXP1 Expansion ROM Header
-#### Expansion 1 - ROM Header (accessed with 8bit databus setting)
+##   DEV0 Expansion ROM Header
+#### DEV0 - ROM Header (accessed with 8bit databus setting)
 ```
   Address  Size Content
   1F000000h 4   Post-Boot Entrypoint (eg. 1F000100h and up)
@@ -100,7 +100,7 @@ Expansion ROMs are most commonly used in cheat devices,<br/>
 
 
 
-##   EXP2 Dual Serial Port (for TTY Debug Terminal)
+##   DEV8 Dual Serial Port (for TTY Debug Terminal)
 #### SCN2681 Dual Asynchronous Receiver/Transmitter (DUART)
 The PSX/PSone retail BIOS contains some TTY Debug Terminal code; using an
 external SCN2681 chip which can be connected to the expansion port.<br/>
@@ -340,16 +340,16 @@ The BIOS seems to use only one of the two channels; for the std\_io functions:<b
 Aside from the external DUART, the PSX additionally contains an internal UART,<br/>
 [Serial Interfaces (SIO)](serialinterfacessio.md)<br/>
 The DTL-H2000 devboard uses a non-serial "ATCONS" channel for TTY stuff,<br/>
-[EXP2 DTL-H2000 I/O Ports](expansionportpio.md#exp2-dtl-h2000-io-ports)<br/>
+[DEV8 DTL-H2000 I/O Ports](expansionportpio.md#dev8-dtl-h2000-io-ports)<br/>
 
 
 
-##   EXP2 DTL-H2000 I/O Ports
+##   DEV8 DTL-H2000 I/O Ports
 The DTL-H2000 contains extended 8Mbyte Main RAM (instead of normal 2Mbyte),
 plus additional 1MByte RAM in Expansion Area at 1FA00000h, plus some I/O ports
 at 1F8020xxh:<br/>
 
-#### 1F802000h - DTL-H2000: EXP2:  - ATCONS STAT (R)
+#### 1F802000h - DTL-H2000: DEV8:  - ATCONS STAT (R)
 ```
   0    Atcons RX Word Avail    (0=None, 1=Yes)   ;16bit word readable at 1F802004h
   1    Unknown/unused
@@ -364,7 +364,7 @@ There are two parallel data channels: an 8bit channel at 1F802002h (status bits
 handshake and result codes, and the 16bit channel for command and bulk data
 words (see [DTL-H2000 devboard protocol](psxdevboardprotocol.md)).
 
-#### 1F802002h - DTL-H2000: EXP2:  - ATCONS DATA (R and W)
+#### 1F802002h - DTL-H2000: DEV8:  - ATCONS DATA (R and W)
 ```
   0-7  TTY/Atcons RX/TX Data
 ```
@@ -373,7 +373,7 @@ DTL-H2000 is using this "ATCONS" stuff instead of the DUART stuff used in
 retail console BIOSes ("CONS" seems to refer to "Console", and "AT" might refer
 to PC/AT or whatever).<br/>
 
-#### 1F802004h - DTL-H2000: EXP2:  - ATCONS DATA16 (R and W)
+#### 1F802004h - DTL-H2000: DEV8:  - ATCONS DATA16 (R and W)
 ```
   0-15 Atcons 16bit RX/TX Data Word
 ```
@@ -415,7 +415,7 @@ The DTL-H2000 BIOS accesses 1F802030h with 8bit load/store opcodes, however,
 the Lightgun games use 32bit load/store - which is theoretically overlapping
 port 1F802032h, though maybe the memory system does ignore the upper bits.<br/>
 
-#### 1F802032h - DTL-H2000: EXP2:  - maybe IRQ enable?
+#### 1F802032h - DTL-H2000: DEV8:  - maybe IRQ enable?
 ```
   0    Used for something (CLEARED on some occasions)
   1-3  Unknown/unused
@@ -423,7 +423,7 @@ port 1F802032h, though maybe the memory system does ignore the upper bits.<br/>
   5-7  Unknown/unused
 ```
 
-#### 1F802040h - DTL-H2000: EXP2: 1-byte - DIP Switch?
+#### 1F802040h - DTL-H2000: DEV8: 1-byte - DIP Switch?
 ```
   0-7  DIP Value (00h..FFh, but should be usually 00h..02h)
 ```
@@ -439,12 +439,15 @@ side). Possible values are:<br/>
   DIP=04h..FFh --> Lockup with POST=04h..FFh
 ```
 
-#### 1F802042h - DTL-H2000: EXP2: POST/LED (R/W)
-[EXP2 Post Registers](expansionportpio.md#exp2-post-registers)<br/>
+#### 1F802042h - DTL-H2000: DEV8: POST/LED (R/W)
+```
+  0-7 Post/LED value
+```
+8bit wide, otherwise same as POST 1F802041h on retail consoles.<br/>
 
 
 
-##   EXP2 Post Registers
+##   DEV8 Post Registers
 #### 1F802041h - POST - External 7-segment Display (W)
 ```
   0-3  Current Boot Status (00h..0Fh)
@@ -454,12 +457,6 @@ During boot, the BIOS writes incrementing values to this register, allowing to
 display the current boot status on an external 7 segment display (much the same
 as Port 80h used in PC BIOSes).<br/>
 
-#### 1F802042h - DTL-H2000: EXP2: POST/LED (R/W)
-```
-  0-7 Post/LED value
-```
-8bit wide, otherwise same as POST 1F802041h on retail consoles.<br/>
-
 #### 1F802070h - POST2 - Unknown? (W) - PS2
 Might be a configuration port, or it's another POST register (which is used
 prior to writing the normal POST bytes to 1FA00000h).<br/>
@@ -468,7 +465,7 @@ The first write to 1F802070h is 32bit, all further writes seem to be 8bit.<br/>
 #### 1FA00000h - POST3 - External 7-segment Display (W) - PS2
 Similar to POST, but PS2 BIOS uses this address.<br/>
 
-##   EXP2 Nocash Emulation Expansion
+##   DEV8 Nocash Emulation Expansion
 #### 1F802060h Emu-Expansion ID1 "E" (R)
 #### 1F802061h Emu-Expansion ID2 "X" (R)
 #### 1F802062h Emu-Expansion ID3 "P" (R)
@@ -496,7 +493,7 @@ acknowledging the previous interrupt.<br/>
   3-7 Reserved (must be zero)
 ```
 
-##   EXP2 PCSX-Redux Emulation Expansion
+##   DEV8 PCSX-Redux Emulation Expansion
 PCSX-Redux contains some specific hardware registers for the purpose of testing and debugging.
 They are located past the 1F802080h address, which means that accessing them on the real
 hardware will cause an exception, unless the [1F80101Ch register](https://psx-spx.consoledev.net/memorycontrol/#1f80101ch-expansion-2-delaysize-usually-00070777h-128-bytes-8bit-bus) has been set to

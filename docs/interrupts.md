@@ -21,7 +21,7 @@ Mask: Read/Write I\_MASK (0=Disabled, 1=Enabled)<br/>
 ```
 
 #### Secondary IRQ10 Controller (Port 1F802030h)
-[EXP2 DTL-H2000 I/O Ports](expansionportpio.md#exp2-dtl-h2000-io-ports)<br/>
+[DEV8 DTL-H2000 I/O Ports](expansionportpio.md#dev8-dtl-h2000-io-ports)<br/>
 
 #### Interrupt Request / Execution
 The interrupt request bits in I\_STAT are edge-triggered, ie. the get set ONLY

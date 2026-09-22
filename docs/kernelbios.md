@@ -2495,7 +2495,7 @@ by:<br/>
 ```
 with that patch, the BIOS bootcode (and many games) are sending debug messages
 to the debug terminal, via expansion port, see:<br/>
-[EXP2 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#exp2-dual-serial-port-for-tty-debug-terminal)<br/>
+[DEV8 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#dev8-dual-serial-port-for-tty-debug-terminal)<br/>
 Note: The nocash BIOS automatically detects the DUART hardware, and activates
 TTY if it is present.<br/>
 

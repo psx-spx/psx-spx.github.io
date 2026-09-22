@@ -191,7 +191,7 @@ see:
 Aside from the internal SIO port, the PSX BIOS supports two additional external
 serial ports, connected to the expansion port.
 
-[EXP2 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#exp2-dual-serial-port-for-tty-debug-terminal)
+[DEV8 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#dev8-dual-serial-port-for-tty-debug-terminal)
 
 #### SIO1 link cable games
 The serial ports on two consoles can be connected with an SCPH-1040 Link Cable

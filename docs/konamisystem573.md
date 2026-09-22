@@ -113,13 +113,13 @@ things the authors believe need more research:
 ## Register map
 
 All standard PS1 registers, with the exception of the CD-ROM drive's, are
-present and accessible. System 573-specific hardware is mapped into the EXP1
+present and accessible. System 573-specific hardware is mapped into the DEV0
 region at `0x1f000000`. IRQ10 and DMA5, normally reserved for the expansion bus
 (and lightguns) on a regular PS1, are used to access the ATAPI drive, while IRQ2
 and DMA3 go unused.
 
-**NOTE**: EXP1 must be configured prior to accessing any of these registers. The
-configuration value written by Konami's code to the EXP1 delay/size register at
+**NOTE**: DEV0 must be configured prior to accessing any of these registers. The
+configuration value written by Konami's code to the DEV0 delay/size register at
 `0x1f801008` is `0x24173f47`. Afterwards, *all* bus writes shall be 16 or 32
 bits wide. The behavior of 8-bit writes is undefined, but 8-bit reads work as
 intended.
@@ -2249,7 +2249,7 @@ have been slightly tweaked to account for the hardware:
 - The code to parse `SYSTEM.CNF` and launch the boot executable from the CD-ROM
   has been made inaccessible. The shell handles executable loading and booting
   on its own, without ever returning to the kernel.
-- The kernel initializes the EXP1 region and clears the watchdog periodically
+- The kernel initializes the DEV0 region and clears the watchdog periodically
   while booting. It does *not* keep clearing it in the background (e.g. from the
   exception handler) once the shell is loaded.
 - `700B01` performs a "memory initialization" sequence that fills various RAM

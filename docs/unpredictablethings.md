@@ -59,10 +59,10 @@ In most cases, I/O ports can be read in 8bit, 16bit, or 32bit units, regardless
 of their size, among others allowing to read two 16bit ports at once with a
 single 32bit read. If there's only one 16bit port within a 32bit region, then
 32bit reads often return garbage in the unused 16bits. Also, 8bit or 16bit VRAM
-data reads via GPUREAD probably won't work? Expansion 2 Region can be accessed
-only via 8bit reads, and 16bit/32bit reads seem to cause exceptions (or rather:
-no such exception!) (except, probably 16bit reads are allowed when the region
-is configured to 16bit databus width).<br/>
+data reads via GPUREAD probably won't work? DEV8 Region can be accessed only via
+8bit reads, and 16bit/32bit reads seem to cause exceptions (or rather: no such
+exception!) (except, probably 16bit reads are allowed when the region is
+configured to 16bit databus width).<br/>
 There are at least some special cases:<br/>
 ```
   FFFE0130h-FFFE0133h  8bit (+16bit?) read works ONLY from word-aligned address
@@ -128,7 +128,7 @@ these words; at [SP+0..N\*4-1].<br/>
 #### Locked Locations in Memory and I/O Area
 ```
   00800000h           ;-when Main RAM configured to end at 7FFFFFh
-  1F080000h 780000h   ;-when Expansion 1 configured to end at 7FFFFh
+  1F080000h 780000h   ;-when DEV0 configured to end at 7FFFFh
   1F800400h C00h      ;-region after Scratchpad
   1F801024h 1Ch       ;\
   1F801064h 0Ch       ;
@@ -137,7 +137,7 @@ these words; at [SP+0..N\*4-1].<br/>
   1F801804h 0Ch       ;
   1F801818h 08h       ;
   1F801828h 3D8h      ;/
-  1F802080h 3FDF80h   ;-when Expansion 2 configured to end at 7Fh
+  1F802080h 3FDF80h   ;-when DEV8 configured to end at 7Fh
   1FC80000h 60380000h ;-when BIOS ROM configured to end at 7FFFFh
   C0000000h 1FFE0000h ;\
   FFFE0020h E0h       ; gaps in KSEG2 (cache control region)

@@ -3,11 +3,11 @@
 ```
   KUSEG     KSEG0     KSEG1
   00000000h 80000000h A0000000h  2048K  Main RAM (first 64K reserved for BIOS)
-  1F000000h 9F000000h BF000000h  8192K  Expansion Region 1 (ROM/RAM)
+  1F000000h 9F000000h BF000000h  8192K  DEV0 expansion (ROM/RAM)
   1F800000h 9F800000h    --      1K     Scratchpad (D-Cache used as Fast RAM)
   1F801000h 9F801000h BF801000h  4K     I/O Ports
-  1F802000h 9F802000h BF802000h  8K     Expansion Region 2 (I/O Ports)
-  1FA00000h 9FA00000h BFA00000h  2048K  Expansion Region 3 (SRAM BIOS region for DTL cards)
+  1F802000h 9F802000h BF802000h  8K     DEV8 expansion (I/O Ports)
+  1FA00000h 9FA00000h BFA00000h  2048K  DEV1 expansion (SRAM BIOS region for DTL cards)
   1FC00000h 9FC00000h BFC00000h  512K   BIOS ROM (Kernel) (4096K max)
         FFFE0000h (in KSEG2)     0.5K   Internal CPU control registers (Cache Control)
 ```
@@ -171,7 +171,7 @@ Therefore, using KSEG1 that disables the write queue is the only way to ensure t
 operations are done in the proper way.
 
 The above is valid for most of the hardware connected to the main CPU, such as the CDROM
-controller, exp1, exp2, the SPU, or the GPU. Therefore, using BF80180xh to access the
+controller, DEV0, DEV1, the SPU, or the GPU. Therefore, using BF80180xh to access the
 CDROM registers is more correct than using 1F80180xh.
 
 It is noteworthy that the Sony code will still incorrectly use KUSEG as the memory map
@@ -197,7 +197,7 @@ For Info on Exception vectors, Unused/Garbage memory locations, I/O Ports,
 Expansion ROM Headers, and Memory Waitstate Control, etc. see:<br/>
 [I/O Map](iomap.md)<br/>
 [Memory Control](memorycontrol.md)<br/>
-[EXP1 Expansion ROM Header](expansionportpio.md#exp1-expansion-rom-header)<br/>
+[DEV0 Expansion ROM Header](expansionportpio.md#dev0-expansion-rom-header)<br/>
 [BIOS Memory Map](kernelbios.md#bios-memory-map)<br/>
 [BIOS Memory Allocation](kernelbios.md#bios-memory-allocation)<br/>
 [COP0 - Exception Handling](cpuspecifications.md#cop0-exception-handling)<br/>
