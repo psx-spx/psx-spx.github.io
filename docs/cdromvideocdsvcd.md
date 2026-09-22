@@ -13,6 +13,16 @@ on Playstations, although, as of 2017, it turned out that the Playstation's CPU
 and MDEC decoder are fast enough for that purpose (when skipping B-frames,
 rendering the movie in monochrome without colors, and reducing audio output to
 11kHz/mono).<br/>
+Various unlicensed "movie card" addons were also sold, mostly in asia, for
+playing VCDs on otherwise unmodified consoles (Gamars PSX-001 and PSX-003,
+Topking, Topview, Copry PS/MC615, Alma FS-300, HOMAS, Redant, Lextek 9000,
+Denpa DP-210, and others). Most plug into the
+[parallel port](pinouts.md#pinouts-audio-video-power-expansion-ports), one is
+advertised as using the serial port, and several connect only to the AV Multi
+Out, which cannot carry disc data, so those are presumably standalone players
+borrowing the TV connection rather than console addons.<br/>
+XXX none of the parallel port models is documented here; unknown whether they
+carry their own MPEG decoder, or hand data to the console<br/>
 
 #### ISO Filesystem (Track 1)
 [VCD ISO Basic Files (INFO, ENTRIES, AVSEQnn, ISO Filesystem)](cdromvideocdsvcd.md#vcd-iso-basic-files-info-entries-avseqnn-iso-filesystem)<br/>
