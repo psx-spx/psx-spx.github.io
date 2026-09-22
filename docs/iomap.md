@@ -59,9 +59,15 @@
 ```
 #### Timers (aka Root counters)
 ```
-  1F80110xh      Timer 0 Dotclock
-  1F80111xh      Timer 1 Horizontal Retrace
-  1F80112xh      Timer 2 1/8 system clock
+  1F801100h      T0_COUNT Timer 0 (dotclock) Current Value (R/W)
+  1F801104h      T0_MODE  Timer 0 (dotclock) Mode (R/W)
+  1F801108h      T0_COMP  Timer 0 (dotclock) Target Value (R/W)
+  1F801110h      T1_COUNT Timer 1 (hblank)   Current Value (R/W)
+  1F801114h      T1_MODE  Timer 1 (hblank)   Mode (R/W)
+  1F801118h      T1_COMP  Timer 1 (hblank)   Target Value (R/W)
+  1F801120h      T2_COUNT Timer 2 (sysclock) Current Value (R/W)
+  1F801124h      T2_MODE  Timer 2 (sysclock) Mode (R/W)
+  1F801128h      T2_COMP  Timer 2 (sysclock) Target Value (R/W)
 ```
 #### CDROM Registers (Address.Read/Write.Index)
 ```

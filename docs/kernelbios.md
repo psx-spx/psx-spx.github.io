@@ -1347,10 +1347,10 @@ Hardware Events:<br/>
   F0000005h IRQ4  RTC0 (timer0)
   F0000006h IRQ5/IRQ6 RTC1 (timer1 or timer2)
   F0000007h N/A   Not used (this should be timer2)
-  F0000008h IRQ7  Controller (joypad/memcard)
+  F0000008h IRQ7  SIO0 (joypad/memcard)
   F0000009h IRQ9  SPU
   F000000Ah IRQ10 PIO ;uh, does the PIO have an IRQ signal? (IRQ10 is joypad)
-  F000000Bh IRQ8  SIO
+  F000000Bh IRQ8  SIO1
   F0000010h Exception ;CPU crashed (BRK,BadSyscall,Overflow,MemoryError, etc.)
   F0000011h memory card (lower level BIOS functions)
   F0000012h memory card (not used by BIOS; maybe used by Sony's devkit?)
