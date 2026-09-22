@@ -27,8 +27,9 @@ getting interrupted by a higher priority DMA channel).<br/>
 In SyncMode=1 and SyncMode=2, the hardware does update MADR (it will contain
 the start address of the currently transferred block; at transfer end, it'll
 hold the end-address in SyncMode=1, or the end marker in SyncMode=2)<br/>
-Notes: Address bits 0-1 are writeable, but any updated current/end addresses are
-word-aligned with bits 0-1 forced to zero.<br/>
+Notes: Address bits 0-1 are writeable and the register keeps whatever was written
+to it. The hardware ignores the last two bits when issuing memory fetch commands,
+but the register itself still has the full value.<br/>
 The address counter wraps around when counting down from 000000h to FFFFFCh,
 leading to words after wraparound not being written to RAM (as FFFFFCh is past
 the default 8 MB main RAM region).<br/>
