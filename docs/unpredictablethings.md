@@ -16,8 +16,8 @@ SPU's asymmetric `/WR0` vs `/WR1` strobe behavior), see
   00000000h-00xFFFFFh   Main RAM        OK      OK      OK
   1F800000h-1F8003FFh   Scratchpad      OK      OK      OK
   1F801000h-1F801023h   MEMCTRL         (w32)   (w32)   OK
-  1F80104xh             JOY_xxx         (w16)   OK      CROP
-  1F80105xh             SIO_xxx         (w16)   OK      CROP
+  1F80104xh             SIO0_xxx        (w16)   OK      CROP
+  1F80105xh             SIO1_xxx        (w16)   OK      CROP
   1F801060h-1F801063h   RAM_SIZE        (w32)   (w32)   OK        (with crash)
   1F801070h-1F801077h   IRQCTRL         (w32)   (w32)   OK
   1F8010x0h-1F8010x3h   DMAx.ADDR       (w32)   (w32)   OK

@@ -2906,7 +2906,7 @@ Used in Metal Gear Solid at 8009AA5Ch, and in alone1 at 800AE2F8h:<br/>
   012A1821 add  r3,r9,r10                     ;        @@wait_lop:
   24620028 add  r2,r3,28h ;=early+28h         ;8C621044 mov  r2,[r3+1044h]
   3C0Axxxx lui  r10,xxxxh ;\@@new_data        ;00000000 nop
-  254Axxxx sub  r10,xxxxh ;/                  ;30420080 and  r2,80h ;JOY_STAT.7
+  254Axxxx sub  r10,xxxxh ;/                  ;30420080 and  r2,80h ;SIO0_SR.7
   3C09xxxx lui  r9,xxxxh  ;\@@new_data_end    ;1440FFFC jnz  r2,@@wait_lop
   2529xxxx sub  r9,xxxxh  ;/                  ;00000000 +nop
           @@copy_lop:                         ;3C020001 lui  r2,0001h
@@ -2938,7 +2938,7 @@ Alternately, elo2 uses slightly different code at 8003961Ch:<br/>
   3C09xxxx mov  r9,xxxx0000h                  ;        @@wait_lop:
   24620028 add  r2,r3,28h ;=early+28h         ;8C621044 mov  r2,[r3+1044h]
   254Axxxx sub  r10,xxxxh ;=@@new_data        ;00000000 nop
-  2529xxxx sub  r9,xxxxh  ;=@@new_data_end    ;30420080 and  r2,80h ;JOY_STAT.7
+  2529xxxx sub  r9,xxxxh  ;=@@new_data_end    ;30420080 and  r2,80h ;SIO0_SR.7
           @@copy_lop:                         ;1440FFFC jnz  r2,@@wait_lop
   8D430000 mov  r3,[r10]                      ;00000000 +nop
   254A0004 add  r10,4h                        ;3C02xxxx lui  r2,8xxxh

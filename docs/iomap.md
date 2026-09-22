@@ -22,17 +22,17 @@
 ```
 #### Peripheral I/O Ports
 ```
-  1F801040h 1/4  JOY_DATA Joypad/Memory Card Data (R/W)
-  1F801044h 4    JOY_STAT Joypad/Memory Card Status (R)
-  1F801048h 2    JOY_MODE Joypad/Memory Card Mode (R/W)
-  1F80104Ah 2    JOY_CTRL Joypad/Memory Card Control (R/W)
-  1F80104Eh 2    JOY_BAUD Joypad/Memory Card Baudrate (R/W)
-  1F801050h 1/4  SIO_DATA Serial Port Data (R/W)
-  1F801054h 4    SIO_STAT Serial Port Status (R)
-  1F801058h 2    SIO_MODE Serial Port Mode (R/W)
-  1F80105Ah 2    SIO_CTRL Serial Port Control (R/W)
-  1F80105Ch 2    SIO_MISC Serial Port Internal Register (R/W)
-  1F80105Eh 2    SIO_BAUD Serial Port Baudrate (R/W)
+  1F801040h 1/4  SIO0_DR Joypad/Memory Card Data (R/W)
+  1F801044h 4    SIO0_SR Joypad/Memory Card Status (R)
+  1F801048h 2    SIO0_MR Joypad/Memory Card Mode (R/W)
+  1F80104Ah 2    SIO0_CR Joypad/Memory Card Control (R/W)
+  1F80104Eh 2    SIO0_BR Joypad/Memory Card Baudrate (R/W)
+  1F801050h 1/4  SIO1_DR Serial Port Data (R/W)
+  1F801054h 4    SIO1_SR Serial Port Status (R)
+  1F801058h 2    SIO1_MR Serial Port Mode (R/W)
+  1F80105Ah 2    SIO1_CR Serial Port Control (R/W)
+  1F80105Ch 2    SIO1_?  Serial Port Internal Register (R/W)
+  1F80105Eh 2    SIO1_BR Serial Port Baudrate (R/W)
 ```
 #### Memory Control 2
 ```
