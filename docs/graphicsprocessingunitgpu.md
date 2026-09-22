@@ -295,6 +295,15 @@ Rectangles, via GP0(E1h). Width and Height can be up to 1023x511, however, the
 maximum size of the texture window is 256x256 (so the source data will be
 repeated when trying to use sizes larger than 256x256).<br/>
 
+Width and Height are masked to their field widths, Xsiz AND 3FFh and
+Ysiz AND 1FFh, and unlike the Copy commands there is no case where a size of
+zero means maximum. Nothing is drawn at all when either masked dimension comes
+out as zero, which happens for raw widths of 0, 400h and 800h, and for raw
+heights of 0 and 200h. A raw size above the mask wraps rather than clamping, so
+Xsiz=401h draws a single column rather than 1024 of them, and Xsiz=7FFh draws
+1023. Computing a width of exactly 400h and getting an empty rectangle is an
+easy one to hit from software that clamps its own sizes to 1024.<br/>
+
 If using a texture with a rectangle primitive, please that the texture UV, 
 as well as the texture width must be even. If not, there will be one pixel
 sampling errors in the drawn rectangle every 16 pixels.
@@ -334,6 +343,21 @@ horizontally, and 511 vertically. Polygons and lines that are exceeding that
 dimensions are NOT rendered. For example, a line from Y1=-300 to Y2=+300 is NOT
 rendered, a line from Y1=-100 to Y2=+400 is rendered (as far as it is within
 the drawing area).<br/>
+
+The distance is taken per edge, on the 11-bit field values as they arrive, and
+the fields have already wrapped by then. A coordinate outside the -1024..+1023
+range is therefore not a reason to drop the primitive: X=+1025 is simply
+X=-1023, and the polygon is rendered at that wrapped position, usually on the
+far side of the drawing area from where the software intended it. Only a
+distance that is still above the limit after wrapping drops the primitive,
+which for a single coordinate leaving the range means exactly the values that
+land on -1024. Software that computes screen coordinates without clamping them
+to the field range gets a misplaced polygon rather than a missing one.<br/>
+
+For quads the checked edges are the four perimeter edges plus the edge between
+Vertex2 and Vertex3, which is the diagonal the two rendered triangles share.
+Vertex1 and Vertex4 are not an edge of either triangle and are not compared, so
+a quad may legally span more than 1023 horizontally between those two.<br/>
 If portions of the polygon/line/rectangle are located outside of the drawing
 area, then the hardware renders only the portion that is inside of the drawing
 area. Not sure if the hardware is skipping all clipped pixels at once (within a
