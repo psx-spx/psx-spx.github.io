@@ -48,10 +48,10 @@ Whereas,<br/>
   (i16) write full 16bits (ignored if address isn't halfword-aligned)
   CROP  write only lower 16bit (and leave upper 16bit unchanged)
 ```
-It's somewhat "legit" to use 16bit writes on 16bit registers like RAM\_SIZE,
+It's somewhat "legit" to use 16bit writes on 16bit registers like DRAM\_CTRL,
 I\_STAT, I\_MASK, and Timer 0-2.<br/>
-Non-4-byte aligned 8bit/16bit writes to RAM\_SIZE do crash (probably because the
-"(w32)" effect is left-shifting the value, so lower 8bit become zero).<br/>
+Non-4-byte aligned 8bit/16bit writes to DRAM\_CTRL do crash (probably because
+the "(w32)" effect is left-shifting the value, so lower 8bit become zero).<br/>
 Results on unaligned I/O port writes (via SWL/SWR opcodes) are unknown.<br/>
 
 #### I/O Read Datasize

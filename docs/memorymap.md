@@ -171,7 +171,7 @@ Therefore, using KSEG1 that disables the write queue is the only way to ensure t
 operations are done in the proper way.
 
 The above is valid for most of the hardware connected to the main CPU, such as the CDROM
-controller, DEV0, DEV1, the SPU, or the GPU. Therefore, using BF80180xh to access the
+controller, DEV0, DEV8, the SPU, or the GPU. Therefore, using BF80180xh to access the
 CDROM registers is more correct than using 1F80180xh.
 
 It is noteworthy that the Sony code will still incorrectly use KUSEG as the memory map

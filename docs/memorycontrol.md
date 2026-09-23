@@ -149,7 +149,7 @@ If the access is done from code in (uncached) RAM, then 0..4 cycles are added
 to the Total value (the exact number seems to vary depending on the used COMx
 values or so).<br/>
 
-#### 1F801060h - RAM\_SIZE (R/W) (usually 00000B88h) (or 00000888h)
+#### 1F801060h - DRAM\_CTRL? (R/W) (usually 00000B88h) (or 00000888h)
 ```
   0-2   Unknown
   3     /CAS and /WE wiring   (0=common /CAS with per-byte /WE, 1=per-byte /CAS with common /WE)
@@ -157,9 +157,9 @@ values or so).<br/>
   6     Unknown
   7     Delay on simultaneous CODE+DATA fetch from RAM (0=None, 1=One Cycle)
   8     Unknown               (should be set for 8MB, cleared for 2MB)
-  9     RAM chip size 2 (N*2MB)
+  9     RAM chip size 2       (chip size = 1MB << ((size2<<1) | size1))
   10    Enable /RAS1 bank     (0=disable/bus fault on access, 1=enable)
-  11    RAM chip size 1 (N*1MB)
+  11    RAM chip size 1
   12-15 Unknown
   16-31 Unused (Garbage)
 ```
@@ -194,8 +194,8 @@ System 573 (700B01 if ASIC revision bit = 0):
            footprints on revision D of the PCB, labeled "DR16M16")
 ```
 "Unmapped" means that the CPU generates an exception when accessing that area.<br/>
-Note: Wipeout uses a BIOS function that changes RAM\_SIZE to 00000888h (ie. with
-corrected size of 2MB, and with the unknown Bit8 cleared). Gundam Battle
+Note: Wipeout uses a BIOS function that changes DRAM\_CTRL to 00000888h (ie.
+with corrected size of 2MB, and with the unknown Bit8 cleared). Gundam Battle
 Assault 2 does actually use the "8MB" space (with stacktop in mirrored RAM at
 807FFFxxh).<br/>
 Clearing bit7 causes many games to hang during CDROM loading on both EARLY-PU-8

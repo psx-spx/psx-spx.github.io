@@ -189,7 +189,7 @@ Defines the ADPCM sample rate (1000h = 44100Hz). This register (and PMON) does
 affect only the ADPCM sample frequency (but not on the Noise frequency, which
 is defined - and shared for all voices - in the ATTR register).<br/>
 
-#### `0x1f801d90`: `PMON0` (voice 0..15 pitch modulation enable)
+#### `0x1f801d90`: `PMON0` (voice 1..15 pitch modulation enable)
 ```
   0     Unused
   1-15  Flags for Voice 1..15  (0=Normal, 1=Modulate by Voice 0..14)
@@ -548,7 +548,7 @@ Starts the ADSR Envelope, and automatically initializes ADSR Volume to zero.<br/
 
 #### `0x1f801d8e`: `KOF1` (voice 16..23 key off, write-only)
 ```
-  0-7   Voice 15..23 Off (0=No change, 1=Start Release)
+  0-7   Voice 16..23 Off (0=No change, 1=Start Release)
   8-15  Not used
 ```
 For a full ADSR pattern, OFF would be usually issued in the Sustain period,
@@ -562,7 +562,7 @@ Sustain periods, and switch immediately to Release).<br/>
 
 #### `0x1f801d9e`: `ENDX1` (voice 16..23 end reached, read-only)
 ```
-  0-7   Voice 15..23 Status (0=Newly Keyed On, 1=Reached LOOP-END)
+  0-7   Voice 16..23 Status (0=Newly Keyed On, 1=Reached LOOP-END)
   8-15  Not used
 ```
 The bits get CLEARED when setting the corresponding KEY ON bits.<br/>
@@ -663,13 +663,13 @@ stores the written value in 1F801DA6h, and does additionally store the value
 register does increment during transfers, whilst the 1F801DA6h value DOESN'T
 increment).<br/>
 
-#### `0x1f801da8`: `DATA` (data write FIFO)
+#### `0x1f801da8`: `DATA?` (data write FIFO)
 ```
   15-0  Data (max 32 halfwords)
 ```
 Used for manual-write. Not sure if it can be also used for manual read?<br/>
 
-#### `0x1f801dac`: `RAM_CTRL` (SPU RAM size control)
+#### `0x1f801dac`: `RAM_CTRL?` (SPU RAM size control)
 ```
   0     Unknown
   1     Enable bank on /OE1 and /WE1 (0=disable, 1=enable)
@@ -697,7 +697,7 @@ additional chip selects and address lines required for this modification.<br/>
 
 
 #### SPU RAM Manual Write
-- Be sure that SPU\_RAM\_CTRL is set to 0004h<br/>
+- Be sure that SPU.RAM\_CTRL is set to 0004h<br/>
 - Set ATTR to "Stop" (and wait until it is applied in STATX)<br/>
 - Set the transfer address<br/>
 - Write 1..32 halfword(s) to the Fifo<br/>
@@ -711,7 +711,7 @@ hardcoded delay of at least 300h cycles; the BIOS is using a much longer bizarre
 delay though).<br/>
 
 #### SPU RAM DMA-Write
-- Be sure that SPU\_RAM\_CTRL is set to 0004h<br/>
+- Be sure that SPU.RAM\_CTRL is set to 0004h<br/>
 - Set ATTR to "Stop" (and wait until it is applied in STATX)<br/>
 - Set the transfer address<br/>
 - Set ATTR to "DMA Write" (and wait until it is applied in STATX)<br/>
@@ -723,7 +723,7 @@ As by now, there's no known method for reading SPU RAM without using DMA.<br/>
 
 #### SPU RAM DMA-Read (stable reading, with DEV4\_CTRL.bit24-27 = nonzero)
 - Be sure that DEV4\_CTRL is set to 220931E1h (bit24-27 MUST be nonzero)<br/>
-- Be sure that SPU\_RAM\_CTRL is set to 0004h<br/>
+- Be sure that SPU.RAM\_CTRL is set to 0004h<br/>
 - Set ATTR to "Stop" (and wait until it is applied in STATX)<br/>
 - Set the transfer address<br/>
 - Set ATTR to "DMA Read" (and wait until it is applied in STATX)<br/>
@@ -780,7 +780,22 @@ not.<br/>
 Caution: The "rep2" trick cannot be used in combination with reverb (reverb
 seems to be using the Port 1F801DACh Sound RAM Data Transfer Control, too).<br/>
 
-
+#### Alternate RAM\_CTRL setting behavior on 512KB RAM
+When setting RAM\_CTRL to values other than 0004h on a stock console fitted with
+a single 512KB bank, the following erratic SPU RAM writing behavior can be
+observed:<br/>
+```
+  Bits 1-3_______Halfwords in Fifo________Halfwords written to SPU RAM__
+  010 (512KB)    A,B,C,D,E,F,G,H,...,X    A,B,C,D,E,F,G,H,...
+  011 (1MB)      A,B,C,D,E,F,G,H,...,X    A,A,C,C,E,E,G,G,...
+  100 (2MB)      A,B,C,D,E,F,G,H,...,X    A,A,A,A,E,E,E,E,...
+  101 (4MB)      A,B,C,D,E,F,G,H,...,X    H,H,H,H,H,H,H,H,...
+  others         A,B,C,D,E,F,G,H,...,X    X,X,X,X,X,X,X,X,...
+```
+1MB skips the 2nd halfword, 2MB skips 2nd..4th, 4MB skips 1st..7th.<br/>
+Invalid settings only use the LAST halfword.<br/>
+Note: The above rather bizarre results apply to WRITE mode. In READ mode, the
+register causes the same halfword to be read 2/4/8 times (for 1/2/4MB).<br/>
 
 ##   SPU Interrupt
 #### `0x1f801da4`: `IRQA` (IRQ address)

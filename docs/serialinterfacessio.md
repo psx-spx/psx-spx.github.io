@@ -39,18 +39,18 @@ SIO transfers in Wipeout 2097).
 
 #### `0x1f801044 + 0x10*N`: `SR` (status register, read-only)
 ```
-  0     TXRDY  TX FIFO Not Full         (1=Ready for new byte)  (depends on CTS) (TX requires CTS)
-  1     RXRDY  RX FIFO Not Empty        (0=Empty, 1=Data available)
-  2     TXU    TX Idle                  (1=Idle/Finished)       (depends on TXEN and on CTS)
-  3     PE     RX Parity Error          (0=No, 1=Error; Wrong Parity, when enabled) (sticky)
-  4     OE     (SIO1) RX FIFO Overrun   (0=No, 1=Error; received more than 8 bytes) (sticky)
-  5     FE     (SIO1) RX Framing Error  (0=No, 1=Error; Bad Stop Bit) (when RXEN)   (sticky)
-  6     BRK?   (SIO1) RX Input Level    (0=Normal, 1=Inverted) ;only AFTER receiving Stop Bit
-  7     DSR    DSR Input Level          (0=Off, 1=On) (remote DTR) ;DSR not required to be on
-  8     CTS    (SIO1) CTS Input Level   (0=Off, 1=On) (remote RTS) ;CTS required for TX
-  9     IRQ    Interrupt Request        (0=None, 1=IRQ) (See CR.Bit4,10-12)   (sticky)
-  10           Not used                 (always zero)
-  11-31 ?      Baudrate Timer           (15-21 bit timer, decrementing at 33MHz)
+  0     TXRDY   TX FIFO Not Full         (1=Ready for new byte)  (depends on CTS) (TX requires CTS)
+  1     RXRDY   RX FIFO Not Empty        (0=Empty, 1=Data available)
+  2     TXU     TX Idle                  (1=Idle/Finished)       (depends on TXEN and on CTS)
+  3     PERROR  RX Parity Error          (0=No, 1=Error; Wrong Parity, when enabled) (sticky)
+  4     OE      (SIO1) RX FIFO Overrun   (0=No, 1=Error; received more than 8 bytes) (sticky)
+  5     FE      (SIO1) RX Framing Error  (0=No, 1=Error; Bad Stop Bit) (when RXEN)   (sticky)
+  6     BRK?    (SIO1) RX Input Level    (0=Normal, 1=Inverted) ;only AFTER receiving Stop Bit
+  7     DSR     DSR Input Level          (0=Off, 1=On) (remote DTR) ;DSR not required to be on
+  8     CTS     (SIO1) CTS Input Level   (0=Off, 1=On) (remote RTS) ;CTS required for TX
+  9     IRQ     Interrupt Request        (0=None, 1=IRQ) (See CR.Bit4,10-12)   (sticky)
+  10            Not used                 (always zero)
+  11-31 ?       Baudrate Timer           (15-21 bit timer, decrementing at 33MHz)
 ```
 Bit 0 gets set after sending the start bit, bit 2 is set after sending all bits
 including the stop bit if any.
