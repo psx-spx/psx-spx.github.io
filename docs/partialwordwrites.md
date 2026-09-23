@@ -23,7 +23,7 @@ register sits on:
   the 32-bit data fabric internal to the CPU package. Byte enables
   are ignored; partial-word stores latch a shifted source word in
   full.
-- **SBUS** (SPU, CD-ROM, BIOS ROM, Expansion 1/2) is an off-die
+- **SBUS** (SPU, CD-ROM, BIOS ROM, DEV0, DEV8) is an off-die
   system bus whose data path width is per-device, configured via
   bit 12 of each device's Delay/Size register (see
   [Memory Control](memorycontrol.md)). CD-ROM and BIOS ROM are
@@ -131,8 +131,8 @@ transaction; the register is unchanged.
 
 ##   SBUS behavior
 The SBUS is the off-die system bus shared by SPU
-(`SBUS./CS4`), CD-ROM (`/CS5`), BIOS ROM (`/CS2`), and
-Expansion 1/2 (`/CS0`, `/CS3`). Address lines are
+(`SBUS./CS4`), CD-ROM (`/CS5`), BIOS ROM (`/CS2`), DEV0
+(`/CS0`) and DEV8 (no chip select). Address lines are
 `SBUS.A[23:0]`. Data lines are `SBUS.D[15:0]`, but each
 device is independently configured as 8-bit or 16-bit
 via bit 12 of its Delay/Size register (see

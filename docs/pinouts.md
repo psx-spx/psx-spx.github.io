@@ -556,7 +556,7 @@ Known IC304 (MC68HC05G6) mask-ROM part numbers by region (...2=JP/Asia, ...3=PAL
 |  43 | `RAM./WE`   |  95 | `SBUS./CS5_CDROM` | 147 | `SBUS.A18` | 199 | `/IRQ0`      |
 |  44 | `RAM./RAS1` |  96 | `SBUS./CS4_SPU`   | 148 | `SBUS.A19` | 200 | `GPU.DREQ2`  |
 |  45 | `RAM./RAS0` |  97 | `SBUS./CS2_BIOS`  | 149 | `SBUS.A20` | 201 | `SYSCK0`     |
-|  46 | `RAM./CAS3` |  98 | `SBUS./CS0_EXP1`  | 150 | `SBUS.A21` | 202 | `GPU.DACK2`  |
+|  46 | `RAM./CAS3` |  98 | `SBUS./CS0_PIO`   | 150 | `SBUS.A21` | 202 | `GPU.DACK2`  |
 |  47 | `RAM./CAS2` |  99 | `SBUS./WR1`       | 151 | `SBUS.A22` | 203 | `GPU./WR`    |
 |  48 | `RAM./CAS1` | 100 | `SBUS./WR0`       | 152 | `SBUS.A23` | 204 | `GPU./RD`    |
 |  49 | `RAM./CAS0` | 101 | `SBUS./RD`        | 153 | `GPU.A0`   | 205 | `GPU./CS7`   |
