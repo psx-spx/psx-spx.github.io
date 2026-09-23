@@ -692,7 +692,7 @@ the television set). (Unknown if it still generates vblank IRQs though?)<br/>
               0 ---> DMA requests off
               1 ---> DMA request on GP0 write FIFO not full
               2 ---> DMA request on GP0 write FIFO empty
-              3 ---> DMA request on GP0 read FIFO full
+              3 ---> DMA request while GPUREAD data is ready
   2-23      Not used (zero)
 ```
 Notes: Manually sending/reading data by software (non-DMA) is ALWAYS possible,
@@ -929,7 +929,7 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
                 When GP1(04h)=2 ---> Same as WFEP
                 When GP1(04h)=3 ---> Same as RFFL
   26    IDLE  Ready to receive Cmd Word   (0=No, 1=Ready)  ;GP0(...) ;via GP0 write
-  27    RFFL  GP0 read FIFO full          (0=No, 1=Full)   ;GP0(C0h) ;via GP0 read
+  27    RFFL  GP0 read data ready         (0=No, 1=Ready)  ;GP0(C0h) ;via GPUREAD
   28    WFEP  GP0 write FIFO empty        (0=No, 1=Empty)  ;GP0(...) ;via GP0 write
   29-30 DMD   DMA Direction               (0=Off, 1=WFNF, 2=WFEP, 3=RFFL)    ;GP1(04h).0-1
   31    ODE   Drawing even/odd lines in interlace mode (0=Even or Vblank, 1=Odd)

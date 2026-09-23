@@ -689,6 +689,7 @@ This register is uninitialized on power-on and must be explicitly set to 0004h
 arcade hardware) prior to accessing SPU RAM.<br/>
 When using values other than 0004h, the addressing unit used by address/pointer
 registers is adjusted accordingly (16 bytes for 1MB, 32 for 2MB, 64 for 4MB).<br/>
+The following is preliminary, from tests on modified consoles.
 SPU RAM may be upgraded on motherboard revisions that use the standalone 100-pin
 SPU, but having multiple banks is electrically unsafe as the SPU selects *both*
 banks at once in single-bank mode, creating potential bus conflicts. PU-22 and
