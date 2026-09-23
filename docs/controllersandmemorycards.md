@@ -1088,7 +1088,7 @@ For details on Timers, see:<br/>
 [Timers](timers.md)<br/>
 In some consoles, IRQ10 seems to be routed through a Secondary IRQ Controller,
 see:<br/>
-[EXP2 DTL-H2000 I/O Ports](expansionportpio.md#exp2-dtl-h2000-io-ports)<br/>
+[DEV8 DTL-H2000 I/O Ports](expansionportpio.md#dev8-dtl-h2000-io-ports)<br/>
 
 #### IRQ10 Priority
 For processing IRQ10 as soon as possible, it should be assigned higher priority
@@ -2157,9 +2157,9 @@ frame).<br/>
 Made by Anthony Ball. [http://www.sinistersoft.com/psxkeyboard]
 
 ```
-  [1F801058h]=00CEh  ;SIO_MODE 8bit, no parity, 2 stop bits (8N2)
-  [1F80105Ah]=771Ch  ;SIO_CTRL rx enable (plus whatever nonsense bits)
-  [1F80105Eh]=006Ch  ;SIO_BAUD 19200 bps
+  [1F801058h]=00CEh  ;SIO1_MR 8bit, no parity, 2 stop bits (8N2)
+  [1F80105Ah]=771Ch  ;SIO1_CR rx enable (plus whatever nonsense bits)
+  [1F80105Eh]=006Ch  ;SIO1_BR 19200 bps
   RX   Keyboard Scancode (same ASCII-style as in later versions?)
   CTS  Caps-Lock state
   DSR  Num-Lock state

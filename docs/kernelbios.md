@@ -1347,10 +1347,10 @@ Hardware Events:<br/>
   F0000005h IRQ4  RTC0 (timer0)
   F0000006h IRQ5/IRQ6 RTC1 (timer1 or timer2)
   F0000007h N/A   Not used (this should be timer2)
-  F0000008h IRQ7  Controller (joypad/memcard)
+  F0000008h IRQ7  SIO0 (joypad/memcard)
   F0000009h IRQ9  SPU
   F000000Ah IRQ10 PIO ;uh, does the PIO have an IRQ signal? (IRQ10 is joypad)
-  F000000Bh IRQ8  SIO
+  F000000Bh IRQ8  SIO1
   F0000010h Exception ;CPU crashed (BRK,BadSyscall,Overflow,MemoryError, etc.)
   F0000011h memory card (lower level BIOS functions)
   F0000012h memory card (not used by BIOS; maybe used by Sony's devkit?)
@@ -2495,7 +2495,7 @@ by:<br/>
 ```
 with that patch, the BIOS bootcode (and many games) are sending debug messages
 to the debug terminal, via expansion port, see:<br/>
-[EXP2 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#exp2-dual-serial-port-for-tty-debug-terminal)<br/>
+[DEV8 Dual Serial Port (for TTY Debug Terminal)](expansionportpio.md#dev8-dual-serial-port-for-tty-debug-terminal)<br/>
 Note: The nocash BIOS automatically detects the DUART hardware, and activates
 TTY if it is present.<br/>
 
@@ -2906,7 +2906,7 @@ Used in Metal Gear Solid at 8009AA5Ch, and in alone1 at 800AE2F8h:<br/>
   012A1821 add  r3,r9,r10                     ;        @@wait_lop:
   24620028 add  r2,r3,28h ;=early+28h         ;8C621044 mov  r2,[r3+1044h]
   3C0Axxxx lui  r10,xxxxh ;\@@new_data        ;00000000 nop
-  254Axxxx sub  r10,xxxxh ;/                  ;30420080 and  r2,80h ;JOY_STAT.7
+  254Axxxx sub  r10,xxxxh ;/                  ;30420080 and  r2,80h ;SIO0_SR.7
   3C09xxxx lui  r9,xxxxh  ;\@@new_data_end    ;1440FFFC jnz  r2,@@wait_lop
   2529xxxx sub  r9,xxxxh  ;/                  ;00000000 +nop
           @@copy_lop:                         ;3C020001 lui  r2,0001h
@@ -2938,7 +2938,7 @@ Alternately, elo2 uses slightly different code at 8003961Ch:<br/>
   3C09xxxx mov  r9,xxxx0000h                  ;        @@wait_lop:
   24620028 add  r2,r3,28h ;=early+28h         ;8C621044 mov  r2,[r3+1044h]
   254Axxxx sub  r10,xxxxh ;=@@new_data        ;00000000 nop
-  2529xxxx sub  r9,xxxxh  ;=@@new_data_end    ;30420080 and  r2,80h ;JOY_STAT.7
+  2529xxxx sub  r9,xxxxh  ;=@@new_data_end    ;30420080 and  r2,80h ;SIO0_SR.7
           @@copy_lop:                         ;1440FFFC jnz  r2,@@wait_lop
   8D430000 mov  r3,[r10]                      ;00000000 +nop
   254A0004 add  r10,4h                        ;3C02xxxx lui  r2,8xxxh

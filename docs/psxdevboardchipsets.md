@@ -76,7 +76,7 @@
   U715  20pin 74HC244AP    (dual 4-bit 3-state noninverting buffer/line driver)
   JPxx 100pin Blue connector (to other ISA board)
   U738  20pin LVT244 (SMD) (dual 4-bit 3-state noninverting buffer/line driver)
-  U734  32pin KM684000G-7 (SRAM 512Kx8)         ;\maybe 1Mbyte EXP3 RAM ?
+  U734  32pin KM684000G-7 (SRAM 512Kx8)         ;\maybe 1Mbyte DEV1 RAM ?
   U733  32pin KM684000G-7 (SRAM 512Kx8)         ;/
   U725  20pin SN74ALS688N  (8bit inverting identity comparator with enable)
   S700  24pin 12bit DIP switch  (select I/O Address bits A15..A4)

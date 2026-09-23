@@ -21,7 +21,7 @@ Mask: Read/Write I\_MASK (0=Disabled, 1=Enabled)<br/>
 ```
 
 #### Secondary IRQ10 Controller (Port 1F802030h)
-[EXP2 DTL-H2000 I/O Ports](expansionportpio.md#exp2-dtl-h2000-io-ports)<br/>
+[DEV8 DTL-H2000 I/O Ports](expansionportpio.md#dev8-dtl-h2000-io-ports)<br/>
 
 #### Interrupt Request / Execution
 The interrupt request bits in I\_STAT are edge-triggered, ie. the get set ONLY
@@ -33,17 +33,17 @@ cop0r12.bit0 are set, too, then the interrupt gets executed.<br/>
 #### Interrupt Acknowledge
 To acknowledge an interrupt, write a "0" to the corresponding bit in I\_STAT.
 Most interrupts (except IRQ0,4,5,6) must be additionally acknowledged at the
-I/O port that has caused them (eg. JOY\_CTRL.bit4).<br/>
+I/O port that has caused them (eg. SIO0\_CR.bit4).<br/>
 Observe that the I\_STAT bits are edge-triggered (they get set only on
 High-to-Low, or False-to-True edges). The correct acknowledge order is:<br/>
 ```
   First, acknowledge I_STAT                (eg. I_STAT.bit7=0)
-  Then, acknowledge corresponding I/O port (eg. JOY_CTRL.bit4=1)
+  Then, acknowledge corresponding I/O port (eg. SIO0_CR.bit4=1)
 ```
 When doing it vice-versa, the hardware may miss further IRQs (eg. when first
-setting JOY\_CTRL.4=1, then a new IRQ may occur in JOY\_STAT.4 within a single
+setting SIO0\_CR.4=1, then a new IRQ may occur in SIO0\_SR.4 within a single
 clock cycle, thereafter, setting I\_STAT.7=0 would successfully reset I\_STAT.7,
-but, since JOY\_STAT.4 is already set, there'll be no further edge, so I\_STAT.7
+but, since SIO0\_SR.4 is already set, there'll be no further edge, so I\_STAT.7
 won't be ever set in future).<br/>
 
 #### COP0 Interrupt Handling
