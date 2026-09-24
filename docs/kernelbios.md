@@ -2073,7 +2073,13 @@ Returns a word, halfword, or string, depending on the selected index value:<br/>
   03h      Get whatever halfword     (usually 0)    ;PS2: returns cop0r15
   04h      Get whatever halfword     (usually 0)
   05h      Get RAM Size in kilobytes (usually 2048) ;=[00000060h] SHL 10
-  06h..0Eh Get whatever halfwords    (usually 0,400h,0,200h,0,0,1,1,1)
+  06h      Get arcade board flag     (usually 0)
+  07h      Get VRAM Size in kilobytes (usually 400h)
+  08h      Get whatever halfword     (usually 0)
+  09h      Get SPU RAM Size in kilobytes (usually 200h)
+  0Ah..0Bh Get whatever halfwords    (usually 0,0)
+  0Ch..0Dh Get whatever halfwords    (usually 1,1)
+  0Eh      Get non-arcade flag       (usually 1)
   0Fh      N/A (returns zero) ;PS2: returns 0000h (effectively = same as zero)
   10h..FFFFFFFFh Not used (returns zero)
 ```
@@ -2084,6 +2090,13 @@ however, a version string for it can be usually found at BFC7FF32h (eg. "System
 ROM Version 4.5 05/25/00 E",0) (in many bios versions, the last letter of that
 string indicates the region, but not in all versions) (the old SCPH1000 does
 not include that version string at all).<br/>
+The old CEX-1000 kernel lacks this function. LIBETC's GetSystemInfo works
+around that: if the word at 000004D0h is nonzero it is called instead;
+otherwise the words at BFC00000h..BFC0457Fh are summed, and if the sum is
+4A20382Ch the library answers by itself: index 0/1 from [BFC00100h/104h],
+index 2 as the pointer BFC00129h, index 3 as cop0r15 AND FFh, index 5 as
+[00000060h] SHL 10, and index 4 and 06h..0Eh from a hardcoded table of the
+usual values above. Any other sum returns -1.<br/>
 
 #### B(56h) - GetC0Table()
 #### B(57h) - GetB0Table()
