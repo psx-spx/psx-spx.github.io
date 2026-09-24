@@ -314,9 +314,8 @@ rendering the rectangle pixels.<br/>
 Optionally, X/Y-Flip bits can be set in TPage.Bit12/13, these bits cause the
 texture coordinates to be decremented (instead of incremented). The X/Y-Flip
 bits do affect only Rectangles (not Polygons, nor VRAM Transfers).<br/>
-Caution: Reportedly, the X/Y-Flip feature isn't supported on old PSX consoles
-(unknown which ones exactly, maybe such with PU-7 mainboards, and unknown how
-to detect flipping support; except of course by reading VRAM).<br/>
+Caution: X/Y-Flip is a v2 GPU feature, and is absent on the v0 GPU used by
+early consoles such as the SCPH-1000.<br/>
 
 #### Note
 There are also two VRAM Transfer commands which work similar to GP0(60h) and
@@ -406,8 +405,8 @@ Specifies the location of the CLUT data within VRAM.<br/>
   9     DTD   Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled) ;GP1.R.9
   10    DFE   Drawing to display area (0=Prohibited, 1=Allowed)          ;GP1.R.10
   11    TBY2  Texture page Y Base 2 (N*512) (v1/v2 GPU only, w/ 2MB VRAM);GP1.R.15
-  12    IX?   Textured Rectangle X-Flip     (v2 GPU only)
-  13    IY?   Textured Rectangle Y-Flip     (v2 GPU only)
+  12    IX?   Textured Rectangle X-Flip     (v2 GPU only) (BIOS does set this bit on power-up...?)
+  13    IY?   Textured Rectangle Y-Flip     (v2 GPU only) (BIOS does set it equal to GP1.R.13...?)
   14-23       Not used (should be 0)
   24-31 CODE  Command  (E1h)
 ```
@@ -912,6 +911,10 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
 
 ##   GPU Status Register
 ####  `0x1f801814`: `GP1` (GPU status register, when read)
+nocash's original version of the documentation refers to this register as
+`GPUSTAT`; this is not official Sony naming, see
+[Legacy names from outdated documentation](iomap.md#legacy-names-from-outdated-documentation)
+for other renamed registers.<br/>
 ```
   0-3   TBX   Texture page X Base   (N*64)                              ;GP0(E1h).0-3
   4     TBY   Texture page Y Base 1 (N*256) (ie. 0, 256, 512 or 768)    ;GP0(E1h).4

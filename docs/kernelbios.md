@@ -1703,7 +1703,7 @@ Returns 1F801814h, ie. the I/O address.<br/>
 Reads [1F801814h] and returns that value.<br/>
 
 #### A(46h) - GPU\_dw(Xdst,Ydst,Xsiz,Ysiz,src)
-Waits until GPUSTAT.Bit26 is set (unlike gpu\_sync, which waits for Bit28), and
+Waits until GP1.R.Bit26 is set (unlike gpu\_sync, which waits for Bit28), and
 does then [1F801810h]=A0000000h, [1F801810h]=YdstXdst, [1F801810h]=YsizXsiz,
 and finally transfers "N" words from [src and up] to [1F801810h], where "N" is
 "Xsiz\*Ysiz/2". The data is transferred by software (without DMA) (by code
@@ -1723,10 +1723,10 @@ NOT transferred, so the GPU stays waiting for that values.<br/>
 Returns R2=1F801810h, and [SP+04h]=Ydst, [SP+08h]=Xsiz, [SP+0Ch]=Ysiz.<br/>
 
 #### A(4Eh) - gpu\_sync()
-If DMA is off (when GPUSTAT.Bit29-30 are zero): Waits until GPUSTAT.Bit28=1 (or
+If DMA is off (when GP1.R.Bit29-30 are zero): Waits until GP1.R.Bit28=1 (or
 until timeout).<br/>
 If DMA is on: Waits until D2\_CHCR.Bit24=0 (or until timeout), and does then
-wait until GPUSTAT.Bit28=1 (without timeout, ie. may hang forever), and does
+wait until GP1.R.Bit28=1 (without timeout, ie. may hang forever), and does
 then turn off DMA via GP1(04h).<br/>
 Returns 0 (or -1 in case of timeout, however, the timeout values are very big,
 so it may take a LOT of seconds before it returns).<br/>
