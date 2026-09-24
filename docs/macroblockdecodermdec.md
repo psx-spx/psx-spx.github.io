@@ -30,17 +30,17 @@ no re-ordering is needed (that works with DMA1 too).<br/>
 
 #### 1F801824h - MDEC1 - MDEC Status Register (R)
 ```
-  31    Data-Out Fifo Empty (0=No, 1=Empty)
-  30    Data-In Fifo Full   (0=No, 1=Full, or Last word received)
-  29    Command Busy  (0=Ready, 1=Busy receiving or processing parameters)
-  28    Data-In Request  (set when DMA0 enabled and ready to receive data)
-  27    Data-Out Request (set when DMA1 enabled and ready to send data)
-  26-25 Data Output Depth  (0=4bit, 1=8bit, 2=24bit, 3=15bit)      ;CMD.28-27
-  24    Data Output Signed (0=Unsigned, 1=Signed)                  ;CMD.26
-  23    Data Output Bit15  (0=Clear, 1=Set) (for 15bit depth only) ;CMD.25
-  22-19 Not used (seems to be always zero)
-  18-16 Current Block (0..3=Y1..Y4, 4=Cr, 5=Cb) (or for mono: always 4=Y)
-  15-0  Number of Parameter Words remaining minus 1  (FFFFh=None)  ;CMD.Bit0-15
+  31    FIFO1  Data-Out Fifo Empty (0=No, 1=Empty)
+  30    FIFO0  Data-In Fifo Full   (0=No, 1=Full, or Last word received)
+  29    BUSY   Command Busy  (0=Ready, 1=Busy receiving or processing parameters)
+  28    DREQ0  Data-In Request  (set when DMA0 enabled and ready to receive data)
+  27    DREQ1  Data-Out Request (set when DMA1 enabled and ready to send data)
+  26-25 ?      Data Output Depth  (0=4bit, 1=8bit, 2=24bit, 3=15bit)      ;CMD.28-27
+  24    ?      Data Output Signed (0=Unsigned, 1=Signed)                  ;CMD.26
+  23    STP    Data Output Bit15  (0=Clear, 1=Set) (for 15bit depth only) ;CMD.25
+  22-19        Not used (seems to be always zero)
+  18-16 ?      Current Block (0..3=Y1..Y4, 4=Cr, 5=Cb) (or for mono: always 4=Y)
+  15-0  ?      Number of Parameter Words remaining minus 1  (FFFFh=None)  ;CMD.Bit0-15
 ```
 If there's data in the output fifo, then the Current Block bits are always set
 to the current output block number (ie. Y1..Y4; or Y for mono) (this
@@ -48,6 +48,10 @@ information is apparently passed to the DMA1 controller, so that it knows if
 and how it must re-order the data in RAM). If the output fifo is empty, then
 the bits indicate the currently processsed incoming block (ie. Cr,Cb,Y1..Y4; or
 Y for mono).<br/>
+An error message in older versions of Sony's MDEC library refers to bit 25 as
+"RGB24", which is only correct because the library always keeps bit 26 set and
+does not support grayscale mode (and even then, the bit is *cleared* in 24bpp
+mode).<br/>
 
 #### 1F801824h - MDEC1 - MDEC Control/Reset Register (W)
 ```

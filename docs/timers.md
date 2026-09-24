@@ -66,13 +66,14 @@ IRQ4/5/6 are triggered only each 2nd time, ie. when INTF changes from 1 to 0).
 The "free run" mode is simply saying that the counter will not reset at a given
 threshold value.
 
-#### `0x1f801108 + 0x10*N`: `COMP`
+#### `0x1f801108 + 0x10*N`: `COMP` / `TARGET`
 ```
   0-15  Counter Target value
   16-31 Garbage
 ```
 When the ZRET flag is set, the counter increments up to (including) the selected
-target value, and does then restart at 0000h.
+target value, and does then restart at 0000h. PS2 IOP documentation calls this
+register `COMP` but symbol names in PS1 libraries refer to it as `TARGET`.
 
 #### Dotclock/Hblank
 For more info on dotclock and hblank timings, see:
