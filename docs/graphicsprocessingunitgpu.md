@@ -23,13 +23,13 @@ and Text output.<br/>
 
 
 ##   GPU I/O Ports, DMA Channels, Commands, VRAM
-#### GPU I/O Ports (1F801810h and 1F801814h in Read/Write Directions)
+#### GPU I/O Ports (`0x1f801810`, `0x1f801814`)
 ```
-  Port            Name     Expl.
-  1F801810h-Write GP0?     Send GP0 Commands/Packets (Rendering and VRAM Access)
-  1F801810h-Read  GP0?     Receive responses to GP0(C0h) and GP1(10h) commands
-  1F801814h-Write GP1?     Send GP1 Commands (Display Control) (and DMA Control)
-  1F801814h-Read  GPU_STAT Receive GPU Status Register
+  Port        Name  Dir    Expl.
+  0x1f801810  GP0   Write  Send GP0 Commands/Packets (Rendering and VRAM Access)
+                    Read   Receive responses to GP0(C0h) and GP1(10h) commands
+  0x1f801814  GP1   Write  Send GP1 Commands (Display Control) (and DMA Control)
+                    Read   Receive GPU Status Register
 ```
 It (=GP0 only?) has a 64-byte (16-word) command FIFO buffer.<br/>
 Optionally, Port 1F801810h (Read/Write) can be also accessed via DMA2.<br/>
@@ -140,14 +140,18 @@ coordinate).<br/>
 When the upper 3 bits of the first GP0 command are set to 1 (001), then the command can
 be decoded using the following bitfield:
 ```
-  0-23  ?    Color for (first) Vertex
-  24    TGE  Texture Color Mode  (0=Shaded/Modulated, 1=Raw)
-  25    ABE  Semi-transparency   (0=Off, 1=On) (if textured: texture bit15 must also be set)
-  26    ?    Texture Mapping     (0=Off, 1=On)
-  27    ?    Vertex Count        (0=Triangle, 1=Quad)
-  28    ?    Shading             (0=Flat, 1=Gouraud)
-  29-31 ?    Command             (always 1 for polygons)
+  0-7   R0     Polygon color       (or first vertex color if IIP=1, ignored if TGE=1)
+  8-15  G0     Polygon color       (or first vertex color if IIP=1, ignored if TGE=1)
+  16-23 B0     Polygon color       (or first vertex color if IIP=1, ignored if TGE=1)
+  24    TGE    Texture Color Mode  (0=Shaded/Modulated, 1=Raw)
+  25    ABE    Semi-transparency   (0=Off, 1=On) (if textured: texture bit15 must also be set)
+  26    TME    Texture Mapping     (0=Off, 1=On)
+  27    VTX    Vertex Count        (0=Triangle, 1=Quad)
+  28    IIP    Shading             (0=Flat, 1=Gouraud)
+  29-31 CODE   Command             (always 1 for polygons)
 ```
+(Bit names are known from the documentation Sony released for the .TMD and .PMD
+file formats, and seem to match their PS2 GS counterparts as well.)
 
 Subsequent data sent to GP0 to complete this command will be the vertex data for the
 command. The meaning and count of these words will be altered by the initial flags
@@ -220,13 +224,15 @@ gouraud shading or modulation.<br/>
 When the upper 3 bits of the first GP0 command are set to 2 (010), then the command can
 be decoded using the following bitfield:
 ```
-  0-23  ?    Color for (first) Vertex
-  24         Unused
-  25    ABE  Semi-transparency   (0=Off, 1=On)
-  26         Unused
-  27    ?    Vertex Count        (0=Single, 1=Polyline)
-  28    ?    Shading             (0=Flat, 1=Gouraud)
-  29-31 ?    Command             (always 2 for lines)
+  0-7   R0     Line color          (or first vertex color if IIP=1)
+  8-15  G0     Line color          (or first vertex color if IIP=1)
+  16-23 B0     Line color          (or first vertex color if IIP=1)
+  24           Unused
+  25    ABE    Semi-transparency   (0=Off, 1=On)
+  26           Unused
+  27    PLL    Vertex Count        (0=Single, 1=Polyline)
+  28    IIP    Shading             (0=Flat, 1=Gouraud)
+  29-31 CODE   Command             (always 2 for lines)
 ```
 
 So each vertex can be seen as the following list of words:
@@ -265,12 +271,14 @@ them into two triangles. Note that this is sometimes refered to as a "sprite".<b
 
 The Rectangle command can be decoded using the following bitfield:
 ```
-  0-23  ?    Color
-  24    TGE  Texture Color Mode  (0=Shaded/Modulated, 1=Raw)
-  25    ABE  Semi-transparency   (0=Off, 1=On) (if textured: texture bit15 must also be set)
-  26    ?    Texture Mapping     (0=Off, 1=On)
-  27-28 ?    Rectangle Size      (0=Variable, 1=1x1, 2=8x8, 3=16x16)
-  29-31 ?    Command             (always 3 for rectangles)
+  0-7   R0    Rectangle color     (ignored if TGE=1)
+  8-15  G0    Rectangle color     (ignored if TGE=1)
+  16-23 B0    Rectangle color     (ignored if TGE=1)
+  24    TGE   Texture Color Mode  (0=Shaded/Modulated, 1=Raw)
+  25    ABE   Semi-transparency   (0=Off, 1=On) (if textured: texture bit15 must also be set)
+  26    TME   Texture Mapping     (0=Off, 1=On)
+  27-28 SIZ   Rectangle Size      (0=Variable, 1=1x1, 2=8x8, 3=16x16)
+  29-31 CODE  Command             (always 3 for rectangles)
 ```
 
 Therefore, the whole draw call can be seen as the following sequence of words:
@@ -356,10 +364,10 @@ single clock cycle), or if it's (slowly) processing them pixel by pixel?<br/>
 
 #### Color Attribute (Parameter for all Rendering commands, except Raw Texture)
 ```
-  0-7    Red   (0..FFh)
-  8-15   Green (0..FFh)
-  16-23  Blue  (0..FFh)
-  24-31  Command (in first paramter) (don't care in further parameters)
+  0-7   Rn   Red   (0..FFh)
+  8-15  Gn   Green (0..FFh)
+  16-23 Bn   Blue  (0..FFh)
+  24-31 ...  Command (in first paramter) (don't care in further parameters)
 ```
 Caution: For untextured graphics, 8bit RGB values of FFh are brightest.
 However, for modulation, 8bit values of 80h are brightest (values
@@ -370,11 +378,11 @@ framebuffer are saturated to max 1Fh).<br/>
 
 #### TPage Attribute (Parameter for textured polygon commands)
 ```
-  0-8    Same as GP0(E1h).Bit0-8 (see there)
-  9-10   Unused (does NOT change GP0(E1h).Bit9-10)
-  11     Same as GP0(E1h).Bit11  (see there)
-  12-13  Unused (does NOT change GP0(E1h).Bit12-13)
-  14-15  Unused (should be 0)
+  0-8   ...  Same as GP0(E1h).Bit0-8 (see there)
+  9-10       Unused (does NOT change GP0(E1h).Bit9-10)
+  11    ...  Same as GP0(E1h).Bit11  (see there)
+  12-13      Unused (does NOT change GP0(E1h).Bit12-13)
+  14-15      Unused (should be 0)
 ```
 This attribute is used in all textured polygon commands.<br/>
 
@@ -382,26 +390,26 @@ This attribute is used in all textured polygon commands.<br/>
 This attribute is used in all Textured Polygon/Rectangle commands. Of course,
 it's relevant only for 4bit/8bit textures (don't care for 15bit textures).<br/>
 ```
-  0-5    X coordinate X/16  (ie. in 16-halfword steps)
-  6-14   Y coordinate 0-511 (ie. in 1-line steps)  ;\on v0 GPU (max 1 MB VRAM)
-  15     Unused (should be 0)                      ;/
-  6-15   Y coordinate 0-1023 (ie. in 1-line steps) ;on v2 GPU (max 2 MB VRAM)
+  0-5  CLX  X coordinate X/16  (ie. in 16-halfword steps)
+  6-14 CLY  Y coordinate 0-511 (ie. in 1-line steps)  ;\on v0 GPU (max 1 MB VRAM)
+  15        Unused (should be 0)                      ;/
+  6-15 CLY  Y coordinate 0-1023 (ie. in 1-line steps) ;on v2 GPU (max 2 MB VRAM)
 ```
 Specifies the location of the CLUT data within VRAM.<br/>
 
 #### GP0(E1h) - Draw Mode setting (aka "TPage")
 ```
-  0-3   TBX   Texture page X Base   (N*64) (ie. in 64-halfword steps)    ;GPUSTAT.0-3
-  4     TBY   Texture page Y Base 1 (N*256) (ie. 0, 256, 512 or 768)     ;GPUSTAT.4
-  5-6   ABR   Semi-transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)   ;GPUSTAT.5-6
-  7-8   TPF   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved);GPUSTAT.7-8
-  9     DTD   Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled) ;GPUSTAT.9
-  10    DFE   Drawing to display area (0=Prohibited, 1=Allowed)          ;GPUSTAT.10
-  11    TBY2  Texture page Y Base 2 (N*512) (only for 2 MB VRAM)         ;GPUSTAT.15
-  12    ?     Textured Rectangle X-Flip   (BIOS does set this bit on power-up...?)
-  13    ?     Textured Rectangle Y-Flip   (BIOS does set it equal to GPUSTAT.13...?)
+  0-3   TBX   Texture page X Base   (N*64) (ie. in 64-halfword steps)    ;GP1.R.0-3
+  4     TBY   Texture page Y Base 1 (N*256) (ie. 0, 256, 512 or 768)     ;GP1.R.4
+  5-6   ABR   Semi-transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)   ;GP1.R.5-6
+  7-8   TPF   Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved);GP1.R.7-8
+  9     DTD   Dither 24bit to 15bit (0=Off/strip LSBs, 1=Dither Enabled) ;GP1.R.9
+  10    DFE   Drawing to display area (0=Prohibited, 1=Allowed)          ;GP1.R.10
+  11    TBY2  Texture page Y Base 2 (N*512) (v1/v2 GPU only, w/ 2MB VRAM);GP1.R.15
+  12    IX?   Textured Rectangle X-Flip     (v2 GPU only)
+  13    IY?   Textured Rectangle Y-Flip     (v2 GPU only)
   14-23       Not used (should be 0)
-  24-31       Command  (E1h)
+  24-31 CODE  Command  (E1h)
 ```
 The GP0(E1h) command is required only for Lines, Rectangle, and
 untextured polygons (for textured polygons, the data is specified through the
@@ -477,8 +485,8 @@ are the values defined with GP0(E3h-E4h).<br/>
 
 #### GP0(E6h) - Mask Bit Setting
 ```
-  0     PBW  Set mask while drawing (0=TextureBit15, 1=ForceBit15=1)   ;GPUSTAT.11
-  1     PBC  Check mask before draw (0=Draw Always, 1=Draw if Bit15=0) ;GPUSTAT.12
+  0     PBW  Set mask while drawing (0=TextureBit15, 1=ForceBit15=1)   ;GP1.R.11
+  1     PBC  Check mask before draw (0=Draw Always, 1=Draw if Bit15=0) ;GP1.R.12
   2-23       Not used (zero)
   24-31      Command  (E6h)
 ```
@@ -606,7 +614,7 @@ GP1(00h) reset), and 1024x1024 on 2 MB systems with GP1(09h).0=1.<br/>
 ##   GPU Other Commands
 #### GP0(1Fh) - Interrupt Request (IRQ1)
 ```
-  1st  Command           (Cc000000h)                    ;GPUSTAT.24
+  1st  Command           (Cc000000h)                    ;GP1.R.24
 ```
 Requests IRQ1. Can be acknowledged via GP1(02h). This feature is rarely used.<br/>
 Note: The command is used by Blaze'n'Blade, but the game doesn't have IRQ1
@@ -660,7 +668,7 @@ Resets the GPU to the following values:<br/>
   GP1(08h)      ;display mode 320x200 NTSC (0)
   GP0(E1h..E6h) ;rendering attributes (0)
 ```
-Accordingly, GPUSTAT becomes 14802000h. The x1,y1 values are too small, ie. the
+Accordingly, GP1.read becomes 14802000h. The x1,y1 values are too small, ie. the
 upper-left edge isn't visible. Note that GP1(09h) is NOT affected by the reset
 command.<br/>
 
@@ -672,13 +680,13 @@ Resets the command buffer and CLUT cache.<br/>
 
 #### GP1(02h) - Acknowledge GPU Interrupt (IRQ1)
 ```
-  0-23  Not used (zero)                                        ;GPUSTAT.24
+  0-23  Not used (zero)                                        ;GP1.R.24
 ```
-Resets the IRQ flag in GPUSTAT.24. The flag can be set via GP0(1Fh).<br/>
+Resets the IRQ flag in GP1.R.24. The flag can be set via GP0(1Fh).<br/>
 
 #### GP1(03h) - Display Enable
 ```
-  0    DMSK  Display On/Off   (0=On, 1=Off)                         ;GPUSTAT.23
+  0    DMSK  Display On/Off   (0=On, 1=Off)                         ;GP1.R.23
   1-23       Not used (zero)
 ```
 Turns display on/off. "Note that a turned off screen still gives the flicker of
@@ -688,7 +696,7 @@ the television set). (Unknown if it still generates vblank IRQs though?)<br/>
 
 #### GP1(04h) - DMA Direction / Data Request
 ```
-  0-1  DMD  DMA Direction (0=Off, 1=WFNF, 2=WFEP, 3=RFFL) ;GPUSTAT.29-30
+  0-1  DMD  DMA Direction (0=Off, 1=WFNF, 2=WFEP, 3=RFFL) ;GP1.R.29-30
               0 ---> DMA requests off
               1 ---> DMA request on GP0 write FIFO not full
               2 ---> DMA request on GP0 write FIFO empty
@@ -697,7 +705,7 @@ the television set). (Unknown if it still generates vblank IRQs though?)<br/>
 ```
 Notes: Manually sending/reading data by software (non-DMA) is ALWAYS possible,
 regardless of the GP1(04h) setting. The GP1(04h) setting does affect the
-meaning of GPUSTAT.25.<br/>
+meaning of GP1.R.25.<br/>
 
 #### Display start/end
 Specifies where the display area is positioned on the screen, and how much data
@@ -788,13 +796,13 @@ those particular cases.<br/>
 
 #### GP1(08h) - Display mode
 ```
-  0-1  HDS   Horizontal Resolution 1     (0=256, 1=320, 2=512, 3=640) ;GPUSTAT.17-18
-  2    VDS   Vertical Resolution         (0=240, 1=480, when Bit5=1)  ;GPUSTAT.19
-  3    NPB   Video Mode                  (0=NTSC/60Hz, 1=PAL/50Hz)    ;GPUSTAT.20
-  4    LBS   Display Area Color Depth    (0=15bit, 1=24bit)           ;GPUSTAT.21
-  5    IRS   Vertical Interlace          (0=Off, 1=On)                ;GPUSTAT.22
-  6    HDS2  Horizontal Resolution 2     (0=256/320/512/640, 1=368)   ;GPUSTAT.16
-  7    ?     Flip screen horizontally    (0=Off, 1=On, v1 only)       ;GPUSTAT.14
+  0-1  HDS   Horizontal Resolution 1     (0=256, 1=320, 2=512, 3=640) ;GP1.R.17-18
+  2    VDS   Vertical Resolution         (0=240, 1=480, when Bit5=1)  ;GP1.R.19
+  3    NPB   Video Mode                  (0=NTSC/60Hz, 1=PAL/50Hz)    ;GP1.R.20
+  4    LBS   Display Area Color Depth    (0=15bit, 1=24bit)           ;GP1.R.21
+  5    IRS   Vertical Interlace          (0=Off, 1=On)                ;GP1.R.22
+  6    HDS2  Horizontal Resolution 2     (0=256/320/512/640, 1=368)   ;GP1.R.16
+  7    REV?  Flip screen horizontally    (0=Off, 1=On, v1 only)       ;GP1.R.14
   8-23       Not used (zero)
 ```
 Note: Interlace must be enabled to see all lines in 480-lines mode (interlace
@@ -803,15 +811,16 @@ better quality than a high resolution interlaced image, a pretty bad example
 is the intro screens shown by the BIOS). The Display Area Color Depth bit does
 NOT affect GP0 draw commands, which always draw in 15 bit. However, the
 Vertical Interlace flag DOES affect GP0 draw commands.<br/>
-Bit 7 is known as "reverseflag" and can reportedly be used on (v1?)
-arcade/prototype GPUs to flip the screen horizontally. On a v2 GPU setting this
-bit corrupts the display output, possibly due to leftovers of the v1 GPU's
-screen flipping circuitry still being present.<br/>
+Bit 7 is referred to as "reverse" by older versions of Sony's GPU library and is
+only supported on v1 arcade/prototype GPUs; the only game currently known to use
+it is Crypt Killer (Konami GQ). On a v2 GPU setting this bit seems to do
+nothing, though nocash's original notes report that it corrupts the display
+output instead (possibly on a different sub-revision of the v2 GPU).<br/>
 
 #### GP1(10h) - Read GPU internal register
 #### GP1(11h..1Fh) - Mirrors of GP1(10h), Read GPU internal register
 After sending the command, the result can be read (immediately) from GP0
-register (there's no NOP or other delay required) (namely GPUSTAT.Bit27 is used
+register (there's no NOP or other delay required) (namely GP1.R.Bit27 is used
 only for VRAM reads, but NOT for register reads, so do not try to wait for that
 flag).<br/>
 ```
@@ -902,7 +911,7 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
 
 
 ##   GPU Status Register
-#### 1F801814h - GPUSTAT - GPU Status Register (R)
+####  `0x1f801814`: `GP1` (GPU status register, when read)
 ```
   0-3   TBX   Texture page X Base   (N*64)                              ;GP0(E1h).0-3
   4     TBY   Texture page Y Base 1 (N*256) (ie. 0, 256, 512 or 768)    ;GP0(E1h).4
@@ -913,7 +922,7 @@ or if X1=260h, and Y1/Y2=A3h+/-N would work fine on most or all PAL TV Sets?<br/
   11    PBW   Set Mask-bit when drawing pixels (0=No, 1=Yes/Mask)       ;GP0(E6h).0
   12    PBC   Draw Pixels           (0=Always, 1=Not to Masked areas)   ;GP0(E6h).1
   13    ODE2  Interlace Field       (or, always 1 when GP1(08h).5=0)
-  14    ?     Flip screen horizontally (0=Off, 1=On, v1 only)           ;GP1(08h).7
+  14    REV?  Flip screen horizontally (0=Off, 1=On, v1 only)           ;GP1(08h).7
   15    TBY2  Texture page Y Base 2 (N*512) (only for 2 MB VRAM)        ;GP0(E1h).11
   16    HDS2  Horizontal Resolution 2     (0=256/320/512/640, 1=368)    ;GP1(08h).6
   17-18 HDS   Horizontal Resolution 1     (0=256, 1=320, 2=512, 3=640)  ;GP1(08h).0-1
@@ -970,10 +979,10 @@ transfers, especially in the FIFO State mode.<br/>
   Differences...                v0 (160-pin)            v1 (208-pin prototype)  v2 (208-pin)
   GPU Chip                      CXD8514Q                CXD8538Q                CXD8561Q/BQ/CQ/CXD9500Q
   Mainboard                     EARLY-PU-8 and below    Arcade boards only      LATE-PU-8 and up
-  Memory Type                   Dual-ported VRAM        Dual-ported VRAM?       Normal DRAM
-  GPUSTAT.13 when interlace=off always 0                unknown                 always 1
-  GPUSTAT.14                    always 0                screen flip             nonfunctional screen flip
-  GPUSTAT.15                    always 0                always 0?               bit1 of tpage Y base
+  Memory Type                   Dual-ported VRAM        Dual-ported VRAM        Normal DRAM
+  GP1.R.13 when interlace=off   always 0                unknown                 always 1
+  GP1.R.14                      always 0                screen flip             nonfunctional screen flip
+  GP1.R.15                      always 0                always 0?               bit1 of tpage Y base
   GP1(10h:index3..4)            19-bit (1 MB VRAM)      22-bit (2 MB VRAM)      20-bit (2 MB VRAM)
   GP1(10h:index7)               N/A                     00000001h version       00000002h version
   GP1(10h:index8)               mirror of index0        00000000h zero          00000000h zero
@@ -1043,7 +1052,7 @@ set to 000002h).<br/>
   [1F801814h]=10000004h       ;GP1(10h).index4 (latch draw area bottom right)
   [1F801814h]=10000007h       ;GP1(10h).index7 (latch GPU version, if any)
   if ([1F801810h] AND 00FFFFFFh)=00000002h then goto @@gpu_v2
-  [1F801810h]=([1F801814h] AND 3FFFh) OR E1001000h ;change GPUSTAT via GP0(E1h)
+  [1F801810h]=([1F801814h] AND 3FFFh) OR E1001000h ;change GP1.read via GP0(E1h)
   dummy=[1F801810h]           ;dummy read (unknown purpose)
   if ([1F801814h] AND 00001000h) then goto @@gpu_v1 else goto @@gpu_v0
  ;---
@@ -1148,7 +1157,7 @@ DMA2-continous block size) (due to GP0 FIFO size limits)?<br/>
 
 #### Sending the OT to the GPU (via DMA2-linked-list mode)
 ```
-  1 - Wait until GPU is ready to receive commands ;GPUSTAT.28
+  1 - Wait until GPU is ready to receive commands ;GP1.R.28
   2 - Enable DMA channel 2                  ;DPCR
   3 - Set GPU to DMA cpu->gpu mode          ;[GP1]=04000002h aka GP1(04h)
   3 - Set D2_MADR to the start of the list  ;(LAST Entry) ;Example=80123010h
