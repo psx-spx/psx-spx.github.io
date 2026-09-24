@@ -180,8 +180,8 @@ some extra words to be DMA'd before moving on to the next node. The node header
 is formatted like this:<br/>
 
 ```
-  0-23  Address of the next node (or end marker)
-  24-31 Number of extra words to transfer for this node
+  0-23  NPTR  Address of the next node (or end marker)
+  24-31 DC    Number of extra words to transfer for this node
 ```
 
 The transfer is stopped once an end marker is reached, or an error occurs. The
