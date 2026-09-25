@@ -223,7 +223,7 @@ The pitch counter is adjusted at 44100Hz rate as follows:<br/>
   Counter = Counter + Step
 ```
 Counter.Bit12 and up indicates the current sample (within a ADPCM block).<br/>
-Counter.Bit4..11 are used as 8bit gaussian interpolation index.<br/>
+Counter.Bit4..11 are used as 8bit interpolation index.<br/>
 
 #### Maximum Sound Frequency
 The Mixer and DAC supports a 44.1kHz output rate (allowing to produce max
@@ -238,6 +238,8 @@ practice this works only for 4000h..7FFFh; as values 8000h..FFFFh are mistaken
 as signed values).<br/>
 
 #### 4-Point Gaussian Interpolation
+The table is called gaussian here and everywhere else, and it is not one; the
+fit is below the table.<br/>
 Interpolation is applied on the 4 most recent 16bit ADPCM samples
 (new,old,older,oldest), using bit4-11 of the pitch counter as 8bit
 interpolation index (i=00h..FFh):<br/>
