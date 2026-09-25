@@ -494,6 +494,12 @@ Bit N of the frame is bit (N AND 7) of byte (N / 8). Multi-byte fields are littl
 Notes:
 
 - VRAM is the dual-ported VRAM of the 160-pin v0 GPU, split across two chips: chip A holds even pixels, chip B odd pixels. On each chip the row address is the VRAM Y coordinate (latched at /RAS) and the column address is X/2 (latched at /CAS).
+- The main RAM address is split across MA11-MA0 as follows (A = CPU physical address; MA10 is not driven by any of A22-A2 during /CAS):
+```
+  Phase   MA11  MA10  MA9  MA8  MA7  MA6  MA5  MA4  MA3  MA2  MA1  MA0
+  /RAS    A10   A22   A20  A19  A18  A17  A16  A15  A14  A13  A12  A11
+  /CAS    A19   -     A10  A21  A9   A8   A7   A6   A5   A4   A3   A2
+```
 - Which bit of each VRAM /WE and DT/OE pair belongs to which chip is not known; the two bits of a pair always move together.
 - The VRAM /CAS pulses are too short to be sampled directly; the analyzer records a toggle per cycle instead, and LIBPA detects edges on these bits.
 - DREQ5 is inferred: the H2700 has no hardware on DEV0 to issue a request, so the bit never changes.
@@ -557,7 +563,6 @@ The bus type classification is not stored in the capture data. It is derived at 
 #### PA Not Yet Documented
 The following aspects of the PA hardware and software have not been reverse-engineered:
 ```
-  - How the MA row/column values map back to CPU addresses
   - Trigger configuration (the meaning of the registers in banks 1-10 that
     control what conditions start and stop a capture)
   - The VRAM bus decoder's full state machine (multi-cycle classification of
