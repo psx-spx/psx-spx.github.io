@@ -96,6 +96,11 @@ opcodes, changing them might have some effect on some/all opcodes)?<br/>
   cop2r61-62 2xS16 ZSF3,ZSF4        Average Z scale factors          ;cnt29-30
   cop2r63      U20 FLAG             Returns any calculation errors   ;cnt31
 ```
+cnt5-7, cnt13-15, cnt21-25 and cnt28 store and return all 32 bits, CFC2 gives back
+what CTC2 wrote, and no GTE command alters them. cnt4, cnt12, cnt20, cnt26, cnt27,
+cnt29 and cnt30 hold 16 bits and sign-expand on read. cnt31 (FLAG) is the odd one
+out and is an output: writes are masked to 7FFFF000h with bit31 recomputed, and
+every command rewrites it.<br/>
 
 
 
@@ -118,16 +123,16 @@ Note in some functions format is different from the one that's given here.<br/>
 Each element is 16bit (1bit sign, 3bit integer, 12bit fraction). Reading the
 last elements (RT33,L33,LB3) returns the 16bit value sign-expanded to 32bit.<br/>
 
-#### Translation Vector (TR) (Input, R/W?)
+#### Translation Vector (TR) (Input, R/W)
 ```
-  cop2r37 (cnt5) - TRX - Translation vector X (R/W?)
-  cop2r38 (cnt6) - TRY - Translation vector Y (R/W?)
-  cop2r39 (cnt7) - TRZ - Translation vector Z (R/W?)
+  cop2r37 (cnt5) - TRX - Translation vector X
+  cop2r38 (cnt6) - TRY - Translation vector Y
+  cop2r39 (cnt7) - TRZ - Translation vector Z
 ```
 Each element is 32bit (1bit sign, 31bit integer).<br/>
 Used only for MVMVA, RTPS, RTPT commands.<br/>
 
-#### Background Color (BK) (Input?, R/W?)
+#### Background Color (BK) (Input, R/W)
 ```
   cop2r45 (cnt13) - RBK - Background color red component
   cop2r46 (cnt14) - GBK - Background color green component
@@ -135,7 +140,7 @@ Used only for MVMVA, RTPS, RTPT commands.<br/>
 ```
 Each element is 32bit (1bit sign, 19bit integer, 12bit fraction).<br/>
 
-#### Far Color (FC) (Input?) (R/W?)
+#### Far Color (FC) (Input, R/W)
 ```
   cop2r53 (cnt21) - RFC - Far color red component
   cop2r54 (cnt22) - GFC - Far color green component
@@ -143,7 +148,7 @@ Each element is 32bit (1bit sign, 19bit integer, 12bit fraction).<br/>
 ```
 Each element is 32bit (1bit sign, 27bit integer, 4bit fraction).<br/>
 
-#### Screen Offset and Distance (Input, R/W?)
+#### Screen Offset and Distance (Input, R/W)
 ```
   cop2r56 (cnt24) - OFX - Screen offset X
   cop2r57 (cnt25) - OFY - Screen offset Y
@@ -161,7 +166,7 @@ The DQA value is only 16bit (1bit sign, 7bit integer, 8bit fraction).<br/>
 The DQB value is 32bit (1bit sign, 7bit integer, 24bit? fraction).<br/>
 Used only for RTPS/RTPT commands.<br/>
 
-#### Average Z Registers (ZSF3/ZSF4=Input, R/W?) (OTZ=Result, R)
+#### Average Z Registers (ZSF3/ZSF4=Input, R/W) (OTZ=Result, R)
 ```
   cop2r61 (cnt29) ZSF3 |  0|ZSF3 1,3,12| Z3 average scale factor (normally 1/3)
   cop2r62 (cnt30) ZSF4 |  0|ZSF4 1,3,12| Z4 average scale factor (normally 1/4)
