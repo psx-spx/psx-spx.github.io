@@ -33,6 +33,7 @@ plugins:
   - search
   - with-pdf:
       output_path: psx-spx.pdf
+      enabled_if_env: ENABLE_PDF_EXPORT
 
 extra_css:
   - css/extra.css
