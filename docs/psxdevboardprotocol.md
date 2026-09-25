@@ -500,6 +500,7 @@ Notes:
   /RAS    A10   A22   A20  A19  A18  A17  A16  A15  A14  A13  A12  A11
   /CAS    A19   -     A10  A21  A9   A8   A7   A6   A5   A4   A3   A2
 ```
+  This is what makes the retail wiring described in the [CPU pinout notes](pinouts.md#cpu-pinout-notes) work: with RAM.A11 on the chips' A8 pin and RAM.A8/RAM.A10 unconnected, the chip rows receive A11-A18, A10, A20 and the columns A2-A9, A19, which covers A2-A20 (2MB) exactly once.
 - Which bit of each VRAM /WE and DT/OE pair belongs to which chip is not known; the two bits of a pair always move together.
 - The VRAM /CAS pulses are too short to be sampled directly; the analyzer records a toggle per cycle instead, and LIBPA detects edges on these bits.
 - DREQ5 is inferred: the H2700 has no hardware on DEV0 to issue a request, so the bit never changes.
