@@ -379,11 +379,11 @@ The DTL-H2700 includes a bus logic analyzer on two daughterboards, accessible th
 #### PA Port Map
 ```
   Port base+C  Status/Control Register (16-bit read/write)
-  Port base+E  Data Register (16-bit read/write, also bulk read)
+  Port base+E  Trace data (16-bit, bulk read only)
 ```
 
 #### PA Control Register
-The control register uses a bank-switching scheme to access multiple internal registers through the single data port:
+All register accesses go through base+C: write the bank number shifted left by 4 to select a bank, then write the bank's value or read it back on the same port.
 ```
   Bits 3:0   Command/mode
                0x01 = Start capture
@@ -427,112 +427,90 @@ The control register uses a bank-switching scheme to access multiple internal re
 ```
 
 #### PA Capture Frame Format
-Each captured frame is 16 bytes (128 bits), representing a single clock cycle snapshot of the PlayStation's bus state. The hardware passively captures raw electrical signal levels - all bus type classification (idle, refresh, DMA, etc.) is performed in software by LIBPA.DLL through state machines that track RAS/CAS sequences, chip selects, and write enables across consecutive frames.
+Each captured frame is 16 bytes (128 bits): the state of the analyzer's input lines sampled once per 33.8688 MHz CPU clock cycle. The hardware records raw signal levels only; all bus cycle classification (idle, refresh, DMA, etc.) is done in software by LIBPA.DLL, which tracks RAS/CAS sequences, chip selects and strobes across consecutive frames.
 
-The bit assignments below were reverse-engineered from LIBPA.DLL and PA32.EXE (PSY-Q SDK 4.4). Waveform signal assignments were confirmed empirically using crafted PAD files loaded in PA32.EXE. Bits not listed are not accessed by the software and may be unused capture lines, reserved, or internal PA hardware state.
+Bit N of the frame is bit (N AND 7) of byte (N / 8). Multi-byte fields are little-endian. Signals prefixed with `/` are active-low; DREQ and DACK lines are active-high.
 ```
-  Word 0 (bytes 0-3) - SDRAM Bus and Control Signals
-  ---------------------------------------------------
-  Bytes 0-1 (16-bit LE):
-    SDRAM multiplexed address lines (active during RAS and CAS phases).
-    The software reconstructs full SDRAM addresses by capturing the row
-    address during RAS then the column address during CAS. The exact
-    mapping from raw bits to logical address bits involves non-trivial
-    rearrangement in the DLL and has not been fully decoded.
+  Bytes 0-3
+  ---------
+  Bits 11-0   MA11-MA0   Main RAM address pins, row/column multiplexed. On
+                         non-RAM cycles they carry the row bits of the
+                         current address.
+  Bit  12     RAM /CAS   Single CAS shared by all byte lanes (reads, writes
+                         and refresh)
+  Bit  13     GPU /RD    Also pulses on CPU reads from main RAM and MDEC
+  Bit  14     GPU /WR    Also pulses on CPU writes to main RAM and MDEC;
+                         low for each word of a GPU DMA transfer
+  Bit  15     SBUS /RD
+  Bit  16     SBUS /WR1  High byte write strobe (16-bit devices only)
+  Bit  17     RXD1       SIO1 receive data
+  Bit  18     DSR1       SIO1 data set ready
+  Bit  19     VRAM DT/OE, chip A  \ low on VRAM reads and on the once-per-line
+  Bit  20     VRAM DT/OE, chip B  / read transfer
+  Bit  21     -          Pulses once per main RAM refresh cycle, purpose unknown
+  Bit  22     VRAM /CAS toggle, chip A  \ change state once per /CAS cycle
+  Bit  23     VRAM /CAS toggle, chip B  / (not the pin level)
+  Bit  24     /CS2       BIOS ROM (DEV2)
+  Bit  25     RAM /RAS0
+  Bit  26     RAM /RAS1
+  Bits 30-27  RAM /WE3-/WE0  Byte lane write enables (stores only)
+  Bit  31     PC2        Follows bit 2 of the CPU instruction fetch address
 
-  Byte 1:
-    Bit 4 (0x10)   Main bus access strobe (active during bus transactions)
-    Bit 7 (0x80)   SBus direction (1=read, 0=write)
-    Bits 0-3,5,6   Part of SDRAM muxed address (exact mapping not decoded)
+  Bytes 4-7
+  ---------
+  Bit  32     GPU /CS
+  Bit  33     DREQ2      GPU DMA request
+  Bit  34     DACK2      GPU DMA acknowledge
+  Bit  35     /IRQ1      GPU interrupt
+  Bit  36     VBLANK
+  Bits 60-37  SBUS A23-A0
+  Bit  61     SBUS /WR0  Low byte write strobe
+  Bit  62     /CS0       DEV0 (expansion 1)
+  Bit  63     DREQ5      PIO DMA request (see notes)
 
-  Byte 2:
-    Bit 0 (0x01)   SBus device select
-    Bit 1 (0x02)   SIO1 RXD (receive data)
-    Bit 2 (0x04)   SIO1 DSR (data set ready)
-    Bit 3 (0x08)   VRAM port 0 access strobe
-    Bit 4 (0x10)   VRAM port 1 access strobe
-    Bit 5           Not accessed by software
-    Bit 6 (0x40)   VRAM clock edge A (toggles on VRAM bus activity)
-    Bit 7 (0x80)   VRAM clock edge B (toggles on VRAM bus activity)
+  Bytes 8-11
+  ----------
+  Bit  64     DACK5      PIO DMA acknowledge
+  Bit  65     /IRQ10     Output of the DTL-H2000/H2700 secondary IRQ controller
+  Bit  66     /CS4       SPU (DEV4)
+  Bit  67     /IRQ9      SPU interrupt
+  Bit  68     DREQ4      SPU DMA request
+  Bit  69     DACK4      SPU DMA acknowledge
+  Bit  70     /CS5       CD-ROM (DEV5)
+  Bit  71     /IRQ2      CD-ROM interrupt
+  Bits 80-72  VRAM A8-A0, chip A
+  Bits 89-81  VRAM A8-A0, chip B
+  Bit  90     VRAM /WE, chip A  \ both low on every VRAM write
+  Bit  91     VRAM /WE, chip B  /
+  Bit  92     VRAM /RAS  (shared by both chips)
+  Bit  93     HBLANK
+  Bit  94     VRAM DSF   High during rectangle fills
+  Bit  95     CTS1       SIO1 clear to send
 
-  Byte 3:
-    Bit 0 (0x01)   RAM chip select
-    Bits 2-1       Transaction boundary (both set = end of bus cycle)
-    Bits 6-3       nMWEN[3:0] - SDRAM byte write enables (active-low,
-                   one per byte lane, active count = bytes written)
-    Bit 7           Not accessed by software
-
-
-  Word 1 (bytes 4-7) - Address Bus and SBus Selects
-  --------------------------------------------------
-  Bytes 4-7 (32-bit LE):
-    Bits 28-5      24-bit bus address (valid during addressed transactions)
-
-  Byte 4:
-    Bit 0 (0x01)   SBus control flag
-    Bit 2 (0x04)   PIO device select
-    Bit 4 (0x10)   VBLNK (vertical blank signal)
-
-  Byte 7:
-    Bit 5 (0x20)   SPU chip select
-    Bit 6 (0x40)   GPU / DMA bus arbitration
-
-
-  Word 2 (bytes 8-11) - VRAM Bus and Peripheral Signals
-  ------------------------------------------------------
-  Bytes 8-10 (from 32-bit LE):
-    Bits 16-8      9-bit VRAM X coordinate, port 0 (half-pixel units)
-    Bits 25-17     9-bit VRAM X coordinate, port 1 (half-pixel units)
-    VRAM Y coordinates are accumulated by software across frames,
-    not directly present in the raw capture.
-
-  Byte 8:
-    Bit 1 (0x02)   GUNINT (lightgun interrupt signal)
-    Bit 2 (0x04)   PIO flag (sub-bus)
-    Bit 6 (0x40)   CD device select
-    Bits 0,3,4,5,7 Not accessed by software
-
-  Byte 11:
-    Bit 2 (0x04)   VRAM transfer active A
-    Bit 3 (0x08)   VRAM transfer active B
-    Bit 4 (0x10)   VRAM vertical sync (used by VRAM decoder for frame sync)
-    Bit 6 (0x40)   VRAM read/write direction
-    Bit 7 (0x80)   SIO1 CTS (clear to send)
-    Bits 0,1,5     Not accessed by software
-
-
-  Word 3 (bytes 12-15) - GPU Data Bus
-  ------------------------------------
-  Full 32-bit capture of the GPU data bus. Interpretation depends on
-  what the GPU is doing at the time of capture:
-    During OT traversal:  Bits 31-24 = GP0 command byte
-                          Bits 23-0  = next OT pointer (0xFFFFFF = end)
-    During vertex data:   Bits 15-0  = X coordinate
-                          Bits 31-16 = Y coordinate
-    During color data:    Bits 7-0   = Red
-                          Bits 15-8  = Green
-                          Bits 23-16 = Blue
-  The GP0 command byte identifies the GPU primitive type:
-    0x20 POLY_F3     0x24 POLY_FT3    0x28 POLY_F4     0x2C POLY_FT4
-    0x30 POLY_G3     0x34 POLY_GT3    0x38 POLY_G4     0x3C POLY_GT4
-    0x40 LINE_F2     0x48 LINE_F3     0x4C LINE_F4
-    0x50 LINE_G2     0x58 LINE_G3     0x5C LINE_G4
-    0x60 TILE_any    0x64 SPRT_any    0x70 TILE_1      0x74 TILE_8
-    0x78 TILE_16     0x7C SPRT_8/16
-    0x02 BlockFill
-    0xE0+ GP1 commands (display control)
+  Bytes 12-15
+  -----------
+  Bits 127-96 RAM D31-D0  Main RAM data bus
 ```
+Notes:
+
+- VRAM is the dual-ported VRAM of the 160-pin v0 GPU, split across two chips: chip A holds even pixels, chip B odd pixels. On each chip the row address is the VRAM Y coordinate (latched at /RAS) and the column address is X/2 (latched at /CAS).
+- Which bit of each VRAM /WE and DT/OE pair belongs to which chip is not known; the two bits of a pair always move together.
+- The VRAM /CAS pulses are too short to be sampled directly; the analyzer records a toggle per cycle instead, and LIBPA detects edges on these bits.
+- DREQ5 is inferred: the H2700 has no hardware on DEV0 to issue a request, so the bit never changes.
+- RXD1, DSR1 and CTS1 are driven by external hardware and follow PA32's signal names.
+- Not captured: RAM /OE, SBUS D15-D0, VRAM data, VRAM SC and /SE, DEV1 and DEV8 chip selects (those two regions are used by the devkit's own debug hardware).
+- GPU commands appear on the RAM data bus while GPU DMA reads them from main RAM, with DACK2 high.
 
 #### PA Waveform Signals
-The PA captures five individual digital signal lines, displayed as waveforms in the PA32 GUI alongside a synthetic SYSCLK reference clock. The signal-to-bit assignments have been confirmed empirically by crafting test PAD files and observing the PA32 waveform display:
+PA32's waveform view shows five captured lines alongside a SYSCLK trace, which is synthetic and not captured:
 ```
-  Byte 4 bit 4 (0x10)   VBLNK   Vertical blank
-  Byte 8 bit 1 (0x02)   GUNINT  Lightgun interrupt
-  Byte 2 bit 1 (0x02)   RXD1    SIO1 receive data (active-low on hardware)
-  Byte 2 bit 2 (0x04)   DSR1    SIO1 data set ready (active-low on hardware)
-  Byte 11 bit 7 (0x80)  CTS1    SIO1 clear to send (active-low on hardware)
+  Bit 36   VBLNK
+  Bit 65   GUNINT   The CPU's /IRQ10 input
+  Bit 17   RXD1
+  Bit 18   DSR1
+  Bit 95   CTS1
 ```
-The GUI displays these with asterisks (GUNINT*, RXD1*, DSR1*, CTS1*) to indicate active-low signals. SYSCLK is not captured from hardware - it is a synthetic reference waveform generated by PA32.EXE.
+PA32 marks GUNINT, RXD1, DSR1 and CTS1 with asterisks (GUNINT*, RXD1*, ...) as active-low.
 
 #### PA Decoded Analysis Views
 The PA software (PA32.EXE + LIBPA.DLL) decodes the raw frames into several analysis views:
@@ -574,19 +552,17 @@ triggering event, so a penalty trace appears wider than the instantaneous
 stall. These views, like the bus views, are decoded by LIBPA from the raw
 frames; the classification is not stored in the capture.
 
-The bus type classification is not stored in the capture data. It is derived at display time by multi-frame state machines in LIBPA.DLL that track SDRAM RAS/CAS sequences, chip select transitions, and write enable patterns across consecutive frames.
+The bus type classification is not stored in the capture data. It is derived at display time by multi-frame state machines in LIBPA.DLL that track RAM RAS/CAS sequences, chip select transitions, and write enable patterns across consecutive frames. Instruction fetches are only identified as such when they are cache line fills ("Inst Burst Read"); a single uncached fetch looks the same as a data read in the raw frame.
 
 #### PA Not Yet Documented
 The following aspects of the PA hardware and software have not been reverse-engineered:
 ```
-  - SDRAM address bit scrambling (the exact rearrangement of raw bits in bytes 0-1
-    to reconstruct logical addresses through RAS/CAS phases)
+  - How the MA row/column values map back to CPU addresses
   - Trigger configuration (the meaning of the registers in banks 1-10 that
     control what conditions start and stop a capture)
   - The VRAM bus decoder's full state machine (multi-cycle classification of
     Read vs Write vs Block Write vs Read-Modify-Write vs Texture Read vs CLUT Read)
-  - 15 bits in the capture frame not accessed by the software
-    (byte 2 bit 5, byte 3 bit 7, byte 8 bits 0/3/4/5/7, byte 11 bits 0/1/5)
+  - The purpose of frame bit 21 (refresh-only pulse) and what drives PC2 (bit 31)
   - Physical signal line mapping to PA daughterboard pins
 ```
 
