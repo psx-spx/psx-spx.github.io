@@ -182,7 +182,10 @@ PU-7, EARLY-PU-8:
 Later consoles:
   0B88h    Single 2MB bank (one 512Kx32 chip), byte masking via /CAS
            (incorrectly set as an 8MB bank, correct setting would be 0888h)
-DTL-H2000, DTL-H2700, DTL-H2500:
+DTL-H2000, DTL-H2700:
+  0B80h    Single 8MB bank (four 2Mx8 chips), byte masking via /WE
+           (correctly set as 8MB)
+DTL-H2500:
   0B88h    Single 8MB bank (four 2Mx8 chips), byte masking via /CAS
            (correctly set as 8MB)
 System 573 (700A01, 700B01 if ASIC revision bit = 1):
