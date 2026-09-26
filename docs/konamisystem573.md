@@ -2627,6 +2627,24 @@ metal plate, which in turn holds the following connectors:
 The back panel has a similar cutout, covered by a plate with holes for the
 digital I/O board's RCA networking jacks.
 
+### DDR Solo I/O connectors
+
+Solo cabinets use a different front panel from the standard 2-player ones: there
+is an extra connector on the left side, and the connectors on the right differ.
+The wiring, as given by the DDR Solo Bass Mix service manual, is:
+
+| Location     | Connector | Wired to                                          |
+| :----------- | :-------- | :------------------------------------------------ |
+| Top left     | `XMR-10V` | Lamp outputs `B0-B3` on the digital I/O board, driving the relays for the AC outlets that power external lamps. |
+| Middle left  | `XMR-12V` | Lamp outputs `B4-B7` and `C4-C7`, driving the cabinet's own lights. |
+| Bottom left  | `XMR-07V` | `EXT-IN` (non-JAMMA button inputs) on the motherboard, going to a harness marked reserved with nothing connected to it. |
+| Top right    | `YLR-08V` | RS-232 port on the digital I/O board. |
+| Bottom right | `YLR-06V` | Lamp outputs `C0-C3`, driving the speaker neons. |
+
+The RS-232 port is not known to have been used by any game, but its presence on
+the panel implies Solo's FPGA bitstream implements a UART for it. Later games'
+bitstreams do not, presumably because Konami ran out of room in the FPGA.
+
 ### DDR light mapping
 
 Dance Dance Revolution cabinets (standard 2-player ones, not Solo) have lights
