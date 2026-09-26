@@ -1,0 +1,655 @@
+#   PSX Dev-Board Protocol
+This page documents the DECI communication protocol and host-side interface used by the DTL-H2000, DTL-H2500, and DTL-H2700 PlayStation development boards. For board chipsets and physical component lists, see [PSX Dev-Board Chipsets](psxdevboardchipsets.md).
+
+The DTL-H2000 is an ISA-bus development board. The DTL-H2500 is a PCI-bus variant with automatic configuration. The DTL-H2700 is an ISA-bus board identical to the H2000 but with an additional Performance Analyzer (bus logic analyzer) on two daughterboards.
+
+All three boards use the same DECI (DEbugging Communication Interface) protocol for debugging, program upload, and PCDRV host file system access. The protocol is transport-agnostic - the DECI command format, opcodes, and PCDRV file operations are identical regardless of whether the underlying transport is ISA or PCI. The H2700 adds extra hardware for the Performance Analyzer.
+
+#### ISA I/O Port Map (DTL-H2000, DTL-H2700)
+The ISA-bus boards use a set of I/O ports at a configurable base address. The base is set via DIP switches on the board. Factory default is 0x1340 for the H2700 (the H2000 commonly uses 0x0320). The DIP switches set the upper 12 bits of the address.
+```
+  Port base+0   Status Register (16-bit read)
+  Port base+1   Command/Result Byte (8-bit read/write)
+  Port base+2   Data Port (16-bit read/write, bulk transfers)
+  Port base+4   Control Register A (8-bit write)
+  Port base+5   Mode Register (8-bit read/write)
+  Port base+6   Reset Control (8-bit write)
+  Port base+7   Reserved
+  Port base+C   Performance Analyzer Status/Control (16-bit, H2700 only)
+  Port base+E   Performance Analyzer Data (16-bit, H2700 only)
+```
+
+#### Status Register (base+0, read)
+```
+  Bit 0     Word ready (single word available in data port)
+  Bit 1     Bulk read ready (large transfer available)
+  Bit 2     Write ready (data port can accept writes)
+  Bit 3     Command accept ready (port1 can accept a command byte)
+  Bit 4     Command complete (result available in port1)
+  Bits 5-15 Unknown/unused
+```
+
+#### Control Register A (base+4, write)
+```
+  0x01      Initialize / finalize connection (written after successful connect)
+  0x20      Acknowledge result (written after reading result from port base+1)
+  0x71      Reset sequence trigger
+```
+Note: DECI commands are triggered by writing the complete command buffer to port base+2. Neither port base+4 nor the pending flag on port base+5 is needed. Port base+4 is only used for acknowledgment (0x20), connection finalization (0x01), and reset (0x71). The pending flag on port base+5 bit 4 is only used during the connection sequence.
+
+#### Mode Register (base+5, read/write)
+```
+  Bit 4     Pending command flag (set to signal command ready)
+  Other     Write 0x01 during reset sequence
+```
+
+#### Reset Control (base+6, write)
+```
+  0x01      Assert reset (used during initialization and resetPS)
+  Other     Target-specific reset modes (e.g. op22 writes AL directly)
+```
+
+#### IRQ Configuration
+Valid IRQs: 10, 11, 12, 15. Configurable via jumper on the board, `/I` command line flag, or `IRQ` setting in `PSYQ.INI`. Standard 8259 PIC handling. IRQ is optional - the protocol works in pure polling mode.
+
+#### DECI Protocol Overview
+Communication between the host PC and the PlayStation target uses the DECI (DEbugging Communication Interface) protocol. All commands follow a master-slave model where the host initiates and the target responds.
+
+#### Boot Modes
+The value written to port base+6 during reset selects the boot mode:
+```
+  Mode 0    Boot from CD-ROM (loads cdrom:PSX.EXE;1)
+  Mode 1    Debug stub (initializes SRAM at 1FA00000, enters DECI handler)
+  Mode 2    Console (interactive ROM monitor with PSX> prompt)
+```
+Mode 1 is the standard development mode. The BIOS calls entry points in SRAM at 0x1FA00000 to initialize the debug stub, then the CPU executes a BREAK instruction to enter the debug handler. This stub services DECI commands (memory read/write, register access, program execution) by polling the ATCONS registers from the PS1 side. On H2500/H2700, the stub is loaded from flash automatically. On H2000, the stub must be uploaded via SNPATCH after each reset (see below).
+
+Mode 2 boots the PS1 kernel with TTY enabled, then enters the ROM monitor - an interactive text console accessible through the ISA ports. The monitor supports commands like `dw` (dump word), `sw` (set word), `dr`/`sr` (dump/set registers), `go` (execute), `di` (disassemble), `help` (list commands), etc. Console I/O uses a simple byte-at-a-time protocol through port base+1 (see Console Mode below).
+
+Mode 0 boots the kernel, initializes CD-ROM, and attempts to load and execute PSX.EXE from disc. With no CD present, it blocks waiting for the disc.
+
+All three boards (H2000, H2500, H2700) have SRAM at 0x1FA00000 and a built-in debug stub in the board's BIOS ROM. During boot, `loadAndInitKernel` (at 0xBFC00428 in the H2000 BIOS) copies the stub from ROM at 0xBFC20000 into SRAM at 0x1FA00000. This happens for all boot modes, before the mode 0/1/2 branch. In mode 1, the BIOS then calls the stub's entry points to initialize it and enters the DECI handler. The built-in stub provides basic DECI functionality (memory read/write, register access).
+
+SNPATCH is an upgraded replacement for the built-in stub. It provides improved kernel patching (fixing cache coherency bugs in the older PATCHX), PCDRV host file system support, and the full DECI debug protocol. On H2500/H2700, the upgraded stub can be stored in flash memory (initialized once via the `FLASH` utility) so it persists across resets. On H2000, SNPATCH must be uploaded after every reset.
+
+#### Connection Sequence
+```
+  1. Write 0x04 to port base+1 (command byte)
+  2. Set bit 4 of port base+5 (pending command flag)
+  3. Poll port base+0 bit 4 until set (command complete)
+  4. Read port base+1 (result byte)
+  5. Write 0x20 to port base+4 (acknowledge result)
+  6. If result == 2, target is connected
+  7. Write 0x01 to port base+4 (finalize connection)
+```
+The connection handshake does not use port base+4 as a trigger before polling. Only the pending flag on port base+5 is needed. The 0x01 write to port base+4 occurs after a successful connection, not before.
+
+#### Reset Sequence
+```
+  1. Disable IRQ (if configured)
+  2. Write mode to port base+6 (0=CD, 1=debug, 2=console)
+  3. Write 0x71 to port base+4
+  4. Write 0x01 to port base+5
+  5. Wait for boot (typically 2-3 seconds)
+```
+
+#### POST Codes (port base+7)
+During boot, port base+7 reflects the PlayStation BIOS POST progress. The values cycle through a predictable sequence that completes within approximately 125ms after reset:
+```
+  0x0F -> 0x01 -> 0x04 -> 0x02 -> 0x0B -> 0x0C -> 0x0D -> 0x00
+```
+Port base+4 transitions from 0x00 to 0x01 when initialization is complete (~124ms after reset). The POST code values correspond to the `BIOS_trace()` calls in the PlayStation kernel (documented in the OpenBIOS source).
+
+#### DECI Command Buffer Format
+Each command sends a 6-byte or 10-byte buffer through the data port (base+2), written as 16-bit words. The buffer is sent as `bufferSize/2` word writes - each word is read as two consecutive bytes from the buffer and written via `outw()`.
+```
+  Byte 0    DECI command code
+  Byte 1    Unit/target ID (variable for PS1 target ops, 0x80 for host-side ops)
+  Byte 2-3  Parameter (zeros for most commands)
+  Byte 4-5  Length in bytes (big-endian: high byte first)
+  Byte 6-9  Address (10-byte commands only, big-endian: bits 31-24, 23-16, 15-8, 7-0)
+```
+On an x86 host, `outw()` writes the low byte first (little-endian bus), so each word written to port base+2 places byte N at the low position and byte N+1 at the high position. For example, writing bytes `{0x20, 0x00}` (DECI cmd 0x20, unit 0) is done as `outw(0x0020)`.
+
+For the 10-byte write memory command (DECI 0x20), DEXBIOS fills the buffer from x86 registers:
+```
+  cmd[0] = 0x20          cmd[1] = AL (unit)
+  cmd[2] = 0             cmd[3] = 0
+  cmd[4] = CH            cmd[5] = CL            (length, CX register)
+  cmd[6] = DH            cmd[7] = DL            (address high word, DX register)
+  cmd[8] = BH            cmd[9] = BL            (address low word, BX register)
+```
+
+#### Command Send/Receive Flow
+To send a DECI command:
+```
+  1. Poll port base+0 bit 2 (write ready)
+  2. Write command buffer as 16-bit words to port base+2
+     (buffer size / 2 words, reading two bytes at a time from the buffer)
+  3. Set bit 4 of port base+5 (pending command flag)
+  4. Enter result polling loop (see below)
+```
+Note: no trigger write to port base+4 is needed to initiate a DECI command, and no pending flag is set on port base+5. The act of writing the complete command buffer to port base+2 is itself sufficient to trigger the command. DEXBIOS uses `REP OUTSW` to blast the buffer in a single instruction, then immediately polls for the result. This differs from the connection sequence, which does use the pending flag on port base+5.
+
+The host then repeatedly polls for the command complete flag and reads the result byte:
+```
+  1. Poll port base+0 bit 4 until set (command complete)
+  2. Read result byte from port base+1
+  3. Write 0x20 to port base+4 (acknowledge)
+  4. Handle result (see below)
+  5. Loop back to step 1 unless result indicates completion
+```
+Note: the built-in debug stub may only process one command per connection. After a command completes, the stub returns to waiting for a new 0x04 connection byte. For multiple operations, reconnect (repeat the connection sequence) or perform a full reset between each command. The stub's state machine is fragile - if a command leaves the stub in an unexpected state, a full reset may be required before the next command will be accepted.
+
+Read-path caveat (observed on H2700, mechanism not yet pinned): a read command (DECI 0x21) issued after other commands within the same connection can return its payload shifted by one 16-bit word - an apparent leading 0x0000 with the trailing word truncated - as if a stale word from the prior command's tail were consumed as the first data word. A read performed immediately after a fresh reset+connect returns cleanly. Tooling that reads target memory back mid-session should account for this (drain/resynchronize before the read, or cross-check against a fresh-connection read); a load-and-run path that never reads memory back is unaffected.
+
+Result codes:
+```
+  Result 0  Target requests data: write payload words to port base+2.
+            Poll port base+0 bit 2 (write ready) between bursts.
+            Maximum burst size: 0x800 words (4KB). If more data remains,
+            poll bit 2 again and send the next burst.
+  Result 1  Target has data: read payload words from port base+2.
+            If remaining bytes > 0xFFF: poll bit 1, read 0x800-word bursts.
+            If remaining bytes <= 0xFFF: poll bit 0 (single word) or
+            bit 4 (FIFO complete), read words individually.
+  Result 2  Command complete. Exit the loop.
+  Result 3  Extended status: the follow-up byte is read using the same
+            CDONE/port1/ack mechanism (poll bit 4, read port base+1,
+            ack with 0x20 to port base+4). NOT read from the data port.
+              0xFF = target requests PSY-Q copyright string (40 bytes
+                     via port base+2)
+              Other = stored as error/status code
+  Result 5  Target disconnected. Mark connection as lost.
+  Result 7  Flow control: follow-up byte read via same CDONE mechanism.
+              0x7E = override timeout (extend wait period)
+              0x00 = command acknowledged, continue normally
+```
+
+#### DECI Command Table
+These are the BIOS-level opcodes and their corresponding DECI command codes. The BIOS opcodes are what programs like RUN.exe and DEXBIOS.COM use, while the DECI command codes are the bytes that appear in the command buffer on the wire.
+```
+  BIOS Op  DECI Cmd  Description
+  00       -         Disconnect (direct port I/O, no DECI buffer)
+  01       -         Select SCSI ID (local only)
+  02       -         Get active SCSI ID
+  07       -         Get PSY-Q report string (error code to text)
+  11       0x00      Get target info (reads 24 bytes)
+  12       0x02      Kill interrupts on target
+  14       0x04      Read 4-byte value from target
+  15       0x05      Send/receive data (bidirectional, lengths in CX/DX)
+  19       0x21      Read target memory (address in DX:BX, length in CX)
+  1a       0x20      Write target memory (address in DX:BX, length in CX)
+  1b       0x0C      Halt-load: arm target but do not start it (RUN /h)
+  1c       0x0D      Commit the loaded target state (NOT the launch - see below)
+  ??       0x8001    Launch: restore the saved register block and exception-return
+                     into the target (the actual "go"). Wire-confirmed on H2700;
+                     BIOS-op origin / exact decode not yet pinned.
+  22       -         Reset PlayStation (direct port I/O to base+6)
+  30       0x22      Read memory, alternate format (flag=0x80)
+  39       0xC6      mkdir (host-side, unit=0x80)
+  3a       0xC7      rmdir (host-side, unit=0x80)
+  3b       0xC8      chdir (host-side, unit=0x80)
+  3c       0xC9      creat - create file (returns 2-byte handle)
+  3d       0xCA      open - open file (returns 2-byte handle)
+  3e       0xCB      close - close file (handle in buf[2:3])
+  3f       0xCC      read - read file (handle in buf[2:3], length in buf[4:5])
+  40       0xCD      write - write file (handle in buf[2:3], length in buf[4:5])
+  41       0xD0      unlink - delete file
+  43       0xD1/D2   get/set file attributes (D1=get, D2=set)
+  47       0xD3      getcwd - get current directory (returns 256-byte path)
+  4e       0xD4      findfirst - find first file (returns 128-byte DTA)
+  4f       0xD5      findnext - find next file (sends/receives 128-byte DTA)
+  56       0xD6      Send two null-terminated strings (rename)
+  57       0xD7/D8   Read/write 4 bytes (D7=read, D8=write)
+```
+
+#### PCDRV (Host File System Access)
+DECI commands 0xC6-0xD8 (BIOS opcodes 0x39-0x57) implement PCDRV - a file system proxy that lets PlayStation programs access files on the host PC. The host-side handler (DEXBIOS.COM on DOS, or a Linux equivalent) translates these into native file operations.
+
+Files are served relative to the working directory where the host-side handler was started. There is no explicit root path configuration - the DOS current directory is the PCDRV root.
+
+The host maintains a handle table of up to 64 entries, mapping PlayStation-side file handles to host file handles. Read and write operations are chunked through a configurable buffer size.
+
+On the PlayStation side, PCDRV requires the DECI debug stub to be installed (see SNPATCH below). The libsn library provides thin wrappers that issue MIPS BREAK instructions, which the debug stub intercepts and translates into DECI commands sent to the host through the development hardware.
+
+#### SNPATCH - Debug Stub Installation
+Before PCDRV or debugging can work, the PlayStation must have a DECI-aware debug stub installed. This is done by uploading and executing SNPATCH.CPE, which is included in the PSY-Q SDK.
+
+SNPATCH.CPE is a CPE-format executable (not a PS-EXE) that installs a patched kernel and debug stub into the development board's SRAM at address 0x1FA00000. This SRAM is mapped into the PlayStation's address space by the development hardware.
+```
+  Boot sequence:
+  1. Reset PlayStation (RESETPS 1)
+  2. Upload and execute SNPATCH.CPE (RUN /w4 SNPATCH)
+  3. Wait 500ms for kernel stabilization (DELAY)
+  4. Upload and execute target program (RUN /w4 MYPROG)
+```
+SNPATCH copies approximately 240KB of code into three regions:
+```
+  0x1FA00000  7,540 bytes   Exception vectors, kernel entry points
+  0x1FA08000  134,004 bytes Shell replacement, debugger core
+  0x1FA66000  104,676 bytes Additional debug/PCDRV handler code
+```
+After copying, it flushes the instruction cache and transfers control to the patched entry points.
+
+SNPATCH replaces both PATCHX.CPE (which had cache coherency bugs) and NEWDEX (which installed the debug stub separately). Three variants exist: SNPATCH.CPE (standard), SNPATCHJ.CPE (Japanese fonts), SNPATCHW.CPE (Western fonts including Latin diacritics, Greek, Cyrillic).
+
+On the DTL-H2500 and DTL-H2700, the debug stub is stored in the board's flash memory and is loaded into SRAM automatically during mode 1 boot - SNPATCH upload is not required after each reset. The flash must be initialized once using the `FLASH` utility included in the SDK. On the older DTL-H2000, which has no flash, SNPATCH (or the older PATCH.CPE) must be uploaded after every reset.
+
+The BIOS boot sequence in mode 1 calls three entry points in the SRAM region:
+```
+  0x1FA00008    Returns required memory allocation size
+  0x1FA00020    Debug stub initialization (first pass)
+  0x1FA00028    Debug stub initialization (second pass)
+```
+After these calls, the BIOS flushes the instruction cache, executes `BREAK 0x101` and `BREAK 0x406`, then the debug stub takes over. In mode 2 (console) these SRAM calls are not made - the SRAM region may contain uninitialized data.
+
+#### Target Execution and the Saved Register Block
+Launching a loaded program does not use a "jump to address" command - no opcode carries a target start address. The entry point and the rest of the initial CPU context are established beforehand. The host loads the program image with write-memory commands (DECI 0x20, BIOS opcode 0x1a), then writes the target's register context - including the program counter - into a saved-register block the debug stub maintains in SRAM. The block is not at a fixed address - it lives in the debug stub's per-target data at a constant offset from the stub's global pointer (gp + 0x7c on the H2700), so its absolute location changes between resets. The host finds it by issuing DECI 0x00 (BIOS op 0x11, "get target info"): the command's response carries a pointer to the saved-register block. The host then reads the block with DECI 0x21 to capture the current context, patches it (the PC at least), and writes it back with DECI 0x20 - both addressed at the returned pointer. The program counter occupies offset 0x90 within the block. This is the same 0x90 used as the register number in a CPE Set-Value record (see CPE Executable Format below) - so a CPE "set register 0x90" record is literally an instruction to patch the saved PC slot. The PC correspondence is confirmed on silicon; whether every CPE register number equals its block offset is a reasonable inference, but only the PC has been checked.
+
+Launch is two distinct commands, confirmed on DTL-H2700 silicon:
+```
+  1. DECI 0x0D   - commit. Finalizes the loaded state. Carries no address and
+                   does NOT itself transfer control.
+  2. DECI 0x8001 - go. Restores the full saved register context (all general
+                   registers, HI/LO, the COP0 Status register) and the saved
+                   exception PC from the block, then performs an exception
+                   return into the target. This is what actually starts it.
+```
+An earlier revision of this page attributed execution to 0x0D; live-hardware tracing shows 0x0D only commits, and the separate 0x8001 performs the jump. The 0x8001 encoding is unusual - the high bit is set, unlike the byte-sized command codes elsewhere in the table - and its exact decode (which BIOS opcode emits it, how the command/unit bytes are read) is not yet pinned; only its on-the-wire effect is confirmed. The stub also carries a run-mode flag with "run" and "break on entry" variants (the latter stops at the entry point under debugger control); RUN.exe's plain launch path runs. This restore-and-exception-return is the same mechanism the ROM monitor's `go` and `call` commands use.
+
+The practical shape of "load and run" is: load image -> write the register block with PC at offset 0x90 -> commit (0x0D) -> go (0x8001). RUN.exe automates it - a CPE record setting register 0x90 arms the target, and after all records are processed RUN commits and launches each armed target (0x0C instead of 0x0D for /h, halt-load).
+
+Confirmed on DTL-H2700 silicon: a sentinel program uploaded and launched by this exact sequence executed on the CPU, verified by an unforgeable value the running code wrote to scratchpad RAM.
+
+#### CPE Executable Format
+CPE is the SN Systems / PSY-Q executable and command-script format used by the development tools (RUN.exe, SNPATCH.CPE, etc.). Unlike PS-EXE, which is a fixed header plus one code blob, a CPE file is a stream of typed records: it can load several blocks to different addresses, set CPU registers, and select a target. Loading a CPE is effectively replaying a short script of memory writes and register sets onto the development board.
+```
+  Header:
+    4 bytes   Magic "CPE\x01" (0x01 0x45 0x50 0x43 little-endian = 0x01455043)
+    2 bytes   Reserved / unit field
+
+  Then a stream of records until a type-0 record. Each record is:
+    1 byte    Record type, followed by a type-specific payload.
+
+  Record types:
+    0x00  End of file. No payload. Stops processing.
+    0x01  Load. addr:u32, size:u32, then <size> bytes of data.
+          Writes the data block to target memory at addr.
+    0x02  Set register (implicit PC), value:u32. Sets the program counter
+          register to the 32-bit value. (Some loaders, e.g. pcsx-redux's,
+          read and ignore this record.)
+    0x03  Set register. reg:u16, value:u32.
+    0x04  Set register. reg:u16, value:u16.
+    0x05  Set register. reg:u16, value:u8.
+    0x06  Set register. reg:u16, value:u16, high:u8  (24-bit value = u16 | high<<16).
+    0x07  Reserved. u32 payload, ignored.
+    0x08  Select target/unit. unit:u8. Switches which target subsequent
+          records apply to (multi-target development setups).
+
+  Register numbers follow the debug protocol's register map; register 0x90
+  is the program counter. Setting the PC register arms the target for
+  execution (see Target Execution above).
+
+  All scalars are little-endian on the wire.
+```
+The format is byte-compatible across loaders, but interpretation varies: a full debugger loader (RUN.exe) acts on every record including register sets and target selection, while a minimal loader that only needs to load-and-run one program may treat the register records (other than the PC) and the target-select record as no-ops. The record stream stays in sync either way because every record's payload length is fixed by its type.
+
+Record types 0x02-0x06 are all "set register" variants differing only in value width; this lets a CPE encode register values compactly. SNPATCH.CPE, for example, uses a type-0x03 record to set register 0x90 (PC) to its main-RAM entry point, several type-0x01 records to load the stub into SRAM, and a type-0x00 record to terminate.
+
+The reason the format is shaped this way is that its record vocabulary maps directly onto the DECI load-and-run sequence (see Target Execution above). Loading a CPE is nothing more than replaying its records onto the board in order:
+```
+  CPE record                  DECI side
+  0x01 Load (addr, data)   -> write-memory (0x20): write data to addr
+  0x02-0x06 Set register   -> a patch to the saved-register block at the
+       (reg 0x90 = PC)         register's offset (reg 0x90 = the PC slot)
+  0x00 End of file         -> commit (0x0D), then launch (go 0x8001;
+                              or arm-only 0x0C for halt-load)
+```
+A loader walks the records in order: each Load becomes a memory write, the Set-Value records become patches to the saved-register block (the block is read once with 0x21, the patches applied, then written back with 0x20), and end-of-file triggers the commit and launch. Nothing program-specific is required - the CPE file already encodes the exact operation order the protocol has to perform. That is why RUN.exe, and any minimal load-and-run path, can replay an arbitrary CPE without bespoke per-program logic: the format and the protocol are the same sequence of steps.
+
+#### Console Mode (Mode 2)
+When the board boots in mode 2, the PlayStation runs the ROM monitor - an interactive text console. Console I/O uses a byte-at-a-time protocol through port base+1, distinct from the DECI command protocol:
+
+Reading console output:
+```
+  1. Poll port base+0 bit 4 (command complete)
+  2. Read character from port base+1
+  3. Write 0x20 to port base+4 (acknowledge)
+  Character 0x04 (EOT) marks end of a transmission block.
+  ESC sequences (ANSI terminal) may appear in the output.
+```
+
+Sending console input:
+```
+  1. Write character byte to port base+1
+  2. Write 0x20 to port base+4 (acknowledge)
+```
+
+After boot, the console outputs the kernel and ROM monitor banners, then presents a `PSX>` prompt. The ROM monitor version on the H2700 is "PS-X ROM monitor Ver.2.6" with copyright dates through 1997.
+
+The connect sequence (write 0x04 to port1, set pending, poll) still works in mode 2, but returns a different result value (0x0A instead of 0x02). Console I/O works regardless of whether a connect has been performed.
+
+The ROM monitor accepts commands via text input. Key commands include:
+```
+  help            Display command list (case-sensitive, "help" not "h")
+  dw ADDR [N]     Dump N words at address (uppercase hex required)
+  di ADDR [N]     Disassemble N instructions
+  dr              Dump all registers
+  sr REG VALUE    Set register (register names: zero,at,v0-v1,a0-a3,
+                  t0-t9,s0-s7,k0-k1,gp,sp,fp,ra,epc,hi,lo,sr,cr)
+  go              Execute at current EPC
+  ds              Dump COP0 status/cause register details
+  dip             Read DIP switch setting
+  mem             Memory map information
+```
+Addresses must be uppercase hexadecimal without a "0x" prefix. The `dw` count parameter specifies the number of 32-bit words to display.
+
+#### PCI Detection (DTL-H2500 only)
+The H2500 is a PCI board and can be auto-detected via PCI BIOS (INT 1Ah):
+```
+  Vendor ID:  0x104D (Sony Corporation)
+  Device ID:  0x8004
+  BAR0:       I/O base address (after masking and shifting)
+```
+DOS tools like RESETPS use PCI BIOS calls (AX=B102h Find PCI Device) to locate the H2500 when DEXBIOS is not loaded. The BAR0 value at PCI config offset 0x10 contains the I/O base address. The H2700 is ISA-only and uses DIP switches for address configuration - PCI detection does not apply.
+
+#### PS1-Side Registers (ATCONS)
+The PlayStation CPU accesses the development hardware through memory-mapped registers in the expansion region:
+```
+  0x1F802000    ATCONS_STAT   Status register (8-bit)
+  0x1F802002    ATCONS_FIFO   Data FIFO (8-bit, character I/O)
+  0x1F802004    ATCONS_DATA16 16-bit data channel used by the structured DECI
+                              command protocol (command buffers, bulk transfers)
+  0x1F802030    ATCONS_IRQ    IRQ control (8-bit)
+  0x1F802032    ATCONS_IRQ2   IRQ control 2 (8-bit)
+```
+The PS1-side console driver (from the DTL-H2000 BIOS) uses these registers:
+```
+  Read character:  Poll ATCONS_STAT bit 4, read ATCONS_FIFO,
+                   ack via ATCONS_IRQ=0x20 and ATCONS_IRQ[2]|=0x10
+  Write character: Poll ATCONS_STAT bit 3, write ATCONS_FIFO,
+                   signal via ATCONS_IRQ[2]|=0x10
+```
+The DECI debug stub (loaded from flash or SNPATCH) also uses these registers to communicate with the host, but through the structured DECI protocol rather than raw character I/O.
+
+#### Performance Analyzer (DTL-H2700 only)
+The DTL-H2700 includes a bus logic analyzer on two daughterboards, accessible through two additional I/O ports at base+0xC and base+0xE. The analyzer can capture main RAM bus, sub bus, and video RAM bus activity.
+
+#### PA Port Map
+```
+  Port base+C  Status/Control Register (16-bit read/write)
+  Port base+E  Trace data (16-bit, bulk read only)
+```
+
+#### PA Control Register
+All register accesses go through base+C: write the bank number shifted left by 4 to select a bank, then write the bank's value or read it back on the same port.
+```
+  Bits 3:0   Command/mode
+               0x01 = Start capture
+               0x02 = Cancel capture
+  Bits 7:4   Bank select (0x0-0xC)
+  Bit 15     Hardware presence test bit
+```
+
+#### PA Register Banks
+```
+  Bank 0     Status (read): bits 1:0 = capture state
+  Banks 1-10 Trigger/capture configuration (written during capture setup)
+  Bank 0xB   Trace read address, low 16 bits (write)
+  Bank 0xC   Trace read address, high 10 bits (write)
+  Bank 1     Capture pointer low 16 bits (read)
+  Bank 2     End pointer low 16 bits (read)
+  Bank 3     Pointer high bits: bits 5:0 = capture ptr high, bits 13:8 = end ptr high
+```
+
+#### PA Hardware Detection
+```
+  1. Write 0x8000 to control (set bit 15)
+  2. Read status: bits 15:12 must be 0x1, bits 11:8 must be 0x0, bit 7 must be set
+  3. Write 0x0000 to control (clear bit 15)
+  4. Read status: bit 7 must be clear
+  If both checks pass, PA hardware is present.
+```
+
+#### PA Capture Flow
+```
+  1. Verify hardware (detection sequence above)
+  2. Write trigger configuration to banks 1-10
+  3. Write 0x01 to control register (start capture)
+  4. Poll bank 0 status, bits 1:0 for completion
+  5. Read capture/end pointers from banks 1-3
+  6. Read trace data:
+     a. Set address: write low 16 bits to bank 0xB, high 10 bits to bank 0xC
+     b. Bulk read from data port (base+0xE) in chunks
+  Maximum capture: 4M frames, 16 bytes per frame (64MB trace buffer)
+  Address space: 26-bit frame address, shifted left 4 for byte address
+```
+
+#### PA Capture Frame Format
+Each captured frame is 16 bytes (128 bits): the state of the analyzer's input lines sampled once per 33.8688 MHz CPU clock cycle. The hardware records raw signal levels only; all bus cycle classification (idle, refresh, DMA, etc.) is done in software by LIBPA.DLL, which tracks RAS/CAS sequences, chip selects and strobes across consecutive frames.
+
+Bit N of the frame is bit (N AND 7) of byte (N / 8). Multi-byte fields are little-endian. Signals prefixed with `/` are active-low; DREQ and DACK lines are active-high.
+```
+  Bytes 0-3
+  ---------
+  Bits 11-0   MA11-MA0   Main RAM address pins, row/column multiplexed. On
+                         non-RAM cycles they carry the row bits of the
+                         current address.
+  Bit  12     RAM /CAS   Single CAS shared by all byte lanes (reads, writes
+                         and refresh)
+  Bit  13     GPU /RD    Also pulses on CPU reads from main RAM and MDEC
+  Bit  14     GPU /WR    Also pulses on CPU writes to main RAM and MDEC;
+                         low for each word of a GPU DMA transfer
+  Bit  15     SBUS /RD
+  Bit  16     SBUS /WR1  High byte write strobe (16-bit devices only)
+  Bit  17     RXD1       SIO1 receive data
+  Bit  18     DSR1       SIO1 data set ready
+  Bit  19     VRAM DT/OE, chip A  \ low on VRAM reads and on the once-per-line
+  Bit  20     VRAM DT/OE, chip B  / read transfer
+  Bit  21     -          Pulses once per main RAM refresh cycle, purpose unknown
+  Bit  22     VRAM /CAS toggle, chip A  \ change state once per /CAS cycle
+  Bit  23     VRAM /CAS toggle, chip B  / (not the pin level)
+  Bit  24     /CS2       BIOS ROM (DEV2)
+  Bit  25     RAM /RAS0
+  Bit  26     RAM /RAS1
+  Bits 30-27  RAM /WE3-/WE0  Byte lane write enables (stores only)
+  Bit  31     PC2        Follows bit 2 of the CPU instruction fetch address
+
+  Bytes 4-7
+  ---------
+  Bit  32     GPU /CS
+  Bit  33     DREQ2      GPU DMA request
+  Bit  34     DACK2      GPU DMA acknowledge
+  Bit  35     /IRQ1      GPU interrupt
+  Bit  36     VBLANK
+  Bits 60-37  SBUS A23-A0
+  Bit  61     SBUS /WR0  Low byte write strobe
+  Bit  62     /CS0       DEV0 (expansion 1)
+  Bit  63     DREQ5      PIO DMA request (see notes)
+
+  Bytes 8-11
+  ----------
+  Bit  64     DACK5      PIO DMA acknowledge
+  Bit  65     /IRQ10     Output of the DTL-H2000/H2700 secondary IRQ controller
+  Bit  66     /CS4       SPU (DEV4)
+  Bit  67     /IRQ9      SPU interrupt
+  Bit  68     DREQ4      SPU DMA request
+  Bit  69     DACK4      SPU DMA acknowledge
+  Bit  70     /CS5       CD-ROM (DEV5)
+  Bit  71     /IRQ2      CD-ROM interrupt
+  Bits 80-72  VRAM A8-A0, chip A
+  Bits 89-81  VRAM A8-A0, chip B
+  Bit  90     VRAM /WE, chip A  \ both low on every VRAM write
+  Bit  91     VRAM /WE, chip B  /
+  Bit  92     VRAM /RAS  (shared by both chips)
+  Bit  93     HBLANK
+  Bit  94     VRAM DSF   High during rectangle fills
+  Bit  95     CTS1       SIO1 clear to send
+
+  Bytes 12-15
+  -----------
+  Bits 127-96 RAM D31-D0  Main RAM data bus
+```
+Notes:
+
+- VRAM is the dual-ported VRAM of the 160-pin v0 GPU, split across two chips: chip A holds even pixels, chip B odd pixels. On each chip the row address is the VRAM Y coordinate (latched at /RAS) and the column address is X/2 (latched at /CAS).
+- The main RAM address is split across MA11-MA0 as follows (A = CPU physical address; MA10 is not driven by any of A22-A2 during /CAS):
+```
+  Phase   MA11  MA10  MA9  MA8  MA7  MA6  MA5  MA4  MA3  MA2  MA1  MA0
+  /RAS    A10   A22   A20  A19  A18  A17  A16  A15  A14  A13  A12  A11
+  /CAS    A19   -     A10  A21  A9   A8   A7   A6   A5   A4   A3   A2
+```
+  This is what makes the retail wiring described in the [CPU pinout notes](../ps1/pinouts/cpu-pinouts.md#cpu-pinout-notes) work: with RAM.A11 on the chips' A8 pin and RAM.A8/RAM.A10 unconnected, the chip rows receive A11-A18, A10, A20 and the columns A2-A9, A19, which covers A2-A20 (2MB) exactly once.
+- Which bit of each VRAM /WE and DT/OE pair belongs to which chip is not known; the two bits of a pair always move together.
+- The VRAM /CAS pulses are too short to be sampled directly; the analyzer records a toggle per cycle instead, and LIBPA detects edges on these bits.
+- DREQ5 is inferred: the H2700 has no hardware on DEV0 to issue a request, so the bit never changes.
+- RXD1, DSR1 and CTS1 are driven by external hardware and follow PA32's signal names.
+- Not captured: RAM /OE, SBUS D15-D0, VRAM data, VRAM SC and /SE, DEV1 and DEV8 chip selects (those two regions are used by the devkit's own debug hardware).
+- GPU commands appear on the RAM data bus while GPU DMA reads them from main RAM, with DACK2 high.
+
+#### PA Waveform Signals
+PA32's waveform view shows five captured lines alongside a SYSCLK trace, which is synthetic and not captured:
+```
+  Bit 36   VBLNK    PA32's label for VBLANK
+  Bit 65   GUNINT   The CPU's /IRQ10 input
+  Bit 17   RXD1
+  Bit 18   DSR1
+  Bit 95   CTS1
+```
+PA32 marks GUNINT, RXD1, DSR1 and CTS1 with asterisks (GUNINT*, RXD1*, ...) as active-low.
+
+#### PA Decoded Analysis Views
+The PA software (PA32.EXE + LIBPA.DLL) decodes the raw frames into several analysis views:
+```
+  Main RAM Bus (Time)   - Transaction type per cycle: Idle, Refresh, RAS Precharge,
+                          PIO DMA Write/Read, CD Write/Read, SPU DMA Write/Read,
+                          Internal DMA Write/Read, GPU DMA Write/Read,
+                          Data Write/Read, Inst Burst Read
+  Sub Bus (Time)        - Peripheral bus activity: Idle, Read/Write PIO,
+                          Read/Write CD, Read/Write SPU, Read/Write RAM,
+                          Read/Write Others
+  Video RAM Bus         - VRAM transfer type: Idle, Read, Write, Block Write,
+                          Read Modify Write, Texture Read, CLUT Read A/B
+  GPU Packets           - Decoded GPU primitives: polygon types, lines, sprites,
+                          tiles, block fills, null packets, commands
+  Waveform Signals      - Five digital signal traces (see above)
+```
+In addition to the bus-activity views above, LIBPA derives several
+performance-penalty views - the PA's actual purpose, locating where cycles
+are lost. Each is a per-cycle decoder run over the same raw frames:
+```
+  Read/Write Penalty    - Cycles stalled on main-RAM read/write access
+                          contention.
+  Write Buffer Penalty  - Stalls caused by the CPU write buffer draining;
+                          tracks recent writes to an address range and flags
+                          a penalty when a new access hits a not-yet-drained
+                          entry within a configurable window.
+  Polygon Penalty       - GPU stall cycles attributed to polygon rendering.
+  Polygon Cull/Waste    - Per GPU polygon packet, classifies geometry that
+                          produces no or reduced output: fully off-screen
+                          (all vertices outside the drawing area), partially
+                          off-screen, back-facing (rejected by the signed-area
+                          winding test, with a configurable winding convention),
+                          or degenerate (coincident vertices / collapsed edges).
+                          Surfaces overdraw and wasted GPU work.
+```
+Penalty values are held on screen for a fixed number of frames after the
+triggering event, so a penalty trace appears wider than the instantaneous
+stall. These views, like the bus views, are decoded by LIBPA from the raw
+frames; the classification is not stored in the capture.
+
+The bus type classification is not stored in the capture data. It is derived at display time by multi-frame state machines in LIBPA.DLL that track RAM RAS/CAS sequences, chip select transitions, and write enable patterns across consecutive frames. Instruction fetches are only identified as such when they are cache line fills ("Inst Burst Read"); a single uncached fetch looks the same as a data read in the raw frame.
+
+#### PA Not Yet Documented
+The following aspects of the PA hardware and software have not been reverse-engineered:
+```
+  - Trigger configuration (the meaning of the registers in banks 1-10 that
+    control what conditions start and stop a capture)
+  - The VRAM bus decoder's full state machine (multi-cycle classification of
+    Read vs Write vs Block Write vs Read-Modify-Write vs Texture Read vs CLUT Read)
+  - The purpose of frame bit 21 (refresh-only pulse) and what drives PC2 (bit 31)
+  - Physical signal line mapping to PA daughterboard pins
+```
+
+#### PA Capture File Format (.PAD)
+PA32.EXE saves and loads capture data in `.PAD` files. The format uses MFC CArchive serialization with 32-bit tagged fields, followed by a bulk dump of raw capture frames. Two format versions exist: "PAD2.02" and "PAD2.03" - differences between them are unknown.
+```
+  File Structure:
+    Header (variable length, typically ~13KB for the included tutorial)
+    Raw frame data (16 bytes per frame, up to 64MB)
+    End marker (4 bytes: 0x0001FFFF) (?)
+
+  Header Tags (32-bit little-endian, format: category<<16 | field):
+    Category 1 - File metadata:
+      0x10001   String: format identifier ("PAD2.02" or "PAD2.03")
+      0x10002   String: version string
+      0x10003   uint16: unknown
+      0x10004   uint32: unknown
+      0x10005   uint32: unknown (stored at internal offset 0x1004C4)
+      0x10006   uint32: unknown (stored at internal offset 0x1004C8)
+      0x10007   uint32: unknown (stored at internal offset 0x1004CC)
+      0x10008   uint16: unknown
+      0x10009   uint16: unknown
+      0x1000A   uint16: unknown
+      0x1000B   String: label (e.g. "[Sampled on ]")
+      0x1000C   Serialized object: additional metadata
+      0x1000D   uint32: unknown
+      0x1000E   uint16: unknown
+
+    Category 2 - Trigger configuration:
+      Internal structure not decoded.
+
+    Category 3:
+      0x30001   uint16: unknown
+
+    Category 4 - Symbol map:
+      Contains segment and function names with address ranges from the
+      .MAP file. Used for address-to-symbol resolution during analysis.
+      Per-entry serialization format not decoded.
+
+    Category 5 - Capture data:
+      0x50001   uint32: unknown (stored at internal offset 0x1004C4)
+      0x50002   uint32: unknown (stored at internal offset 0x1004C8)
+      0x50003   uint32: total frame count (stored at 0x1004CC, confirmed)
+      0x50004   uint16: unknown (stored at 0x1004D0)
+      0x50005   uint16: has raw data flag (stored at 0x1004D4, confirmed:
+                if nonzero, tag 0x50014 contains frame data)
+      0x50006-  uint16 values: configuration (stored at 0x1004D8-0x100500)
+      0x50013
+      0x50014   Bulk raw frame data (confirmed):
+                No explicit length - reader uses frame count from 0x50003.
+                Data is written/read in chunks of 0x400 (1024) frames.
+                Each chunk is 0x4000 (16384) bytes of raw 16-byte frames.
+                No per-chunk headers - pure concatenated raw frames.
+      0x50015   uint16: unknown (stored at 0x100510)
+      0x50016   uint16: unknown (stored at 0x100514)
+      0x50017   uint16: unknown (stored at 0x100518)
+
+    0x1FFFF   End marker (terminates the tag loop)
+
+  Serialization notes:
+    Strings: length-prefixed (1 byte for short strings; MFC CArchive may
+    use 2-byte or 4-byte lengths for longer strings - not fully traced).
+    Integer values are little-endian. Tag parsing reads 4 bytes at a time
+    from the MFC CArchive stream.
+```
+The included tutorial capture (`PA/DATA/TUTO3.PAD`, 18MB) has a 13,156-byte header followed by 1,132,544 raw 16-byte frames (18,120,704 bytes) and 4 trailing bytes.
+
+#### PA Software
+```
+  PA32.EXE    Windows GUI for capture visualization and analysis
+  LIBPA.DLL   Win32 library implementing the PA protocol (CPalib C++ class)
+  PSX95PA.VXD Win95 kernel driver (thin I/O port wrapper)
+  PSXNTPA.SYS WinNT kernel driver (thin I/O port wrapper)
+```
+The PA software is included in the PSY-Q SDK under the PA directory. The kernel drivers only provide port I/O access - all protocol logic is in LIBPA.DLL.
+
+#### Configuration Files
+DEXBIOS.COM reads configuration from `PSYQ.INI`, located via the `PSYQ_PATH` environment variable:
+```
+  [DEXBIOS]
+  ADDRESS=0320     ;I/O base address (hex, upper 12 bits)
+  IRQ=11           ;IRQ number (0=disabled, 10/11/12/15 valid)
+```
+Command line flags `/A` (address) and `/I` (IRQ) override INI settings. The `/B` flag sets the PCDRV transfer buffer size in KB (range 2-32).

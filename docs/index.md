@@ -25,9 +25,9 @@ To discuss the contents of this document, or hang out with likely minded people 
 ## How to read this
 
 This is a reference. Each page describes one piece of hardware and assumes you came
-with a question about it. If you did not, read [Memory Map](memorymap.md),
-[I/O Map](iomap.md) and [CPU Specifications](cpuspecifications.md) first, then
-[Interrupts](interrupts.md), [DMA Channels](dmachannels.md) and [Timers](timers.md)
+with a question about it. If you did not, read [Memory Map](ps1/system/memorymap.md),
+[I/O Map](ps1/system/iomap.md) and [CPU Specifications](ps1/cpu/cpuspecifications.md) first, then
+[Interrupts](ps1/system/interrupts.md), [DMA Channels](ps1/system/dmachannels.md) and [Timers](ps1/system/timers.md)
 before any peripheral page. The GPU, MDEC, SPU, CDROM and expansion port each have a
 DMA channel of their own, and their pages do not stop to explain what that means. The
 index below is grouped in that order.
@@ -66,68 +66,68 @@ can be closed with a short program on a real console.
 
 ### Start here
 
-[Memory Map](memorymap.md)<br/>
-[I/O Map](iomap.md)<br/>
-[CPU Specifications](cpuspecifications.md)<br/>
+[Memory Map](ps1/system/memorymap.md)<br/>
+[I/O Map](ps1/system/iomap.md)<br/>
+[CPU Specifications](ps1/cpu/cpuspecifications.md)<br/>
 
 ### Buses, timing and traps
 
 Read these before any peripheral page.
 
-[Interrupts](interrupts.md)<br/>
-[DMA Channels](dmachannels.md)<br/>
-[Timers](timers.md)<br/>
-[Memory Control](memorycontrol.md)<br/>
-[Partial Word Writes](partialwordwrites.md)<br/>
-[Unpredictable Things](unpredictablethings.md)<br/>
+[Interrupts](ps1/system/interrupts.md)<br/>
+[DMA Channels](ps1/system/dmachannels.md)<br/>
+[Timers](ps1/system/timers.md)<br/>
+[Memory Control](ps1/system/memorycontrol.md)<br/>
+[Partial Word Writes](ps1/system/partialwordwrites.md)<br/>
+[Unpredictable Things](ps1/system/unpredictablethings.md)<br/>
 
 ### Graphics
 
 GPU is DMA2 and DMA6, MDEC is DMA0 and DMA1.
 
-[Graphics Processing Unit (GPU)](graphicsprocessingunitgpu.md)<br/>
-[Geometry Transformation Engine (GTE)](geometrytransformationenginegte.md)<br/>
-[GTE Pipeline Timings](gtepipelinetimings.md)<br/>
-[Macroblock Decoder (MDEC)](macroblockdecodermdec.md)<br/>
+[Graphics Processing Unit (GPU)](ps1/gpu/index.md)<br/>
+[Geometry Transformation Engine (GTE)](ps1/cpu/gte/geometrytransformationenginegte.md)<br/>
+[GTE Pipeline Timings](ps1/cpu/gte/gtepipelinetimings.md)<br/>
+[Macroblock Decoder (MDEC)](ps1/cpu/mdec/macroblockdecodermdec.md)<br/>
 
 ### Sound
 
 SPU is DMA4.
 
-[Sound Processing Unit (SPU)](soundprocessingunitspu.md)<br/>
+[Sound Processing Unit (SPU)](ps1/spu/soundprocessingunitspu.md)<br/>
 
 ### Disc
 
 The drive is DMA3.
 
-[CDROM Drive](cdromdrive.md)<br/>
-[CDROM Format](cdromformat.md)<br/>
-[CDROM File Formats](cdromfileformats.md)<br/>
-[CDROM Video CDs (VCD)](cdromvideocdsvcd.md)<br/>
-[CDROM Internal Info on PSX CDROM Controller](cdrominternalinfoonpsxcdromcontroller.md)<br/>
+[CDROM Drive](ps1/cdr/cdromdrive.md)<br/>
+[CDROM Format](ps1/cdr/cdromformat.md)<br/>
+[CDROM File Formats](ps1/cdr/cdromfileformats/index.md)<br/>
+[CDROM Video CDs (VCD)](ps1/cdr/cdromvideocdsvcd.md)<br/>
+[CDROM Internal Info on PSX CDROM Controller](ps1/cdr/cdrominternalinfoonpsxcdromcontroller.md)<br/>
 
 ### Ports and peripherals
 
 The expansion port is DMA5.
 
-[Controllers and Memory Cards](controllersandmemorycards.md)<br/>
-[Pocketstation](pocketstation.md)<br/>
-[Serial Interfaces (SIO)](serialinterfacessio.md)<br/>
-[Expansion Port (PIO)](expansionportpio.md)<br/>
-[Pinouts](pinouts.md)<br/>
+[Controllers and Memory Cards](ps1/sio/controllersandmemorycards/index.md)<br/>
+[Pocketstation](ps1/sio/pocketstation.md)<br/>
+[Serial Interfaces (SIO)](ps1/sio/serialinterfacessio.md)<br/>
+[Expansion Port (PIO)](ps1/pio/expansionportpio.md)<br/>
+[Pinouts](ps1/pinouts/index.md)<br/>
 
 ### System software
 
-[Kernel (BIOS)](kernelbios.md)<br/>
+[Kernel (BIOS)](ps1/kernelbios/index.md)<br/>
 
 ### Other hardware
 
-[Arcade Cabinets](arcadecabinets.md)<br/>
+[Arcade Cabinets](arcade/arcadecabinets.md)<br/>
 [Konami System 573](konamisystem573.md)<br/>
-[Cheat Devices](cheatdevices.md)<br/>
-[PSX Dev-Board Chipsets](psxdevboardchipsets.md)<br/>
-[PSX Dev-Board Protocol](psxdevboardprotocol.md)<br/>
-[Hardware Numbers](hardwarenumbers.md)<br/>
+[Cheat Devices](ps1/pio/cheatdevices.md)<br/>
+[PSX Dev-Board Chipsets](dtl/psxdevboardchipsets.md)<br/>
+[PSX Dev-Board Protocol](dtl/psxdevboardprotocol.md)<br/>
+[Hardware Numbers](ps1/hardwarenumbers.md)<br/>
 
 ### About
 

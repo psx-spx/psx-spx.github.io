@@ -25,9 +25,12 @@ theme:
         name: Switch to light mode
   icon:
     logo: material/sony-playstation
+  features:
+    - navigation.indexes
 
 hooks:
   - tools/bitfields/hook.py
+  - tools/redirects/hook.py
 
 plugins:
   - search
@@ -53,36 +56,149 @@ markdown_extensions:
   - pymdownx.tilde
 
 nav:
-  - index.md
-  - memorymap.md
-  - iomap.md
-  - graphicsprocessingunitgpu.md
-  - geometrytransformationenginegte.md
-  - gtepipelinetimings.md
-  - macroblockdecodermdec.md
-  - soundprocessingunitspu.md
-  - interrupts.md
-  - dmachannels.md
-  - timers.md
-  - cdromdrive.md
-  - cdromformat.md
-  - cdromfileformats.md
-  - controllersandmemorycards.md
-  - pocketstation.md
-  - serialinterfacessio.md
-  - expansionportpio.md
-  - memorycontrol.md
-  - partialwordwrites.md
-  - unpredictablethings.md
-  - cpuspecifications.md
-  - kernelbios.md
-  - arcadecabinets.md
+- index.md
+- PlayStation:
+  - System:
+    - ps1/system/memorymap.md
+    - ps1/system/iomap.md
+    - ps1/system/interrupts.md
+    - ps1/system/dmachannels.md
+    - ps1/system/timers.md
+    - ps1/system/memorycontrol.md
+    - ps1/system/partialwordwrites.md
+    - ps1/system/unpredictablethings.md
+  - CPU:
+    - ps1/cpu/cpuspecifications.md
+    - ps1/cpu/gte/geometrytransformationenginegte.md
+    - ps1/cpu/gte/gtepipelinetimings.md
+    - ps1/cpu/mdec/macroblockdecodermdec.md
+  - GPU:
+    - ps1/gpu/index.md
+    - ps1/gpu/i-o-ports-dma-channels-commands-vram.md
+    - ps1/gpu/render-polygon-commands.md
+    - ps1/gpu/render-line-commands.md
+    - ps1/gpu/render-rectangle-commands.md
+    - ps1/gpu/rendering-attributes.md
+    - ps1/gpu/memory-transfer-commands.md
+    - ps1/gpu/other-commands.md
+    - ps1/gpu/display-control-commands-gp1.md
+    - ps1/gpu/status-register.md
+    - ps1/gpu/versions.md
+    - ps1/gpu/depth-ordering.md
+    - ps1/gpu/video-memory-vram.md
+    - ps1/gpu/texture-caching.md
+    - ps1/gpu/timings.md
+    - ps1/gpu/misc.md
+  - ps1/spu/soundprocessingunitspu.md
+  - CD-ROM:
+    - ps1/cdr/cdromdrive.md
+    - ps1/cdr/cdromformat.md
+    - CDROM File Formats:
+      - ps1/cdr/cdromfileformats/index.md
+      - ps1/cdr/cdromfileformats/executables.md
+      - ps1/cdr/cdromfileformats/graphics.md
+      - ps1/cdr/cdromfileformats/streaming.md
+      - ps1/cdr/cdromfileformats/audio.md
+      - ps1/cdr/cdromfileformats/archives.md
+      - ps1/cdr/cdromfileformats/compression.md
+      - ps1/cdr/cdromfileformats/diskimages.md
+    - ps1/cdr/cdromvideocdsvcd.md
+    - ps1/cdr/cdrominternalinfoonpsxcdromcontroller.md
+  - Serial Ports (SIO):
+    - Controllers and Memory Cards:
+      - ps1/sio/controllersandmemorycards/index.md
+      - ps1/sio/controllersandmemorycards/controller-and-memory-card-overview.md
+      - ps1/sio/controllersandmemorycards/controller-and-memory-card-signals.md
+      - ps1/sio/controllersandmemorycards/controller-and-memory-card-multitap-adaptor.md
+      - ps1/sio/controllersandmemorycards/controllers-communication-sequence.md
+      - ps1/sio/controllersandmemorycards/controllers-standard-digital-analog-controllers.md
+      - ps1/sio/controllersandmemorycards/controllers-mouse.md
+      - ps1/sio/controllersandmemorycards/controllers-racing-controllers.md
+      - ps1/sio/controllersandmemorycards/controllers-lightguns.md
+      - ps1/sio/controllersandmemorycards/controllers-lightguns-namco-guncon.md
+      - ps1/sio/controllersandmemorycards/controllers-lightguns-konami-justifier-hyperblaster-irq10.md
+      - ps1/sio/controllersandmemorycards/controllers-lightguns-psx-lightgun-games.md
+      - ps1/sio/controllersandmemorycards/controllers-configuration-commands.md
+      - ps1/sio/controllersandmemorycards/controllers-vibration-rumble-control.md
+      - ps1/sio/controllersandmemorycards/controllers-analog-buttons-dualshock2.md
+      - ps1/sio/controllersandmemorycards/controllers-dance-mats.md
+      - ps1/sio/controllersandmemorycards/controllers-pop-n-controllers.md
+      - ps1/sio/controllersandmemorycards/controllers-taiko-controllers-tatacon.md
+      - ps1/sio/controllersandmemorycards/controllers-densha-de-go-jet-de-go-controllers.md
+      - ps1/sio/controllersandmemorycards/controllers-fishing-controllers.md
+      - ps1/sio/controllersandmemorycards/controllers-ps2-dvd-remote.md
+      - ps1/sio/controllersandmemorycards/controllers-i-mode-adaptor-mobile-internet.md
+      - ps1/sio/controllersandmemorycards/controllers-keyboards.md
+      - ps1/sio/controllersandmemorycards/controllers-additional-inputs.md
+      - ps1/sio/controllersandmemorycards/controllers-misc.md
+      - ps1/sio/controllersandmemorycards/memory-card-read-write-commands.md
+      - ps1/sio/controllersandmemorycards/memory-card-data-format.md
+      - ps1/sio/controllersandmemorycards/memory-card-images.md
+      - ps1/sio/controllersandmemorycards/memory-card-notes.md
+    - ps1/sio/pocketstation.md
+    - ps1/sio/serialinterfacessio.md
+  - Expansion Port (PIO):
+    - ps1/pio/expansionportpio.md
+    - ps1/pio/cheatdevices.md
+  - Kernel (BIOS):
+    - ps1/kernelbios/index.md
+    - ps1/kernelbios/overview.md
+    - ps1/kernelbios/memory-map.md
+    - ps1/kernelbios/function-summary.md
+    - ps1/kernelbios/file-functions.md
+    - ps1/kernelbios/file-execute-and-flush-cache.md
+    - ps1/kernelbios/cdrom-functions.md
+    - ps1/kernelbios/memory-card-functions.md
+    - ps1/kernelbios/interrupt-exception-handling.md
+    - ps1/kernelbios/event-functions.md
+    - ps1/kernelbios/event-summary.md
+    - ps1/kernelbios/thread-functions.md
+    - ps1/kernelbios/timer-functions.md
+    - ps1/kernelbios/joypad-functions.md
+    - ps1/kernelbios/gpu-functions.md
+    - ps1/kernelbios/memory-allocation.md
+    - ps1/kernelbios/memory-fill-copy-compare-slow.md
+    - ps1/kernelbios/string-functions.md
+    - ps1/kernelbios/number-string-character-conversion.md
+    - ps1/kernelbios/misc-functions.md
+    - ps1/kernelbios/internal-boot-functions.md
+    - ps1/kernelbios/more-internal-functions.md
+    - ps1/kernelbios/pc-file-server.md
+    - ps1/kernelbios/tty-console-std-io.md
+    - ps1/kernelbios/character-sets.md
+    - ps1/kernelbios/control-blocks.md
+    - ps1/kernelbios/versions.md
+    - ps1/kernelbios/patches.md
+  - Pinouts:
+    - ps1/pinouts/index.md
+    - ps1/pinouts/controller-ports-and-memory-card-ports.md
+    - ps1/pinouts/audio-video-power-expansion-ports.md
+    - ps1/pinouts/sio-pinouts.md
+    - ps1/pinouts/chipset-summary.md
+    - ps1/pinouts/cpu-pinouts.md
+    - ps1/pinouts/gpu-pinouts-for-old-160-pin-gpu.md
+    - ps1/pinouts/gpu-pinouts-for-new-208-pin-gpu.md
+    - ps1/pinouts/spu-pinouts.md
+    - ps1/pinouts/drv-pinouts.md
+    - ps1/pinouts/vcd-pinouts.md
+    - ps1/pinouts/hc05-pinouts.md
+    - ps1/pinouts/mem-pinouts.md
+    - ps1/pinouts/clk-pinouts.md
+    - ps1/pinouts/pwr-pinouts.md
+    - ps1/pinouts/component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080.md
+    - ps1/pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150.md
+    - ps1/pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200.md
+    - ps1/pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-110.md
+    - ps1/pinouts/component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103.md
+    - ps1/pinouts/component-list-and-chipset-pin-outs-for-multitap-scph-1070.md
+    - ps1/pinouts/memory-cards.md
+    - ps1/pinouts/mods-nocash-psx-xboo-upload.md
+    - ps1/pinouts/mods-pal-ntsc-color-mods.md
+  - ps1/hardwarenumbers.md
+- Arcade:
+  - arcade/arcadecabinets.md
   - konamisystem573.md
-  - cheatdevices.md
-  - psxdevboardchipsets.md
-  - psxdevboardprotocol.md
-  - hardwarenumbers.md
-  - pinouts.md
-  - aboutcredits.md
-  - cdromvideocdsvcd.md
-  - cdrominternalinfoonpsxcdromcontroller.md
+- Dev Boards:
+  - dtl/psxdevboardchipsets.md
+  - dtl/psxdevboardprotocol.md
+- aboutcredits.md
