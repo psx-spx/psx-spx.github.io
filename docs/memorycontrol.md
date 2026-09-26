@@ -151,30 +151,56 @@ values or so).<br/>
 
 #### 1F801060h - DRAM\_CTRL? (R/W) (usually 00000B88h) (or 00000888h)
 ```
-  0-2   Unknown
-  3     /CAS and /WE wiring   (0=common /CAS with per-byte /WE, 1=per-byte /CAS with common /WE)
-  4-5   Refresh period        (0=256 cycles, 1=320 cycles, 2=384 cycles, 3=448 cycles)
+  0-2   Refresh hold-off during DMA  (0=none, 1..6=(4 << (N-1)) cycles, 7=unlimited)
+  3     /CAS and /WE wiring          (0=common /CAS with per-byte /WE, 1=per-byte /CAS with common /WE)
+  4-5   Refresh period               (0..3=(256 + 64*N) cycles)
   6     Unknown
-  7     Delay on simultaneous CODE+DATA fetch from RAM (0=None, 1=One Cycle)
-  8     Unknown               (should be set for 8MB, cleared for 2MB)
-  9     RAM chip size 2       (chip size = 1MB << ((size2<<1) | size1))
-  10    Enable /RAS1 bank     (0=disable/bus fault on access, 1=enable)
-  11    RAM chip size 1
+  7     Consecutive access waitstate (0=none, 1=1 cycle)
+  8     /RAS1 bank size bit 1        (see below)
+  9     /RAS0 bank size bit 1        (see below)
+  10    Enable /RAS1 bank            (0=disable/bus fault on access, 1=enable)
+  11    Bank size bit 0              (see below, common to both banks)
   12-15 Unknown
   16-31 Unused (Garbage)
 ```
-Possible values for bits 9-11 are:<br/>
+
+The two main RAM banks are mapped in memory sequentially, /RAS1 after /RAS0.
+Each of them can be 1, 2, 4 or 8MB in size, determined as follows:
 ```
-  000 = 1MB bank on /RAS0 + 15MB unmapped
-  001 = 4MB bank on /RAS0 + 12MB unmapped
-  010 = 1MB bank on /RAS0 + 1MB bank on /RAS1 + 14MB unmapped
-  011 = 4MB bank on /RAS0 + 4MB bank on /RAS1 + 8MB unmapped
-  100 = 2MB bank on /RAS0 + 14MB unmapped
-  101 = 8MB bank on /RAS0 + 8MB unmapped
-  110 = 2MB bank on /RAS0 + 2MB bank on /RAS1 + 12MB unmapped
-  111 = 8MB bank on /RAS0 + 8MB bank on /RAS1
+  /RAS0 size = 1MB << ((DRAM_CTRL.9 << 1) | DRAM_CTRL.11)
+  /RAS1 size = 1MB << ((DRAM_CTRL.8 << 1) | DRAM_CTRL.11)
 ```
-The BIOS writes different values depending on the console revision:<br/>
+
+Assuming two banks of the same size, possible values for bits 8-11 are thus:
+```
+  0000 = 1MB bank on /RAS0 + 15MB unmapped
+  0011 = 4MB bank on /RAS0 + 12MB unmapped
+  0100 = 1MB bank on /RAS0 +  1MB bank on /RAS1 + 14MB unmapped
+  0111 = 4MB bank on /RAS0 +  4MB bank on /RAS1 +  8MB unmapped
+  1000 = 2MB bank on /RAS0 + 14MB unmapped
+  1011 = 8MB bank on /RAS0 +  8MB unmapped
+  1100 = 2MB bank on /RAS0 +  2MB bank on /RAS1 + 12MB unmapped
+  1111 = 8MB bank on /RAS0 +  8MB bank on /RAS1
+```
+
+Notes:
+- "Unmapped" means that the CPU generates an exception when accessing that area.
+- The DRAM controller determines which bank to access from the CPU address bit
+  immediately above the /RAS0 bank size: A20 for 1MB, A21 for 2MB, A22 for 4MB
+  or A23 for 8MB.
+- Bits 0-2 set how many cycles a refresh can be postponed by while the DRAM
+  controller is busy handling a DMA transfer. The default value of 0 forces DMA
+  transfers to yield to a refresh immediately. Instruction fetches and data
+  reads/writes seem to be unaffected.
+- Bit 7 inserts an idle cycle between any two consecutive RAM accesses
+  (including refreshes), but not between each word in a DMA or instruction fetch
+  burst. Clearing it causes many games to hang during CD-ROM loading on
+  EARLY-PU-8 and LATE-PU-8 boards (but works on PU-18 onwards).
+- Bit 3 is only implemented in later CPU revisions (verified to be nonfunctional
+  on the DTL-H2700) and swaps /CAS and /WE when set. See the CPU pinouts section
+  for more details.
+
+The BIOS writes different values depending on the console revision:
 ```
 PU-7, EARLY-PU-8:
   0B80h    Single 2MB bank (four 512Kx8 chips), byte masking via /WE
@@ -196,13 +222,13 @@ System 573 (700B01 if ASIC revision bit = 0):
            (probably an incorrect setting for the two alternate 1Mx16 RAM
            footprints on revision D of the PCB, labeled "DR16M16")
 ```
-"Unmapped" means that the CPU generates an exception when accessing that area.<br/>
-Note: Wipeout uses a BIOS function that changes DRAM\_CTRL to 00000888h (ie.
-with corrected size of 2MB, and with the unknown Bit8 cleared). Gundam Battle
-Assault 2 does actually use the "8MB" space (with stacktop in mirrored RAM at
-807FFFxxh).<br/>
-Clearing bit7 causes many games to hang during CDROM loading on both EARLY-PU-8
-and LATE-PU-8 (but works on PU-18 through PM-41).<br/>
+
+Several retail games (Puzzle Bobble, Gundam Battle Assault 2, likely more) and
+homebrew (the FreePSXBoot BIOS shell exploit) are known to rely on the three
+accidental "mirrors" created by the BIOS incorrectly configuring the DRAM
+controller for an 8MB bank instead of 2MB; this sometimes happens due to
+developers forgetting to move the stack down from 807FFFxxh to 801FFFxxh.
+Wipeout uses the SetMem() BIOS function to shrink the bank size to 2MB.
 
 #### Main RAM array organization
 The 2MB main RAM is organized as 2048 rows of 256 columns, 4 bytes per column,
