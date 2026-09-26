@@ -1168,6 +1168,7 @@ It is exactly 768 x 44.1 Khz = For each audio sample in CD quality, there are 76
 So, the state machine has to repeat its complete cycle every 768 system clock cycles.
 
 Now the full job to do within those 768 cycles:
+
 - 24 channels to process.
 - Reverb to compute and write back.
 - Write back to voice 1 / 3, audio CD L/R.

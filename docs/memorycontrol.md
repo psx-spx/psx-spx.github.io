@@ -184,6 +184,7 @@ Assuming two banks of the same size, possible values for bits 8-11 are thus:
 ```
 
 Notes:
+
 - "Unmapped" means that the CPU generates an exception when accessing that area.
 - The DRAM controller determines which bank to access from the CPU address bit
   immediately above the /RAS0 bank size: A20 for 1MB, A21 for 2MB, A22 for 4MB
