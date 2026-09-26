@@ -1794,10 +1794,18 @@ any kernel functions use that memory area), so the executable can freely use
 the "fast" memory at 1F800000h..1F8003FFh.<br/>
 
 #### A(9Fh) - SetMem(megabytes)
-Changes the effective RAM size (2 or 8 megabytes) by manipulating port
-1F801060h, and additionally stores the size in megabytes in RAM at [00000060h].<br/>
-Note: The BIOS bootcode accidently sets the RAM value to 2MB (which is the
-correct physical memory size), but initializes the I/O port to 8MB (which
+Changes the effective RAM size by manipulating bits 8-10 of DRAM\_CTRL
+(1F801060h), and additionally stores the size in megabytes in RAM at 00000060h.
+There are two known variants of this function:<br/>
+- the one found in retail and devkit kernels, which only supports setting the
+  size to 2 or 8MB (single bank);
+- the one used in arcade kernels, which additionally supports 4 and 16MB (as
+  2x2MB and 2x8MB respectively).
+
+The values written to DRAM\_CTRL assume bit 11 is already set and will be
+incorrect otherwise.<br/>
+Note: The retail BIOS bootcode accidently sets the RAM value to 2MB (which is
+the correct physical memory size), but initializes the I/O port to 8MB (which
 mirrors the physical 2MB within that 8MB region), so the initial values don't
 match up with each other.<br/>
 Caution: Applying the correct size of 2MB may cause the "realloc" function to
