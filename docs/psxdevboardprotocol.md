@@ -511,7 +511,7 @@ Notes:
 #### PA Waveform Signals
 PA32's waveform view shows five captured lines alongside a SYSCLK trace, which is synthetic and not captured:
 ```
-  Bit 36   VBLNK
+  Bit 36   VBLNK    PA32's label for VBLANK
   Bit 65   GUNINT   The CPU's /IRQ10 input
   Bit 17   RXD1
   Bit 18   DSR1
