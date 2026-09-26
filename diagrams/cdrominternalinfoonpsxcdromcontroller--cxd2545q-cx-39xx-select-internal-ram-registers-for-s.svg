@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="332" viewBox="0 0 769 332" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="517" y="15" width="251" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="642.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,642.5,173)">8bit Unused</text>
+<text x="517" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="293" y="15" width="219" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="402.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,402.5,173)">7bit SD Serial readout data select</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<text x="512" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+<rect x="261" y="15" width="27" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="274.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,274.5,173)">1bit DAC Serial data readout DAC mode on/off</text>
+<text x="261" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="5" y="15" width="251" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="130.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,130.5,173)">8bit Command</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<text x="256" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">16</text>
+</svg>

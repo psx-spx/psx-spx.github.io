@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="325" viewBox="0 0 769 325" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="677" y="15" width="91" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="722.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,722.5,169.5)">OLVL Output Level on TCMP pin on Compare...</text>
+<text x="677" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="581" y="15" width="91" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="626.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,169.5)">IEDG Input Edge on TCAP pin</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="293" y="15" width="283" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="434.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,169.5)">Not used</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<text x="576" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">2</text>
+<rect x="197" y="15" width="91" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="242.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,242.5,169.5)">TOIE Timer Overflow Interrupt Enable</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="101" y="15" width="91" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,169.5)">OC1IE Output Compare Interrupt Enable</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="5" y="15" width="91" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,169.5)">ICIE Input Capture Interrupt Enable</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+</svg>

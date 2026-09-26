@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="505" height="312" viewBox="0 0 505 312" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="485" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="494.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,494.5,163)">LOCK Enable cache lock mode</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="461" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="470.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,470.5,163)">INV Enable cache invalidation mode</text>
+<text x="461" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="437" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="446.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,446.5,163)">TAG Enable cache tag test mode</text>
+<text x="437" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="413" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="422.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,422.5,163)">RAM Enable cache scratchpad mode</text>
+<text x="413" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="365" y="15" width="43" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="386.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,386.5,163)">DBLKSZ Data cache refill size</text>
+<text x="365" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<text x="408" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">4</text>
+<rect x="341" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="350.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,350.5,163)">Always 0</text>
+<text x="341" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="317" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="326.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,326.5,163)">DS Enable data cache</text>
+<text x="317" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<rect x="269" y="15" width="43" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="290.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,290.5,163)">IBLKSZ Instruction cache refill size</text>
+<text x="269" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">9</text>
+<text x="312" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+<rect x="245" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="254.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,254.5,163)">IS0 Always 0</text>
+<text x="245" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">10</text>
+<rect x="221" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="230.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,230.5,163)">IS1 Enable instruction cache</text>
+<text x="221" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<rect x="197" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="206.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,206.5,163)">INTP Supposedly &quot;Interrupt polarity&quot;</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">12</text>
+<rect x="173" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="182.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,182.5,163)">RDPRI Supposedly &quot;Enable read priority&quot;</text>
+<text x="173" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<rect x="149" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="158.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,163)">NOPAD Supposedly &quot;No wait state&quot;</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="125" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="134.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,134.5,163)">BGNT Supposedly &quot;Enable bus grant&quot;</text>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="101" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="110.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,163)">LDSCH Supposedly &quot;Enable load scheduling&quot;</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">16</text>
+<rect x="77" y="15" width="19" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="86.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,163)">NOSTR Supposedly &quot;No streaming&quot;</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">17</text>
+<rect x="5" y="15" width="67" height="296" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,163)">Reserved</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">18</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="241" height="319" viewBox="0 0 241 319" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="221" y="15" width="19" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="230.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,230.5,166.5)">Unknown, STARTED by Kernel upon reset</text>
+<text x="221" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="197" y="15" width="19" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="206.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,206.5,166.5)">Red LED, Communication related</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<rect x="173" y="15" width="19" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="182.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,182.5,166.5)">Unknown, STARTED by Kernel upon reset</text>
+<text x="173" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
+<rect x="149" y="15" width="19" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="158.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,166.5)">Unknown, STARTED by Kernel upon reset</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<rect x="125" y="15" width="19" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="134.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,134.5,166.5)">Never STARTED nor STOPPED by BIOS</text>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="101" y="15" width="19" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="110.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,166.5)">Sound Enable</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">5</text>
+<rect x="77" y="15" width="19" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="86.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,166.5)">Unknown, STOPPED by Kernel upon reset</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<rect x="5" y="15" width="67" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,166.5)">Unknown, never STARTED nor STOPPED by BIOS</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">7</text>
+</svg>

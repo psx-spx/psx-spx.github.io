@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="332" viewBox="0 0 769 332" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="197" y="15" width="571" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="482.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,482.5,173)">HXFR number of data bytes, bit0-11 (0..FFFh)</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="149" y="15" width="43" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="170.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,170.5,173)">HADR.16 HADR bit16</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">12</text>
+<rect x="101" y="15" width="43" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="122.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,122.5,173)">&quot;L&quot; Reserved</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<rect x="53" y="15" width="43" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="74.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,74.5,173)">&quot;L&quot; ?? Reserved</text>
+<text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="5" y="15" width="43" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="26.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,26.5,173)">DISHXFRC Disable HXFRC</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="553" height="332" viewBox="0 0 553 332" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="485" y="15" width="67" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="518.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,518.5,173)">Not used</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<text x="552" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="461" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="470.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,470.5,173)">IR0 saturated to +0000h..+1000h</text>
+<text x="461" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">12</text>
+<rect x="437" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="446.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,446.5,173)">SY2 saturated to -0400h..+03FFh</text>
+<text x="437" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<rect x="413" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="422.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,422.5,173)">SX2 saturated to -0400h..+03FFh</text>
+<text x="413" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="389" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="398.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,398.5,173)">MAC0 Result larger than 31 bits and negative</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="365" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="374.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,374.5,173)">MAC0 Result larger than 31 bits and positive</text>
+<text x="365" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">16</text>
+<rect x="341" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="350.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,350.5,173)">Divide overflow. RTPS/RTPT division...</text>
+<text x="341" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">17</text>
+<rect x="317" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="326.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,326.5,173)">SZ3 or OTZ saturated to +0000h..+FFFFh</text>
+<text x="317" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">18</text>
+<rect x="293" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="302.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,302.5,173)">Color-FIFO-B saturated to +00h..+FFh</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">19</text>
+<rect x="269" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="278.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,278.5,173)">Color-FIFO-G saturated to +00h..+FFh</text>
+<text x="269" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">20</text>
+<rect x="245" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="254.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,254.5,173)">Color-FIFO-R saturated to +00h..+FFh</text>
+<text x="245" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">21</text>
+<rect x="221" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="230.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,230.5,173)">IR3 saturated to +0000h..+7FFFh (lm=1)...</text>
+<text x="221" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">22</text>
+<rect x="197" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="206.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,206.5,173)">IR2 saturated to +0000h..+7FFFh (lm=1)...</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<rect x="173" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="182.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,182.5,173)">IR1 saturated to +0000h..+7FFFh (lm=1)...</text>
+<text x="173" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">24</text>
+<rect x="149" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="158.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,173)">MAC3 Result larger than 43 bits and negative</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">25</text>
+<rect x="125" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="134.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,134.5,173)">MAC2 Result larger than 43 bits and negative</text>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">26</text>
+<rect x="101" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="110.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,173)">MAC1 Result larger than 43 bits and negative</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">27</text>
+<rect x="77" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="86.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,173)">MAC3 Result larger than 43 bits and positive</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">28</text>
+<rect x="53" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="62.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,62.5,173)">MAC2 Result larger than 43 bits and positive</text>
+<text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">29</text>
+<rect x="29" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="38.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,173)">MAC1 Result larger than 43 bits and positive</text>
+<text x="29" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">30</text>
+<rect x="5" y="15" width="19" height="316" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="14.5" y="173" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,14.5,173)">Error Flag</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">31</text>
+</svg>
