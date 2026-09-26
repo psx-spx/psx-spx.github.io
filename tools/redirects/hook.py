@@ -13,7 +13,10 @@ import os
 
 MAP = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'map.json')
 
-STUB = """<!doctype html>
+MARKER = '<!-- tools/redirects stub -->'
+
+STUB = MARKER + """
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -40,7 +43,7 @@ def on_post_build(config):
         pages = json.load(f)
     for old, table in pages.items():
         out = os.path.join(site, old, 'index.html')
-        if os.path.exists(out):
+        if os.path.exists(out) and not open(out, encoding='utf-8').read().startswith(MARKER):
             raise RuntimeError(f'redirect for /{old}/ would overwrite a real page')
         os.makedirs(os.path.dirname(out), exist_ok=True)
         default = html.escape(table[''])
