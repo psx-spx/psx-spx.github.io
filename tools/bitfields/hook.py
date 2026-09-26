@@ -38,8 +38,14 @@ def on_config(config):
         text = open(os.path.join(docs_dir, fn), encoding='utf-8').read()
         for _line, name, _heading, fields, width in extract.blocks_for(page, text):
             svg = render.render(extract.fill_gaps(fields, width), width)
-            with open(os.path.join(out_dir, name + '.svg'), 'w', encoding='utf-8') as f:
-                f.write(svg)
+            path = os.path.join(out_dir, name + '.svg')
+            try:
+                same = open(path, encoding='utf-8').read() == svg
+            except OSError:
+                same = False
+            if not same:
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(svg)
             keep.add(name + '.svg')
             count += 1
 

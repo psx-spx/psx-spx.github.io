@@ -24,3 +24,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CUSTOM_DOMAIN: psx-spx.consoledev.net
           CONFIG_FILE: mkdocs.yml
+          ENABLE_PDF_EXPORT: 1
