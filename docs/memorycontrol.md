@@ -190,8 +190,10 @@ Notes:
   or A23 for 8MB.
 - Bits 0-2 set how many cycles a refresh can be postponed by while the DRAM
   controller is busy handling a DMA transfer. The default value of 0 forces DMA
-  transfers to yield to a refresh immediately. Instruction fetches and data
-  reads/writes seem to be unaffected.
+  transfers to yield to a refresh immediately. With a value of 7, refreshes
+  missed during a DMA transfer are dropped rather than caught up afterwards,
+  so a long transfer can starve the DRAM of refresh cycles. Instruction fetches
+  and data reads/writes seem to be unaffected.
 - Bit 7 inserts an idle cycle between any two consecutive RAM accesses
   (including refreshes), but not between each word in a DMA or instruction fetch
   burst. Clearing it causes many games to hang during CD-ROM loading on
@@ -208,11 +210,8 @@ PU-7, EARLY-PU-8:
 Later consoles:
   0B88h    Single 2MB bank (one 512Kx32 chip), byte masking via /CAS
            (incorrectly set as an 8MB bank, correct setting would be 0888h)
-DTL-H2000, DTL-H2700:
+DTL-H2000, DTL-H2500, DTL-H2700:
   0B80h    Single 8MB bank (four 2Mx8 chips), byte masking via /WE
-           (correctly set as 8MB)
-DTL-H2500:
-  0B88h    Single 8MB bank (four 2Mx8 chips), byte masking via /CAS
            (correctly set as 8MB)
 System 573 (700A01, 700B01 if ASIC revision bit = 1):
   0C80h    Two 2MB banks (four 512Kx8 chips each), byte masking via /WE
