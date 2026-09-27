@@ -177,7 +177,7 @@ bool is_exe_valid(void) {
     // 2048 bytes.
     uint32_t crc = exe_crc32(EXE_HEADER_PTR, *EXE_TEXT_SIZE_PTR);
 
-    return (crc == *EXE_DATA_PTR);
+    return (crc == *EXE_CRC32_PTR);
 }
 ```
 
