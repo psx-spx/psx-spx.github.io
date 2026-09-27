@@ -21,7 +21,17 @@ SUBDIR = 'diagrams'
 
 
 def _page_name(src_path):
-    return os.path.basename(src_path)[:-3]
+    # 'ps1/gpu/timings.md' -> 'ps1-gpu-timings', unique across the tree
+    return src_path.replace(os.sep, '/')[:-3].replace('/', '-')
+
+
+def _pages(docs_dir):
+    for root, dirs, files in os.walk(docs_dir):
+        dirs[:] = sorted(d for d in dirs if d != SUBDIR)
+        for fn in sorted(files):
+            if fn.endswith('.md'):
+                path = os.path.join(root, fn)
+                yield _page_name(os.path.relpath(path, docs_dir)), path
 
 
 def on_config(config):
@@ -31,20 +41,17 @@ def on_config(config):
     os.makedirs(out_dir, exist_ok=True)
 
     keep, count = set(), 0
-    for fn in sorted(os.listdir(docs_dir)):
-        if not fn.endswith('.md'):
-            continue
-        page = fn[:-3]
-        text = open(os.path.join(docs_dir, fn), encoding='utf-8').read()
+    for page, path in _pages(docs_dir):
+        text = open(path, encoding='utf-8').read()
         for _line, name, _heading, fields, width in extract.blocks_for(page, text):
             svg = render.render(extract.fill_gaps(fields, width), width)
-            path = os.path.join(out_dir, name + '.svg')
+            out = os.path.join(out_dir, name + '.svg')
             try:
-                same = open(path, encoding='utf-8').read() == svg
+                same = open(out, encoding='utf-8').read() == svg
             except OSError:
                 same = False
             if not same:
-                with open(path, 'w', encoding='utf-8') as f:
+                with open(out, 'w', encoding='utf-8') as f:
                     f.write(svg)
             keep.add(name + '.svg')
             count += 1
@@ -59,9 +66,7 @@ def on_config(config):
 
 def on_page_markdown(markdown, page, config, files):
     name = _page_name(page.file.src_path)
-    if os.path.dirname(page.file.src_path):
-        return markdown                     # only top-level pages carry registers
-
+    up = '../' * page.file.src_path.replace(os.sep, '/').count('/')
     inserts = list(extract.blocks_for(name, markdown))
     if not inserts:
         return markdown
@@ -74,5 +79,5 @@ def on_page_markdown(markdown, page, config, files):
         if line and lines[line - 1].startswith('!['):
             continue
         alt = heading.lstrip('#').strip() or 'bit layout'
-        lines.insert(line, f'![{alt} - bit layout]({SUBDIR}/{diagram}.svg)')
+        lines.insert(line, f'![{alt} - bit layout]({up}{SUBDIR}/{diagram}.svg)')
     return '\n'.join(lines)
