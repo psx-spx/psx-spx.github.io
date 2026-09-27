@@ -1,4 +1,16 @@
 #   CPU Specifications
+The CPU chip (IC103, CXD8530 or CXD8606) holds more than the R3000A core. The
+[GTE](gte/geometrytransformationenginegte.md) (COP2), the
+[MDEC](mdec/macroblockdecodermdec.md), the [DMA](../system/dmachannels.md) and
+[interrupt](../system/interrupts.md) controllers, the
+[timers](../system/timers.md), both serial ports
+([SIO0](../sio/controllersandmemorycards/index.md) for controllers and memory
+cards, [SIO1](../sio/serialinterfacessio.md)) and the
+[main RAM and system bus interfaces](../system/memorycontrol.md) are all part
+of the same chip, as its [pinout](../pinouts/cpu-pinouts.md) and the
+[chipset summary](../pinouts/chipset-summary.md) show, even where their pages
+sit under System or Serial Ports.<br/>
+
 #### CPU
 [CPU Registers](#cpu-registers)<br/>
 [CPU Opcode Encoding](#cpu-opcode-encoding)<br/>
