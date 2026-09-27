@@ -123,7 +123,7 @@ The expansion port is DMA5.
 ### Other hardware
 
 [Arcade Cabinets](arcade/arcadecabinets.md)<br/>
-[Konami System 573](konamisystem573.md)<br/>
+[Konami System 573](arcade/konami/573/index.md)<br/>
 [Cheat Devices](ps1/pio/cheatdevices.md)<br/>
 [PSX Dev-Board Chipsets](dtl/psxdevboardchipsets.md)<br/>
 [PSX Dev-Board Protocol](dtl/psxdevboardprotocol.md)<br/>

@@ -197,7 +197,17 @@ nav:
   - ps1/hardwarenumbers.md
 - Arcade:
   - arcade/arcadecabinets.md
-  - konamisystem573.md
+  - Konami System 573:
+    - Konami System 573: arcade/konami/573/index.md
+    - Register Map: arcade/konami/573/registers.md
+    - Built-in I/O and JVS: arcade/konami/573/builtin-io.md
+    - Expansion I/O Boards: arcade/konami/573/expansion-io.md
+    - Security Cartridges: arcade/konami/573/security-cartridges.md
+    - External Modules: arcade/konami/573/external-modules.md
+    - BIOS and Bootleg Mod Boards: arcade/konami/573/bios.md
+    - CD/DVD Drives: arcade/konami/573/drives.md
+    - Games and Notes: arcade/konami/573/games.md
+    - Pinouts: arcade/konami/573/pinouts.md
 - Dev Boards:
   - dtl/psxdevboardchipsets.md
   - dtl/psxdevboardprotocol.md
