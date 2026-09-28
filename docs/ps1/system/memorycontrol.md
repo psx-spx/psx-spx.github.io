@@ -270,6 +270,8 @@ roughly 15.5ms.<br/>
 Documented in chapter 14 of the datasheet for LSI's L64360, which specifically
 states it "includes the LR33300 Family Control Registers described in the
 CW33300 manual".<br/>
+With BGNT=0, a DMA transfer that has been started waits, and it completes once
+BGNT is set again. CPU access timing is not affected.<br/>
 With LDSCH=0, a load no longer overlaps the independent instructions that
 follow it: a RAM load followed by four NOPs costs about 2 more cycles. A load
 whose result is used by the very next instruction costs the same either way.<br/>
