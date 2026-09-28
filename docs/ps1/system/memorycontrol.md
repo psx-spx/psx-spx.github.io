@@ -262,14 +262,25 @@ roughly 15.5ms.<br/>
   12    INTP   Supposedly "Interrupt polarity"     (usually 0)
   13    RDPRI  Supposedly "Enable read priority"   (usually 1)
   14    NOPAD  Supposedly "No wait state"          (usually 1)
-  15    BGNT   Supposedly "Enable bus grant"       (usually 1)
-  16    LDSCH  Supposedly "Enable load scheduling" (usually 1)
-  17    NOSTR  Supposedly "No streaming"           (usually 0)
+  15    BGNT   Enable bus grant                    (usually 1, DMA never completes when 0)
+  16    LDSCH  Enable load scheduling              (usually 1, see below)
+  17    NOSTR  No streaming                        (usually 0, see below)
   18-31 -      Reserved (R/W)
 ```
 Documented in chapter 14 of the datasheet for LSI's L64360, which specifically
 states it "includes the LR33300 Family Control Registers described in the
 CW33300 manual".<br/>
+With BGNT=0, a DMA transfer that has been started waits, and it completes once
+BGNT is set again. CPU access timing is not affected.<br/>
+With LDSCH=0, a load no longer overlaps the independent instructions that
+follow it: a RAM load followed by four NOPs costs about 2 more cycles. A load
+whose result is used by the very next instruction costs the same either way.<br/>
+With NOSTR=1, instruction fetch from uncached memory is slower, by about one
+cycle per two instructions.<br/>
+Flipping INTP, RDPRI or NOPAD changes none of: RAM load, store and
+store-then-load timing, scratchpad and I/O access, uncached instruction fetch,
+or how long a DMA transfer takes while the CPU runs. INTP was only tested with
+interrupts disabled.<br/>
 IBLKSZ (bits 8-9) controls the i-cache refill burst length. With the default
 value of 1 (4-word), a cache miss at word 0 fills the entire 4-word line. With
 IBLKSZ=0 (2-word), a miss at word 0 fills only words 0 and 1. Misses at words
