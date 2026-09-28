@@ -21,8 +21,31 @@ Denpa DP-210, and others). Most plug into the
 advertised as using the serial port, and several connect only to the AV Multi
 Out, which cannot carry disc data, so those are presumably standalone players
 borrowing the TV connection rather than console addons.<br/>
-XXX none of the parallel port models is documented here; unknown whether they
-carry their own MPEG decoder, or hand data to the console<br/>
+The Gamars PSX-003 carries its own MPEG-1 decoder (Winbond W9925QF with 512
+KiB of DRAM, a Lattice ispLSI 2032 for glue, and a 256 KiB flash at 1F000000h
+with a cheat-cartridge menu). The console still reads the disc: the card's
+pre-boot code unpacks a player to RAM, which reads the MPEG sectors through
+the console's own CD-ROM controller (Setmode 21h, ReadS) and then copies each
+sector's 2324-byte Form 2 payload to the card with the CPU, as 16-bit words,
+the earlier byte to 1F0002CAh and the later one to 1F0002CBh. Before each
+64-byte chunk it waits for the low 6 bits of a status read from 1F0002CAh to be
+zero. Video and audio then come out of the card's own A/V board.<br/>
+The card's registers sit inside the flash's address range, at 1F000200h..2FFh:
+```
+  1F000200h R  Bit0: selects VCD player or cheat menu at boot (likely the
+               VCD/PASSWORD switch on the case)
+               Bit7: busy/ready handshake
+  1F000200h W  Control (values 00h, 02h, 03h, 0Ah, 12h, 80h, 82h seen)
+  1F0002C0h W  Decoder register index (2C1h high byte, 2C0h low byte)
+  1F0002C2h RW Decoder register data, 16bit (2C3h high byte, 2C2h low byte)
+  1F0002C4h W  24bit address, written 2C6h, 2C5h, 2C4h
+  1F0002C7h R  Bit0: ready for 2C8h/2C9h
+  1F0002C8h RW 16bit data (2C9h high byte, 2C8h low byte)
+  1F0002CAh W  MPEG stream data, 16bit (2CBh high byte, 2CAh low byte)
+  1F0002CAh R  Status, low 6 bits must be zero before a 64-byte burst
+```
+All of these are byte accesses. Other parallel port models are not documented
+here.<br/>
 
 #### ISO Filesystem (Track 1)
 [VCD ISO Basic Files (INFO, ENTRIES, AVSEQnn, ISO Filesystem)](#vcd-iso-basic-files-info-entries-avseqnn-iso-filesystem)<br/>
