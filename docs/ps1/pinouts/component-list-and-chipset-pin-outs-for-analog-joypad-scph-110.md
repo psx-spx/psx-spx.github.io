@@ -9,6 +9,7 @@
   Q2   3pin "LG" (small transistor for right/small M2 rumble motor)
   D1   2pin diode (for large motor, reference Z-diode with pull-up?)
   D2   3pin dual-diode (R5/IRQ7 to GND and R3/DAT to GND)
+       (not fitted on the "S003" PCB1 revision, which works without it)
   CN1  9pin cable to PSX controller port
   J1  16pin ribbon cable from membrane/foil
   M1   2pin wires to left/big rumble motor (analog, slow/fast)
