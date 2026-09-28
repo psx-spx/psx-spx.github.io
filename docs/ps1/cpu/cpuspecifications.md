@@ -375,7 +375,7 @@ the new operation replaces the old one, and hi/lo are ready after the new
 operation's own execution time. For example, "mult" with a slow rs followed
 directly by "mult" with a fast rs stalls a following "mflo" for 6 cycles, not 19,
 and "div" followed directly by "mult" stalls it for 6, not 42.<br/>
-mthi and mtlo don't wait for a busy mul/div either. They abort it, and the other
+mthi and mtlo don't wait for a busy multiply either. They abort it, and the other
 register is left with a partial value, which is neither its old contents nor the
 result. For example, "mthi" directly after "mult" leaves lo holding rs.<br/>
 The hardware does NOT generate exceptions on divide overflows, instead, divide
