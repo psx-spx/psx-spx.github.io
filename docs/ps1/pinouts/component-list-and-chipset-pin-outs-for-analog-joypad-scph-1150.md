@@ -5,8 +5,7 @@ This applies for two controller versions:<br/>
   SCPH-1180 Analog Pad without Rumble Motor
 ```
 Both are using the same PCB, and the same SD657 chip. The SCPH-1180 leaves out
-the motor only: the Q1/Q2 motor transistors are still fitted. On the SCPH-1180,
-J1 carries the R-1/R-2 button ribbon and J3 the L-1/L-2 ribbon.<br/>
+the motor and its J1 connector; the Q1/Q2 motor transistors are still fitted.<br/>
 
 #### Analog Joypad Component List (SCPH-1150, single motor)
 ```
