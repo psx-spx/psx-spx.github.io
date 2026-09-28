@@ -352,7 +352,7 @@ The hardware does NOT generate exceptions on SHL overflows.<br/>
 The mul/div opcodes are starting the multiply/divide operation, starting takes
 only a single clock cycle, however, trying to read the result from the hi/lo
 registers while the mul/div operation is busy will halt the CPU until the
-mul/div has completed. For multiply, the execution time depends on rs (ie.
+mul/div has completed. For multiply, the execution time depends on rs only, rt has no effect (ie.
 "small\*large" can be much faster than "large\*small").<br/>
 ```
   __multu_execution_time_____________________________________________________
@@ -361,8 +361,8 @@ mul/div has completed. For multiply, the execution time depends on rs (ie.
   Slow  (13 cycles)  rs = 00100000h..FFFFFFFFh
   __mult_execution_time_____________________________________________________
   Fast  (6 cycles)   rs = 00000000h..000007FFh, or rs = FFFFF800h..FFFFFFFFh
-  Med   (9 cycles)   rs = 00000800h..000FFFFFh, or rs = FFF00000h..FFFFF801h
-  Slow  (13 cycles)  rs = 00100000h..7FFFFFFFh, or rs = 80000000h..FFF00001h
+  Med   (9 cycles)   rs = 00000800h..000FFFFFh, or rs = FFF00000h..FFFFF7FFh
+  Slow  (13 cycles)  rs = 00100000h..7FFFFFFFh, or rs = 80000000h..FFEFFFFFh
   __divu/div_execution_time________________________________________________
   Fixed (36 cycles)  no matter of rs and rt values
 ```
