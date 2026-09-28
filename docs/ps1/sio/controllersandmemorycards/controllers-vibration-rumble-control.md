@@ -11,8 +11,8 @@ configuration commands (and supports two motors).<br/>
   SCPH-10010 DualAnalog Pad with 2 motors, PS2/Dualshock2 ;-plus analog buttons
   Blaze Scorpion Lightgun with rumble      ;\unknow how to control rumble
   Fishing controllers with rumble          ;/
-  SCPH-1180 Analog Pad without rumble      ;\unknow if there're config commands
-  SCPH-1110 Analog Stick without rumble    ;/for analog mode (probably not)
+  SCPH-1180 Analog Pad without rumble      ;-no config commands (43h gets ID byte, then no /ACK)
+  SCPH-1110 Analog Stick without rumble    ;-unknow if there're config commands
 ```
 
 #### Old Method, one motor, no config commands (SCPH-1150, SCPH-1200, SCPH-110)
