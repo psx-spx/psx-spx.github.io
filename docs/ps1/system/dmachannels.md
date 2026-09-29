@@ -110,12 +110,20 @@ read/write-able bits: 24,28,30. All other bits are read-only: bit 1 is always
   23    DMA5, PIO     Master Enable (0=Disable, 1=Enable)
   24-26 DMA6, OTC     Priority      (0..7; 0=Highest, 7=Lowest)
   27    DMA6, OTC     Master Enable (0=Disable, 1=Enable)
-  28-30 CPU memory access priority  (0..7; 0=Highest, 7=Lowest)
+  28-30 CPU memory access priority  (0..7) (R/W, but no effect)
   31    No effect, should be CPU memory access enable (R/W)
 ```
 Initial value on reset is 07654321h. If two or more channels have the same
 priority setting, then the priority is determined by the channel number
-(DMA0=Lowest, DMA6=Highest, CPU=higher than DMA6?).<br/>
+(DMA0=Lowest, DMA6=Highest).<br/>
+The CPU priority in bits 28-30 does nothing: whatever its value, a transfer
+stalls the CPU as described in [CPU Operation during DMA](#cpu-operation-during-dma).<br/>
+A channel started while its Master Enable is off waits, and begins when the
+enable bit is set.<br/>
+Priority decides which of the waiting channels starts first, but does not keep
+the others off the bus for the whole transfer. With DMA2 (SyncMode 1) set to a
+higher priority than DMA6, DMA6 takes over between two DMA2 blocks, after about
+5 to 7 of them, runs to completion, and DMA2 then resumes.<br/>
 
 #### 1F8010F4h - DICR - DMA Interrupt Register (R/W)
 ```
@@ -228,6 +236,9 @@ see:<br/>
 [Write queue](memorymap.md#write-queue)<br/>
 Any read access from RAM or I/O registers or filling more than 4 entries into
 the write queue will stall the CPU until the DMA is finished.<br/>
+A SyncMode 0 transfer takes a few cycles to start after the CHCR write that
+starts it: a RAM or I/O read issued within 3 cycles of that write still goes
+through first, and the next one waits for the whole transfer.<br/>
 Additionally, the CPU operation resumes during periods when DMA gets interrupted
 (ie. after SyncMode 1 blocks, after SyncMode 2 list entries) (or in SyncMode 0
 with Chopping enabled).<br/>
