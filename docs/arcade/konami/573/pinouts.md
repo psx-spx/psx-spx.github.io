@@ -631,8 +631,8 @@ The pinout of this connector is currently unknown.
 |    95 |  480 |               | O   |       | Slow | Audio DAC            | I2S frame clock (`LRCK`)         |
 |    96 |  483 |               | O   |       | Slow | Audio DAC            | I2S data input (`SDIN`)          |
 |    97 |  492 |               | O   |       | Slow | Audio DAC            | I2S master clock (`MCLK`)        |
-|    98 |  495 |               | O   |       | Slow | ARCnet transceiver   | Network TX enable?               |
-|    99 |  498 |               | O   |       | Slow | ARCnet transceiver   | Network TX?                      |
+|    98 |  495 |               | O   |       | Slow | ARCnet transceiver   | Network TX enable (same as TX)   |
+|    99 |  498 |               | O   |       | Slow | ARCnet transceiver   | Network TX                       |
 |   100 |  501 |               | I   | Yes   |      | ARCnet transceiver   | Network RX                       |
 |   101 |  504 |               |     |       |      |                      | _Unused_                         |
 |   102 |  507 | `GCK4`        |     |       |      |                      | _Unused_                         |
