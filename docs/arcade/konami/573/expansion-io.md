@@ -170,9 +170,32 @@ performing the following steps:
 - clear `key1` by writing zero to register `0x1f6400a8`, which will render the
   decryption step a no-op.
 
-#### `0x1f640090` (FPGA, all bitstreams): **Network board address**
+#### `0x1f640090` (FPGA, all bitstreams): **Network node ID**
 
-#### `0x1f640092` (FPGA, all bitstreams): **Unknown (network related)**
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|  0-2 | W  | Node ID (0-7)                 |
+| 3-15 |    | _Unused_                      |
+
+The node ID is sent in the header of every frame and also sets the node's
+priority when accessing the bus (see [network protocol](#network-protocol)).
+Reading this register returns `0x1234`, as the magic number at `0x1f640080` is
+mirrored throughout `0x1f640080-0x1f64009f` and `0x1f6400d0-0x1f6400df`.
+
+#### `0x1f640092` (FPGA, all bitstreams): **Network control**
+
+| Bits | RW | Description                                                           |
+| ---: | :- | :-------------------------------------------------------------------- |
+|    0 | W  | Transmitter enable (1 = send queued bytes)                            |
+|  1-3 |    | _Unused_                                                              |
+|    4 | W  | Receiver enable (1 = store received bytes in the RX FIFO)             |
+|  5-7 |    | _Unused_                                                              |
+|    8 | W  | Accept frames with the node's own ID, including its own transmissions |
+| 9-15 |    | _Unused_                                                              |
+
+By default the receiver discards any frame whose header carries the same node
+ID as the one written to `0x1f640090`. Setting bit 8 disables this filter, which
+turns a lone node into a loopback test setup.
 
 #### `0x1f6400a0` (FPGA, all bitstreams): **MP3 data start address high**
 
@@ -279,17 +302,60 @@ increment the current read pointer and kick off prefetching of the next word.
 
 #### `0x1f6400c0` (FPGA, all bitstreams): **Network data**
 
+When written:
+
+| Bits | RW | Description                                  |
+| ---: | :- | :------------------------------------------- |
+|  0-7 | W  | Byte to push into the TX FIFO                |
+| 8-15 | W  | Stored in the TX FIFO but never transmitted  |
+
+When read:
+
+| Bits  | RW | Description                                  |
+| ----: | :- | :------------------------------------------- |
+|   0-7 | R  | Received byte (popped from the RX FIFO)      |
+|  8-10 | R  | Node ID of the sender                        |
+| 11-15 | R  | Always 0                                     |
+
+Each byte is sent as a separate frame. Reading this register while the RX FIFO
+is empty returns the last word read again and decrements `0x1f6400c4`, which
+wraps around to `0x0fff`.
+
 #### `0x1f6400c2` (FPGA, all bitstreams): **Network TX FIFO length**
+
+| Bits  | RW | Description                                      |
+| ----: | :- | :----------------------------------------------- |
+|   0-9 | R  | Number of bytes waiting in the TX FIFO           |
+| 10-15 | R  | Always 0                                         |
+
+The byte at the head of the queue is moved into the transmitter's shift
+register as soon as it is written and is not included in this count, so this
+register reads 0 after a single byte has been queued. The TX FIFO holds 512
+entries and has no overflow protection: pushing more bytes than there is room
+for overwrites the oldest pending ones, while this counter keeps incrementing
+up to 1023 before wrapping around.
 
 #### `0x1f6400c4` (FPGA, all bitstreams): **Network RX FIFO length**
 
+| Bits  | RW | Description                                      |
+| ----: | :- | :----------------------------------------------- |
+|  0-11 | R  | Number of bytes waiting in the RX FIFO           |
+| 12-15 | R  | Always 0                                         |
+
+The RX FIFO holds 2048 entries and has no overflow protection: once full, newly
+received bytes overwrite the oldest unread ones while this counter keeps
+incrementing up to 4095 before wrapping around. There is no interrupt for
+received data, so this register must be polled.
+
 #### `0x1f6400c6` (FPGA, all bitstreams): **Unknown**
 
-Seems to return `0x7654` on startup.
+Always reads `0x7654`. Writing to it has no known effect.
 
-#### `0x1f6400c8` (FPGA, all bitstreams): **Unknown (network related)**
+#### `0x1f6400c8` (FPGA, all bitstreams): **Network FIFO reset**
 
-Seems to also return `0x7654` on startup.
+Writing any value to this register empties both the TX FIFO (including the byte
+already loaded into the transmitter) and the RX FIFO. Reads always return
+`0x7654`.
 
 #### `0x1f6400ca` (FPGA, all bitstreams except Solo): **DAC sample counter high**
 
@@ -484,6 +550,76 @@ bitstream is always 330696 bits (41337 bytes) long as per the XCS40XL datasheet.
 |   13 | W  | Output B1 (0 = grounded, 1 = high-z) |
 |   14 | W  | Output B2 (0 = grounded, 1 = high-z) |
 |   15 | W  | Output B3 (0 = grounded, 1 = high-z) |
+
+#### Network protocol
+
+The FPGA implements a small broadcast network over the board's RS-485
+transceiver. The DDR Solo games are the only ones known to use it. Despite the
+transceiver being meant for ARCnet, the protocol has nothing in common with it. The behavior described here has been verified on the 3rdMIX bitstream
+only; all timings are in cycles of the FPGA's 29.45 MHz clock.
+
+The FPGA's transmit data and transmit enable pins always carry the same signal,
+so a node only ever drives the bus low and the bus idles high. Data is sent in
+cells of 16 cycles (about 1.84 Mbit/s), each carrying one bit:
+
+| Bit | Cycles 0-11 | Cycles 12-15 |
+| --: | :---------- | :----------- |
+|   0 | Low         | High         |
+|   1 | High        | Low          |
+
+Every byte written to `0x1f6400c0` is sent as a frame of 20 cells, the first 10
+forming a header and the last 10 carrying the byte:
+
+| Cells | Value                                                              |
+| ----: | :----------------------------------------------------------------- |
+|     0 | 0                                                                  |
+|     1 | 1                                                                  |
+|   2-3 | Node ID bit 2, followed by its inverse                             |
+|   4-5 | Node ID bit 1, followed by its inverse                             |
+|   6-7 | Node ID bit 0, followed by its inverse                             |
+|     8 | Node ID bit 1 (again)                                              |
+|     9 | 0                                                                  |
+|    10 | 0 (start bit)                                                      |
+| 11-18 | Data byte, MSB first                                               |
+|    19 | Even parity bit (set if the data byte has an odd number of 1 bits) |
+
+The receiver samples the bus once per cell, 6 cycles into it. It aligns itself
+to the falling edge at the start of the header and again at the start bit of
+the data byte, which may arrive up to 51 cycles late; the cells within each of
+the two parts are then timed from that edge alone, so the receiver only
+tolerates a few percent of clock mismatch between nodes. A frame is discarded if
+cell 0 or 1 is wrong, if any of the three node ID pairs is not made up of a bit
+followed by its inverse, if the start bit is not 0 or if the parity is wrong.
+Cells 8 and 9 are ignored. Any cells sent after the parity bit are ignored as
+well, so each frame can only ever carry a single byte.
+
+Bus access is arbitrated through carrier sensing. Each node has an 8-bit timer
+that counts down once every 2 cycles, is reloaded whenever the bus is low and
+lets the node start transmitting when it underflows. The reload value is the
+node ID multiplied by 4, plus one of the following depending on the node's
+recent activity:
+
+| Reload value   | Condition                                                  |
+| :------------- | :--------------------------------------------------------- |
+| `0x20 + ID*4`  | The node has not transmitted anything yet                  |
+| `0x60 + ID*4`  | Another node has transmitted since the node's last frame   |
+| `0xa0 + ID*4`  | The node transmitted the last frame on the bus             |
+
+A node that has just sent a frame thus always yields to any other node waiting
+to transmit, with the node ID only deciding the order within each group. When
+multiple nodes have data queued they end up taking turns, one frame each. While
+sending the header (cells 0-8), the transmitter compares the bus against what
+it is driving 6 and 15 cycles into each cell; on any mismatch it stops, waits
+for the bus to become idle again and retries the same byte later. The data byte
+itself is not checked.
+
+The TX and RX FIFOs are stored in the board's SRAM as 16-bit words, high byte
+first, at the following locations:
+
+| SRAM address        | Contents                    |
+| :------------------ | :-------------------------- |
+| `0x1e000-0x1e3ff`   | TX FIFO (512 entries)       |
+| `0x1f000-0x1ffff`   | RX FIFO (2048 entries)      |
 
 ### Alternate analog I/O board (`GX700-PWB(K)`)
 
