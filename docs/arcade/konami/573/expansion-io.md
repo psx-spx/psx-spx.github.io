@@ -113,6 +113,13 @@ The DDR and Mambo bitstreams all implement the same registers (listed below) and
 seem to only differ in the MP3 decryption algorithm, while the unused Martial
 Beat bitstreams seem to behave in a completely different way.
 
+In the Solo Bass Mix and 3rdMIX bitstreams, nearly all of the logic runs from
+the 29.45 MHz clock input. The MAS3507D's `CLKI` input is fed that clock divided by 2. The audio
+DAC's `MCLK` output is the MAS3507D's `CLKO` output divided by 2, and the DAC's
+`BCLK`, `LRCK` and `SDIN` outputs are the MAS3507D's `SOC`, `SOI` and `SOD`
+outputs re-registered on that divided clock. The 19.6608 MHz clock input only
+clocks a single flip-flop that copies the RS-232 `CTS` input to `RTS`.
+
 Homebrew software may also load custom bitstreams developed using the Xilinx ISE
 4.2 toolchain (the last version to support Spartan-XL parts). The following
 custom bitstreams are known to exist so far:
@@ -147,7 +154,9 @@ to make sure the bitstream was properly loaded.
 
 Custom register only implemented by the 573in1 bitstream, in order to allow for
 emulation of quirks present in different versions of Konami's bitstreams as well
-as control some additional features.
+as control some additional features. Konami's bitstreams have no descrambler
+mode bits: on them this address falls within the range that mirrors
+`0x1f640080` and writes to it have no effect.
 
 Bits 9-11 tune the behavior of the DAC sample counter registers (`0x1f6400ca`,
 `0x1f6400cc` and `0x1f6400cf`). Setting all of them will make the registers
@@ -180,7 +189,8 @@ performing the following steps:
 The node ID is sent in the header of every frame and also sets the node's
 priority when accessing the bus (see [network protocol](#network-protocol)).
 Reading this register returns `0x1234`, as the magic number at `0x1f640080` is
-mirrored throughout `0x1f640080-0x1f64009f` and `0x1f6400d0-0x1f6400df`.
+mirrored throughout `0x1f640080-0x1f64009f` and `0x1f6400d0-0x1f6400df`. Other
+than this register and `0x1f640092`, writes to those ranges have no effect.
 
 #### `0x1f640092` (FPGA, all bitstreams): **Network control**
 
@@ -199,11 +209,38 @@ turns a lone node into a loopback test setup.
 
 #### `0x1f6400a0` (FPGA, all bitstreams): **MP3 data start address high**
 
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|  0-8 | W  | Start address bits 16-24      |
+| 9-15 |    | _Unused_                      |
+
 #### `0x1f6400a2` (FPGA, all bitstreams): **MP3 data start address low**
+
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|    0 |    | _Unused_                      |
+| 1-15 | W  | Start address bits 1-15       |
+
+Reading `0x1f6400a0` and `0x1f6400a2` returns the current MP3 data fetch
+address in the same format (bits 0-8 of `0x1f6400a0` are address bits 16-24).
+The start address itself cannot be read back.
 
 #### `0x1f6400a4` (FPGA, all bitstreams): **MP3 data end address high**
 
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|  0-8 | W  | End address bits 16-24        |
+| 9-15 |    | _Unused_                      |
+
 #### `0x1f6400a6` (FPGA, all bitstreams): **MP3 data end address low**
+
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|    0 |    | _Unused_                      |
+| 1-15 | W  | End address bits 1-15         |
+
+Reading `0x1f6400a4` or `0x1f6400a6` returns the same value as `0x1f6400ae`,
+of which only bit 12 is meaningful.
 
 #### `0x1f6400a8` (FPGA, all bitstreams): **MP3 frame counter** / **Descrambler key 1**
 
@@ -222,6 +259,14 @@ When written:
 The frame counter is only active when bit 15 in register `0x1f6400ae` is set.
 Note that the MAS3507D also has an internal frame counter readable through I2C,
 independent of this register.
+
+The 3rdMIX bitstream descrambles MP3 data using `key1`, `key2` and `key3`,
+while the Solo Bass Mix bitstream only uses `key1`. Writing a key
+register reloads only that key. The descrambler's key state advances once for
+every 16-bit word sent to the MAS3507D and does not advance while playback is
+paused. It persists when playback is stopped and restarted and when the start or
+end address registers are written. Bit 15 of `0x1f6400e8` clears the entire key
+state.
 
 #### `0x1f6400aa` (FPGA, all bitstreams): **MP3 playback status**
 
@@ -255,7 +300,7 @@ low. Setting the chip select high will result in the MAS3507D tristating `PI19`,
 |  0-11 |    | _Unused_                            |
 |    12 | RW | MAS3507D `SDA` (write 0 = pull low) |
 |    13 | RW | MAS3507D `SCL` (write 0 = pull low) |
-| 14-15 | RW | _Unused_                            |
+| 14-15 |    | _Unused_                            |
 
 Due to the MAS3507D relying heavily on I2C clock stretching (pulling `SCL` low
 to request the host to wait), both `SDA` and `SCL` are bidirectional open-drain
@@ -275,13 +320,28 @@ Data is only fed to the MAS3507D when both bits 13 and 14 are set. Bit 12 is a
 read-only copy of bit 14 and remains set if playback is stopped by clearing bit
 13 only.
 
+Each 16-bit word is sent to the MAS3507D high byte first, MSB first. The first
+word sent after playback starts is whatever the MP3 data latch holds (0 after a
+reset through bit 14 of `0x1f6400e8`, otherwise the last word fetched from
+DRAM), descrambled as if the key state were all zeroes.
+
 Bit 15 controls whether to increment register `0x1f6400a8` each time a rising
 edge is detected on the MAS3507D's `PI4` (frame sync) pin. The counter is
 automatically reset to zero when this bit is cleared.
 
 #### `0x1f6400b0` (FPGA, all bitstreams): **DRAM write address high**
 
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|  0-8 | W  | DRAM address bits 16-24       |
+| 9-15 |    | _Unused_                      |
+
 #### `0x1f6400b2` (FPGA, all bitstreams): **DRAM write address low**
+
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|    0 |    | _Unused_                      |
+| 1-15 | W  | DRAM address bits 1-15        |
 
 #### `0x1f6400b4` (FPGA, all bitstreams): **DRAM data**
 
@@ -289,16 +349,44 @@ automatically reset to zero when this bit is cleared.
 | ---: | :- | :---------------- |
 | 0-15 | RW | Current data word |
 
-**NOTE**: on some bitstream versions, all registers in the
-`0x1f6400b0-0x1f6400bf` region seem to mirror this register when read (possibly
-due to incomplete address decoding), however only a read from `0x1f6400b4` will
-increment the current read pointer and kick off prefetching of the next word.
+**NOTE**: on at least the Solo Bass Mix and 3rdMIX bitstreams, all registers in
+the `0x1f6400b0-0x1f6400bf` region return the current data word when read, however only a read from
+`0x1f6400b4` will increment the address pointer and kick off prefetching of the
+next word.
+
+Writing the DRAM address does not trigger a new prefetch, so the first read from
+this register after changing the address returns the previously prefetched
+word.
 
 #### `0x1f6400b6` (FPGA, all bitstreams): **DRAM read address high**
 
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|  0-8 | W  | DRAM address bits 16-24       |
+| 9-15 |    | _Unused_                      |
+
 #### `0x1f6400b8` (FPGA, all bitstreams): **DRAM read address low**
 
-#### `0x1f6400ba` (FPGA, all bitstreams): **Unknown**
+| Bits | RW | Description                   |
+| ---: | :- | :---------------------------- |
+|    0 |    | _Unused_                      |
+| 1-15 | W  | DRAM address bits 1-15        |
+
+There is a single DRAM address pointer, used for both reads and writes. The
+"write address" registers `0x1f6400b0-0x1f6400b2` and the "read address"
+registers `0x1f6400b6-0x1f6400b8` both set it.
+
+#### `0x1f6400ba` (FPGA, all bitstreams): **MP3 DRAM fetch enable**
+
+| Bits | RW | Description                                      |
+| ---: | :- | :----------------------------------------------- |
+| 0-14 |    | _Unused_                                         |
+|   15 | W  | MP3 data fetch enable (1 = fetch data from DRAM) |
+
+When bit 15 is cleared, the MP3 data feeder's address keeps advancing but no
+data is loaded from DRAM, so the MAS3507D receives stale data. CPU access to the
+DRAM and refresh are unaffected. This bit is cleared by bit 14 of `0x1f6400e8`.
+Reading this register returns the current DRAM data word (see `0x1f6400b4`).
 
 #### `0x1f6400c0` (FPGA, all bitstreams): **Network data**
 
@@ -349,7 +437,7 @@ received data, so this register must be polled.
 
 #### `0x1f6400c6` (FPGA, all bitstreams): **Unknown**
 
-Always reads `0x7654`. Writing to it has no known effect.
+Always reads `0x7654`. Writes have no effect.
 
 #### `0x1f6400c8` (FPGA, all bitstreams): **Network FIFO reset**
 
@@ -359,9 +447,37 @@ already loaded into the transmitter) and the RX FIFO. Reads always return
 
 #### `0x1f6400ca` (FPGA, all bitstreams except Solo): **DAC sample counter high**
 
+| Bits  | RW | Description                   |
+| ----: | :- | :---------------------------- |
+|  0-11 | R  | Sample counter bits 16-27     |
+| 12-15 |    | _Unused_                      |
+
+The DAC sample counter counts rising edges of the MAS3507D's `LRCK` output (one
+per stereo sample), synchronized to the FPGA clock. It is 28 bits wide on the
+3rdMIX bitstream and 16 bits wide on the Solo Bass Mix bitstream, where this
+register always reads `0x7654`. On 3rdMIX, writes to this register have no
+effect. The counter is held at zero while bit 13 of `0x1f6400e8` is cleared.
+
 #### `0x1f6400cc` (FPGA, all bitstreams): **DAC sample counter low**
 
+| Bits | RW | Description                                         |
+| ---: | :- | :-------------------------------------------------- |
+| 0-15 | RW | Sample counter bits 0-15 (write any value to clear) |
+
+Writing to this register clears the whole counter and holds it at zero until
+the next rising edge of the MAS3507D's `PI4` (frame sync) pin; later `PI4` edges
+have no effect. On the Solo Bass Mix bitstream writes have no effect and the
+counter always runs.
+
 #### `0x1f6400ce` (FPGA, all bitstreams): **DAC sample counter delta**
+
+| Bits | RW | Description              |
+| ---: | :- | :----------------------- |
+| 0-15 | R  | Sample counter bits 0-15 |
+
+On the 3rdMIX bitstream, reading this register returns the same value as
+`0x1f6400cc` and then clears bits 0-15 of the counter, leaving the bits in
+`0x1f6400ca` unchanged. Writes to this register have no effect on 3rdMIX.
 
 #### `0x1f6400e0` (FPGA, all bitstreams): **Bank A**
 
@@ -372,6 +488,8 @@ already loaded into the transmitter) and the RX FIFO. Reads always return
 |   13 | W  | Output A5 (0 = grounded, 1 = high-z) |
 |   14 | W  | Output A6 (0 = grounded, 1 = high-z) |
 |   15 | W  | Output A7 (0 = grounded, 1 = high-z) |
+
+All registers in the `0x1f6400e0-0x1f6400ec` range read 0.
 
 #### `0x1f6400e2` (FPGA, all bitstreams): **Bank A**
 
@@ -405,16 +523,36 @@ already loaded into the transmitter) and the RX FIFO. Reads always return
 
 #### `0x1f6400e8` (FPGA, all bitstreams): **Internal logic reset**
 
-| Bits | RW | Description                                                  |
-| ---: | :- | :----------------------------------------------------------- |
-| 0-11 |    | _Unused_                                                     |
-|   12 | W  | Unknown reset (0 = reset)                                    |
-|   13 | W  | Reset MP3 feeder and master clock divider to DAC (0 = reset) |
-|   14 | W  | Unknown reset (0 = reset)                                    |
-|   15 | W  | Unknown reset (0 = reset)                                    |
+| Bits | RW | Description                                             |
+| ---: | :- | :------------------------------------------------------ |
+| 0-11 |    | _Unused_                                                |
+|   12 | W  | I/O logic reset (0 = reset)                             |
+|   13 | W  | DAC clock, sample counter and network reset (0 = reset) |
+|   14 | W  | DRAM controller reset (0 = reset)                       |
+|   15 | W  | MP3 decoder interface reset (0 = reset)                 |
 
 Konami's code writes `0xf000`, followed by `0x0000`, a delay and `0xf000` again,
 to this register after uploading the bitstream.
+
+All bits are active low and hold the respective logic in reset while cleared.
+
+Bit 12 puts the light outputs in `0x1f6400e0-0x1f6400e6` into high-z, releases
+the DS2401 1-wire bus and ignores writes to it. The DS2433 1-wire bus keeps its
+current state. Network control (`0x1f640092`) is cleared and the node ID
+reverts to 7.
+
+Bit 13 stops the DAC master clock, and with it the DAC's serial outputs. It
+also clears the DAC sample counter and holds it at zero, and empties both
+network FIFOs in the same way as a write to `0x1f6400c8` (losing any queued
+byte). It does not affect the MP3 data feeder, which keeps sending data to the
+MAS3507D.
+
+Bit 14 stops all DRAM activity, including refresh, and clears both bit 15 of
+`0x1f6400ba` and the MP3 data latch. The descrambler keys are not affected.
+
+Bit 15 clears `0x1f6400ae` (stopping playback), `0x1f6400aa` (pulling the
+MAS3507D's `/POR` low and holding it in reset) and `0x1f6400ac` (releasing
+`SDA` and `SCL`), as well as the descrambler's key state.
 
 #### `0x1f6400ea` (FPGA, all bitstreams): **Descrambler key 2**
 
@@ -428,6 +566,9 @@ to this register after uploading the bitstream.
 | ---: | :- | :------------------- |
 |  0-7 | W  | Initial `key3` value |
 | 8-15 |    | _Unused_             |
+
+On the Solo Bass Mix bitstream `key2` and `key3` are not connected and writes to
+`0x1f6400ea` and `0x1f6400ec` are ignored.
 
 #### `0x1f6400ee` (FPGA, all bitstreams): **1-wire bus**
 
