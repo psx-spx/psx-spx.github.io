@@ -364,12 +364,20 @@ mul/div has completed. For multiply, the execution time depends on rs only, rt h
   Med   (9 cycles)   rs = 00000800h..000FFFFFh, or rs = FFF00000h..FFFFF7FFh
   Slow  (13 cycles)  rs = 00100000h..7FFFFFFFh, or rs = 80000000h..FFEFFFFFh
   __divu/div_execution_time________________________________________________
-  Fixed (36 cycles)  no matter of rs and rt values
+  Fixed (36 cycles)  no matter of rs and rt values, rt=0 included
 ```
 For example, when executing "multu 123h,12345678h" and "mflo r1", one can
 insert up to six (cached) ALU opcodes, or read one value from PSX Main RAM
 (which has 6 cycle access time) between the "multu" and "mflo" opcodes without
 additional slowdown.<br/>
+Starting a mul/div while the previous one is still busy doesn't wait for it:
+the new operation replaces the old one, and hi/lo are ready after the new
+operation's own execution time. For example, "mult" with a slow rs followed
+directly by "mult" with a fast rs stalls a following "mflo" for 6 cycles, not 19,
+and "div" followed directly by "mult" stalls it for 6, not 42.<br/>
+mthi and mtlo don't wait for a busy multiply either. They abort it, and the other
+register is left with a partial value, which is neither its old contents nor the
+result. For example, "mthi" directly after "mult" leaves lo holding rs.<br/>
 The hardware does NOT generate exceptions on divide overflows, instead, divide
 errors are returning the following values:<br/>
 ```
