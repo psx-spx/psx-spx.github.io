@@ -732,8 +732,9 @@ Notes:
   broken out to the I/O board connector. Konami's bitstreams use the 29.45 MHz
   oscillator as the main clock, additionally dividing it down to 14.725 MHz and
   feeding it to the MAS3507D's clock input.
-- The 19.6608 MHz clock is left unused by most (all?) bitstream variants, but
-  was likely meant to be used for RS-232. Dividing it by 512, 1024, 2048 or 4096
+- In the Solo Bass Mix and 3rdMIX bitstreams, the 19.6608 MHz clock only drives
+  a single flip-flop that copies the RS-232 CTS input to RTS. It was likely
+  meant to be used for RS-232. Dividing it by 512, 1024, 2048 or 4096
   will give the standard baud rates of 38400, 19200, 9600 and 4800 respectively.
   The UART driving the RS-232 port may have been removed from the bitstream at
   some point to make room for the other circuitry.
