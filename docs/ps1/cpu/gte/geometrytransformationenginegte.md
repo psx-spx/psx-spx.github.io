@@ -41,6 +41,11 @@ If an instruction that reads a GTE register or a GTE command is executed before
 the current GTE command is finished, the CPU will hold until the instruction
 has finished. The number of cycles each GTE instruction takes is shown in the
 command list.<br/>
+The instructions that hold are MFC2 and CFC2 (on any register, including ones the
+running command doesn't use), SWC2, and the next GTE command. MTC2, CTC2 and LWC2
+don't wait, and write into the register file while the command runs. The hold
+covers only what is left of the command: cycles spent on other instructions
+between the command and the read come off it one for one.<br/>
 
 #### GTE Command Encoding (COP2 imm25 opcodes)
 ```
