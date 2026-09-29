@@ -223,7 +223,14 @@ turns a lone node into a loopback test setup.
 
 Reading `0x1f6400a0` and `0x1f6400a2` returns the current MP3 data fetch
 address in the same format (bits 0-8 of `0x1f6400a0` are address bits 16-24).
-The start address itself cannot be read back.
+It equals the start address until playback starts, then runs one word ahead of
+the word being sent to the MAS3507D. The first word fetched from DRAM is the one
+at the start address plus 2; the word at the start address itself is never
+sent.
+
+When the word at the end address has been sent, bit 12 of `0x1f6400ae` is
+cleared and playback stops; it does not loop. The fetch address is left at the
+end address plus 4.
 
 #### `0x1f6400a4` (FPGA, all bitstreams): **MP3 data end address high**
 
@@ -321,9 +328,9 @@ read-only copy of bit 14 and remains set if playback is stopped by clearing bit
 13 only.
 
 Each 16-bit word is sent to the MAS3507D high byte first, MSB first. The first
-word sent after playback starts is whatever the MP3 data latch holds (0 after a
-reset through bit 14 of `0x1f6400e8`, otherwise the last word fetched from
-DRAM), descrambled as if the key state were all zeroes.
+word sent after playback starts is whatever the MP3 data latch holds: 0 after a
+reset through bit 14 of `0x1f6400e8`, otherwise the last word fetched during the
+previous playback, already descrambled.
 
 Bit 15 controls whether to increment register `0x1f6400a8` each time a rising
 edge is detected on the MAS3507D's `PI4` (frame sync) pin. The counter is
@@ -350,12 +357,13 @@ automatically reset to zero when this bit is cleared.
 | 0-15 | RW | Current data word |
 
 **NOTE**: on at least the Solo Bass Mix and 3rdMIX bitstreams, all registers in
-the `0x1f6400b0-0x1f6400bf` region return the current data word when read, however only a read from
-`0x1f6400b4` will increment the address pointer and kick off prefetching of the
-next word.
+the `0x1f6400b0-0x1f6400bf` region return the current data word when read,
+however only a read from `0x1f6400b4` will increment the address pointer and
+kick off prefetching of the next word.
 
-Writing the DRAM address does not trigger a new prefetch, so the first read from
-this register after changing the address returns the previously prefetched
+Writing the read address (`0x1f6400b6-0x1f6400b8`) starts a prefetch from the
+new address. Writing the write address (`0x1f6400b0-0x1f6400b2`) does not, so
+a read from this register right after it returns the previously prefetched
 word.
 
 #### `0x1f6400b6` (FPGA, all bitstreams): **DRAM read address high**
@@ -375,6 +383,11 @@ word.
 There is a single DRAM address pointer, used for both reads and writes. The
 "write address" registers `0x1f6400b0-0x1f6400b2` and the "read address"
 registers `0x1f6400b6-0x1f6400b8` both set it.
+
+Address bits 1-10 select the DRAM column, bits 11-22 the row and bits 23-24 the
+chip (0 = `22H`, 1 = `22J`, 2 = `22G`), giving 24 MB in total. Addresses from
+`0x1800000` upwards do not access any chip. All three chips are refreshed
+together every 265 cycles of the 29.45 MHz clock.
 
 #### `0x1f6400ba` (FPGA, all bitstreams): **MP3 DRAM fetch enable**
 
