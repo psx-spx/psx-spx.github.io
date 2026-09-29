@@ -596,19 +596,26 @@ well, so each frame can only ever carry a single byte.
 
 Bus access is arbitrated through carrier sensing. Each node has an 8-bit timer
 that counts down once every 2 cycles, is reloaded whenever the bus is low and
-lets the node start transmitting when it underflows. The reload value is the
-node ID multiplied by 4, plus one of the following depending on the node's
-recent activity:
+lets the node start transmitting when it underflows. The timer only picks up
+a new reload value while the bus is low or within 2 cycles of it going high.
+The reload value is the node ID multiplied by 4, plus one of the following
+depending on how many frames from other nodes the node has heard since its own
+last frame:
 
-| Reload value   | Condition                                                  |
-| :------------- | :--------------------------------------------------------- |
-| `0x20 + ID*4`  | The node has not transmitted anything yet                  |
-| `0x60 + ID*4`  | Another node has transmitted since the node's last frame   |
-| `0xa0 + ID*4`  | The node transmitted the last frame on the bus             |
+| Reload value   | Condition                                                           |
+| :------------- | :------------------------------------------------------------------ |
+| `0xa0 + ID*4`  | None (the node sent the last frame on the bus)                      |
+| `0x60 + ID*4`  | One                                                                 |
+| `0x20 + ID*4`  | Two or more, or the node has not transmitted anything yet           |
 
-A node that has just sent a frame thus always yields to any other node waiting
-to transmit, with the node ID only deciding the order within each group. When
-multiple nodes have data queued they end up taking turns, one frame each. While
+A node switches to `0xa0` as soon as it finishes sending, and starts counting a
+few cycles later than the nodes that received the frame. A receiving node
+updates its value about 320 cycles into the frame, which is in time only if the
+frame ends with a parity bit of 1 (a byte with an odd number of set bits).
+After a byte with an even number of set bits the receivers contend with the
+value they had before that frame. A receiver that was still at `0xa0` then
+competes with the sender at the same level and can lose, letting the sender
+transmit two frames in a row, so nodes do not strictly take turns. While
 sending the header (cells 0-8), the transmitter compares the bus against what
 it is driving 6 and 15 cycles into each cell; on any mismatch it stops, waits
 for the bus to become idle again and retries the same byte later. The data byte
