@@ -88,16 +88,22 @@ signals (Left or Right) can be connected. PSX programs should thus offer an
 option to disable stereo effects, and to output an equal volume to both cables.<br/>
 
 #### Unstable and Delayed I/O
-The SPU occasionally seems to "miss" 32bit I/O writes (not sure if that can be
-fixed by any Memory Control settings?), a stable workaround is to split each
-32bit write into two 16bit writes. The SPU seems to process written values at
+With the usual DEV4 Delay/Size setting (1F801014h=200931E1h), a 32bit write
+to the SPU sometimes loses its low halfword, which keeps its old value. The
+high halfword always lands. How often varies from none to about one
+write in three; in a run of eight back-to-back 32bit writes, one of them loses
+its low halfword. Splitting each 32bit write into two 16bit writes avoids it.
+So does a longer Write Delay (1F801014h=200931EFh), or setting bit 9
+(200933E1h). Clearing bit 8 (200930E1h) makes every 32bit write lose its high
+halfword instead.<br/>
+The SPU seems to process written values at
 44100Hz rate (so it may take 1/44100 seconds (300h clock cycles) until it has
 actually realized the new value).<br/>
 
 #### SPU Bus-Width
 The SPU is connected to a 16bit databus. 8bit/16bit/32bit reads and 16bit
-writes are implemented; 32bit writes are also supported but seem to be
-particularly unstable (see above). However, 8bit writes are NOT implemented:
+writes are implemented; 32bit writes are also supported but can lose their low
+halfword (see above). However, 8bit writes are NOT implemented:
 8bit writes to ODD addresses are simply ignored (without causing any
 exceptions), 8bit writes to EVEN addresses are executed as 16bit writes (e.g.
 `li v0, 12345678h; sb v0, spu\_port` will write 5678h instead of 78h).<br/>
