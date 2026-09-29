@@ -555,8 +555,9 @@ bitstream is always 330696 bits (41337 bytes) long as per the XCS40XL datasheet.
 
 The FPGA implements a small broadcast network over the board's RS-485
 transceiver. The DDR Solo games are the only ones known to use it. Despite the
-transceiver being meant for ARCnet, the protocol has nothing in common with it. The behavior described here has been verified on the 3rdMIX bitstream
-only; all timings are in cycles of the FPGA's 29.45 MHz clock.
+transceiver being meant for ARCnet, the protocol has nothing in common with it. The behavior described here is
+identical on the Solo Bass Mix and 3rdMIX bitstreams; all timings are in cycles
+of the FPGA's 29.45 MHz clock.
 
 The FPGA's transmit data and transmit enable pins always carry the same signal,
 so a node only ever drives the bus low and the bus idles high. Data is sent in
