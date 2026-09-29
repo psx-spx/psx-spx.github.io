@@ -96,6 +96,10 @@ its low halfword. Splitting each 32bit write into two 16bit writes avoids it.
 So does a longer Write Delay (1F801014h=200931EFh), or setting bit 9
 (200933E1h). Clearing bit 8 (200930E1h) makes every 32bit write lose its high
 halfword instead.<br/>
+On the bus, two 16bit writes are two separate transactions, each asserting and
+releasing both /CS and /WR. A 32bit write is one transaction: /CS stays
+asserted for both halfwords, and only /WR is released and asserted again
+between them.<br/>
 The SPU seems to process written values at
 44100Hz rate (so it may take 1/44100 seconds (300h clock cycles) until it has
 actually realized the new value).<br/>
