@@ -236,9 +236,9 @@ see:<br/>
 [Write queue](memorymap.md#write-queue)<br/>
 Any read access from RAM or I/O registers or filling more than 4 entries into
 the write queue will stall the CPU until the DMA is finished.<br/>
-A SyncMode 0 transfer takes a few cycles to start after the CHCR write that
-starts it: a RAM or I/O read issued within 3 cycles of that write still goes
-through first, and the next one waits for the whole transfer.<br/>
+A DMA6 transfer takes a few cycles to start after the CHCR write that starts
+it: an I/O read issued within 3 cycles of that write still goes through first,
+and the next RAM read waits for the whole transfer.<br/>
 Additionally, the CPU operation resumes during periods when DMA gets interrupted
 (ie. after SyncMode 1 blocks, after SyncMode 2 list entries) (or in SyncMode 0
 with Chopping enabled).<br/>
