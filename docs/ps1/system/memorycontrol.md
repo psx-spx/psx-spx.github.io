@@ -52,6 +52,10 @@ For DEV1, the address seems to be fixed (1FA00000h).<br/>
   30    Wide DMA           (0=use bit 12, 1=override to full 32 bits)
   31    Wait               (1=wait on external device before being ready)
 ```
+An access wider than the Data Bus-width is a single bus transaction: /CS is
+asserted once, /RD or /WR is pulsed once per 8bit or 16bit unit, and /CS is
+released only after the last one. For example, a 32bit read from the 8bit
+BIOS ROM is one /CS assertion with four /RD pulses.<br/>
 When booting, all these registers are using the maximum cycle delays for both
 reads and writes. Then, the BIOS will immediately select a faster read
 access delay, resulting in a visible speed up after the first few instructions.
