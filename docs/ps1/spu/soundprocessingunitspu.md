@@ -99,7 +99,10 @@ halfword instead.<br/>
 On the bus, two 16bit writes are two separate transactions, each asserting and
 releasing both /CS and /WR. A 32bit write is one transaction: /CS stays
 asserted for both halfwords, and only /WR is released and asserted again
-between them.<br/>
+between them. The gap between the two /WR pulses is the Recovery Period: with
+200931E1h it is 5 cycles, the same as the gap between two transactions. With
+bit 8 clear it drops to 1 cycle, which is when the SPU loses the second
+halfword.<br/>
 The SPU seems to process written values at
 44100Hz rate (so it may take 1/44100 seconds (300h clock cycles) until it has
 actually realized the new value).<br/>
