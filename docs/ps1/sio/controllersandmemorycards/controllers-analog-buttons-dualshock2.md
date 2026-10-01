@@ -31,7 +31,7 @@ enabled/disabled via Command 4Fh (ie. 3FFFFh = 18 bits).<br/>
 
 #### Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol
 ```
-  Send  01h 41h 00h aa  bb  cc  dd  ee  ff
+  Send  01h 4Fh 00h aa  bb  cc  dd  ee  ff
   Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
 ```
 This can output some 48bit value (bit0=aa.bit0, bit47=ff.bit7), used to
@@ -63,14 +63,14 @@ enable/disable Reply bytes in the controller read command (Command 42h).<br/>
 ```
 Usually, one would use one of the following command/values:<br/>
 ```
-  Send  01h 41h 00h 03h 00h 00h 00h 00h 00h  Digital buttons
-  Send  01h 41h 00h 3Fh 00h 00h 00h 00h 00h  Digital buttons + analog sticks
-  Send  01h 41h 00h FFh FFh 03h 00h 00h 00h  Enable all 18 input bytes
+  Send  01h 4Fh 00h 03h 00h 00h 00h 00h 00h  Digital buttons
+  Send  01h 4Fh 00h 3Fh 00h 00h 00h 00h 00h  Digital buttons + analog sticks
+  Send  01h 4Fh 00h FFh FFh 03h 00h 00h 00h  Enable all 18 input bytes
 ```
 The transfer order is 1st..21st byte as shown above (unless some bits are
 cleared, eg. if bit0-5=0 and bit6=1 then DPAD Right would appear as 4th byte
 instead of 10th byte). The command length increases/decreases depening on the
-number of enabled bits. The transfer length is always 3+N\*2 bytes (including a
+number of enabled bits. The transfer length is always 3+N bytes (including a
 00h padding byte when the number of enabled bits is odd). The analog mode ID
 byte changes depending on number of halfwords.<br/>
 CAUTION: Sending Command 44h does RESET the Command 4Fh setting (either to
