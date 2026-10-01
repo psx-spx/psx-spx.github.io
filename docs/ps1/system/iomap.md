@@ -183,7 +183,7 @@ names are suffixed with a question mark.
 ```
 #### DEV8 (default 128 bytes, max 8 KBytes)
 ```
-  1F802000h  80h  Expansion Region (8bit data bus, crashes on 16bit access?)
+  1F802000h  80h  Expansion Region (8bit data bus)
 ```
 #### DEV8 - Dual Serial Port (for TTY Debug Terminal)
 ```
