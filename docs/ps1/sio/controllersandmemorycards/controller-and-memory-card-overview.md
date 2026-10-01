@@ -64,11 +64,12 @@ bizarre coding, emulators can't trigger IRQ7 immediately within 0 cycles after
 sending the byte.<br/>
 
 #### BIOS Functions
-Controllers can be probably accessed via InitPad and StartPad functions,<br/>
+Controllers are accessed via InitPAD2 and StartPAD2,<br/>
 [BIOS Joypad Functions](../../kernelbios/joypad-functions.md#bios-joypad-functions)<br/>
 Memory cards can be accessed by the filesystem (with device names "bu00:"
-(slot1) and "bu10:" (slot2) or so). Before using that device names, it seems to
-be required to call InitCard, StartCard, and \_bu\_init (?).<br/>
+(slot1) and "bu10:" (slot2) or so). Before using those device names, call
+InitCARD2, StartCARD2, and \_bu\_init, in that order,<br/>
+[BIOS Memory Card Functions](../../kernelbios/memory-card-functions.md#bios-memory-card-functions)<br/>
 
 #### Synchronous I/O
 The data is transferred in units of bytes, via separate input and output lines.
