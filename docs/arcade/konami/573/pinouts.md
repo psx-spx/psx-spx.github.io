@@ -313,8 +313,8 @@ output, unused by the 573.
 | Pin   | H8 GPIO   | Dir | Connected to       | Usage                                         |
 | ----: | :-------- | :-- | :----------------- | :-------------------------------------------- |
 |    11 | `P9_0`    | I   |                    | _Unused_                                      |
-|    12 | `P9_1-2`  | O   | Konami ASIC        | Status code (readable from `0x1f400004`)      |
-|    12 | `P9_3-4`  | O   | Konami ASIC        | Error code (readable from `0x1f400004`)       |
+| 12-13 | `P9_1-2`  | O   | Konami ASIC        | Status code (readable from `0x1f400004`)      |
+| 14-15 | `P9_3-4`  | O   | Konami ASIC        | Error code (readable from `0x1f400004`)       |
 |    16 | `IRQ0`    | I   |                    | _Unused_                                      |
 | 17-24 | `P6_0-7`  | O   | Konami ASIC        | Low byte of value readable from `0x1f40000a`  |
 | 25-32 | `P5_0-7`  | O   | Konami ASIC        | High byte of value readable from `0x1f40000a` |
@@ -474,13 +474,13 @@ The pinout of this connector is currently unknown.
 | Pin | Name   | Dir |
 | --: | :----- | :-- |
 |   1 | `TX`   | O   |
-|   2 | `RX`   | O   |
+|   2 | `RX`   | I   |
 |   3 | `GND`  |     |
 |   4 | `GND`  |     |
 |   5 | `RTS`  | O   |
-|   6 | `CTS`  | O   |
+|   6 | `CTS`  | I   |
 |   7 | `DTR`  | O   |
-|   8 | `DSR`  | O   |
+|   8 | `DSR`  | I   |
 
 #### Analog MP3 audio output (`CN16`)
 
