@@ -658,10 +658,10 @@ value (`XXXX-YYYY`), generated as follows:
 // while others use all 48 bits.
 size_t xid_to_string_32(char *output, const uint8_t *xid) {
     uint32_t value = 0
-        | (xid[1] <<  0)
-        | (xid[2] <<  8)
-        | (xid[3] << 16)
-        | (xid[4] << 24);
+        | ((uint32_t) xid[1] <<  0)
+        | ((uint32_t) xid[2] <<  8)
+        | ((uint32_t) xid[3] << 16)
+        | ((uint32_t) xid[4] << 24);
 
     int high = (value / 10000) % 10000;
     int low  = value % 10000;
@@ -671,12 +671,12 @@ size_t xid_to_string_32(char *output, const uint8_t *xid) {
 
 size_t xid_to_string_48(char *output, const uint8_t *xid) {
     uint64_t value = 0
-        | (xid[1] <<  0)
-        | (xid[2] <<  8)
-        | (xid[3] << 16)
-        | (xid[4] << 24)
-        | (xid[5] << 32)
-        | (xid[6] << 40);
+        | ((uint64_t) xid[1] <<  0)
+        | ((uint64_t) xid[2] <<  8)
+        | ((uint64_t) xid[3] << 16)
+        | ((uint64_t) xid[4] << 24)
+        | ((uint64_t) xid[5] << 32)
+        | ((uint64_t) xid[6] << 40);
 
     int high = (int) ((value / 10000) % 10000);
     int low  = (int) (value % 10000);
