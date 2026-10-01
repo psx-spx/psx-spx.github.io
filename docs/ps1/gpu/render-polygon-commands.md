@@ -42,7 +42,7 @@ Any further clut/page bits should be set to 0.
 So for example, a solid flat blue triangle of coordinate (10, 20), (30, 40), (50, 60)
 will be drawn using the following draw call data:
 ```
-200000FF
+20FF0000
 00100020
 00300040
 00500060
