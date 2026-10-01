@@ -85,35 +85,85 @@ DEV0, or communicate with a computer, speeding up write access is recommended.
 The fastest a port could go would be by setting the lowest 16 bits to zero, which
 will result in 3 CPU cycles for a single byte access.
 
-!CS always goes active at least one cycle before !WR or !RD go active. The various
-timing changes are between all the events inside the data read/write waveform. The
-whole formula for computing the total access time is fairly complex overall, and
-difficult to properly describe.
+All counts below are in CPU cycles, taken from the SPU (DEV4, 16bit) and the
+BIOS ROM (DEV2, 8bit) with the COM\_DELAY register at 00031125h unless noted.
 
-- The pre-strobe period will add delays between the moment the data bus is set,
-  and the moment !CS goes active.
-- The hold period will keep the data in the data bus for some more cycles after
-  !WR goes inactive, and before !CS goes inactive. The accessed device is supposed
-  to sample the data bus during this interval.
-- The floating period will keep the data bus floating for some more cycles after
-  !RD goes inactive, and before !CS goes inactive. The accessed device is supposed
-  to stop driving the data bus during this interval. The CPU will sample the data
-  bus somewhere before or exactly when !CS goes inactive.
-- The recovery period will add delays between two operations.
+- /CS goes active one cycle before /RD or /WR.
+- /RD is active for Read Delay+1 cycles, /WR for Write Delay+1 cycles.
+- Pre-strobe (bit 11) delays the strobe by COM3 more cycles after /CS, and takes
+  the same COM3 cycles off the strobe itself, down to a minimum of 1 cycle, so
+  the access keeps its length.
+- Hold (bit 9) only affects writes: /CS stays active COM1 cycles after /WR goes
+  inactive, and the gap between two units of a wide write grows by COM1.
+- Floating (bit 10) only affects reads: /CS stays active COM2 cycles after /RD
+  goes inactive, and the gap between two units of a wide read grows by COM2.
+- Recovery (bit 8) puts COM0 cycles between the units of a wide access, with /CS
+  still active, and keeps /CS inactive for COM0 cycles after a write before the
+  next transaction. With bit 8 cleared, both gaps are 1 cycle.
 
-The data bus width will influence if the CPU does full 16 bits reads, or only
-8 bits. When doing 32 bits operations, the CPU will issue 2 16-bits operations,
-or 4 8-bits operations, keeping !CS active the whole time, and strobing !WR or
-!RD accordingly. When doing these sequences, the address bus will also increment
-automatically between each operation, if the auto-increment bit is active.
+A halfword write to the SPU with 200931E1h: /CS, then a 2 cycle /WR.
+
+![sh to the SPU](waveforms/spu-sh.svg)
+
+A word write to the same register: two /WR pulses under one /CS, separated by
+the 5 cycle recovery period.
+
+![sw to the SPU](waveforms/spu-sw.svg)
+
+The same word write with bit 8 cleared (200930E1h). The two halves, and the next
+transaction, are 1 cycle apart. On a retail console this loses the high half of
+every 32bit write to the SPU.
+
+![sw to the SPU, no recovery](waveforms/spu-sw-no-recovery.svg)
+
+The same word write with bit 8 cleared and bit 9 set (200932E1h): /CS is held
+2 more cycles after each /WR, so the halves are 3 cycles apart.
+
+![sw to the SPU, hold](waveforms/spu-sw-hold.svg)
+
+A word read from the BIOS ROM with 0013243Fh: four 4 cycle /RD pulses, 2 cycles
+apart (1 cycle of floating period, then 1 before the next strobe), and one more
+floating cycle before /CS goes inactive.
+
+![lw from the BIOS ROM](waveforms/bios-lw.svg)
+
+The same read with bit 10 cleared (0013203Fh): the pulses are 1 cycle apart and
+/CS goes inactive with the last /RD.
+
+![lw from the BIOS ROM, no floating period](waveforms/bios-lw-no-float.svg)
+
+The same read with bit 11 set (00132C3Fh): each /RD starts 2 cycles after /CS
+(3 after the previous pulse, counting the floating cycle), and lasts 3 cycles
+instead of 4.
+
+![lw from the BIOS ROM, pre-strobe](waveforms/bios-lw-prestrobe.svg)
+
+The data bus width selects whether a 32bit access is two 16bit operations or
+four 8bit ones, all under one /CS. The auto-increment bit makes the address
+advance between them. With it cleared, every operation uses the starting
+address: a 32bit read of BFC00000h with DEV2 at 0013043Fh returns 13131313h
+instead of 3C080013h, and a 32bit write to the SPU writes both halves to the
+same register, the second one winning.
 
 This means it is possible to slightly shorten the read time of 4 bytes off the
 same address by disabling auto-increment, and reading a full word. The CPU will
 then read 4 bytes off the same address, and place them all into each byte of
 the loaded register.
 
-The DMA timing override portion will replace the access timing when doing DMA,
-only if the DMA override flag is set.
+The SPU itself is 16bit only. With bit 12 cleared on DEV4, each byte is written
+as a full halfword, with FFh in bits 8-15, and the SPU ignores A0, so the odd
+byte overwrites the even one in the same register.
+
+With bit 29 set, DMA transfers use bits 24-27 instead of the normal timings:
+/WR is active for (bits 24-27)+1 cycles with 1 cycle between pulses, whatever
+the Write Delay and the COM bits say. With bit 29 cleared, DMA uses the normal
+timings and bits 24-27 are ignored. A DMA block is one /CS assertion for the
+whole block. The BIOS value for DEV4, 200931E1h, has bit 29 set and bits 24-27
+at zero, so SPU DMA writes run at 1 cycle per strobe with 1 cycle between.
+
+![SPU DMA, normal timings (000931E1h)](waveforms/spu-dma-normal.svg)
+
+![SPU DMA, override (200931E1h)](waveforms/spu-dma-override.svg)
 
 The Wide DMA flag will enable full 32 bits DMA operations on the bus, by reusing
 the low 16-bits address signals as the high 16-bits data. This means that if
