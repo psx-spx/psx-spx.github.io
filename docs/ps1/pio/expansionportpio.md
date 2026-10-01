@@ -16,9 +16,8 @@ see:<br/>
 [Memory Control](../system/memorycontrol.md)<br/>
 For DEV0, 32bit reads are supported even in 8bit mode (eg. 32bit opcode fetches
 are automatically processed as four 8bit reads).<br/>
-For DEV8, only 8bit access seems to be supported (except that probably 16bit
-mode allows 16bit access), anyways, larger accesses seem to cause exceptions...
-not sure if that can be disabled...?<br/>
+For DEV8, 16bit and 32bit reads and writes also work in 8bit mode, without an
+exception.<br/>
 
 #### DEV0 - Intended to contain ROM
 [DEV0 Expansion ROM Header](#dev0-expansion-rom-header)<br/>
