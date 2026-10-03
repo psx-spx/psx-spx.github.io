@@ -1,0 +1,6927 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/ps1/cdr/cdromfileformats/graphics/">
+      
+      
+        <link rel="prev" href="../executables/">
+      
+      
+        <link rel="next" href="../streaming/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Textures, 2D and 3D Graphics - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../css/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#textures-2d-and-3d-graphics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Textures, 2D and 3D Graphics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    PlayStation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            PlayStation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    System
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            System
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../system/memorymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../system/iomap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../system/interrupts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interrupts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../system/dmachannels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DMA Channels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../system/timers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../system/memorycontrol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../system/partialwordwrites/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Partial-Word Writes to MMIO
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../system/unpredictablethings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unpredictable Things
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CPU
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            CPU
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cpu/cpuspecifications/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Specifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cpu/gte/geometrytransformationenginegte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geometry Transformation Engine (GTE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cpu/gte/gtepipelinetimings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GTE Pipeline Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cpu/mdec/macroblockdecodermdec/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Macroblock Decoder (MDEC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../gpu/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    GPU
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            GPU
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/i-o-ports-dma-channels-commands-vram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU I/O Ports, DMA Channels, Commands, VRAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/render-polygon-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Render Polygon Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/render-line-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Render Line Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/render-rectangle-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Render Rectangle Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/rendering-attributes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Rendering Attributes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/memory-transfer-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Memory Transfer Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/other-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Other Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/display-control-commands-gp1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Display Control Commands (GP1)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/status-register/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Status Register
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Versions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/depth-ordering/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Depth Ordering
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/video-memory-vram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Video Memory (VRAM)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/texture-caching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Texture Caching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/timings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gpu/misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU (MISC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../spu/soundprocessingunitspu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sound Processing Unit (SPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CD-ROM
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            CD-ROM
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdromdrive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Drive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdromformat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    CDROM File Formats
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_5_3" id="__nav_2_5_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            CDROM File Formats
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../executables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Executables and Debug Files
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Textures, 2D and 3D Graphics
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Textures, 2D and 3D Graphics
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-texture-image-timpxlclt-sony" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video Texture Image TIM/PXL/CLT (Sony)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video Texture Image TIM/PXL/CLT (Sony)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tim-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      TIM Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-format-of-the-clut-and-pixel-data-sections-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      The format of the CLUT and Pixel Data Section(s) is:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pxlclt-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      PXL/CLT Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clt-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLT Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pxl-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      PXL Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compressed-tims" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compressed TIMs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malformed-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Malformed Files
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Malformed Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#malformed-tims-in-bigfiledat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Malformed TIMs in BIGFILE.DAT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oversized-tims" class="md-nav__link">
+    <span class="md-ellipsis">
+      Oversized TIMs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#miscomputed-section-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      Miscomputed Section Size
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nontims-in-bloody-roar-1-and-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      NonTIMs in Bloody Roar 1 and 2
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-uncommonmalformed-tim-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other uncommon/malformed TIM variants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malformed-clts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Malformed CLTs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-texturebitmap-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video Texture/Bitmap (Other)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video Texture/Bitmap (Other)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compressed-bitmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compressed Bitmaps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uncompressed-bitmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Uncompressed Bitmaps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#targa-tga-and-paintbrush-pcx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Targa TGA and Paintbrush PCX
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#psi-bitmap-power-spike-magdemo43-powergameidxbizpsi" class="md-nav__link">
+    <span class="md-ellipsis">
+      PSI bitmap - Power Spike (MagDemo43: POWER\GAME.IDX\.BIZ\.PSI)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jumpstart-wildlife-safari-field-trip-magdemo52-demodatadatdatpsx" class="md-nav__link">
+    <span class="md-ellipsis">
+      JumpStart Wildlife Safari Field Trip (MagDemo52: DEMO\DATA.DAT\*.DAT+*.PSX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wxh-bitmap-widthheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      WxH Bitmap (Width*Height)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rawp-bitmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAWP Bitmap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xywh-bitmappalette-xywidthheight-bit-and-clt" class="md-nav__link">
+    <span class="md-ellipsis">
+      XYWH Bitmap/Palette (X,Y,Width*Height) (.BIT and .CLT)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#doom-psxdoomabinpsxdoomwad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Doom (PSXDOOM\ABIN\PSXDOOM.WAD\\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lemmings-oh-no-more-lemmings-filesgfxbob-filessmlmapsbob" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lemmings &amp; Oh No! More Lemmings (FILES\GFX\.BOB, FILES\SMLMAPS\.BOB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perfect-assassin-datajfsdatabm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perfect Assassin (DATA.JFS\DATA\*.BM)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-dirfilebinvcf" class="md-nav__link">
+    <span class="md-ellipsis">
+      One (DIRFILE.BIN\*.VCF)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-dirfilebinvck-and-dirfilebinwsectbintexture-001" class="md-nav__link">
+    <span class="md-ellipsis">
+      One (DIRFILE.BIN\*.VCK and DIRFILE.BIN\w*\sect*.bin\TEXTURE 001)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bmr-bitmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      BMR Bitmaps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#croc-1-retail-img-retail-only-not-in-magdemo02-demo-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      Croc 1 (retail: *.IMG) (retail only, not in MagDemo02 demo version)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#croc-2-magdemo22-croc2crociidirimg" class="md-nav__link">
+    <span class="md-ellipsis">
+      Croc 2 (MagDemo22: CROC2\CROCII.DIR\*.IMG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disneys-the-emperors-new-groove-magdemo39-engkingdomdirimg" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disney's The Emperor's New Groove (MagDemo39: ENG\KINGDOM.DIR\*.IMG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disneys-aladdin-in-nasiras-rev-magdemo46-aladdinaladdindirimg" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disney's Aladdin in Nasira's Rev. (MagDemo46: ALADDIN\ALADDIN.DIR\*.IMG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mat-hoffmans-pro-bmx-magdemo39-bmxfewadstrbin-activision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mat Hoffman's Pro BMX (MagDemo39: BMX\FE.WAD+STR\*.BIN) (Activision)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mat-hoffmans-pro-bmx-magdemo48-mhpbfewadstrbin-shabaactivision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mat Hoffman's Pro BMX (MagDemo48: MHPB\FE.WAD+STR\*.BIN) (Shaba/Activision)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#et-interplanetary-mission-magdemo54-megamegacsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      E.T. Interplanetary Mission (MagDemo54: MEGA\MEGA.CSH\*)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ea-sports-madden-nfl-98-magdemo02-tiburondat" class="md-nav__link">
+    <span class="md-ellipsis">
+      EA Sports: Madden NFL '98 (MagDemo02: TIBURON\.DAT\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ea-sports-madden-nfl-2000-magdemo27-madn00dat" class="md-nav__link">
+    <span class="md-ellipsis">
+      EA Sports: Madden NFL 2000 (MagDemo27: MADN00\.DAT\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ea-sports-madden-nfl-2001-magdemo39-madn01dat" class="md-nav__link">
+    <span class="md-ellipsis">
+      EA Sports: Madden NFL 2001 (MagDemo39: MADN01\.DAT\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#989-sports-nhl-faceoff-99-magdemo17-fo99kgbtex" class="md-nav__link">
+    <span class="md-ellipsis">
+      989 Sports: NHL Faceoff '99 (MagDemo17: FO99\.KGB\.TEX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#989-sports-nhl-faceoff-2000-magdemo28-fo2000tex" class="md-nav__link">
+    <span class="md-ellipsis">
+      989 Sports: NHL Faceoff 2000 (MagDemo28: FO2000\*.TEX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#989-sports-ncaa-final-four-2000-magdemo30-ff00tex" class="md-nav__link">
+    <span class="md-ellipsis">
+      989 Sports: NCAA Final Four 2000 (MagDemo30: FF00\*.TEX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#electronic-arts-psh-shpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Electronic Arts .PSH (SHPP)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#destruction-derby-raw-magdemo35-ddrawpckfntspr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Destruction Derby Raw (MagDemo35: DDRAW\*.PCK,*.FNT,*.SPR)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cool-boarders-2-magdemo02-cb2datafbd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cool Boarders 2 (MagDemo02: CB2\DATA*\*.FBD)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-texturebitmap-tga" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video Texture/Bitmap (TGA)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video Texture/Bitmap (TGA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#targa-tga" class="md-nav__link">
+    <span class="md-ellipsis">
+      Targa TGA
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-texturebitmap-pcx" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video Texture/Bitmap (PCX)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video Texture/Bitmap (PCX)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pc-paintbrush-pcx-files-zsoft" class="md-nav__link">
+    <span class="md-ellipsis">
+      PC Paintbrush .PCX files (ZSoft)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pcx-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      PCX Versions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-pcx-color-depths" class="md-nav__link">
+    <span class="md-ellipsis">
+      Known PCX Color Depths
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#width-and-height" class="md-nav__link">
+    <span class="md-ellipsis">
+      Width and Height
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color-planes-and-palettes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Color Planes and Palettes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mono-2-color-palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mono 2-Color Palette
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-color-palettes" class="md-nav__link">
+    <span class="md-ellipsis">
+      4-Color Palettes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-color-and-16-color-with-fixed-ega-palettes-version03h-or-04h" class="md-nav__link">
+    <span class="md-ellipsis">
+      8-Color and 16-Color, with fixed EGA Palettes (version=03h or 04h)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-color-with-custom-egavga-palettes-version02h-or-05h" class="md-nav__link">
+    <span class="md-ellipsis">
+      16-Color, with custom EGA/VGA Palettes (version=02h or 05h)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#256-color-vga-palettes-version05h" class="md-nav__link">
+    <span class="md-ellipsis">
+      256-Color VGA Palettes (version=05h)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#256-level-grayscale-images-version05h-and-44h0002h" class="md-nav__link">
+    <span class="md-ellipsis">
+      256-Level Grayscale Images (version=05h and [44h]=0002h)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-16-color-cgaega-palettes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default 16-color CGA/EGA Palettes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pcx-files-in-psx-games" class="md-nav__link">
+    <span class="md-ellipsis">
+      PCX files in PSX games
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pcx-files-in-psx-metal-gear-solid-mgs" class="md-nav__link">
+    <span class="md-ellipsis">
+      PCX files in PSX Metal Gear Solid (MGS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dcx-archives" class="md-nav__link">
+    <span class="md-ellipsis">
+      DCX Archives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-2d-graphics-celbgdtsqanmsdf-sony" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video 2D Graphics CEL/BGD/TSQ/ANM/SDF (Sony)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video 2D Graphics CEL/BGD/TSQ/ANM/SDF (Sony)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cel-cell-data-official-format-with-8bit-header-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      CEL: Cell Data (official format with 8bit header entries)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cel16-inofficial-cel-hack-with-16bit-entries-and-more-extra-data-r-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      CEL16: Inofficial CEL hack with 16bit entries and more extra data (R-Types)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bgd-bg-map-data-official-format-with-8bit-header-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      BGD: BG Map Data (official format with 8bit header entries)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bgd16-inofficial-bgd-hack-with-16bit-entries-r-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      BGD16: Inofficial BGD hack with 16bit entries (R-Types)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tsq-animation-time-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      TSQ: Animation Time Sequence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anm-animation-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      ANM: Animation Information
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sdf-sprite-editor-project-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      SDF: Sprite Editor Project File
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-3d-graphics-tmdpmdtodhmdrsd-sony" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video 3D Graphics TMD/PMD/TOD/HMD/RSD (Sony)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video 3D Graphics TMD/PMD/TOD/HMD/RSD (Sony)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tmd-modeling-data-for-os-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      TMD - Modeling Data for OS Library
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pmd-high-speed-modeling-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      PMD - High-Speed Modeling Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tod-animation-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      TOD - Animation Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hmd-hierarchical-3d-model-animation-and-other-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      HMD - Hierarchical 3D Model, Animation and Other Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsd-files-rsdplymatgrpmshpvtcodmotogp" class="md-nav__link">
+    <span class="md-ellipsis">
+      RSD Files (RSD,PLY,MAT,GRP,MSH,PVT,COD,MOT,OGP)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../streaming/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Video Streaming and BS Compression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Archives
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compression/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diskimages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Disk Images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdromvideocdsvcd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Video CDs (VCD)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Internal Info on PSX CDROM Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Serial Ports (SIO)
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Serial Ports (SIO)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../sio/controllersandmemorycards/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Controllers and Memory Cards
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_1" id="__nav_2_6_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            Controllers and Memory Cards
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controller-and-memory-card-overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controller-and-memory-card-signals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Signals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controller-and-memory-card-multitap-adaptor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Multitap Adaptor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-communication-sequence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Communication Sequence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-standard-digital-analog-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Standard Digital/Analog Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-mouse/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Mouse
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-racing-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Racing Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-lightguns/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Lightguns
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-lightguns-namco-guncon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Lightguns - Namco (GunCon)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-lightguns-konami-justifier-hyperblaster-irq10/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Lightguns - Konami Justifier/Hyperblaster (IRQ10)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-lightguns-psx-lightgun-games/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Lightguns - PSX Lightgun Games
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-configuration-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Configuration Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-vibration-rumble-control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Vibration/Rumble Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-analog-buttons-dualshock2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Analog Buttons (Dualshock2)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-dance-mats/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Dance Mats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-pop-n-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Pop'n Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-taiko-controllers-tatacon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Taiko Controllers (Tatacon)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-densha-de-go-jet-de-go-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Densha de Go! / Jet de Go! Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-fishing-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Fishing Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-ps2-dvd-remote/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - PS2 DVD Remote
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-i-mode-adaptor-mobile-internet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - I-Mode Adaptor (Mobile Internet)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-keyboards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Keyboards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-additional-inputs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Additional Inputs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/controllers-misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controllers - Misc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/memory-card-read-write-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Read/Write Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/memory-card-data-format/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Data Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/memory-card-images/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/controllersandmemorycards/memory-card-notes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/pocketstation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pocketstation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sio/serialinterfacessio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serial Interfaces (SIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            Expansion Port (PIO)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pio/expansionportpio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pio/cheatdevices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cheat Devices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../kernelbios/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Kernel (BIOS)
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Kernel (BIOS)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/memory-map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/function-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Function Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/file-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS File Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/file-execute-and-flush-cache/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS File Execute and Flush Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/cdrom-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS CDROM Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/memory-card-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Memory Card Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/interrupt-exception-handling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Interrupt/Exception Handling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/event-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Event Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/event-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Event Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/thread-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Thread Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/timer-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Timer Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/joypad-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Joypad Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/gpu-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS GPU Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/memory-allocation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Memory Allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/memory-fill-copy-compare-slow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Memory Fill/Copy/Compare (SLOW)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/string-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS String Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/number-string-character-conversion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Number/String/Character Conversion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/misc-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Misc Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/internal-boot-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Internal Boot Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/more-internal-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS More Internal Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/pc-file-server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS PC File Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/tty-console-std-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS TTY Console (std_io)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/character-sets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Character Sets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/control-blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Control Blocks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Versions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kernelbios/patches/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS Patches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../pinouts/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Pinouts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/controller-ports-and-memory-card-ports/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Controller Ports and Memory-Card Ports
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/audio-video-power-expansion-ports/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Audio, Video, Power, Expansion Ports
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/sio-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - SIO Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/chipset-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Chipset Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/cpu-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - CPU Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/gpu-pinouts-for-old-160-pin-gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - GPU Pinouts (for old 160-pin GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/gpu-pinouts-for-new-208-pin-gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - GPU Pinouts (for new 208-pin GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/spu-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - SPU Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/drv-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - DRV Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/vcd-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - VCD Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/hc05-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - HC05 Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/mem-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - MEM Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/clk-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - CLK Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/pwr-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - PWR Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-110/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/component-list-and-chipset-pin-outs-for-multitap-scph-1070/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Component List and Chipset Pin-Outs for Multitap, SCPH-1070
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/memory-cards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts - Memory Cards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/mods-nocash-psx-xboo-upload/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mods - Nocash PSX-XBOO Upload
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pinouts/mods-pal-ntsc-color-mods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mods - PAL/NTSC Color Mods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hardwarenumbers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hardware Numbers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Arcade
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Arcade
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/arcadecabinets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arcade Cabinets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../arcade/konami/573/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Konami System 573
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Konami System 573
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/registers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Register Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/builtin-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Built-in I/O and JVS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/expansion-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion I/O Boards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/security-cartridges/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Security Cartridges
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/external-modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/bios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS and Bootleg Mod Boards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/drives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CD/DVD Drives
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/games/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Games and Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../arcade/konami/573/pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Dev Boards
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Dev Boards
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../dtl/psxdevboardchipsets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Chipsets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../dtl/psxdevboardprotocol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../aboutcredits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About & Credits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-texture-image-timpxlclt-sony" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video Texture Image TIM/PXL/CLT (Sony)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video Texture Image TIM/PXL/CLT (Sony)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tim-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      TIM Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-format-of-the-clut-and-pixel-data-sections-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      The format of the CLUT and Pixel Data Section(s) is:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pxlclt-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      PXL/CLT Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clt-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLT Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pxl-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      PXL Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compressed-tims" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compressed TIMs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malformed-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Malformed Files
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Malformed Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#malformed-tims-in-bigfiledat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Malformed TIMs in BIGFILE.DAT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oversized-tims" class="md-nav__link">
+    <span class="md-ellipsis">
+      Oversized TIMs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#miscomputed-section-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      Miscomputed Section Size
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nontims-in-bloody-roar-1-and-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      NonTIMs in Bloody Roar 1 and 2
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-uncommonmalformed-tim-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other uncommon/malformed TIM variants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malformed-clts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Malformed CLTs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-texturebitmap-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video Texture/Bitmap (Other)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video Texture/Bitmap (Other)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compressed-bitmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compressed Bitmaps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uncompressed-bitmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Uncompressed Bitmaps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#targa-tga-and-paintbrush-pcx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Targa TGA and Paintbrush PCX
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#psi-bitmap-power-spike-magdemo43-powergameidxbizpsi" class="md-nav__link">
+    <span class="md-ellipsis">
+      PSI bitmap - Power Spike (MagDemo43: POWER\GAME.IDX\.BIZ\.PSI)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jumpstart-wildlife-safari-field-trip-magdemo52-demodatadatdatpsx" class="md-nav__link">
+    <span class="md-ellipsis">
+      JumpStart Wildlife Safari Field Trip (MagDemo52: DEMO\DATA.DAT\*.DAT+*.PSX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wxh-bitmap-widthheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      WxH Bitmap (Width*Height)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rawp-bitmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAWP Bitmap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xywh-bitmappalette-xywidthheight-bit-and-clt" class="md-nav__link">
+    <span class="md-ellipsis">
+      XYWH Bitmap/Palette (X,Y,Width*Height) (.BIT and .CLT)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#doom-psxdoomabinpsxdoomwad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Doom (PSXDOOM\ABIN\PSXDOOM.WAD\\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lemmings-oh-no-more-lemmings-filesgfxbob-filessmlmapsbob" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lemmings &amp; Oh No! More Lemmings (FILES\GFX\.BOB, FILES\SMLMAPS\.BOB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perfect-assassin-datajfsdatabm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perfect Assassin (DATA.JFS\DATA\*.BM)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-dirfilebinvcf" class="md-nav__link">
+    <span class="md-ellipsis">
+      One (DIRFILE.BIN\*.VCF)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-dirfilebinvck-and-dirfilebinwsectbintexture-001" class="md-nav__link">
+    <span class="md-ellipsis">
+      One (DIRFILE.BIN\*.VCK and DIRFILE.BIN\w*\sect*.bin\TEXTURE 001)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bmr-bitmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      BMR Bitmaps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#croc-1-retail-img-retail-only-not-in-magdemo02-demo-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      Croc 1 (retail: *.IMG) (retail only, not in MagDemo02 demo version)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#croc-2-magdemo22-croc2crociidirimg" class="md-nav__link">
+    <span class="md-ellipsis">
+      Croc 2 (MagDemo22: CROC2\CROCII.DIR\*.IMG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disneys-the-emperors-new-groove-magdemo39-engkingdomdirimg" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disney's The Emperor's New Groove (MagDemo39: ENG\KINGDOM.DIR\*.IMG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disneys-aladdin-in-nasiras-rev-magdemo46-aladdinaladdindirimg" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disney's Aladdin in Nasira's Rev. (MagDemo46: ALADDIN\ALADDIN.DIR\*.IMG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mat-hoffmans-pro-bmx-magdemo39-bmxfewadstrbin-activision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mat Hoffman's Pro BMX (MagDemo39: BMX\FE.WAD+STR\*.BIN) (Activision)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mat-hoffmans-pro-bmx-magdemo48-mhpbfewadstrbin-shabaactivision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mat Hoffman's Pro BMX (MagDemo48: MHPB\FE.WAD+STR\*.BIN) (Shaba/Activision)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#et-interplanetary-mission-magdemo54-megamegacsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      E.T. Interplanetary Mission (MagDemo54: MEGA\MEGA.CSH\*)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ea-sports-madden-nfl-98-magdemo02-tiburondat" class="md-nav__link">
+    <span class="md-ellipsis">
+      EA Sports: Madden NFL '98 (MagDemo02: TIBURON\.DAT\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ea-sports-madden-nfl-2000-magdemo27-madn00dat" class="md-nav__link">
+    <span class="md-ellipsis">
+      EA Sports: Madden NFL 2000 (MagDemo27: MADN00\.DAT\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ea-sports-madden-nfl-2001-magdemo39-madn01dat" class="md-nav__link">
+    <span class="md-ellipsis">
+      EA Sports: Madden NFL 2001 (MagDemo39: MADN01\.DAT\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#989-sports-nhl-faceoff-99-magdemo17-fo99kgbtex" class="md-nav__link">
+    <span class="md-ellipsis">
+      989 Sports: NHL Faceoff '99 (MagDemo17: FO99\.KGB\.TEX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#989-sports-nhl-faceoff-2000-magdemo28-fo2000tex" class="md-nav__link">
+    <span class="md-ellipsis">
+      989 Sports: NHL Faceoff 2000 (MagDemo28: FO2000\*.TEX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#989-sports-ncaa-final-four-2000-magdemo30-ff00tex" class="md-nav__link">
+    <span class="md-ellipsis">
+      989 Sports: NCAA Final Four 2000 (MagDemo30: FF00\*.TEX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#electronic-arts-psh-shpp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Electronic Arts .PSH (SHPP)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#destruction-derby-raw-magdemo35-ddrawpckfntspr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Destruction Derby Raw (MagDemo35: DDRAW\*.PCK,*.FNT,*.SPR)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cool-boarders-2-magdemo02-cb2datafbd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cool Boarders 2 (MagDemo02: CB2\DATA*\*.FBD)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-texturebitmap-tga" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video Texture/Bitmap (TGA)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video Texture/Bitmap (TGA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#targa-tga" class="md-nav__link">
+    <span class="md-ellipsis">
+      Targa TGA
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-texturebitmap-pcx" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video Texture/Bitmap (PCX)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video Texture/Bitmap (PCX)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pc-paintbrush-pcx-files-zsoft" class="md-nav__link">
+    <span class="md-ellipsis">
+      PC Paintbrush .PCX files (ZSoft)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pcx-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      PCX Versions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-pcx-color-depths" class="md-nav__link">
+    <span class="md-ellipsis">
+      Known PCX Color Depths
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#width-and-height" class="md-nav__link">
+    <span class="md-ellipsis">
+      Width and Height
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color-planes-and-palettes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Color Planes and Palettes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mono-2-color-palette" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mono 2-Color Palette
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-color-palettes" class="md-nav__link">
+    <span class="md-ellipsis">
+      4-Color Palettes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-color-and-16-color-with-fixed-ega-palettes-version03h-or-04h" class="md-nav__link">
+    <span class="md-ellipsis">
+      8-Color and 16-Color, with fixed EGA Palettes (version=03h or 04h)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-color-with-custom-egavga-palettes-version02h-or-05h" class="md-nav__link">
+    <span class="md-ellipsis">
+      16-Color, with custom EGA/VGA Palettes (version=02h or 05h)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#256-color-vga-palettes-version05h" class="md-nav__link">
+    <span class="md-ellipsis">
+      256-Color VGA Palettes (version=05h)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#256-level-grayscale-images-version05h-and-44h0002h" class="md-nav__link">
+    <span class="md-ellipsis">
+      256-Level Grayscale Images (version=05h and [44h]=0002h)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-16-color-cgaega-palettes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default 16-color CGA/EGA Palettes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pcx-files-in-psx-games" class="md-nav__link">
+    <span class="md-ellipsis">
+      PCX files in PSX games
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pcx-files-in-psx-metal-gear-solid-mgs" class="md-nav__link">
+    <span class="md-ellipsis">
+      PCX files in PSX Metal Gear Solid (MGS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dcx-archives" class="md-nav__link">
+    <span class="md-ellipsis">
+      DCX Archives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-2d-graphics-celbgdtsqanmsdf-sony" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video 2D Graphics CEL/BGD/TSQ/ANM/SDF (Sony)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video 2D Graphics CEL/BGD/TSQ/ANM/SDF (Sony)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cel-cell-data-official-format-with-8bit-header-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      CEL: Cell Data (official format with 8bit header entries)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cel16-inofficial-cel-hack-with-16bit-entries-and-more-extra-data-r-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      CEL16: Inofficial CEL hack with 16bit entries and more extra data (R-Types)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bgd-bg-map-data-official-format-with-8bit-header-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      BGD: BG Map Data (official format with 8bit header entries)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bgd16-inofficial-bgd-hack-with-16bit-entries-r-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      BGD16: Inofficial BGD hack with 16bit entries (R-Types)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tsq-animation-time-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      TSQ: Animation Time Sequence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anm-animation-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      ANM: Animation Information
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sdf-sprite-editor-project-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      SDF: Sprite Editor Project File
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdrom-file-video-3d-graphics-tmdpmdtodhmdrsd-sony" class="md-nav__link">
+    <span class="md-ellipsis">
+      CDROM File Video 3D Graphics TMD/PMD/TOD/HMD/RSD (Sony)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDROM File Video 3D Graphics TMD/PMD/TOD/HMD/RSD (Sony)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tmd-modeling-data-for-os-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      TMD - Modeling Data for OS Library
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pmd-high-speed-modeling-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      PMD - High-Speed Modeling Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tod-animation-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      TOD - Animation Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hmd-hierarchical-3d-model-animation-and-other-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      HMD - Hierarchical 3D Model, Animation and Other Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsd-files-rsdplymatgrpmshpvtcodmotogp" class="md-nav__link">
+    <span class="md-ellipsis">
+      RSD Files (RSD,PLY,MAT,GRP,MSH,PVT,COD,MOT,OGP)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="textures-2d-and-3d-graphics">Textures, 2D and 3D Graphics</h1>
+<h2 id="cdrom-file-video-texture-image-timpxlclt-sony">CDROM File Video Texture Image TIM/PXL/CLT (Sony)</h2>
+<p>TIM/PXL/CLT are standard formats from Sony's devkit. TIM is used by many PSX
+games.<br/>
+<div class="highlight"><pre><span></span><code>  .TIM   contains Pixel data, and (optional) CLUT data  ;-all in one file
+  .PXL   contains Pixel data only                       ;\in two separate files
+  .CLT   contains CLUT data only (if any)               ;/
+</code></pre></div></p>
+<h4 id="tim-format">TIM Format</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 1  File ID  (always 10h=TIM)
+  001h 1  Version  (always 00h)
+  002h 2  Reserved (always 0000h) (or 1 or 2 for Compressed TIM, see below)
+  004h 4  Flags (bit0-2=Type; see below, bit3=HasCLUT, bit4-31=Reserved/zero)
+  ...  .. Data Section for CLUT (Palette), only exists if Flags.bit3=1, HasCLUT
+  ...  .. Data Section for Pixels (Bitmap/Texture)
+</code></pre></div>
+The Type in Flags.bit0-2 can be 0=4bpp, 1=8bpp, 2=16bpp, 3=24bpp, 4=Mixed.<br/>
+NFL Blitz 2000 (MagDemo26: B2000\DATA\ARTD_G.BIN) does additionally use Type
+5=8bit.<br/>
+The Type value value is only a hint on how to view the Pixel data (the data is
+copied to VRAM regardless of the type; 4=Mixed is meant to indicate that the
+data contains different types, eg. both 4bpp &amp; 8bpp textures).<br/>
+Type 3=24bpp is quite rare, but does exist (eg. Colony Wars (MagDemo02:
+CWARS\GAME.RSC\DEMO.TIM).<br/></p>
+<h4 id="the-format-of-the-clut-and-pixel-data-sections-is">The format of the CLUT and Pixel Data Section(s) is:</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 4  Size of Data Section (Xsiz*2*Ysiz+0Ch)  ;maybe rounded to 4-byte?
+  004h 4  Destination Coord    (YyyyXxxxh)  ;Xpos counted in halfwords
+  008h 4  Width+Height         (YsizXsizh)  ;Xsiz counted in halfwords
+  00Ch .. VRAM Data (to be DMAed to frame buffer)
+</code></pre></div>
+Note: Above is usually a multiple of 4 bytes, but not always:<br/>
+Shadow Madness (MagDemo18: SHADOW\DATA\ANDY\LOADSAVE\*.TIM) contains TIM
+bitmaps with 27x27 or 39x51 halfwords; those files have odd section size &amp;
+odd total filesize. Gran Turismo 2 (GT2.VOL\arcade\arc_other.tim\0000) also has
+odd size. Unknown if the CLUT can also have odd size (which would misalign the
+following Bitmap section).<br/>
+Bust A Groove (MagDemo18: BUSTGR_A\G_COMMON.DFS\0005) has 0x0 pixel Bitmaps
+(with CLUT data).<br/></p>
+<h4 id="pxlclt-format">PXL/CLT Format</h4>
+<p>PXL/CLT is very rare. And oddly, with swapped ID values (official specs say
+11h=PXL, 12h=CLT, but the existing games do use 11h=CLT, 12h=PXL).<br/>
+Used by Granstream Saga (MagDemo10 GS\<em>)<br/>
+Used by Bloody Roar 1 (MagDemo06: BL\</em>)<br/>
+Used by Bloody Roar 2 (MagDemo22: ASC,CMN,EFT,LON,SND,ST5,STU\*)<br/></p>
+<h4 id="clt-format">CLT Format</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 1  File ID  ( 11h=CLT) (although Sony&#39;s doc says 12h)
+  001h 1  Version  ( 00h)
+  002h 2  Reserved (always 0000h)
+  004h 4  Flags (bit0-1=Type=2; bit2-31=Reserved/zero)
+  ...  .. Data Section for CLUT (Palette)
+</code></pre></div>
+The .CLT Type should be always 2 (meant to indicate 16bit CLUT entries).<br/></p>
+<h4 id="pxl-format">PXL Format</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 1  File ID  (always 12h=PXL) (although Sony&#39;s doc says 11h)
+  001h 1  Version  (always 00h)
+  002h 2  Reserved (always 0000h)
+  004h 4  Flags (bit0-?=Type; see below, bit?-31=Reserved/zero)
+  ...  .. Data Section for Pixels (Bitmap/Texture)
+</code></pre></div>
+This does probably support the same 5 types as in .TIMs (though official Sony
+docs claim the .PXL type to be only 1bit wide, but netherless claim that PXL
+can be 4bpp, 8bpp, or 16bpp).<br/></p>
+<h4 id="compressed-tims">Compressed TIMs</h4>
+<p>Ape Escape (Sony 1999) is using a customized TIM format with 4bpp compression:<br/>
+<a href="../compression/#cdrom-file-compression-tim-rle4rle8">CDROM File Compression TIM-RLE4/RLE8</a><br/>
+Other than that, TIMs can be compressed via generic compression functions (like
+LZSS, GZIP), or via bitmap dedicated compression formats (like BS, JPG, GIF).<br/></p>
+<h4 id="malformed-files">Malformed Files</h4>
+<h5 id="malformed-tims-in-bigfiledat">Malformed TIMs in BIGFILE.DAT</h5>
+<p><div class="highlight"><pre><span></span><code>  Used by Legacy of Kain: Soul Reaver (eg. BIGFILE.DAT\folder04h\file13h)
+  Used by Gex - Enter the Gecko (eg. BIGFILE.DAT\file0Fh\LZcompressed)
+</code></pre></div>
+Malformed TIMs contain texture data preceeded by a dummy 14h-byte TIM header
+with following constant values:<br/>
+<div class="highlight"><pre><span></span><code>  10 00 00 00  02 00 00 00  04 00 08 00  00 02 00 00  00 02 00 02  ;&lt;-- this
+  10 00 00 00  02 00 00 00  04 00 08 00  00 00 00 00  00 02 00 02  ;&lt;-- or this
+</code></pre></div>
+The malformed entries include:<br/>
+<div class="highlight"><pre><span></span><code>  [04h]=Type should indicated the color depth, but it&#39;s always 02h=16bpp.
+  [08h]=Width*2*Height+0Ch should be 8000Ch, but malformed is 80004h.
+  Total filesize should be 80014h, but Gecko files are often MUCH smaller.
+</code></pre></div>
+Also, destination yloc should be 0..1FFh, but PSX "Lemmings &amp; Oh No! More
+Lemmings" (FILES\GFX\*.TIM) has yloc=200h (that game also has vandalized .BMP
+headers with 2-byte alignment padding after ID "BM", whilst pretending that
+those extra bytes aren't there in data offset and total size entries).<br/></p>
+<h5 id="oversized-tims">Oversized TIMs</h5>
+<p><div class="highlight"><pre><span></span><code>  Used by Pong (MagDemo24: LES02020\*\*.TIM)
+</code></pre></div>
+Has 200x200h pix, but section size (and filesize) are +2 bigger than that:<br/>
+<div class="highlight"><pre><span></span><code>  10 00 00 00 02 00 00 00 0E 00 08 00 C0 01 00 00 00 02 00 02  ;Pong *.TIM
+  10 00 00 00 02 00 00 00 0E 00 07 00 00 02 00 00 C0 01 00 02  ;Pong WORLD.TIM
+  10 00 00 00 02 00 00 00 0E 80 03 00 00 02 00 01 C0 01 00 01  ;Pong ZONE*.TIM
+</code></pre></div></p>
+<h5 id="miscomputed-section-size">Miscomputed Section Size</h5>
+<p>NBA Basketball 2000 (MagDemo28: FOXBB\TIM\*.TIM) has TIMs with section size
+"0Ch+Xsiz*Ysiz" instead of "0Ch+Xsiz*2*Ysiz".<br/></p>
+<h5 id="nontims-in-bloody-roar-1-and-2">NonTIMs in Bloody Roar 1 and 2</h5>
+<p><div class="highlight"><pre><span></span><code>  Bloody Roar 1 (CMN\INIT.DAT\000Eh)
+  Bloody Roar 2 (CMN\SE00.DAT, CMD\SEL00.DAT\0030h and CMN\VS\VS.DAT\0000h)
+</code></pre></div>
+This looks somehow TIM-inspired, but has ID=13h.<br/>
+<div class="highlight"><pre><span></span><code>  13 00 00 00 02 00 00 00 0C 20 00 00 00 00 F8 01 00 01 10 00  ;Bloody Roar 1
+  13 00 00 00 02 00 00 00 0C 20 00 00 00 00 00 00 00 01 10 00  ;Bloody Roar 2
+</code></pre></div></p>
+<h5 id="other-uncommonmalformed-tim-variants">Other uncommon/malformed TIM variants</h5>
+<p>And, Heart of Darkness has a TIM with Size entry set to Xsiz*2*Ysiz+0Eh
+(instead of +0Ch) (that malformed TIM is found inside of the RNC compressed
+IMAGES\US.TIM file).<br/>
+Also, NFL Gameday '99 (MagDemo17: GAMEDAY\PHOTOS.FIL) contains a TIM cropped to
+800h-byte size (containing only the upper quarter of the photo).<br/>
+Also, not directly malformed, but uncommon: Final Fantasy IX contains 14h-byte
+0x0 pixel TIMs (eg. FF9.IMG\dir04\file0046\1B-0000\04-0001).<br/>
+Klonoa (MagDemo08: KLONOA\FILE.IDX\3\2\0..1) has 0x0pix TIM (plus palette).<br/></p>
+<h5 id="malformed-clts">Malformed CLTs</h5>
+<p><div class="highlight"><pre><span></span><code>  Used by Secret of Mana, WM\WEFF\*.CLT
+</code></pre></div>
+ID is 10h=TIM, Flags=10101009h (should be ID=12h, Flags=02h).<br/></p>
+<h2 id="cdrom-file-video-texturebitmap-other">CDROM File Video Texture/Bitmap (Other)</h2>
+<p>Apart from Sony's TIM (and PXL/CLT) format, there are a bunch of other
+texture/bitmap formats:<br/></p>
+<h4 id="compressed-bitmaps">Compressed Bitmaps</h4>
+<div class="highlight"><pre><span></span><code>  .BS used by several games (and also in most .STR videos)
+  .GIF used by Lightspan Online Connection CD
+  .JPG used by Lightspan Online Connection CD
+  .BMP with RLE4 used by Lightspan Online Connection CD (MONOFONT, PROPFONT)
+  .BMP with RLE8+Delta also used by Online Connection CD (PROPFONT\ARIA6.BMP)
+  .PCX with RLE used by Jampack Vol. 1 (MDK\CD.HED\*.pcx)
+</code></pre></div>
+<h4 id="uncompressed-bitmaps">Uncompressed Bitmaps</h4>
+<div class="highlight"><pre><span></span><code>  .BMP
+  .BMP used by Mat Hoffman&#39;s Pro BMX (MagDemo39: BMX\BMXCD.HED\*)
+  .BMP used by Mat Hoffman&#39;s Pro BMX (MagDemo48: MHPB\BMXCD.HED\*)
+  .BMP used by Thrasher: Skate and Destroy (MagDemo27: SKATE\ASSETS\*.ZAL)
+  .BMP used by Dave Mirra Freestyle BMX (MagDemo36,46: BMX\ASSETS\*.ZAL)
+  .VRM .IMG .TEX .TIM .RAW .256 .COL .4B .15B .R16 .TPG - raw VRAM data
+  &quot;SC&quot; memory card icons
+</code></pre></div>
+<h4 id="targa-tga-and-paintbrush-pcx">Targa TGA and Paintbrush PCX</h4>
+<p><a href="#cdrom-file-video-texturebitmap-tga">CDROM File Video Texture/Bitmap (TGA)</a><br/>
+<a href="#cdrom-file-video-texturebitmap-pcx">CDROM File Video Texture/Bitmap (PCX)</a><br/></p>
+<h4 id="psi-bitmap-power-spike-magdemo43-powergameidxbizpsi">PSI bitmap - Power Spike (MagDemo43: POWER\GAME.IDX\<em>.BIZ\</em>.PSI)</h4>
+<div class="highlight"><pre><span></span><code>  000h 10h   Name 1 (&quot;FILENAME.BMP&quot;, zeropadded)
+  010h 10h   Name 2 (&quot;FILENAME.PSI&quot;, zeropadded)
+  020h 4     Bits per pixel (usually 4, 8, or 16)
+  024h 2     Bitmap VRAM Dest.X ?
+  026h 2     Bitmap VRAM Dest.Y ?
+  028h 2     Bitmap Width in pixels
+  02Ah 2     Bitmap Height in pixels
+  02Ch 2     Palette VRAM Dest.X ?   ;\zero for 16bpp
+  02Eh 2     Palette VRAM Dest.Y ?   ;/
+  030h 2     Bitmap Width in Halfwords (PixelWidth*bpp/16)
+  032h 2     Palette Size in Halfwords (0, 10h, 100h for 16bpp,4npp,8bpp)
+  034h 4     Maybe Bitmap present flag (always 1)
+  038h 4     Maybe Palette present flag (0=16bpp, 1=4bpp/8bpp)
+  03Ch ..    Bitmap pixels
+  ...  ..    Palette (if any, for 4bpp: 16x16bit, for 8bpp: 256x16bit)
+</code></pre></div>
+<h4 id="jumpstart-wildlife-safari-field-trip-magdemo52-demodatadatdatpsx">JumpStart Wildlife Safari Field Trip (MagDemo52: DEMO\DATA.DAT\*.DAT+*.PSX)</h4>
+<p>This game does use two different (but nearly identical) bitmap formats (with
+either palette or bitmap data stored first).<br/>
+<div class="highlight"><pre><span></span><code>  000h 4     Total Filesize (Width*Height+20Ch)
+  004h 2     Bitmap Width
+  006h 2     Bitmap Height
+  008h 4     Unknown, always 1 (maybe 1=8bpp?)
+ In .DAT files (512x192 or 256x64 pix), palette first:
+  00Ch 200h  Palette data
+  20Ch ..    Bitmap data
+ In .PSX files (64x64 pix), bitmap first:
+  00Ch ..    Bitmap data
+  ...  200h  Palette data
+</code></pre></div>
+To detect the "palette first" format, check for these conditions(s):<br/>
+<div class="highlight"><pre><span></span><code>  Filename extension is &quot;.DAT&quot;
+  Bitmap Width&lt;&gt;Height (non-square)
+  [00Ch..20Bh] has AllMSBs&gt;=80h, and SomeLSBs&lt;80h
+</code></pre></div>
+Note: The bitmaps are vertically mirrored (starting with bottom-most scanline).<br/></p>
+<h4 id="wxh-bitmap-widthheight">WxH Bitmap (Width*Height)</h4>
+<p>Used by Alone in the Dark The New Nightmare (FAT.BIN\BOOK,DOC,INTRO,MENU\<em>)<br/>
+Used by Rayman (RAY\JUN,MON,MUS\</em>) (but seems to contain map data, not pixels)<br/>
+<div class="highlight"><pre><span></span><code>  000h 2   Width  (W)   ;\usually 320x240 (or 512x240 or 80x13)
+  002h 2   Height (H)   ;/
+  004h ..  Bitmap 16bpp (W*H*2 bytes)
+</code></pre></div></p>
+<h4 id="rawp-bitmap">RAWP Bitmap</h4>
+<p>Used by Championship Motocross (MagDemo25: SMX\RESHAD.BIN\*) ("RAWP")<br/>
+<div class="highlight"><pre><span></span><code>  000h 4     ID &quot;RAWP&quot; (this variant has BIG-ENDIAN width/height!)
+  004h 2     Width  (usually 280h=640pix or 140h=320pix) (big-endian!!!)
+  006h 2     Height (usually 1E0h=480pix or F0h=240pix)  (big-endian!!!)
+  008h ..    Bitmap data, 16bpp (width*height*2 bytes)
+</code></pre></div></p>
+<h4 id="xywh-bitmappalette-xywidthheight-bit-and-clt">XYWH Bitmap/Palette (X,Y,Width*Height) (.BIT and .CLT)</h4>
+<p>Used by CART World Series (MagDemo04: CART\<em>.BIT and *.BIN\</em>)<br/>
+Used by NFL Gameday '98 (MagDemo04: GAMEDAY\BUILD\GRBA.FIL\<em>)<br/>
+Used by NFL Gameday '99 (MagDemo17: GAMEDAY\</em>.BIT and *.FIL\<em>)<br/>
+Used by NFL Gameday 2000 (MagDemo27: GAMEDAY\</em>.BIT)<br/>
+Used by NCAA Gamebreaker '98 (MagDemo05: GBREAKER\<em>.BIT and UFLA.BIN\</em>)<br/>
+Used by NCAA Gamebreaker 2000 (MagDemo27: GBREAKER\<em>.BIT and *.FIL\</em>)<br/>
+Used by Twisted Metal 4 (MagDemo30: TM4DATA\<em>.MR,*.IMG\</em>.bit,*.clt)<br/>
+<div class="highlight"><pre><span></span><code>  000h 2   VRAM.X             (X) (0..3FFh)
+  002h 2   VRAM.X             (Y) (0..1FFh)
+  004h 2   Width in halfwords (W) (1..400h)
+  006h 2   Height             (H) (1..200h)
+  008h ..  Bitmap or Palette data (W*H*2 bytes)
+</code></pre></div></p>
+<h4 id="doom-psxdoomabinpsxdoomwad">Doom (PSXDOOM\ABIN\PSXDOOM.WAD\<em>\</em>)</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 2     Hotspot X (signed) (usually 0)
+  002h 2     Hotspot Y (signed) (usually 0)
+  004h 2     Width in bytes
+  006h 2     Height
+  008h ..    Bitmap 8bpp (Width*Height bytes)
+</code></pre></div>
+Most files have Hotspot X=0,Y=0, WAD\LOADING has X=FF80h,Y=FF8Ah, and WAD\S\*
+has X=0..Width, Y=0..Height+1Ah (eg. S\BKEY*, S\BFG*, S\PISFA0 have large Y).<br/>
+The files do not contain any palette info... maybe 2800h-byte PLAYPAL does
+contain the palette(s)?<br/></p>
+<h4 id="lemmings-oh-no-more-lemmings-filesgfxbob-filessmlmapsbob">Lemmings &amp; Oh No! More Lemmings (FILES\GFX\<em>.BOB, FILES\SMLMAPS\</em>.BOB)</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 2       Width
+  002h 2       Height
+  004h 100h*3  Palette 24bit RGB888
+  304h ..      Bitmap 8bpp (Width*Height bytes)
+  ..   (1700h) Unknown (only in SMLMAPS\*.BOB, not in GFX\*.BOB)
+</code></pre></div>
+Apart from .BOB, the FILES\GFX folder also has vandalized .BMP (with ID
+"BM",00h,00h) and corrupted .TIM (with VRAM.Y=200h).<br/></p>
+<h4 id="perfect-assassin-datajfsdatabm">Perfect Assassin (DATA.JFS\DATA\*.BM)</h4>
+<div class="highlight"><pre><span></span><code>  000h 4      Format 1 (0=8bpp, 1=16bpp)
+  004h 4      Format 2 (1=8bpp, 2=16bpp)
+  008h 4      Width in pixels
+  00Ch 4      Height in pixels
+  010h ..     Bitmap Data
+  ...  (300h) Palette 18bit RGB666 (R,G,B range 00h..3Fh) (only if format 8bpp)
+</code></pre></div>
+<h4 id="one-dirfilebinvcf">One (DIRFILE.BIN\*.VCF)</h4>
+<div class="highlight"><pre><span></span><code>  000h 4     Unknown (always 1)
+  004h 4     Unknown (always 8)
+  008h 4     Unknown (always 2) (maybe 2=16bpp?)
+  00Ch 4     Width in pixels (3Ah, 140h, or 280h)
+  010h 4     Height          (3Ah, or F0h)
+  014h ..    Bitmap 16bpp (Width*Height*2 bytes)
+</code></pre></div>
+<h4 id="one-dirfilebinvck-and-dirfilebinwsectbintexture-001">One (DIRFILE.BIN\*.VCK and DIRFILE.BIN\w*\sect*.bin\TEXTURE  001)</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 2     Number if Files (N)
+  002h 2     Number of VRAM.Slots (less or equal than Number of Files)
+  004h 4     ID &quot;BLK0&quot;
+  008h N*10h File List
+  ...  ..    1st File Bitmap
+  ...  ..    1st File Palette (20h/200h/0 bytes for 4bpp/8bpp/16bpp)
+  ...  ..    2nd File Bitmap
+  ...  ..    2nd File Palette (only if PaletteID=FileNo=1)
+  ...  ..    3rd File Bitmap
+  ...  ..    3rd File Palette (only if PaletteID=FileNo=2)
+  ...  ..    etc.
+</code></pre></div>
+File List entries:<br/>
+<div class="highlight"><pre><span></span><code>  000h 2     VRAM.X in halfwords (0..1Fh, +bit15=Blank)  ;\within current
+  002h 2     VRAM.Y              (0..3Fh)                ;/VRAM.Slot
+  004h 2     Width in pixels (max 80h/40h/20h for 4bpp/8bpp/16bpp)
+  006h 2     Height          (max 40h)
+  008h 2     VRAM.Slot       (0,1,2,3,...,NumSlots-1)
+  00Ah 2     Unknown         (0,1,2,4 in *.vck, 4 in sect*.bin)
+  00Ch 2     Color Depth     (0=4bpp, 1=8bpp, 2=16bpp)
+  00Eh 2     Palette ID      (0..FileNo-1=Old, FileNo=New, FFFFh=None/16bpp)
+  NumFiles-1, or ID of already used palette)
+</code></pre></div>
+Note: VRAM.Slots are 20h*40h halfwords.<br/>
+Bitmaps can either have newly defined palettes (when PaletteID=FileNo), or
+re-use previously defined "old" palettes (when PaletteID\&lt;FileNo).<br/>
+The Blank flag allows to define a blank region (for whatever purpose), the file
+doesn't contain any bitmap/palette data for such blank regions.<br/></p>
+<h4 id="bmr-bitmaps">BMR Bitmaps</h4>
+<p>These are 16bpp bitmaps, stored either in uncompressed .BMR files, or in
+compressed .RLE files:<br/>
+<a href="../compression/#cdrom-file-compression-rle_16">CDROM File Compression RLE_16</a><br/>
+<div class="highlight"><pre><span></span><code>  Apocalypse (MagDemo16: APOC\CD.HED\*.RLE and *.BMR)
+  Spider-Man 1 older version (MagDemo31: SPIDEY\CD.HED\*.RLE)
+  Spider-Man 1 newer version (MagDemo40: SPIDEY\CD.HED\*.RLE and .BMR)
+  Spider-Man 2 (MagDemo50: HARNESS\CD.HED\*.RLE)
+  Tony Hawk&#39;s Pro Skater (MagDemo22: PROSKATE\CD.HED\*.BMR)
+</code></pre></div>
+The width/height for known filesizes are:<br/>
+<div class="highlight"><pre><span></span><code>  33408h bytes --&gt; 512x205pix, 16bpp (Apocalypse warning.rle)
+  3C008h bytes --&gt; 512x240pix, 16bpp (most common)
+  96008h bytes --&gt; 640x480pix, 16bpp (tony hawk&#39;s pro skater)
+</code></pre></div>
+Most of the older BMR files (in Apocalypse) have valid 8-byte headers:<br/>
+<div class="highlight"><pre><span></span><code>  000h 2     Unknown (FFA0h) (ID for files with valid headers?)
+  002h 2     Dest.Y (usually 0) (11h=(240-205)/2 in Apocalypse warning.rle)
+  004h 2     Width  (usually 200h=512pix)
+  006h 2     Height (usually F0h=240pix) (CDh=205pix in Apocalypse warning.rle)
+  008h ..    Bitmap data, 16bpp (width*height*2 bytes)
+</code></pre></div>
+Most or all newer BMR files (in Apocalypse "loadlogo.rle", and in all files in
+Spider-Man 1, Spider-Man-2, Tony Hawk's Pro Skater) have the 8-byte header
+replaced by unused 8-byte at end of file:<br/>
+<div class="highlight"><pre><span></span><code>  000h ..    Bitmap data, 16bpp (width*height*2 bytes)
+  ..   8     Unused (garbage or extra pixels, not transferred to VRAM)
+</code></pre></div>
+BUG: The bitmaps in all .BMR files (both with/without header) are distorted:
+The last 4-byte (rightmost 2pix) of each scanline should be actually located at
+the begin of the scanline, and the last scanline is shifted by an odd amount of
+bytes (resulting in nonsense 16bpp pixel colors); Spider-Man is actually
+displaying the bitmap in that distorted form (although it does mask off some
+glitches: one of the two bad rightmost pixels is replaced by a bad black
+leftmost pixel, and glitches in upper/lower lines aren't visible on 224-line
+NTSC screens).<br/></p>
+<h4 id="croc-1-retail-img-retail-only-not-in-magdemo02-demo-version">Croc 1 (retail: *.IMG) (retail only, not in MagDemo02 demo version)</h4>
+<h4 id="croc-2-magdemo22-croc2crociidirimg">Croc 2 (MagDemo22: CROC2\CROCII.DIR\*.IMG)</h4>
+<h4 id="disneys-the-emperors-new-groove-magdemo39-engkingdomdirimg">Disney's The Emperor's New Groove (MagDemo39: ENG\KINGDOM.DIR\*.IMG)</h4>
+<h4 id="disneys-aladdin-in-nasiras-rev-magdemo46-aladdinaladdindirimg">Disney's Aladdin in Nasira's Rev. (MagDemo46: ALADDIN\ALADDIN.DIR\*.IMG)</h4>
+<p>Contains raw 16bpp bitmaps, with following sizes:<br/>
+<div class="highlight"><pre><span></span><code>  25800h bytes = 12C00h pixels (320x240)  ;Croc 1 (retail version)
+  3C000h bytes = 1E000h pixels (512x240)
+  96000h bytes = 4B000h pixels (640x480)
+</code></pre></div>
+Note: The .IMG format is about same as .BMR files (but without the 8-byte
+header, and without distorted scanlines).<br/></p>
+<h4 id="mat-hoffmans-pro-bmx-magdemo39-bmxfewadstrbin-activision">Mat Hoffman's Pro BMX (MagDemo39: BMX\FE.WAD+STR\*.BIN) (Activision)</h4>
+<h4 id="mat-hoffmans-pro-bmx-magdemo48-mhpbfewadstrbin-shabaactivision">Mat Hoffman's Pro BMX (MagDemo48: MHPB\FE.WAD+STR\*.BIN) (Shaba/Activision)</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 2     Bits per pixel (4 or 8)
+  002h 2     Bitmap Width in pixels
+  004h 2     Bitmap Height in pixels
+  006h 2     Zero
+  008h N*2   Palette (with N=(1 SHL bpp))
+  ...  ..    Bitmap (with Width*Height*bpp/8 bytes)
+  ...  (..)  Zeropadding to 4-byte boundary (old version only)
+</code></pre></div>
+The trailing alignment padding exists only in old demo version (eg. size of
+78x49x8bpp "coreypp.bin" is old=10F8h, new=10F6h).<br/></p>
+<h4 id="et-interplanetary-mission-magdemo54-megamegacsh">E.T. Interplanetary Mission (MagDemo54: MEGA\MEGA.CSH\*)</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 2     Type (0=4bpp, 1=8bpp, 2=16bpp)
+  002h 2     Unknown (usually 0000h, or sometimes CCCCh)
+  004h 2     Bitmap Width in pixels
+  006h 2     Bitmap Height in pixels
+  008h 200h  Palette (always 200h-byte, even for 4bpp or 16bpp)
+  208h ..    Bitmap (Width*Height*bpp/8 bytes)
+</code></pre></div>
+Palette is 00h-or-CCh-padded when 4bpp, or CCh-filled when 16bpp.<br/>
+Note: Some files contain two or more such bitmaps (of same or different sizes)
+badged together.<br/></p>
+<h4 id="ea-sports-madden-nfl-98-magdemo02-tiburondat">EA Sports: Madden NFL '98 (MagDemo02: TIBURON\<em>.DAT\</em>)</h4>
+<h4 id="ea-sports-madden-nfl-2000-magdemo27-madn00dat">EA Sports: Madden NFL 2000 (MagDemo27: MADN00\<em>.DAT\</em>)</h4>
+<h4 id="ea-sports-madden-nfl-2001-magdemo39-madn01dat">EA Sports: Madden NFL 2001 (MagDemo39: MADN01\<em>.DAT\</em>)</h4>
+<p>This format is used in various EA Sports Madden .DAT archives, it contains
+standard TIMs with extra Headers/Footers.<br/>
+<div class="highlight"><pre><span></span><code>  000h 4     Offset to TIM (1Ch) (Hdr size)    (1Ch)               ;\
+  004h 4     Offset to Footer    (Hdr+TIM size)(123Ch,1A3Ch,1830h) ;
+  008h 2     Bitmap Width in pixels      (40h or 60h or 30h)       ;
+  00Ah 2     Bitmap Height in pixels     (40h)                     ;
+  00Ch 4     Unknown, always 01h         (01h)                     ; Header
+  010h 4     Unknown, always 23h         (23h)                     ; 1Ch bytes
+  014h 2     Unknown, always 0101h       (101h)                    ;
+  016h 1     Bitmap Width in pixels      (40h or 60h or 30h)       ;
+  017h 1     Bitmap Height in pixels     (40h)                     ;
+  018h 4     Unknown, always 00h         (0)                       ;/
+  01Ch ..    TIM (Texture, can be 4bpp, 8bpp, 16bpp)               ;-TIM
+  ...  4     Unknown, always C0000222h   (C0000222h)               ;\
+  ...  2     Unknown, always 0001h       (0001h)                   ;
+  ...  1     Bitmap Width in pixels      (40h or 60h or 30h)       ; Footer
+  ...  1     Bitmap Height in pixels     (40h)                     ; 12h bytes
+  ...  4     Unknown, always 78000000h   (78000000h)               ;
+  ...  6     Unknown                     (0,0,80h,0,0,0)           ;/
+</code></pre></div>
+Purpose is unknown; the 8bit Width/Height entries might be TexCoords.<br/>
+The PORTRAITS.DAT archives are a special case:<br/>
+<div class="highlight"><pre><span></span><code>  Madden NFL &#39;98 (MagDemo02: TIBURON\PORTRAIT.DAT) (48x64, 16bpp)
+  Madden NFL 2000 (MagDemo27: MADN00\PORTRAIT.DAT) (96x64, 8bpp plus palette)
+  Madden NFL 2001 (MagDemo39: MADN01\PORTRAIT.DAT) (64x64, 8bpp plus palette)
+</code></pre></div>
+Those PORTRAITS.DAT don't have any archive header, instead they do contain
+several images in the above format, each one zeropadded to 2000h-byte size.<br/></p>
+<h4 id="989-sports-nhl-faceoff-99-magdemo17-fo99kgbtex">989 Sports: NHL Faceoff '99 (MagDemo17: FO99\<em>.KGB\</em>.TEX)</h4>
+<h4 id="989-sports-nhl-faceoff-2000-magdemo28-fo2000tex">989 Sports: NHL Faceoff 2000 (MagDemo28: FO2000\*.TEX)</h4>
+<h4 id="989-sports-ncaa-final-four-2000-magdemo30-ff00tex">989 Sports: NCAA Final Four 2000 (MagDemo30: FF00\*.TEX)</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 0Ch  ID &quot;TEX PSX &quot;,01h,00h,00h,00h    ;used in 989 Sports games
+  00Ch 4    Number of Textures
+  010h 4    Total Filesize
+  014h 4    Common Palette Size    (0=200h, 1=None, 2=20h)
+  018h (..) Common Palette, if any (0,20h,200h bytes)
+  ...  ..   Texture(s)
+ Texture format:
+  000h 10h  Filename (eg. &quot;light1&quot;, max 16 chars, zeropadded if shorter)
+  010h 4    Width in pixels  (eg. 40h)
+  014h 4    Height           (eg. 20h or 40h)
+  018h 4    Unknown          (always 0)
+  01Ch 4    Number of Colors (eg. 10h, 20h or 100h)
+  020h ..   Bitmap (4bpp when NumColors&lt;=10h, 8bpp when NumColors&gt;10h)
+  ...  (..) Palette (NumColors*2 bytes, only present if Common Palette=None)
+</code></pre></div>
+The .TEX files may be in ISO folders, KGB archives, DOTLESS archives. And, some
+are stored in headerless .DAT/.CAT archives (which start with ID "TEX PSX ",
+but seem to have further files appended thereafter).<br/></p>
+<h4 id="electronic-arts-psh-shpp">Electronic Arts .PSH (SHPP)</h4>
+<p>FIFA - Road to World Cup 98 (with chunk C0h/C1h = RefPack compression)<br/>
+NCAA March Madness 2000 (MagDemo32: MM2K\<em>.PSH)<br/>
+Need for Speed 3 Hot Pursuit (*.PSH, ZLOAD*.QPS\RefPack.PSH)<br/>
+ReBoot (DATA\</em>.PSH) (with chunk 6Bh)<br/>
+Sled Storm (MagDemo24: DEBUG,ART,ART2,ART3,SOUND\<em>.PSH) (with Comment, Mipmap)<br/>
+WCW Mayhem (MagDemo28: WCWDEMO\</em>.BIG\*.PSH) (with chunk C0h/C1h = RefPack)<br/>
+<div class="highlight"><pre><span></span><code>  000h 4    ID &quot;SHPP&quot;
+  004h 4    Total Filesize (or Filesize-0Ch, eg. FIFA&#39;98 ZLEG*.PSH)
+  008h 4    Number of Textures (N)
+  00Ch 4    ID &quot;GIMX&quot;
+  010h N*8  File List
+  ...  ..   Data (each File contains a Bitmap chunk, and Palette chunk, if any)
+ File List entries:
+  000h 4    Name (ascii) (Mipmaps use the same name for each mipmap level)
+  004h 4    Offset from begin of archive to first Chunk of file
+  Caution: Most PSH files do have the above offsets sorted in increasing order,
+  but some have UNSORTED offsets, eg. Sled Storm (MagDemo24: ART3\LOAD1.PSH),
+  so one cannot easily compute sizes as NextOffset-CurrOffset.
+  Note: Mipmap textures consist of two files with same name and different
+  resolution, eg. in Sled Storm (MagDemo24: ART\WORLD0x.PSH)
+ Bitmap Chunk:
+  000h 1    Chunk Type (40h=PSX/4bpp, 41h=PSX/8bpp, 42h=PSX/16bpp)
+  001h 3    Offset from current chunk to next chunk (000000h=None)
+  004h 2    Bitmap Width in pixels (can be odd, pad lines to 2-byte boundary)
+  006h 2    Bitmap Height
+  008h 2    Center X   (whatever that is)
+  00Ah 2    Center Y   (whatever that is)
+  00Ch 2    Position X (whatever that is, plus bit12-15=flags?)
+  00Eh 2    Position Y (whatever that is, plus bit12-15=flags?)
+  010h ..   Bitmap data (each scanline is padded to 2-byte boundary)
+  ...  ..   Padding to 8-byte boundary
+ Compressed Bitmap Chunk:
+  000h 1    Chunk Type (C0h=PSX/4bpp, C1h=PSX/8bpp, and probably C2h=PSX/16bpp)
+  001h 0Fh  Same as in Chunk 40h/41h/42h (see there)
+  010h ..   Compressed Bitmap data (usually/always with Method=10FBh)
+  ...  ..   Padding to 8-byte boundary
+ Palette Chunk (if any) (only for 4bpp/8bpp bitmaps, not for 16bpp):
+  000h 1    Chunk Type (23h=PSX/Palette)
+  001h 3    Offset from current chunk to next chunk (000000h=None)
+  004h 2    Palette Width in halfwords (10h or 100h)
+  006h 2    Palette Height             (1)
+  008h 2    Unknown (usually same as Width) (or 80D0h or 9240h)
+  00Ah 2    Unknown (usually 0000h)         (or 0001h or 0002h)
+  00Ch 2    Unknown (usually 0000h)
+  00Eh 2    Unknown (usually 00F0h)
+  010h ..   Palette data (16bit per color)
+  Note: The odd 80D0h,0001h values occur in Sled Storm ART\WORKD00.PSH\TBR1)
+ Unknown Chunk (eg. ReBoot (DATA\AREA15.PSH\sp*))
+  000h 1    Chunk Type (6Bh)
+  001h 3    Offset from current chunk to next chunk (000000h=None)
+  004h 8    Unknown (2C,00,00,3C,03,00,00,00)
+  00Ch -    For whatever reason, there is no 8-byte padding here
+ Comment Chunk (eg. Sled Storm (MagDemo24: ART\WORLD0x.PSH))
+  000h 1    Chunk Type (6Fh=PSX/Comment)
+  001h 3    Offset from current chunk to next chunk (000000h=None)
+  004h ..   Comment (&quot;Saved in Photoshop Plugin made by PEE00751@...&quot;,00h)
+  ...  ..   Zeropadding to 8-byte boundary
+ Unknown Chunk (eg. Sled Storm (MagDemo24: ART\WORLD09.PSH\ADAA))
+  000h 1    Chunk Type (7Ch)
+  001h 3    Offset from current chunk to next chunk (000000h=None)
+  004h 2Ch  Unknown (reportedly Hot spot / Pix region, but differs on PSX?)
+</code></pre></div>
+The whole .PSH file or the bitmap chunks can be compressed:<br/>
+<a href="../compression/#cdrom-file-compression-ea-methods">CDROM File Compression EA Methods</a><br/>
+Variants of the .PSH format are also used on PC, PS2, PSP, XBOX (with other
+Chunk Types for other texture/palette formats, and for optional extra data).
+For details, see: <a href="http://wiki.xentax.com/index.php/EA_SSH_FSH_Image">http://wiki.xentax.com/index.php/EA_SSH_FSH_Image</a></p>
+<h4 id="destruction-derby-raw-magdemo35-ddrawpckfntspr">Destruction Derby Raw (MagDemo35: DDRAW\*.PCK,*.FNT,*.SPR)</h4>
+<p>This format can contain one single Bitmap, or a font with several small
+character bitmaps.<br/>
+<div class="highlight"><pre><span></span><code>  000h 2     ID &quot;BC&quot;                                        ;\
+  002h 1     Color Depth (1=4bpp, 2=8bpp, 4=16bpp)          ; Header
+  003h 1     Type        (40h=Bitmap, C0h=Font)             ;/
+  ...  (2)   Palette Unknown (0 or 1)                       ;\only if Bitmap
+  ...  (2)   Palette Unknown (1)                            ; 4bpp or 8bpp
+  ...  (..)  Palette data (20h or 200h bytes for 4bpp/8bpp) ;/
+  ...  2     Bitmap Number of Bitmaps-1 (N-1)               ;\
+  ...  2     Bitmap Width in pixels                         ;
+  ...  2     Bitmap Height in pixels                        ; Bitmap(s)
+  ...  N*1   Bitmap Tilenumbers (eg. &quot;ABCDEFG...&quot; for Fonts);
+  ...  N*1   Bitmap Proportional Font widths? (0xh or FFh)  ;
+  ...  N*BMP Bitmap(s) for all characters                   ;/
+  ...  (20h) Palette Data (20h bytes for 4bpp)              ;-only if Font/4bpp
+</code></pre></div>
+All bitmap scanlines are padded to 2-byte boundary, eg. needed for:<br/>
+<div class="highlight"><pre><span></span><code>  INGAME1\BOWL2.PTH\SPRITES.PTH\ST.SPR    30x10x4bpp: 15 --&gt; 16 bytes/line
+  INGAME1\BOWL2.PTH\SPRITES.PTH\STOPW.SPR 75x40x4bpp: 37.5 --&gt; 38 bytes/line
+</code></pre></div>
+The BC files are usually compressed (either in PCK file, or in the compressed
+DAT portion of a PTH+DAT archive).<br/></p>
+<h4 id="cool-boarders-2-magdemo02-cb2datafbd">Cool Boarders 2 (MagDemo02: CB2\DATA*\*.FBD)</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 2    ID (&quot;FB&quot;)                                ;\File Header
+  002h 2    Always 1 (version? 4bpp? num entries?)   ;/
+  004h 2    Palette VRAM Dest X (eg. 300h)           ;\
+  006h 2    Palette VRAM Dest Y (eg. 1CCh,1EDh,1FFh) ; Palette Header
+  008h 2    Palette Width in halfwords (eg. 100h)    ; (all zero when unused)
+  00Ah 2    Palette Height (eg. 1 or 0Dh)            ;/
+  00Ch 2    Bitmap VRAM Dest X (eg. 140h or 200h)    ;\
+  00Eh 2    Bitmap VRAM Dest Y (eg. 0 or 100h)       ; Bitmap Header
+  010h 2    Bitmap Width in halfwords                ;
+  012h 2    Bitmap Height                            ;/
+  ...  ..   Palette Data (if any)                    ;-Palette Data
+  ...  ..   Bitmap Data                              ;-Bitmap Data
+</code></pre></div>
+The bitmap data seems to be 4bpp and/or 8bpp, but it's hard to know the correct
+palette (some files have more than 16 or 256 palette colors, or don't have any
+palette at all).<br/></p>
+<h2 id="cdrom-file-video-texturebitmap-tga">CDROM File Video Texture/Bitmap (TGA)</h2>
+<h4 id="targa-tga">Targa TGA</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 1   Image ID Size (00h..FFh, usually 0=None)      ;0
+  001h 1   Palette Present Flag (0=None, 1=Present)      ;0            iv=1
+  002h 1   Data Type code (0,1,2,3,9,10,11,32,33)        ;NEBULA=2     iv=1
+  003h 2   Palette First Color (usually 0)               ;0            iv=0
+  005h 2   Palette Number of Colors (usually 100h)       ;0            iv=100h
+  007h 1   Palette Bits per Color (16,24,32, usually 24) ;0            iv=18h
+  008h 2   Bitmap X origin (usually 0)                   ;0
+  00Ah 2   Bitmap Y origin (usually 0)                   ;0
+  00Ch 2   Bitmap Width                                  ;NEBULA=20h LOGO=142h
+  00Eh 2   Bitmap Height                                 ;NEBULA=20h
+  010h 1   Bitmap Bits per Pixel (8,16,24,32 exist?)     ;NEBULA=18h   iv=8
+  011h 1   Image Descriptor (usually 0)                  ;0
+  012h ..  Image ID Data (if any, len=[00h], usually 0=None)
+  ...  ..  Palette
+  ...  ..  Bitmap
+  ...  1Ah Footer (8x00h, &quot;TRUEVISION-XFILE.&quot;, 00h) (not present in iview)
+</code></pre></div>
+Data Type [02h]:<br/>
+<div class="highlight"><pre><span></span><code>  00h = No image data included  ;-Unknown purpose
+  01h = Color-mapped image      ;\
+  02h = RGB image               ; Uncompressed
+  03h = Black and white image   ;/
+  09h = Color-mapped image      ;\Runlength
+  0Ah = RGB image               ;/
+  0Bh = Black and white image   ;-Unknown compression method
+  20h = Color-mapped image      ;-Huffman+Delta+Runlength
+  21h = Color-mapped image      ;-Huffman+Delta+Runlength+FourPassQuadTree
+</code></pre></div>
+The official specs do list the above 9 types, but do describe only 4 types in
+detail (type 01h,02h,09h,0Ah).<br/>
+<div class="highlight"><pre><span></span><code>  Type 01h and 09h lack details on supported bits per pixel (8bpp with 100h
+    colors does exist; unknown if less (or more) than 8bpp are supported,
+    and if so, in which bit order.
+  Type 02h and 0Ah are more or less well documented.
+  Type 03h has unknown bit-order, also unknown if/how it differs from type
+    01h with 1bpp.
+  Type 0Bh, 20h, 21h lack any details on the compression method.
+</code></pre></div>
+TGA's are used by a couple of PSX games/demos (all uncompressed):<br/>
+<div class="highlight"><pre><span></span><code>  16bpp: Tomb Raider 2 (MagDemo01: TOMBRAID\*.RAW)
+  24bpp: Tomb Raider 2 (MagDemo05: TOMB2\*.TGA)
+  24bpp: Colony Wars Venegance (MagDemo14: CWV\GAME.RSC\NEBULA*.TGA, *SKY.TGA)
+  24bpp: Colony Wars Red Sun (MagDemo31: CWREDSUN\GAME.RSC\000A\*)
+  16bpp: Colony Wars Venegance (MagDemo14: CWV\GAME.RSC\LOGO.DAT)
+  16bpp: X-Men: Mutant Academy (MagDemo50: XMEN2\*)
+  16bpp: Disney&#39;s Tarzan (MagDemo42: TARZAN\*)
+  8bpp+Wrong8bitAttr: SnoCross Championship Racing (MagDemo37: SNOCROSS\*.TGA)
+  16bpp+WrongYflip: SnoCross Championship Racing (MagDemo37: SNOCROSS\*.TGA)
+</code></pre></div>
+For whatever reason, TGA is still in use on newer consoles:<br/>
+<div class="highlight"><pre><span></span><code>  32bpp: 3DS AR Games (RomFS:\i_ar\tex\hm*.lz77
+</code></pre></div></p>
+<h2 id="cdrom-file-video-texturebitmap-pcx">CDROM File Video Texture/Bitmap (PCX)</h2>
+<h4 id="pc-paintbrush-pcx-files-zsoft">PC Paintbrush .PCX files (ZSoft)</h4>
+<p>Default extension is .PCX (some tools did use .PCX for the "main" image, and
+.PCC for smaller snippets that were clipped/cropped/copied from from a large
+image).<br/>
+<div class="highlight"><pre><span></span><code>  000h 1    File ID (always 0Ah=PCX/ZSoft)
+  001h 1    Version (0,2,3,4,5)
+  002h 1    Compression (always 01h=RLE) (or inofficial: 00h=Uncompressed)
+  003h 1    Bits per Pixel (per Plane) (1, 2, 4, or 8)
+  004h 2    Window X1   ;\
+  006h 2    Window Y1   ; Width  = X2+1-X1
+  008h 2    Window X2   ; Height = Y2+1-Y1
+  00Ah 2    Window Y2   ;/
+  00Ch 2    Horizontal Resolution in DPI  ;\often square, but can be also zero,
+  00Eh 2    Vertical Resolution in DPI    ;/or screen size, or other values
+  010h 30h  EGA/VGA Palette (16 colors, 3-byte per color = R,G,B) (or garbage)
+  010h 1    CGA: Bit7-4=Background Color (supposedly IRGB1111 ?)
+  013h 1    CGA: Bit7:0=Color,1=Mono,Bit6:0=Yellow,1=White,Bit5:0=Dim,1=Bright
+  014h 1    Paintbrush IV: New CGA Color1 Green  ;\weird new way to encode CGA
+  015h 1    Paintbrush IV: New CGA Color1 Red    ;/palette in these two bytes
+  040h 1    Reserved (00h) (but is 96h in animals.pcx)
+  041h 1    Number of color planes (1=Palette, 3=RGB, or 4=RGBI)
+  042h 2    Bytes per Line (per plane) (must be N*2) (=(Width*Bits+15)/16*2)
+  044h 2    PaletteInfo? (0000h/xxxxh=Normal, 0001h=Color/BW, 0002h=Grayscale)
+  046h 2    Horizontal screen size in pixels  ;\New fields, found only
+  048h 2    Vertical screen size in pixels    ;/in Paintbrush IV/IV Plus
+  04Ah 36h  Reserved (zerofilled) (or garbage in older files, custom in MGS)
+  080h ..   Bitmap data (RLE compressed)
+  ...  1    VGA Palette ID (0Ch=256 colors)                      ;\when 8bpp
+  ..   300h VGA Palette (256 colors, 3-byte per color  = R,G,B)  ;/
+</code></pre></div>
+Decoding PCX files is quite a hardcore exercise due to a vast amount of
+versions, revisions, corner cases, incomplete &amp; bugged specifications, and
+inofficial third-party glitches.<br/></p>
+<h4 id="pcx-versions">PCX Versions</h4>
+<p><div class="highlight"><pre><span></span><code>  00h = Version 2.5 whatever ancient stuff
+  02h = Version 2.8 with custom 16-color palette
+  03h = Version 2.8 without palette (uses fixed CGA/EGA palette)
+  04h = Version ?.? without palette (uses fixed CGA/EGA palette)
+  05h = Version 3.0 with custom 16-color or 256-color palette or truecolor
+</code></pre></div>
+NOTE: Version[01h]=05h with PaletteInfo[44h]=0001h..0002h is Paintbrush IV?<br/></p>
+<h4 id="known-pcx-color-depths">Known PCX Color Depths</h4>
+<div class="highlight"><pre><span></span><code>  planes=1, bits=1  P1        ;1bit, HGC 2 color (iview and paint shop pro 2)
+  planes=1, bits=2  P2        ;2bit, CGA 4 color (with old/new palette info)
+  planes=3, bits=1  RGB111    ;3bit, EGA 8 color (official samples)  ;\version
+  planes=4, bits=1  IRGB1111  ;4bit, EGA 16 color (paint shop pro 2) ;/03h..04h
+  planes=1, bits=4  P4        ;4bit, BMP 16 color (iview)
+  planes=1, bits=8  P8        ;8bit, VGA 256 color palette
+  planes=1, bits=8  I8        ;8bit, VGA 256 level grayscale (gmarbles.pcx)
+  planes=3, bits=8  BGR888    ;24bit, truecolor (this is official 24bit format)
+ ;planes=1, bits=24 BGR888 ?  ;24bit, reportedly exists? poor compression
+ ;planes=4, bits=4  ABGR4444  ;16bit, wikipedia-myth? unlikely to exist
+ ;planes=4, bits=8  ABGR8888  ;32bit, truecolor+alpha (used in abydos.dcx\*)
+</code></pre></div>
+<h4 id="width-and-height">Width and Height</h4>
+<p>These are normally calculated as so:<br/>
+<div class="highlight"><pre><span></span><code>  Width  = X2+1-X1      ;width for normal files
+  Height = Y2+1-Y1      ;height for normal files
+</code></pre></div>
+However, a few PCX files do accidentally want them to be calculated as so:<br/>
+<div class="highlight"><pre><span></span><code>  Width  = X2-X1        ;width for bugged files
+  Height = Y2-Y1        ;height for bugged files
+</code></pre></div>
+Files with bugged width can be (sometimes) detected as so:<br/>
+<div class="highlight"><pre><span></span><code>  (Width*Bits+15)/16*2) &gt; BytesPerLine
+</code></pre></div>
+Files with bugged height can be detected during decompression:<br/>
+<div class="highlight"><pre><span></span><code>  BeginOfLastScanline &gt;= Filesize (or Filesize-301h for files with palette)
+</code></pre></div>
+Bugged sample files are SAMPLE.DCX, marbles.pcx and gmarbles.pcx. RLE
+decompression may crash when not taking care of such files.<br/></p>
+<h4 id="color-planes-and-palettes">Color Planes and Palettes</h4>
+<p>The official ZSoft PCX specs are - wrongly - describing planes as:<br/>
+<div class="highlight"><pre><span></span><code>  plane0 = red         ;\
+  plane1 = green       ; this is WRONG, NONSENSE, does NOT exist
+  plane2 = blue        ;
+  plane3 = intensity   ;/
+</code></pre></div>
+The 8-color and 16-color EGA images are actually using plane0,1,2,(3) as
+bit0,1,2,(3) of the EGA color number; which implies plane0=blue (ie. red/blue
+are opposite of the ZSoft document).<br/>
+The truecolor and truecolor+alpha formats have plane0..2=red,green,blue (as
+described by ZSoft), but they don't have any intensity plane (a few files are
+using plane3=alpha).<br/></p>
+<h4 id="mono-2-color-palette">Mono 2-Color Palette</h4>
+<p>This format was intended for 640x200pix 2-color CGA graphics, it's also common
+for higher resolution FAX or print images. The general rule for these files is
+to use this colors:<br/>
+<div class="highlight"><pre><span></span><code>  color0=black
+  color1=white
+</code></pre></div>
+There are rumours that color1 could be changed to any of the 16 CGA colors
+(supposedly via [10h].bit7-4, but most older &amp; newer 2-color files have
+that byte set to 00h, so one would end up with black-on-black).<br/>
+Some newer 2-color files contain RGB palette entries [10h]=000000h,
+[13h]=FFFFFFh (and [16h..3Fh]=00h-filled or FFh-filled).<br/>
+Iview does often display 2-color images with color1=dark green (somewhat
+mysteriously; it's doing that even for files that don't contain any CGA color
+numbers or RGB palette values that could qualify as dark green).<br/></p>
+<h4 id="4-color-palettes">4-Color Palettes</h4>
+<p>This format was intended for 320x200pix 4-color CGA graphics, and the palette
+is closely bound to colors available in CGA graphics modes. Color0 is defined
+in [10h], and Color1-3 were originally defined in [13h], and later in</p>
+<p><div class="highlight"><pre><span></span><code>  color0=[10h].bit7-4  ;(Color0 IRGB)  ;CGA Port 3D9h.bit3-0 (usually 0=black)
+  bright=[13h].bit5                    ;CGA Port 3D9h.bit4    ;\
+  palette=[13h].bit6                   ;CGA Port 3D9h.bit5    ; old method
+  if [13h].bit7 then palette=2         ;CGA Port 3D8h.bit2    ;/
+  if [01h]=05h and [44h]=0001h then                           ;\new &quot;smart&quot;
+    if [14h]&gt;200 or [15h]&gt;200 then bright=1, else bright=0    ; method used in
+    if [14h]&gt;[15h] then palette=0 else palette=1              :/Paintbrush IV
+  if palette=0 and bright=0 then color1..3=02h,04h,06h  ;\green-red-yellow
+  if palette=0 and bright=1 then color1..3=0Ah,0Ch,0Eh  ;/
+  if palette=1 and bright=0 then color1..3=03h,05h,07h  ;\cyan-magenta-white
+  if palette=1 and bright=1 then color1..3=0Bh,0Dh,0Fh  ;/
+  if palette=2 and bright=0 then color1..3=03h,04h,07h  ;\cyan-red-white
+  if palette=2 and bright=1 then color1..3=0Bh,0Ch,0Fh  ;/
+</code></pre></div>
+Palette=2 uses some undocumented CGA glitch, it was somewhat intended to output
+grayscale by disabling color burst on CGA hardware with analog composite
+output, but actually most or all CGA hardware is having digital 4bit IRGB
+output, which outputs cyan-red-white.<br/>
+The new "smart" method is apparently trying to detect if [13h-1Bh] contains RGB
+values with Color1=Green or Cyan, and to select the corresponding CGA palette;
+unfortunately such PCX files are merely setting <a href="br/">14h,15h</a> to match up with the
+"smart" formula, without actually storing valid RGB values in [13h-1Bh].<br/></p>
+<h4 id="8-color-and-16-color-with-fixed-ega-palettes-version03h-or-04h">8-Color and 16-Color, with fixed EGA Palettes (version=03h or 04h)</h4>
+<p>These images have 3 or 4 planes. Plane0-3 correspond to bit0-3 of the EGA color
+numbers (ie. blue=plane0, green=plane1, red=plane2, and either intensity=plane3
+for 16-color, or intensity=0 for 8-color images).<br/>
+Some 8-Color sample images (with version=03h and 04h) can be found bundled with
+PC Paintbrush Plus 1.22 for Windows. A 16-color sample called WINSCR.PCX can be
+found elsewhere in internet.<br/>
+Caution 1: Official ZSoft specs are wrongly claiming plane0=red and
+plane2=blue; this is wrong (although Paint Shop Pro 2 is actually implementing
+it that way) (whilst MS Paint for Win95b can properly display them) (most other
+tools are trying to read a palette from [10h..3Fh], which is usually garbage
+filled in version=03h..04h).<br/>
+Caution 2: The standard EGA palette is used for version=03h..04h (many docs
+claim it to be used for version=03h only).<br/></p>
+<h4 id="16-color-with-custom-egavga-palettes-version02h-or-05h">16-Color, with custom EGA/VGA Palettes (version=02h or 05h)</h4>
+<p>These can have 1 plane with 4 bits, or 4 planes with 1 bit. Header[10h..3Fh]
+contains a custom 16-color RGB palette with 3x8bit per R,G,B.<br/>
+Classic VGA hardware did only use the upper 6bit of the 8bit values.<br/>
+Classic EGA hardware did only use the upper 2bit of the 8bit values (that, only
+when having a special EGA monitor with support for more than 16 colors).<br/></p>
+<h4 id="256-color-vga-palettes-version05h">256-Color VGA Palettes (version=05h)</h4>
+<p>These have 1 plane with 8 bits. And a 256-color RGB palette with 3x8bit per
+R,G,B appended at end of file.<br/>
+The appended 256-color palette should normally exist only in 256-color images,
+some PCX tools are reportedly always appending the extra palette to all
+version=05h files (even for 2-color files).<br/></p>
+<h4 id="256-level-grayscale-images-version05h-and-44h0002h">256-Level Grayscale Images (version=05h and [44h]=0002h)</h4>
+<p>The most obvious and reliable way is to use a palette with grayscale RGB
+values. However, Paintbrush IV is explicetly implementing (or ignoring?) an
+obscure grayscale format with following settings:<br/>
+<div class="highlight"><pre><span></span><code>  [01h]=version=05h, and [44h]=0002h=grayscale
+</code></pre></div>
+That settings are used in a file called gmarbles.pcx (which does contain a
+256-color RGB palette with gray RGB values, ie. one can simply ignore the
+special settings, and display it as normal 256-color image).<br/></p>
+<h4 id="default-16-color-cgaega-palettes">Default 16-color CGA/EGA Palettes</h4>
+<p><div class="highlight"><pre><span></span><code>  Color  Name                     IRGB1111 RGB222 RGB888   Windows
+  00h    dark black               0000     000    000000   000000
+  01h    dark blue                0001     002    0000AA   000080
+  02h    dark green               0010     020    00AA00   008000
+  03h    dark cyan                0011     022    00AAAA   008080
+  04h    dark red                 0100     200    AA0000   800000
+  05h    dark magenta             0101     202    AA00AA   800080
+  06h    dark yellow (brown)      0110     210!!  AA5500!! 808000
+  07h    dark white (light gray)  0111     222    AAAAAA   C0C0C0!!
+  08h    bright black (dark gray) 1000     111    555555   808080!!
+  09h    bright blue              1001     113    5555FF   0000FF
+  0Ah    bright green             1010     131    55FF55   00FF00
+  0Bh    bright cyan              1011     133    55FFFF   00FFFF
+  0Ch    bright red               1100     311    FF5555   FF0000
+  0Dh    bright magenta           1101     313    FF55FF   FF00FF
+  0Eh    bright yellow            1110     331    FFFF55   FFFF00
+  0Fh    bright white             1111     333    FFFFFF   FFFFFF
+</code></pre></div>
+Some notes on number of colors:<br/>
+<div class="highlight"><pre><span></span><code> CGA supports 16 colors in text mode (but only max 4 colors in graphics mode).
+ EGA supports the same 16 colors as CGA in both text and graphics mode.
+ EGA-with-special-EGA-monitor supports 64 colors (but only max 16 at once).
+ VGA supports much colors (but can mimmick CGA/EGA colors, or similar colors)
+</code></pre></div>
+CGA is using a 4pin IRGB1111 signal for up to 16 colors in text mode (max 4
+colors in graphics mode), and CGA monitors contain some circuitry to convert
+"dark yellow" to "brown" (though cheap CGA clones may display it as "dark
+yellow").<br/>
+EGA can display CGA colors (with all 16 colors in graphics mode).
+EGA-with-special-EGA-monitor uses 6pin RGB222 signals for up to 64 colors (but
+not more than 16 colors at once).<br/>
+Windows is also using those 16 standard colors (when not having any VGA driver
+installed, and also in 256-color VGA mode, in the latter case the 16 standard
+colors are held to always available (even if different tasks are trying to
+simultanously display different images with different palettes).<br/>
+However, Windows has dropped brown, and uses non-pastelized bright colors.<br/></p>
+<h4 id="pcx-files-in-psx-games">PCX files in PSX games</h4>
+<div class="highlight"><pre><span></span><code>  .PCX with RLE used by Jampack Vol. 1 (MDK\CD.HED\*.pcx)
+  .PCX with RLE used by Hot Wheels Extreme Racing (MagDemo52: US_01293\MISC\*)
+  .PCX with RLE used by Metal Gear Solid (slightly corrupted PCX files)
+</code></pre></div>
+<h4 id="pcx-files-in-psx-metal-gear-solid-mgs">PCX files in PSX Metal Gear Solid (MGS)</h4>
+<p>MGS is storing some extra data at [4Ah..57h] (roughly resembling the info in
+TIM files).<br/>
+<div class="highlight"><pre><span></span><code>  04Ah 2    Custom MGS ID (always 3039h)
+  04Ch 2    Display Mode? (08h/18h=4bit, 09h/19h=8bit)
+  04Eh 2    Bitmap X-coordinate in VRAM (reportedly &quot;divided by 2&quot; ???)
+  050h 2    Bitmap Y-coordinate in VRAM
+  052h 2    Palette X-coordinate in VRAM
+  054h 2    Palette Y-coordinate in VRAM
+  056h 2    Palette number of actually used colors (can be less than 16/256)
+  058h 28h  Reserved (zerofilled)
+  080h ..   Bitmap data (RLE compressed)
+  ...  1    VGA Palette ID (0Ch=256 colors)                      ;\when 8bpp
+  ..   300h VGA Palette (256 colors, 3-byte per color  = R,G,B)  ;/
+  ..   ..   Padding to 4-byte boundary, ie. palette isn&#39;t at filesize-301h !!!
+</code></pre></div>
+MGS has filesize padded to 4-byte boundary. That is causing problems for files
+with 256-color palette: The official way to find the palette is to stepback
+301h bytes from end of file, which won't work with padding. To find the MGS
+palette, one must decompress the whole bitmap, and then expect the 301h-byte
+palette to be located after the compressed data.<br/>
+As an extra oddity, MGS uses non-square ultra-high DPI values.<br/></p>
+<h4 id="dcx-archives">DCX Archives</h4>
+<p>DCX archives contain multiple PCX files (eg. multi-page FAX documents). The
+standard format is as so:<br/>
+<div class="highlight"><pre><span></span><code>  0000h 4     ID (3ADE68B1h) (987654321 decimal)
+  0004h 4000h File List (32bit offsets) (max 1023 files, plus 0=End of List)
+  1004h ..    File Data area (PCX files)
+</code></pre></div>
+However, some files have the first PCX at offset 1000h (ie. the list is only
+3FFCh bytes tall). Reportedly there are also files that start with yet smaller
+offsets (for saving space when the file list contains fewer entries).<br/>
+The PCX filesize is next-curr offset (or total-curr for last file).<br/></p>
+<h4 id="references">References</h4>
+<p><a href="https://www.fileformat.info/format/pcx/egff.htm">https://www.fileformat.info/format/pcx/egff.htm</a></p>
+<h2 id="cdrom-file-video-2d-graphics-celbgdtsqanmsdf-sony">CDROM File Video 2D Graphics CEL/BGD/TSQ/ANM/SDF (Sony)</h2>
+<p>CEL/BGD/TSQ/ANM/SDF<br/></p>
+<h4 id="cel-cell-data-official-format-with-8bit-header-entries">CEL: Cell Data (official format with 8bit header entries)</h4>
+<p>This does merely translate Tile Numbers to VRAM Addresses and Attributes (with
+the actual VRAM bitmap data usually being stored in .TIM files).<br/>
+<div class="highlight"><pre><span></span><code>  000h 1   File ID (22h)
+  001h 1   Version (3)
+  002h 2   Flag (bit15=WithAttr, bit14=AttrDataSize:0=8bit,1=16bit, bit13-0=0)
+  004h 2   Number of cell data items (in cell units) (N)
+  006h 1   Sprite Editor Display Window Width  (in cell units)
+  007h 1   Sprite Editor Display Window Height (in cell units)
+  008h ..  Cell Data[N] (64bit entries)
+  ...  ..  Cell Attr[N] (0bit/8bit/16bit user data? depending on Flag)
+</code></pre></div>
+Cell Data:<br/>
+<img alt="CEL: Cell Data (official format with 8bit header entries) - bit layout" src="../../../../diagrams/ps1-cdr-cdromfileformats-graphics--cel-cell-data-official-format-with-8bit-header-entri.svg" />
+<div class="highlight"><pre><span></span><code>  0-7   Tex Coord X (8bit)
+  8-15  Tex Coord Y (8bit)
+  16-21 Clut X      (6bit)
+  22-30 Clut X      (9bit)
+  31    Semi-transparency enable        ;-only in Version&gt;=3
+  32    Vertical Reversal   (Y-Flip)    ;\only in Version=0 and Version&gt;=2
+  33    Horizontal Reversal (X-Flip)    ;/
+  34-47 Unused
+  48-52 Texture Page (5bit)
+  53-54 Semi Transparency     (0=B/2+F/2, 1=B+F, 2=B-F, 3=B+F/4)
+  55-56 Texture page colors   (0=4bit, 1=8bit, 2=15bit, 3=Reserved)
+  57-60 Sprite Editor Color Set Number  ;\
+  61    Unused                          ; only in Version&gt;=3
+  62-63 Sprite Editor TIM Bank          ;/     XXX else hardcoded?
+</code></pre></div>
+This is used in R-Types, CG.1\file3Dh\file00h, but [6,7] are 16bit wide! And
+there are a LOT of ZEROes appended (plus FFh-padding due to CG.1 archive size
+units).<br/>
+Used by R-Types (CG.1\file07h\file01h, size 08h*04h, with 8bit attr)<br/>
+Used by R-Types (CG.1\file07h\file03h, size 10h*08h, with 16bit attr)<br/>
+Used by R-Types (CG.1\file07h\file05h, size 04h*04h, with 16bit attr)<br/>
+Used by Tiny Tank (MagDemo23: TINYTANK\TMD05.DSK\*.CEL, size 08h*05h)<br/></p>
+<h4 id="cel16-inofficial-cel-hack-with-16bit-entries-and-more-extra-data-r-types">CEL16: Inofficial CEL hack with 16bit entries and more extra data (R-Types)</h4>
+<p>This is an inofficial hack used by R-Types, the game does use both the official
+CEL and inofficial CEL16 format.<br/>
+<div class="highlight"><pre><span></span><code>  000h 1   File ID (22h)        ;\same as in official CEL version
+  001h 1   Version (3)          ;/
+  002h 2   Flag (...unknown meaning in this case...?)           ;&lt;-- ?
+  004h 2   Number of cell data items (in cell units) (N)
+  006h 2   Sprite Editor Display Window Width  (in cell units)  ;&lt;-- 16bit!
+  008h 2   Sprite Editor Display Window Height (in cell units)  ;&lt;-- 16bit!
+  00Ah ..  Cell Data[N] (64bit entries)
+  ...  ..  Cell Attr[N] (16bit/192bit user data, depending on Flag or so...?)
+</code></pre></div>
+Used by R-Types (CG.1\file12h\file00h, size 0120h*000Fh with 192bit attr)<br/>
+Used by R-Types (CG.1\file15h\file00h, size 0168h*000Fh with ? attr)<br/>
+Used by R-Types (CG.1\file1Ch\file00h, size 00D8h*000Fh with ? attr)<br/></p>
+<h4 id="bgd-bg-map-data-official-format-with-8bit-header-entries">BGD: BG Map Data (official format with 8bit header entries)</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 1   File ID (23h)
+  001h 1   Version (0)
+  002h 2   Flag (bit15=WithAttr, bit14=AttrDataSize:0=8bit,1=16bit, bit13-0=0)
+  004h 1   BG Map Width  (in cell units) (W)
+  005h 1   BG Map Height (in cell units) (H)
+  006h 1   Cell Width    (in pixels)
+  007h 1   Cell Height   (in pixels)
+  008h ..  BG Map Data[W*H] (16bit cell numbers)
+  ...  ..  BG Map Attr[W*H] (0bit/8bit/16bit user data? depending on Flag)
+</code></pre></div>
+Used by R-Types (CG.1\file07h\file00h, official BGD format)<br/>
+Used by Cardinal Syn (MagDemo03,09: SYN\SONY\KROLOGO.WAD\<em>.BGD)<br/>
+Used by Tiny Tank (MagDemo23: TINYTANK\TMD05.DSK\</em>.BGD, with 8bit entries).<br/></p>
+<h4 id="bgd16-inofficial-bgd-hack-with-16bit-entries-r-types">BGD16: Inofficial BGD hack with 16bit entries (R-Types)</h4>
+<p>This is an inofficial hack used by R-Types, the game does use both the official
+BGD and inofficial BGD16 format. Apparently invented to support bigger BG Map
+Widths for huge sidescrolling game maps.<br/>
+<div class="highlight"><pre><span></span><code>  000h 1   File ID (23h)        ;\same as in official BGD version
+  001h 1   Version (0)          ;/
+  002h 2   Flag (bit15=WithAttr, bit14=AttrDataSize:0=8bit,1=16bit, bit13-0=0)
+  004h 2   BG Map Width  (in cell units) (W)                    ;&lt;-- 16bit!
+  006h 2   BG Map Height (in cell units) (H)                    ;&lt;-- 16bit!
+  008h 2   Cell Width    (in pixels)                            ;&lt;-- 16bit!
+  00Ah 2   Cell Height   (in pixels)                            ;&lt;-- 16bit!
+  00Ch ..  BG Map Data[W*H] (16bit cell numbers)
+  ...  ..  BG Map Attr[W*H] (0bit/8bit/16bit user data? depending on Flag)
+  ...  ..  FFh-padding (in case being stored in R-Types&#39; DOT1 archives)
+</code></pre></div>
+Used by R-Types (CG.1\file3Ch\file00h, inofficial BGD16 format)<br/></p>
+<h4 id="tsq-animation-time-sequence">TSQ: Animation Time Sequence</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 1   File ID (24h)
+  001h 1   Version (1)
+  002h 2   Number of Sequence data entries (N)
+  004h N*8 Sequence Data (64bit entries)
+</code></pre></div>
+Sequence Data:<br/>
+<div class="highlight"><pre><span></span><code>  0-15  Sprite Group Number to be displayed
+  16-23 Display Time
+  24-27 Unused
+  28-31 Attribute (user defined) (only in Version&gt;=1)
+  32-47 Hotspot X Coordinate
+  48-63 Hotspot Y Coordinate
+</code></pre></div>
+There aren't any known games using .TSQ files.<br/></p>
+<h4 id="anm-animation-information">ANM: Animation Information</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 1    File ID (21h)
+  001h 1    Version (3=normal) (but see below notes on older versions)
+  002h 2    Flag (bit0-1=TPF, bit2-11=0, bit12-15=CLT)
+             0-1   TPF PixFmt (0=4bpp, 1=8bpp, 2/3=Reserved)   ;version&gt;=2 only
+             2-11  -   Reserved (0)
+             12-15 CLT Number of CLUT Groups, for color animation
+  004h 2    Number of Sprites Groups
+  006h 2    Number of Sequences (N) (can be 0=None)
+  008h N*8  Sequence(s) (64bit per entry)  ;Num=[004h]
+  ...  ..   Sprite Group(s)                ;Num=[006h]
+  ...  ..   CLUT Group(s)                  ;Num=[002h].bit12-15
+</code></pre></div>
+Sequence entries:<br/>
+<div class="highlight"><pre><span></span><code>  000h 2  Sprite Group Number to be displayed (range 0..AnimHdr[004h]-1)
+  002h 1  Display Time (can be 00h or 0Ah or whatever)
+  003h 1  Attribute (bit0-3=Unused/Zero, bit4-7=User defined)  ;version&gt;=3 only
+  004h 2  Hotspot X Coordinate (usually 0, or maybe can be +/-NN ?)
+  006h 2  Hotspot Y Coordinate (usually 0, or maybe can be +/-NN ?)
+</code></pre></div>
+Sprite Group entries:<br/>
+<div class="highlight"><pre><span></span><code> Each &quot;Group&quot; seems to represent one animation frame.
+ Each &quot;Group&quot; can contain one or more sprites (aka metatiles).
+ Below stuff is &quot;4+N*14h&quot; bytes, that seems to repeat &quot;AnmHeader[004h] times&quot;
+ XXX... actually below can be &quot;4+N*10h&quot; or &quot;4+N*14h&quot; bytes
+ XXX... so, maybe maybe some entries like width/height are optional?
+  000h 4     Number of Sprites in this Sprite Group (&quot;sprites per metatile&quot;?)
+  004h 14h*N Sprite(s) (see below)
+ Sprites:
+  000h 1   Tex Coord X (8bit)
+  001h 1   Tex Coord Y (8bit)
+  002h 1   Offset X from Hotspot within frame (maybe vertex x ?)
+  003h 1   Offset Y from Hotspot within frame (maybe vertex y ?)
+  004h 2   CBA Clut Base (bit0-5=ClutX, Bit6-14=ClutY, bit15=SemiTransp)
+  006h 2   FLAGs (bit0-4, bit5-6, bit7-8, bit9, bit10, bit11, bit12-15)
+            0-4   TPN Texture Page Number
+            5-6   ABR Semi-Transparency Rate
+            7-8   TPF Pixel depth (0=4bpp, 1=8bpp, 2=16bpp)
+            9     -   Reserved
+            10    RSZ Scaling  (0=No, 1=Scaled)
+            11    ROT Rotation (0=No, 1=Rotated)
+            12-15 THW Texture Width/Height div8 (0=Other custom width/height)
+  008h (2) Texture Width    &quot;of optional size&quot; (uh?)  ;\only present if
+  00Ah (2) Texture Height   &quot;of optional size&quot; (uh?)  ;/FLAGs.bit12-15=0 ?)
+  00Ch 2   Angle of Rotation (in what units?)
+  00Eh 2   Sprite Editor info (bit0-7=Zero, bit8-13=ClutNo, bit14-15=TimBank)
+  010h 2   Scaling X (for Vertex?) (as whatever fixed point number) (eg. 1000h)
+  012h 2   Scaling Y (for Vertex?) (as whatever fixed point number) (eg. 1000h)
+</code></pre></div>
+CLUT Group entries:<br/>
+<div class="highlight"><pre><span></span><code>  000h 4  CLUT size in bytes (Width*Height*2+0Ch)
+  004h 2  Clut X Coordinate
+  006h 2  Clut Y Coordinate
+  008h 2  Clut Width
+  00Ah 2  Clut Height
+  00Ch .. CLUT entries (16bit per entry, Width*Height*2 bytes)
+</code></pre></div>
+Note: ALICE.PAC\MENU.PAC\CON00.ANM has NumSequences=0 and NumSpriteGroups=2Dh
+(unknown if/how that is animated, maybe it has 2Dh static groups? or the groups
+are played in order 0..2Ch with display time 1 frame each?).<br/>
+Used by Alice in Cyberland (ALICE.PAC\*.ANM) (ANM v3)<br/>
+Unknown if there are any other games are using that format.<br/></p>
+<h4 id="sdf-sprite-editor-project-file">SDF: Sprite Editor Project File</h4>
+<p>This is an ASCII text file for "artist boards" with following entries:<br/>
+<div class="highlight"><pre><span></span><code>  TIM0 file0.tim             ;\
+  TIM1 file1.pxl file1.clt   ; four TIM banks (with TIM or PXL/CLT files)
+  TIM2                       ; (or no filename for empty banks)
+  TIM3                       ;/
+  CEL0 file0.cel             ;-one CEL (with CEL, or no filename if none)
+  MAP0 file0.bgd             ;\
+  MAP1 file1.bgd             ; four BG MAP banks (with BGD filenames)
+  MAP2                       ; (or no filename for empty banks)
+  MAP3                       ;/
+  ANM0 file0.anm             ;-one ANM (with ANM, or no filename if none)
+  DISPLAY n       ;0-3=256/320/512/640x240, 4-7=256/320/512/640x480
+  COLOR n         ;0=4bpp, 1=8bpp  ;docs are unclear, is it COLORn or COLOR n?
+  ADDR0 texX texY clutX clutY numColorSets ;\
+  ADDR1 texX texY clutX clutY numColorSets ; four texture/palette offsets
+  ADDR2 texX texY clutX clutY numColorSets ; for the corresponding TIM banks
+  ADDR3 texX texY clutX clutY numColorSets ;/ (or whatever for empty banks?)
+</code></pre></div></p>
+<h2 id="cdrom-file-video-3d-graphics-tmdpmdtodhmdrsd-sony">CDROM File Video 3D Graphics TMD/PMD/TOD/HMD/RSD (Sony)</h2>
+<h4 id="tmd-modeling-data-for-os-library">TMD - Modeling Data for OS Library</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 4     ID (00000041h)
+  004h 4     Flags (bit0=FIXP, bit1-31=Reserved/zero)
+  008h 4     Number of Objects (N)     ;&quot;integral value&quot; uh?
+  00Ch N*1Ch Object List (1Ch-byte per entry)
+  ...  ..    Data (Vertices, Normals, Primitives)
+</code></pre></div>
+Object List entries:<br/>
+<div class="highlight"><pre><span></span><code>  000h 4    Start address of a Vertex     ;\Address values depend on the
+  004h 4    Number of Vertices            ; file header&#39;s FIXP flag:
+  008h 4    Start address of a Normal     ;  FIXP=0 Addr from begin of Object
+  00Ch 4    Number of Normals             ;  FIXP=0 Addr from begin of TMD File
+  010h 4    Start address of a Primitive  ;
+  014h 4    Number of Primitives          ;/
+  018h 4    Scale (signed shift value, Pos=SHL, Neg=SHR) (not used by LIBGS)
+</code></pre></div>
+Vertex entries (8-byte):<br/>
+<div class="highlight"><pre><span></span><code>  000h 2    Vertex X (signed 16bit)
+  002h 2    Vertex Y (signed 16bit)
+  004h 2    Vertex Z (signed 16bit)
+  006h 2    Unused
+</code></pre></div>
+Normal entries (8-byte) (if any, needed only for computing light directions):<br/>
+<div class="highlight"><pre><span></span><code>  000h 2    Normal X (fixed point 1.3.12)
+  002h 2    Normal Y (fixed point 1.3.12)
+  004h 2    Normal Z (fixed point 1.3.12)
+  006h 2    Unused
+</code></pre></div>
+Primitive entries (variable length):<br/>
+<div class="highlight"><pre><span></span><code>  000h 1    Output Size/4 of the GPU command (after GTE conversion)
+  001h 1    Input Size/4 of the Packet Data in the TMD file
+  002h 1    Flag
+              0   Light source calculation (0=On, 1=Off)
+              1   Clip Back (0=Clip, 1=Don&#39;t clip) (for Polygons only)
+              2   Shading (0=Flat, 1=Gouraud)
+                   (Valid only for the polygon not textured,
+                   subjected to light source calculation)
+              3-7 Reserved (0)
+  003h 1    Mode (20h..7Fh) (same as GP0(20h..7Fh) command value in packet)
+  004h ..   Packet Data
+</code></pre></div>
+Packet Data (for Polygons)<br/>
+<div class="highlight"><pre><span></span><code>  000h 4   GPU Command+Color for that packet (CcBbGgRrh), see GP0(20h..3Fh)
+  ... (4)  Texcoord1+Palette (ClutYyXxh)               ;\
+  ... (4)  Texcoord2+Texpage (PageYyXxh)               ; only if Mode.bit2=1
+  ... (4)  Texcoord3         (0000YyXxh)               ;
+  ... (4)  Texcoord4         (0000YyXxh) ;-quad only   ;/
+  ... (4)  Color2 (00BbGgRrh)                          ;\
+  ... (4)  Color3 (00BbGgRrh)                          ; only if Flag.bit2=1
+  ... (4)  Color4 (00BbGgRrh) ;-quad only              ;/
+  ... (2)  Normal1 (index in Normal list?)  ;always, unless Flag.bit0=1
+  ...  2   Vertex1 (index in Vertex list?)
+  ... (2)  Normal2 (index in Normal list?)             ;-only if Mode.bit4=1
+  ...  2   Vertex2 (index in Vertex list?)
+  ... (2)  Normal3 (index in Normal list?)             ;-only if Mode.bit4=1
+  ...  2   Vertex3 (index in Vertex list?)
+  ... (2)  Normal4 (index in Normal list?) ;\quad only ;-only if Mode.bit4=1
+  ...  2   Vertex4 (index in Vertex list?) ;/
+  ... (2)  Unused zeropadding (to 4-byte boundary)
+</code></pre></div>
+Packet Data (for Lines)<br/>
+<div class="highlight"><pre><span></span><code>  000h 4   GPU Command+Color for that packet (CcBbGgRrh), see GP0(40h,50h)
+  ... (4)  Color2 (00BbGgRrh)                          ;-only if Mode.bit4=1
+  ...  2   Vertex1 (index in Vertex list?)
+  ...  2   Vertex2 (index in Vertex list?)
+</code></pre></div>
+Packet Data (for Rectangle/Sprites)<br/>
+<div class="highlight"><pre><span></span><code>  000h 4   GPU Command+Color for that packet (CcBbGgRrh), see GP0(60h..7Fh)
+  ...  ..  Unknown, reportedy &quot;with 3-D coordinates and the drawing
+           content is the same as a normal sprite.&quot;
+</code></pre></div>
+Note: Objects should usually contain Primitives and Vertices (and optionally
+Normals), however, N2O\SHIP.TMD does contain some dummy Objects with Number of
+Vertices/Normals/Primitives all set to zero.<br/>
+Used by Playstation Logo (in sector 5..11 on all PSX discs, 3278h bytes)<br/>
+Used by ...???model???... (MagDemo54: MODEL\<em>.BIN\</em>.TMD)<br/>
+Used by Alice in Cyberland (ALICE.PAC\xxx_TM*.FA\<em>.TMD)<br/>
+Used by Armored Core (MagDemo02: AC10DEMP\MS\MENU_TMD.T\</em>)<br/>
+Used by Bloody Roar 1 (MagDemo06: CMN\EFFECT.DAT\0005h)<br/>
+Used by Deception III Dark Delusion (MagDemo33: DECEPT3\K3_DAT.BIN\056A,0725\<em>)<br/>
+Used by Gundam Battle Assault 2 (DATA\</em>.PAC\<em>)<br/>
+Used by Hear It Now (Playstation Developer's Demo) (*.TMD and FISH.DAT).<br/>
+Used by Jersey Devil (MagDemo10: JD\</em>.BZZ\<em>)<br/>
+Used by Klonoa (MagDemo08: KLONOA\FILE.IDX\</em>)<br/>
+Used by Legend of Dragoon (MagDemo34: LOD\DRAGN0.BIN\16xxh)<br/>
+Used by Macross VF-X 2 (MagDemo23: VFX2\DATA01\<em>.TMD)<br/>
+Used by Madden NFL '98 (MagDemo02: TIBURON\MODEL01.DAT\</em>)<br/>
+Used by No One Can Stop Mr. Domino (MagDemo18: DATA\<em>, .TMD and DOT1\TMD)<br/>
+Used by O.D.T. (MagDemo17: ODT\</em>.LNK\<em>)<br/>
+Used by Parappa (MagDemo01: PARAPPA\COMPO01.INT\3\</em>.TMD)<br/>
+Used by Resident Evil 1 (PSX\ITEM_M1\<em>.DOR\0001)<br/>
+Used by Starblade Alpha (FLT\SB2.DAT\</em> and TEX\SB2.DAT\<em>)<br/>
+Used by Tiny Tank (MagDemo23: TINYTANK\TMD*.DSK\</em>.TMD)<br/>
+Used by WCW/nWo Thunder (MagDemo19: THUNDER\RING\<em>.TMD)<br/>
+Used by Witch of Salzburg (the MODELS\</em>.MDL\<em>.TMD)<br/>
+Used by Scooby Doo and the Cyber Chase (MagDemo54: MODEL\</em>\*)<br/></p>
+<h4 id="pmd-high-speed-modeling-data">PMD - High-Speed Modeling Data</h4>
+<p>This is about same as TMD, with less features, intended to work faster.<br/>
+<div class="highlight"><pre><span></span><code>  000h 4    ID (00000042h)
+  004h 4    Offset to Primitives
+  008h 4    Offset to Shared Vertices (or 0=None)
+  00Ch 4    Number of Objects
+  010h ..   Objects         (4+N*4 bytes each, with offsets to Primitives)
+  ...  ..   Primitives
+  ...  ..   Shared Vertices (8-bytes each, if any)
+</code></pre></div>
+Vertex entries (8-byte):<br/>
+<div class="highlight"><pre><span></span><code>  000h 2    Vertex X (signed 16bit)
+  002h 2    Vertex Y (signed 16bit)
+  004h 2    Vertex Z (signed 16bit)
+  006h 2    Unused
+</code></pre></div>
+Objects:<br/>
+<div class="highlight"><pre><span></span><code>  000h 4    Number of Primitives
+  004h N*4  Offsets to Primitives ... maybe relative to hdr[004h] ?
+</code></pre></div>
+Primitives:<br/>
+<div class="highlight"><pre><span></span><code>  000h 2    Number of Packets
+  002h 2    Type flags
+             0    Polygon   (0=Triangle, 1=Quadrilateral)
+             1    Shading   (0=Flat, 1=Gouraud)           ;uh, with ONE color?
+             2    Texture   (0=Texture-On, 1=Texture-Off) ;uh, withoutTexCoord?
+             3    Shared    (0=Independent vertex, 1=Shared vertex)
+             4    Light source calculation (0=Off, 1=On)  ;uh, withoutNormal?
+             5    Clip      (0=Back clip, 1=No back clip)
+             6-15 Reserved for system
+  004h ...  Packet(s)
+</code></pre></div>
+Packet entries, when Type.bit3=0 (independent vertex):<br/>
+<div class="highlight"><pre><span></span><code>  000h 4   GPU Command+Color for that packet (CcBbGgRrh), see GP0(20h..7Fh)
+  004h 8   Vertex1 (Xxxxh,Yyyyh,Zzzzh,0000h)
+  00Ch 8   Vertex2 (Xxxxh,Yyyyh,Zzzzh,0000h)
+  014h 8   Vertex3 (Xxxxh,Yyyyh,Zzzzh,0000h)
+  01Ch (8) Vertex4 (Xxxxh,Yyyyh,Zzzzh,0000h) ;&lt;-- only when Type.bit0=1 (quad)
+</code></pre></div>
+Packet entries, when Type.bit3=1 (shared vertex):<br/>
+<div class="highlight"><pre><span></span><code>  000h 4   GPU Command+Color for that packet (CcBbGgRrh), see GP0(20h..7Fh)
+  004h 4   Offset to Shared Vertex1    ;offsets are
+  008h 4   Offset to Shared Vertex2    ;&quot;from the start of a row&quot;
+  00Ch 4   Offset to Shared Vertex3    ;aka from &quot;Packet+04h&quot; ?
+  010h (4) Offset to Shared Vertex4          ;&lt;-- only when Type.bit0=1(quad)
+</code></pre></div>
+Unknown if/how Texture/Light is implemented... without TexCoords/Normals?<br/>
+Unknown if/how Gouraud is implemented... with ONE color and without Normals?<br/>
+Used only by a few games:<br/>
+<div class="highlight"><pre><span></span><code>  Cool Boarders 2 (MagDemo02: CB2\DATA3\*.PMD)
+  Cardinal Syn (MagDemo03,09: SYN\*\*.WAD\*.PMD)    (4-byte hdr plus PMD file)
+  Sesame Streets Sports (MagDemo52: SSS\LV*\*MRG\*) (4-byte hdr plus PMD file)
+</code></pre></div>
+Unknown if/which other games are using the PMD format.<br/></p>
+<h4 id="tod-animation-data">TOD - Animation Data</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 1    ID (50h)
+  001h 1    Version (0)
+  002h 2    Resolution (time per frame in 60Hz units, can be 0) (60Hz on PAL?)
+  004h 4    Number of Frames
+  008h ..   Frame1
+  ...  ..   Frame2
+  ...  ..   Frame3
+  ...  ..   etc.
+</code></pre></div>
+Frames:<br/>
+<div class="highlight"><pre><span></span><code>  000h 2    Frame Size in words (ie. size/4)
+  002h 2    Number of Packets (can be 0=None, ie. do nothing this frame)
+  004h 4    Frame Number (increasing 0,1,2,3,..)
+  008h ...  Packet(s)
+</code></pre></div>
+Packet:<br/>
+<div class="highlight"><pre><span></span><code>  000h 2    Object ID
+  002h 1    Type/Flag (bit0-3=Type, bit4-7=Flags)
+  003h 1    Packet Size (&quot;in words (4 bytes)&quot;)
+  004h ...  Packet Data
+</code></pre></div>
+XXX... in Sony's doc.<br/>
+Used by Witch of Salzburg (ANIM\ANM0\ANM0.TOD) (oddly with [02h]=0000h)<br/>
+Used by Parappa (MagDemo01: PARAPPA\COMPO01.INT\3\<em>.TOD)<br/>
+Used by Macross VF-X 2 (MagDemo23: VFX2\DATA01\</em>.TOD and *.TOX)<br/>
+Used by Alice in Cyberland (ALICE.PAC\xxx_T*.FA\*.TOD)<br/>
+Unknown if/which other games are using the TOD format.<br/></p>
+<h4 id="hmd-hierarchical-3d-model-animation-and-other-data">HMD - Hierarchical 3D Model, Animation and Other Data</h4>
+<p><div class="highlight"><pre><span></span><code>  000h 4    ID (00000050h)   ;same as in TOD, which CAN ALSO have MSBs=zero(!)
+  004h 4    MAP FLAG (0 or 1, set when mapped via GsMapUnit() function)
+  008h 4    Primitive Header Section pointer (whut?)
+  00Ch 4    Number of Blocks
+  010h 4*N  Pointers to Blocks
+  ...       Primitive Header section    (required)
+  ...       Coordinate section          (optional)
+  ...       Primitive section           (required)
+</code></pre></div>
+This format is very complicated, see Sony's "File Formats" document for
+details.<br/>
+.HMD used by Brunswick Bowling (MagDemo13: THQBOWL\<em>).<br/>
+.HMD used by Soul of the Samurai (MagDemo22: RASETSU\0\OPT01T.BIN\0\0\</em>)<br/>
+.HMD used by Bloody Roar 2 (MagDemo22: LON\LON*.DAT\*, ST5\ST*.DAT\02h..03h)<br/>
+.HMD used by Ultimate Fighting Championship (MagDemo38: UFC\CU00.RBB\6Bh..EFh)<br/>
+Unknown if/which games other are using the HMD format.<br/></p>
+<h4 id="rsd-files-rsdplymatgrpmshpvtcodmotogp">RSD Files (RSD,PLY,MAT,GRP,MSH,PVT,COD,MOT,OGP)</h4>
+<p>RSD files consist of a set of several files (RSD,PLY,MAT,etc). The files
+contain the "polygon source code" in ASCII text format, generated from Sony's
+"SCE 3D Graphics Tool". For use on actual hardware, the "RSDLINK" utility can
+be used to convert them to binary (TMD, PMD, TOD?, HMB?) files.<br/>
+<div class="highlight"><pre><span></span><code>  RSD Main project file
+  PLY Polygon Vertices (Vertices, Normals, Polygons)
+  MAT Polygon Material (Color, Blending, Texture)
+  GRP Polygon Grouping
+  MSH Polygon Linking                   ;\
+  PVT Pivot Rotation center offsets     ; New Extended
+  COD Vertex Coordinate Attributes      ; (since RSD version 3)
+  MOT Animation Information             ;/
+  OGP Vertex Object Grouping            ;-Sub-extended
+</code></pre></div>
+All of the above files are in ASCII text format. Each file is starting with a
+"@typYYMMDD" string in the first line of the file, eg. "@RSD970401" for RSD
+version 3. Vertices are defined as floating point values (as ASCII strings).<br/>
+There's more info in Sony's "File Formats" document, but the RSD stuff isn't
+used on retail discs. Except:<br/>
+<div class="highlight"><pre><span></span><code>  RSD/GRP/MAT/PLY (and DXF=whatever?) used on Yaroze disc (DTL-S3035)
+</code></pre></div></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.indexes"], "search": "../../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>

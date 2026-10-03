@@ -1,0 +1,25 @@
+@media print {
+  .md-typeset {
+    font-size: 1rem !important;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+  }
+  .md-typeset code {
+    font-size: 1em !important;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace !important;
+  }
+  /* with-pdf gives every page after the first in a nav section a full-page
+     min-height, which can make WeasyPrint silently drop the rest of the PDF. */
+  article section + section {
+    min-height: auto !important;
+  }
+  /* It also shifts headings down one level per nav section, past h6. */
+  article h7, article h8, article h9 {
+    display: block;
+    font-weight: bold;
+    margin: 1em 0 0.5em 0.25rem;
+  }
+}
+
+.md-typeset table {
+  white-space: nowrap;
+}

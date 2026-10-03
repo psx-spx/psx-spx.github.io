@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="187" viewBox="0 0 769 187" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="533" y="15" width="235" height="171" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="650.5" y="100.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,650.5,100.5)">Red</text>
+<text x="533" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="293" y="15" width="235" height="171" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="410.5" y="100.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,410.5,100.5)">Green</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">9</text>
+<text x="528" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">5</text>
+<rect x="53" y="15" width="235" height="171" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="170.5" y="100.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,170.5,100.5)">Blue</text>
+<text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<text x="288" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">10</text>
+<rect x="5" y="15" width="43" height="171" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="26.5" y="100.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,26.5,100.5)">Semi-transparency Flag</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+</svg>

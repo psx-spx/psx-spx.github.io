@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="160" viewBox="0 0 769 160" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="677" y="15" width="91" height="144" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="722.5" y="87" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,722.5,87)">Used for something</text>
+<text x="677" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">0</text>
+<rect x="389" y="15" width="283" height="144" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="530.5" y="87" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,530.5,87)">Unknown/unused</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<text x="672" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">1</text>
+<rect x="293" y="15" width="91" height="144" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="338.5" y="87" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,87)">Used for something</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">4</text>
+<rect x="5" y="15" width="283" height="144" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="146.5" y="87" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,87)">Unknown/unused</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<text x="288" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">5</text>
+</svg>
