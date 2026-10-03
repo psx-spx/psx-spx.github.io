@@ -155,15 +155,18 @@ as a full halfword, with FFh in bits 8-15, and the SPU ignores A0, so the odd
 byte overwrites the even one in the same register.
 
 With bit 29 set, DMA transfers use bits 24-27 instead of the normal timings:
-/WR is active for (bits 24-27)+1 cycles with 1 cycle between pulses, whatever
-the Write Delay and the COM bits say. With bit 29 cleared, DMA uses the normal
-timings and bits 24-27 are ignored. A DMA block is one /CS assertion for the
+/WR (or /RD, for a DMA read from the device) is active for (bits 24-27)+1
+cycles with 1 cycle between pulses, whatever the Write or Read Delay and the
+COM bits say. With bit 29 cleared, DMA uses the normal timings and bits 24-27
+are ignored. A DMA block is one /CS assertion for the
 whole block. The BIOS value for DEV4, 200931E1h, has bit 29 set and bits 24-27
 at zero, so SPU DMA writes run at 1 cycle per strobe with 1 cycle between.
 
 ![SPU DMA, normal timings (000931E1h)](waveforms/spu-dma-normal.svg)
 
 ![SPU DMA, override (200931E1h)](waveforms/spu-dma-override.svg)
+
+![SPU to RAM DMA, override (200931E1h)](waveforms/spu-dma-read-override.svg)
 
 The Wide DMA flag will enable full 32 bits DMA operations on the bus, by reusing
 the low 16-bits address signals as the high 16-bits data. This means that if
