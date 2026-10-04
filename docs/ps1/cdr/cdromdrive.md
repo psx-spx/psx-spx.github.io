@@ -357,10 +357,30 @@ CDROM).<br/>
   CDROM/HOST: init CI register with XA-ADPCM coding info
   CDROM/HOST: enable ADPCM (ADPMUTE=0)  ;probably needed?
   ... set dummy addr/len with DISHXFRC=1 ?  <-- NOT required !
-  ... set SMEN ... and dummy BFWR?    <-- BOTH bits required ?
-  transfer 900h bytes (same format as ADPCM sectors) (WRDATA)
+  for each block:
+    set HCHPCTL=60h (SMEN and BFWR, both required)
+    transfer 900h bytes (same format as ADPCM sectors) (WRDATA)
+    wait for BFWRDY, then acknowledge it
   Note: Before sending a byte, one should wait for DRQSTS
   Note: ADPCM output doesn't start until the last (900h'th) byte is transferred
+```
+HCHPCTL must be written again before every block: if it is written only once,
+the first block plays and the decoder then reports BFEMPT. DRQSTS stays set for
+exactly 900h bytes per block. With SMEN alone, BFWRDY is set by the HCHPCTL
+write but DRQSTS never is; with BFWR alone the bytes go to the sector buffer
+(1000h of them are accepted) and nothing is played. Writing E0h instead of 60h
+behaves the same.<br/>
+
+The firmware version alone does not decide whether sound map produces output:
+two SCPH-5501 units with the same firmware (97-01-10) give opposite results.
+The cause is unknown.<br/>
+```
+  Console     Firmware   Sound map output
+  SCPH-1000   95-05-16   yes
+  SCPH-1001   95-07-24   silent (handshake completes, no audio)
+  SCPH-5501   97-01-10   yes on one unit, silent on another
+  SCPH-7001   97-08-14   yes
+  SCPH-9002   99-02-01   yes
 ```
 Sound Map mode may be very useful for testing XA-ADPCM directly from within an
 exe file (without needing a cdrom with ADPCM sectors). And, Sound Map supports
