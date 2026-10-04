@@ -379,7 +379,7 @@ The cause is unknown.<br/>
   SCPH-1000   95-05-16   yes
   SCPH-1001   95-07-24   silent (handshake completes, no audio)
   SCPH-5501   97-01-10   yes on one unit, silent on another
-  SCPH-7001   ?          untested
+  SCPH-7001   97-08-14   yes
   SCPH-9002   99-02-01   yes
 ```
 Sound Map mode may be very useful for testing XA-ADPCM directly from within an
