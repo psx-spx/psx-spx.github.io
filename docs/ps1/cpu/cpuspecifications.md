@@ -455,6 +455,18 @@ interprete it by software; by examing the opcode bits at [epc-4]).<br/>
 ```
 Unknown if any tlb-opcodes (tlbr,tlbwi,tlbwr,tlbp) are implemented in the psx hardware?<br/>
 
+#### Coprocessor Branches
+None of the four coprocessors drives the condition input, so it always reads
+as false, including COP2 while a GTE command is running or when FLAG.31 is
+set. With the coprocessor enabled in SR, bc#f always branches and bc#t never
+does. The delay slot is executed either way.<br/>
+Bit 1 of the rt field is ignored: rt=2 behaves as bc#f and rt=3 as bc#t, with
+no branch-likely nullification of the delay slot.<br/>
+With the coprocessor disabled in SR (SR.Bit28..31), both opcodes cause a
+Coprocessor Unusable Exception (excode=0Bh, Cause.CE=#). That applies to bc0f
+and bc0t as well, even in kernel mode, where mfc0 and mtc0 work regardless of
+SR.Bit28.<br/>
+
 #### Caution - Load Delay
 When reading from a coprocessor register, the next opcode cannot use the
 destination register as operand (much the same as the Load Delays that occur
@@ -818,6 +830,10 @@ The PSX supports only one cop0cmd (cop0cmd=10h aka RFE). Trying to execute the
 TLBxx opcodes causes a Reserved Instruction Exception (excode=0Ah).<br/>
 
 #### jf/jt cop0flg,dest - conditional cop0 jumps
+With SR.Bit28=0, these cause a Coprocessor Unusable Exception (excode=0Bh),
+even in kernel mode. With SR.Bit28=1, bc0f always jumps and bc0t never does,
+see [Coprocessor Branches](#coprocessor-branches).<br/>
+
 #### mov [mem],cop0reg / mov cop0reg,[mem] - coprocessor cop0 load/store
 Not supported by the CPU. Trying to execute these opcodes causes a Coprocessor
 Unusable Exception (excode=0Bh, ie. unlike above, not 0Ah).<br/>
