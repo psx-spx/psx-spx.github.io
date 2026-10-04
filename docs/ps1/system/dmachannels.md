@@ -64,13 +64,15 @@ transfer).<br/>
   2-7   Unused
   8     When 1:
         -Burst mode: enable "chopping" (cycle stealing by CPU)
-        -Slice mode: Causes DMA to hang
-        -Linked-list mode: Transfer header before data?
+        -Slice mode: locks up the whole console
+        -Linked-list mode: the node headers are sent to the device along
+         with the data
   9-10  Transfer mode (SyncMode)
         0=Burst (transfer data all at once after DREQ is first asserted)
         1=Slice (split data into blocks, transfer next block whenever DREQ is asserted)
         2=Linked-list mode
-        3=Reserved
+        3=Reserved (stored and read back on DMA0-5; starting a transfer in
+          this mode while the device requests data locks up the console)
   11-15 Unused
   16-18 Chopping DMA window size (1 << N words)
   19    Unused
@@ -88,6 +90,13 @@ transfer).<br/>
 Bit 28 is automatically cleared upon BEGIN of the transfer, this bit needs to be
 set only in SyncMode=0 (setting it in other SyncModes would force the first
 block to be transferred instantly without DREQ, which isn't desired).<br/>
+Bit 28 forces one unit through without DREQ: the whole transfer in SyncMode=0,
+one block in SyncMode=1, one list node in SyncMode=2 (RAM to device). After
+that, the channel waits for DREQ as usual. The CDROM does not assert DREQ on
+DMA3, whatever BFRD says, so CDROM transfers only run in SyncMode=0 with bit 28
+set.<br/>
+In SyncMode=2 with device to RAM direction, the channel follows the headers in
+RAM until the end marker and finishes, but moves no data either way.<br/>
 Bit 24 is automatically cleared upon COMPLETION of the transfer, this bit must
 be always set for all SyncModes when starting a transfer.<br/>
 For DMA6/OTC there are some restrictions, D6\_CHCR has only three
