@@ -1,37 +1,18 @@
 #   Controller and Memory Card Signals
 #### Overview
-```
-        ____                                                              _____
-  /CS       \____________________________________________________________/
-        ______        ____        ____        ____        ____        _________
-  SCK         ||||||||    ||||||||    ||||||||    ||||||||    ||||||||
-        ____                                                              _____
-  MOSI      '=[ Addr ]====[ Cmd  ]====[ Tap  ]====[Param ]====[Param ]==='
 
-  MISO  ---------------===[ IDlo ]====[ IDhi ]====[ Data ]====[ Data ]===------
-        _______________   _________   _________   _________   _________________
-  /ACK                 |_|         |_|         |_|         |_|
+![Controller packet overview](waveforms/overview.svg)
 
---- High impedance
-=== Any state (don't care)
-```
+Dashed lines are high impedance, grey areas are don't care.
 
 #### Address byte (01h) being sent
-```
-        ____
-  /CS       \__________________________________________________________________
-        ______   _   _   _   _   _   _   _   __________________   _   _   _   _
-  SCK         |_| |_| |_| |_| |_| |_| |_| |_|                  |_| |_| |_| |_|
-        __________                                                  ___
-  MOSI          1 |_0___0___0___0___0___0___0____________________0_| 1 |_0___0_
-                                                               ____
-  MISO  -----------------------------------------------======='  1 |_0___0___0_
-        ______________________________________________     ____________________
-  /ACK                                                |___|
 
---- High impedance
-=== Any state (don't care)
-```
+The address byte, followed by the first bits of the command byte (42h) and of
+the controller's reply (41h).
+
+![Address byte being sent](waveforms/address-byte.svg)
+
+The vertical lines mark the falling clock edges.
 
 Notes:
 
