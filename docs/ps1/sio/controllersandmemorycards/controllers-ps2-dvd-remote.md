@@ -10,8 +10,9 @@ become unresponsive again. It will initially behave as two different devices,
 one with address 01h acting like a standard digital controller and the other
 with address 61h exposing IR codes as received from the remote.<br/>
 All transfers to address 61h are 7 bytes long. The PS2 IOP remote driver (rmman)
-names the commands 04h=poll, 06h=init, and 0Fh=find, and it supports receivers
-on Multi Tap slots (up to 4 per port).<br/>
+names the commands 04h=poll, 06h=init, and 0Fh=find. It keeps state for up to
+4 slots per port, but never sends the slot number, so a receiver behind a Multi
+Tap is not actually addressed.<br/>
 
 #### Command 04h - IR poll (and disable controller mode)
 ```

@@ -1848,7 +1848,8 @@ Not sent by any libmcx function.<br/>
 Sent by libmcx McxCardType ("Probe PDA connection status"), via the
 undocumented McxGetMcxInfo, which stores the two reply bytes after the length
 byte. McxCardType returns success when a PDA was detected, and McxErrInvalid
-for a plain memory card.<br/>
+for a plain memory card. McxErrInvalid also means a communication failure, so
+LibRef says to retry before concluding it is a memory card.<br/>
 
 #### BU Command 59h (Prepare File Execution with Dir\_index, and Parameter)
 ```
