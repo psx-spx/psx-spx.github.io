@@ -1,4 +1,4 @@
-#   BIOS Misc Functions
+#   Misc Functions
 #### A(2Fh) - rand()
 Advances the random generator as "x=x\*41C64E6Dh+3039h" (aka plus 12345
 decimal), and returns a 15bit random value "R2=(x/10000h) AND 7FFFh".<br/>

@@ -1,4 +1,4 @@
-#   Controllers - Keyboards
+#   Keyboards
 There isn't any official retail keyboard for PSX, however, there is a shitload
 of obscure ways to connect keyboards...<br/>
 

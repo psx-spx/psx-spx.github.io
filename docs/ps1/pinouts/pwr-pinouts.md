@@ -1,4 +1,4 @@
-#   Pinouts - PWR Pinouts
+#   PWR Pinouts
 #### Voltage Summary
 ```
   +7.5V  Used to generate other voltages and CDROM/Joypad/MemoryCard/Expansion

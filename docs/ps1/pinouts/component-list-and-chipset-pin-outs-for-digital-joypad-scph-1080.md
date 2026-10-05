@@ -1,4 +1,4 @@
-#   Pinouts - Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080
+#   Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080
 #### Digital Joypad Component List (SCPH-1080)
 ```
   Case: "SONY, CONTROLLER, Sony Computer Entertainment Inc. H"

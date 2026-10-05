@@ -1,4 +1,4 @@
-#   Pinouts - SPU Pinouts
+#   SPU Pinouts
 #### IC308 - SONY CXD2922Q (SPU) (on PU-7, EARLY-PU-8 boards)
 #### IC308 - SONY CXD2925Q (SPU) (on LATE-PU-8, PU-16, PU-18, PU-20 boards)
 ```

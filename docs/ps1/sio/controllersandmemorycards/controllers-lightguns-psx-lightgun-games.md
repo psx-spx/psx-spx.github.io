@@ -1,4 +1,4 @@
-#   Controllers - Lightguns - PSX Lightgun Games
+#   Lightguns - PSX Lightgun Games
 #### PSX Lightgun Games
 Some games are working only with IRQ10 or only with Cinch, some games support
 both methods:<br/>

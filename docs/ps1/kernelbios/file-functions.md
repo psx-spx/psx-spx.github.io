@@ -1,4 +1,4 @@
-#   BIOS File Functions
+#   File Functions
 #### A(00h) or B(32h) - open(filename, accessmode) - Opens a file for IO
 ```
   out: V0  File handle (00h..0Fh), or -1 if error.

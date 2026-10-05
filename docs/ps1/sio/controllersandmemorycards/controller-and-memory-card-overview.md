@@ -65,11 +65,11 @@ sending the byte.<br/>
 
 #### BIOS Functions
 Controllers are accessed via InitPAD2 and StartPAD2,<br/>
-[BIOS Joypad Functions](../../kernelbios/joypad-functions.md#bios-joypad-functions)<br/>
+[Joypad Functions](../../kernelbios/joypad-functions.md#joypad-functions)<br/>
 Memory cards can be accessed by the filesystem (with device names "bu00:"
 (slot1) and "bu10:" (slot2) or so). Before using those device names, call
 InitCARD2, StartCARD2, and \_bu\_init, in that order,<br/>
-[BIOS Memory Card Functions](../../kernelbios/memory-card-functions.md#bios-memory-card-functions)<br/>
+[Memory Card Functions](../../kernelbios/memory-card-functions.md#memory-card-functions)<br/>
 
 #### Synchronous I/O
 The data is transferred in units of bytes, via separate input and output lines.

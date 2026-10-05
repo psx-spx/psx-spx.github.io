@@ -1,4 +1,4 @@
-#   BIOS Memory Fill/Copy/Compare (SLOW)
+#   Memory Fill/Copy/Compare (SLOW)
 Like most A(NNh) functions, below functions are executed in uncached BIOS ROM,
 the ROM has very high waitstates, and the 32bit opcodes are squeezed through an
 8bit bus. Moreover, below functions are restricted to process the data

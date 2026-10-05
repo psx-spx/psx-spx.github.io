@@ -1,4 +1,4 @@
-#   Controllers - PS2 DVD Remote
+#   PS2 DVD Remote
 An accessory released by Sony for the PS2, consisting of an infrared remote
 control and a receiver dongle that plugs into a controller port. The remote
 features all standard controller buttons (including L3/R3) as well as additional

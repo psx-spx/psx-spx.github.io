@@ -1,4 +1,4 @@
-#   BIOS Interrupt/Exception Handling
+#   Interrupt/Exception Handling
 The Playstation's Kernel uses an uncredible inefficient and unstable exception
 handler; which may have been believed to be very powerful and flexible.<br/>
 

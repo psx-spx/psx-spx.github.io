@@ -1,4 +1,4 @@
-#   BIOS Versions
+#   Versions
 #### Kernel Versions
 For the actual kernel, there seem to be only a few different versions. Most
 PSX/PSone's are containing the version from 1995 (which is kept 1:1 the same in

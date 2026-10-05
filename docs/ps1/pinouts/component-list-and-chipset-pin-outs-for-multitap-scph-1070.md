@@ -1,4 +1,4 @@
-#   Pinouts - Component List and Chipset Pin-Outs for Multitap, SCPH-1070
+#   Component List and Chipset Pin-Outs for Multitap, SCPH-1070
 #### Multitap Component List
 ```
   Case "SONY, MULTITAP, SonyComputerEntertainmentInc, SCPH-1070 MADE IN CHINA"

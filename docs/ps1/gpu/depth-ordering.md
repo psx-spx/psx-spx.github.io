@@ -1,4 +1,4 @@
-#   GPU Depth Ordering
+#   Depth Ordering
 #### Absent Depth Buffer
 The PlayStation's GPU stores only RGB colors in the framebuffer (ie. unlike
 modern 3D processors, it's NOT buffering Depth values; leaving apart the Mask

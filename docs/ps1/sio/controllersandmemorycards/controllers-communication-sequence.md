@@ -1,4 +1,4 @@
-#   Controllers - Communication Sequence
+#   Communication Sequence
 #### Controller Communication Sequence
 ```
   Send Reply Comment
@@ -22,8 +22,8 @@ The TAP byte should be usually zero, unless one wants to activate Multitap
 The two MOT bytes are meant to control the rumble motors (for normal non-rumble
 controllers, that bytes should be 00h), however, the MOT bytes have no effect
 unless rumble is enabled via config commands, for details, see<br/>
-[Controllers - Configuration Commands](controllers-configuration-commands.md#controllers-configuration-commands)<br/>
-[Controllers - Vibration/Rumble Control](controllers-vibration-rumble-control.md#controllers-vibrationrumble-control)<br/>
+[Configuration Commands](controllers-configuration-commands.md#configuration-commands)<br/>
+[Vibration/Rumble Control](controllers-vibration-rumble-control.md#vibrationrumble-control)<br/>
 
 #### Controller ID (Halfword Number 0)
 ```

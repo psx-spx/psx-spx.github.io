@@ -7,7 +7,7 @@ disc (whole movies usually being stored on two CDs). VCDs are popular in asia
 For the Playstation, the asian SCPH-5903 model includes a special daughterboard
 with MPEG decoding hardware for playing VCDs.<br/>
 [CDROM - Video CD Commands](cdromdrive.md#cdrom-video-cd-commands)<br/>
-[Pinouts - VCD Pinouts](../pinouts/vcd-pinouts.md#pinouts-vcd-pinouts)<br/>
+[VCD Pinouts](../pinouts/vcd-pinouts.md#vcd-pinouts)<br/>
 Without that hardware it has been widely believed to be impossible to play VCDs
 on Playstations, although, as of 2017, it turned out that the Playstation's CPU
 and MDEC decoder are fast enough for that purpose (when skipping B-frames,
@@ -17,7 +17,7 @@ Various unlicensed "movie card" addons were also sold, mostly in asia, for
 playing VCDs on otherwise unmodified consoles (Gamars PSX-001 and PSX-003,
 Topking, Topview, Copry PS/MC615, Alma FS-300, HOMAS, Redant, Lextek 9000,
 Denpa DP-210, and others). Most plug into the
-[parallel port](../pinouts/audio-video-power-expansion-ports.md#pinouts-audio-video-power-expansion-ports), one is
+[parallel port](../pinouts/audio-video-power-expansion-ports.md#audio-video-power-expansion-ports), one is
 advertised as using the serial port, and several connect only to the AV Multi
 Out, which cannot carry disc data, so those are presumably standalone players
 borrowing the TV connection rather than console addons.<br/>

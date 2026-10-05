@@ -1,4 +1,4 @@
-#   Controllers - Lightguns - Konami Justifier/Hyperblaster (IRQ10)
+#   Lightguns - Konami Justifier/Hyperblaster (IRQ10)
 #### Overall IRQ10-Based Lightgun Access
 ```
   Send  01h 42h 00h x0h 00h
@@ -66,7 +66,7 @@ processed shortly before processing the priority chains (the resulting IRQ
 priority isn't actually higher as when using 1st element of chain 0; the main
 difference is that it skips some time consuming code which pushes registers
 R4..R30). For details on that patch, see:<br/>
-[BIOS Patches](../../kernelbios/patches.md#bios-patches)<br/>
+[Patches](../../kernelbios/patches.md#patches)<br/>
 Even if IRQ10 has highest priority, execution of (older) other IRQs may cause a
 new IRQ10 to be executed delayed (because IRQs are disabled during IRQ
 handling), to avoid that problem: Best don't enable any other IRQs except IRQ0

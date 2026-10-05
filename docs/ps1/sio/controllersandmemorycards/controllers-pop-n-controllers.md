@@ -1,4 +1,4 @@
-# Controllers - Pop'n Controllers
+# Pop'n Controllers
 Controllers used for Konami's Pop'n Music series. At least a few different
 versions of the controller (Pop'n Controller, Pop'n Controller 2, larger
 arcade-size version, possibly others and in different color variations) have

@@ -1,4 +1,4 @@
-#   Pinouts - Controller Ports and Memory-Card Ports
+#   Controller Ports and Memory-Card Ports
 #### Controller Ports and Memory-Card Ports
 ![Controller pinout](../sio/controller-pinout.jpg)
 

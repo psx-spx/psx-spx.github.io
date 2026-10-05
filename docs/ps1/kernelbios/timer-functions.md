@@ -1,4 +1,4 @@
-#   BIOS Timer Functions
+#   Timer Functions
 #### Timers (aka Root Counters)
 The three hardware timers aren't internally used by any BIOS functions, so they
 can be freely used by the game, either via below functions, or via direct I/O

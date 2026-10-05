@@ -1,4 +1,4 @@
-#   BIOS Patches
+#   Patches
 The original PSX Kernel mainly consists of messy and unstable compiler
 generated code, and, to the worst, the \<same\> author seems to have
 attempted to use assembler code in some places. In result, most commercial

@@ -1,4 +1,4 @@
-#   GPU Display Control Commands (GP1)
+#   Display Control Commands (GP1)
 GP1 Display Control Commands are sent by writing the 8bit Command number
 (MSBs), and 24bit parameter (LSBs) to Port 1F801814h. Unlike GP0 commands, GP1
 commands are passed directly to the GPU (ie. they can be sent even when the

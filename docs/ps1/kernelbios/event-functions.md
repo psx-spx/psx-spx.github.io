@@ -1,4 +1,4 @@
-#   BIOS Event Functions
+#   Event Functions
 #### B(08h) - OpenEvent(class, spec, mode, func)
 Adds an event structure to the event table.<br/>
 ```

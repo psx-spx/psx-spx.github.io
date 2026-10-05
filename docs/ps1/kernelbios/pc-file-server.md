@@ -1,4 +1,4 @@
-#   BIOS PC File Server
+#   PC File Server
 #### DTL-H2000
 Below BRK's are internally used in DTL-H2000 BIOS for two devices: "mwin:"
 (Message Window) and "sim:" (CDROM Sim).<br/>

@@ -1,4 +1,4 @@
-#   Pinouts - GPU Pinouts (for new 208-pin GPU)
+#   GPU Pinouts (for new 208-pin GPU)
 New 206-pin GPU is used LATE-PU-8 boards and up.<br/>
 
 #### GPU Pinouts (IC203)

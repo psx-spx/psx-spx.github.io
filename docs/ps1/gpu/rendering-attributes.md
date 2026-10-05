@@ -1,4 +1,4 @@
-#   GPU Rendering Attributes
+#   Rendering Attributes
 #### Vertex (Parameter for Polygon, Line, Rectangle commands)
 ```
   0-10   X-coordinate (signed, -1024..+1023)

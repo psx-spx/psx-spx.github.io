@@ -1,4 +1,4 @@
-# Controllers - Taiko Controllers (Tatacon)
+# Taiko Controllers (Tatacon)
 Drum controllers made by Namco and used by the Taiko no Tatsujin series on the
 PS2 (but compatible with the PS1, even though no PS1 Taiko game was ever made).
 These controllers behave like standard digital pads (ID 41h) and contain four

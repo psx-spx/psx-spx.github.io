@@ -1,4 +1,4 @@
-#   GPU Status Register
+#   Status Register
 ####  `0x1f801814`: `GP1` (GPU status register, when read)
 nocash's original version of the documentation refers to this register as
 `GPUSTAT`; this is not official Sony naming, see

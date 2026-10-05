@@ -198,7 +198,7 @@ Expansion ROM Headers, and Memory Waitstate Control, etc. see:<br/>
 [I/O Map](iomap.md)<br/>
 [Memory Control](memorycontrol.md)<br/>
 [DEV0 Expansion ROM Header](../pio/expansionportpio.md#dev0-expansion-rom-header)<br/>
-[BIOS Memory Map](../kernelbios/memory-map.md#bios-memory-map)<br/>
-[BIOS Memory Allocation](../kernelbios/memory-allocation.md#bios-memory-allocation)<br/>
+[Memory Map](../kernelbios/memory-map.md#memory-map)<br/>
+[Memory Allocation](../kernelbios/memory-allocation.md#memory-allocation)<br/>
 [COP0 - Exception Handling](../cpu/cpuspecifications.md#cop0-exception-handling)<br/>
 [Unpredictable Things](unpredictablethings.md)<br/>

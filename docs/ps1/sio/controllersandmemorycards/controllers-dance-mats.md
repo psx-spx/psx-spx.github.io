@@ -1,4 +1,4 @@
-#   Controllers - Dance Mats
+#   Dance Mats
 PSX Dance Mats are essentially normal joypads with uncommonly arranged buttons,
 the huge mats are meant to be put on the floor, so the user could step on them.<br/>
 

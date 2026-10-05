@@ -1,4 +1,4 @@
-#   Pinouts - GPU Pinouts (for old 160-pin GPU)
+#   GPU Pinouts (for old 160-pin GPU)
 Old 160-pin GPU is used on PU-7 boards and EARLY-PU-8 boards.<br/>
 
 #### IC203 - Sony CXD8514Q - Old 160pin GPU for use with Dual-ported VRAM

@@ -1,4 +1,4 @@
-#   GPU Versions
+#   Versions
 #### Summary of GPU Differences
 ```
   Differences...                v0 (160-pin)            v1 (208-pin prototype)  v2 (208-pin)

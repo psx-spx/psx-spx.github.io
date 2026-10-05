@@ -1,4 +1,4 @@
-#   GPU Render Rectangle Commands
+#   Render Rectangle Commands
 Rectangles are drawn much faster than polygons. Unlike polygons, gouraud
 shading is not possible, dithering isn't applied, the rectangle must forcefully
 have horizontal and vertical edges, textures cannot be rotated or scaled, and,

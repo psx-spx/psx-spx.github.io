@@ -1,4 +1,4 @@
-#   Controllers - Fishing Controllers
+#   Fishing Controllers
 The fishing rods are (next to lightguns) some of the more openly martial
 playstation controllers - using the credo that "as long as you aren't using
 dynamite: it's okay to kill them cause they don't have any feelings."<br/>

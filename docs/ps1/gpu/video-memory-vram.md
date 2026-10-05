@@ -1,4 +1,4 @@
-#   GPU Video Memory (VRAM)
+#   Video Memory (VRAM)
 #### Framebuffer
 The framebuffer contains the image that is to be output to the Television Set.
 The GPU supports 10 resolutions, with 16bit or 24bit per pixel.<br/>

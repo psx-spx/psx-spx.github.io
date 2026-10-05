@@ -144,4 +144,4 @@ accepting switching commands with address 61h. Unknown if the PS2 multitap is
 backwards compatible with the SCPH-1070 protocol.<br/>
 
 #### See also
-[Pinouts - Component List and Chipset Pin-Outs for Multitap, SCPH-1070](../../pinouts/component-list-and-chipset-pin-outs-for-multitap-scph-1070.md#pinouts-component-list-and-chipset-pin-outs-for-multitap-scph-1070)<br/>
+[Component List and Chipset Pin-Outs for Multitap, SCPH-1070](../../pinouts/component-list-and-chipset-pin-outs-for-multitap-scph-1070.md#component-list-and-chipset-pin-outs-for-multitap-scph-1070)<br/>

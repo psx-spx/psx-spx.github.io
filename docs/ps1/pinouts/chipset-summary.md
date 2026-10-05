@@ -1,4 +1,4 @@
-#   Pinouts - Chipset Summary
+#   Chipset Summary
 #### PSX/PSone Mainboards
 ```
   Board    Expl.

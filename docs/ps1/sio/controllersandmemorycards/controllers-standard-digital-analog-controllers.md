@@ -1,4 +1,4 @@
-#   Controllers - Standard Digital/Analog Controllers
+#   Standard Digital/Analog Controllers
 ```
        ___                      ___           ___                      ___
     __/_L_\__   Analog Pad   __/_R_\__     __/_L_\__  Digital Pad   __/_R_\__
@@ -112,7 +112,7 @@ confusing (that's probably why the LED=Green mode wasn't implemented on the
 Dual Shock).<br/>
 
 #### See also
-[Pinouts - Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080](../../pinouts/component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080.md#pinouts-component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150](../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200](../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200)<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110](../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-110.md#pinouts-component-list-and-chipset-pin-outs-for-analog-joypad-scph-110)<br/>
+[Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080](../../pinouts/component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080.md#component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080)<br/>
+[Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150](../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150.md#component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150)<br/>
+[Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200](../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200.md#component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200)<br/>
+[Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110](../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-110.md#component-list-and-chipset-pin-outs-for-analog-joypad-scph-110)<br/>

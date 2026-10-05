@@ -1,4 +1,4 @@
-#   GPU Timings
+#   Timings
 #### Nominal Video Clock
 
 ```
@@ -55,7 +55,7 @@ The PSone/PAL video clock is the cpu clock multiplied by 11/7.<br/>
   Video Clock =  53.222400MHz (44100Hz*300h*11/7)
 ```
 For other PSX/PSone PAL/NTSC variants, see:<br/>
-[Pinouts - CLK Pinouts](../pinouts/clk-pinouts.md#pinouts-clk-pinouts)<br/>
+[CLK Pinouts](../pinouts/clk-pinouts.md#clk-pinouts)<br/>
 
 #### Vertical Timings
 ```

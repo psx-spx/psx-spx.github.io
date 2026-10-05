@@ -1,4 +1,4 @@
-#   Controllers - I-Mode Adaptor (Mobile Internet)
+#   I-Mode Adaptor (Mobile Internet)
 The I-Mode Adaptor cable (SCPH-10180) allows to connect an I-mode compatible
 mobile phone to the playstation's controller port; granting a mobile internet
 connection to japanese games.<br/>

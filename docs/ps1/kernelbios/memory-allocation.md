@@ -1,4 +1,4 @@
-#   BIOS Memory Allocation
+#   Memory Allocation
 #### A(33h) - malloc(size)
 Allocates size bytes on the heap, and returns the memory handle (aka the
 address of the allocated memory block). The address of the block is guaranteed

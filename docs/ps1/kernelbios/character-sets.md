@@ -1,4 +1,4 @@
-#   BIOS Character Sets
+#   Character Sets
 #### B(51h) - Krom2RawAdd(shiftjis\_code)
 ```
   In: r4  = 16bit Shift-JIS character code

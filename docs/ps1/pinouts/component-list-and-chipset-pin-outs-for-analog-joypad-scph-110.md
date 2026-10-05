@@ -1,4 +1,4 @@
-#   Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110
+#   Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110
 #### Analog Joypad Component List (SCPH-110, two motors, PSone-design)
 ```
   Case "SONY, ANALOG CONTROLLER, SonyCompEntInc. A, SCPH-110 MADE IN CHINA"

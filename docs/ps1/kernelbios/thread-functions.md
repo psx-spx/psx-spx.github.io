@@ -1,4 +1,4 @@
-#   BIOS Thread Functions
+#   Thread Functions
 #### B(0Eh) - OpenTh(reg\_PC,reg\_SP\_FP,reg\_GP)
 Searches a free TCB, marks it as used, and stores the inital program counter
 (PC), global pointer (GP aka R28), stack pointer (SP aka R29), and frame
