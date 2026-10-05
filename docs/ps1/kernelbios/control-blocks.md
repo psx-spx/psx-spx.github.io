@@ -1,4 +1,4 @@
-#   BIOS Control Blocks
+#   Control Blocks
 #### Exception Control Blocks (ExCB) (4 blocks of 8 bytes each)
 ```
   00h 4   ptr to first element of exception chain

@@ -1,4 +1,4 @@
-#   GPU Render Line Commands
+#   Render Line Commands
 When the upper 3 bits of the first GP0 command are set to 2 (010), then the command can
 be decoded using the following bitfield:
 ```

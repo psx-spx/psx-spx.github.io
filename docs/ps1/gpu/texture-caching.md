@@ -1,4 +1,4 @@
-#   GPU Texture Caching
+#   Texture Caching
 The GPU has 2 Kbyte Texture Cache<br/>
 There is also a CLUT cache that is preserved between GPU drawing commands. The
 CLUT cache is invalidated when different CLUT index values are used or when

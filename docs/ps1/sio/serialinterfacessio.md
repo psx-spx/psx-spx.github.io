@@ -186,7 +186,7 @@ cards, see:
 For serial port pinouts, PSone SIO1 upgrading, and for building RS232 adaptors,
 see:
 
-[Pinouts - SIO Pinouts](../pinouts/sio-pinouts.md#pinouts-sio-pinouts)
+[SIO Pinouts](../pinouts/sio-pinouts.md#sio-pinouts)
 
 Aside from the internal SIO port, the PSX BIOS supports two additional external
 serial ports, connected to the expansion port.

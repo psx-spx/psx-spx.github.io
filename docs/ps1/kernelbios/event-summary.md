@@ -1,4 +1,4 @@
-#   BIOS Event Summary
+#   Event Summary
 Below is a list of all events (class,spec values) that are delivered and/or
 undelivered by the BIOS in one way or another. The BIOS does internally open
 five events for cdrom (class=F0000003h with spec=10h,20h,40h,80h,8000h). The

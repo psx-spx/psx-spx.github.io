@@ -1,4 +1,4 @@
-#   BIOS Overview
+#   Overview
 #### BIOS CDROM Boot
 The main purpose of the BIOS is to boot games from CDROM, unfortunately, before
 doing that, it displays the Sony intro. It's also doing some copy protection

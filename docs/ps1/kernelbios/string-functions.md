@@ -1,4 +1,4 @@
-#   BIOS String Functions
+#   String Functions
 #### A(15h) - strcat(dst, src)
 Appends src to the end of dst. Searches the ending 00h byte in dst, and copies
 src to that address, up to including the ending 00h byte in src. Returns the

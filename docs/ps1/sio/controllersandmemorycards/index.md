@@ -5,23 +5,23 @@
 [Controller and Memory Card Multitap Adaptor](controller-and-memory-card-multitap-adaptor.md#controller-and-memory-card-multitap-adaptor)<br/>
 
 #### Controllers
-[Controllers - Communication Sequence](controllers-communication-sequence.md#controllers-communication-sequence)<br/>
-[Controllers - Standard Digital/Analog Controllers](controllers-standard-digital-analog-controllers.md#controllers-standard-digitalanalog-controllers)<br/>
-[Controllers - Mouse](controllers-mouse.md#controllers-mouse)<br/>
-[Controllers - Racing Controllers](controllers-racing-controllers.md#controllers-racing-controllers)<br/>
-[Controllers - Lightguns](controllers-lightguns.md#controllers-lightguns)<br/>
-[Controllers - Configuration Commands](controllers-configuration-commands.md#controllers-configuration-commands)<br/>
-[Controllers - Vibration/Rumble Control](controllers-vibration-rumble-control.md#controllers-vibrationrumble-control)<br/>
-[Controllers - Analog Buttons (Dualshock2)](controllers-analog-buttons-dualshock2.md#controllers-analog-buttons-dualshock2)<br/>
-[Controllers - Dance Mats](controllers-dance-mats.md#controllers-dance-mats)<br/>
-[Controllers - Pop'n Controllers](controllers-pop-n-controllers.md#controllers-popn-controllers)<br/>
-[Controllers - Taiko Controllers (Tatacon)](controllers-taiko-controllers-tatacon.md#controllers-taiko-controllers-tatacon)<br/>
-[Controllers - Densha de Go! / Jet de Go! Controllers](controllers-densha-de-go-jet-de-go-controllers.md#controllers-densha-de-go-jet-de-go-controllers)<br/>
-[Controllers - Fishing Controllers](controllers-fishing-controllers.md#controllers-fishing-controllers)<br/>
-[Controllers - PS2 DVD Remote](controllers-ps2-dvd-remote.md#controllers-ps2-dvd-remote)<br/>
-[Controllers - I-Mode Adaptor (Mobile Internet)](controllers-i-mode-adaptor-mobile-internet.md#controllers-i-mode-adaptor-mobile-internet)<br/>
-[Controllers - Additional Inputs](controllers-additional-inputs.md#controllers-additional-inputs)<br/>
-[Controllers - Misc](controllers-misc.md#controllers-misc)<br/>
+[Communication Sequence](controllers-communication-sequence.md#communication-sequence)<br/>
+[Standard Digital/Analog Controllers](controllers-standard-digital-analog-controllers.md#standard-digitalanalog-controllers)<br/>
+[Mouse](controllers-mouse.md#mouse)<br/>
+[Racing Controllers](controllers-racing-controllers.md#racing-controllers)<br/>
+[Lightguns](controllers-lightguns.md#lightguns)<br/>
+[Configuration Commands](controllers-configuration-commands.md#configuration-commands)<br/>
+[Vibration/Rumble Control](controllers-vibration-rumble-control.md#vibrationrumble-control)<br/>
+[Analog Buttons (Dualshock2)](controllers-analog-buttons-dualshock2.md#analog-buttons-dualshock2)<br/>
+[Dance Mats](controllers-dance-mats.md#dance-mats)<br/>
+[Pop'n Controllers](controllers-pop-n-controllers.md#popn-controllers)<br/>
+[Taiko Controllers (Tatacon)](controllers-taiko-controllers-tatacon.md#taiko-controllers-tatacon)<br/>
+[Densha de Go! / Jet de Go! Controllers](controllers-densha-de-go-jet-de-go-controllers.md#densha-de-go-jet-de-go-controllers)<br/>
+[Fishing Controllers](controllers-fishing-controllers.md#fishing-controllers)<br/>
+[PS2 DVD Remote](controllers-ps2-dvd-remote.md#ps2-dvd-remote)<br/>
+[I-Mode Adaptor (Mobile Internet)](controllers-i-mode-adaptor-mobile-internet.md#i-mode-adaptor-mobile-internet)<br/>
+[Additional Inputs](controllers-additional-inputs.md#additional-inputs)<br/>
+[Misc](controllers-misc.md#misc)<br/>
 
 #### Memory Cards
 [Memory Card Read/Write Commands](memory-card-read-write-commands.md#memory-card-readwrite-commands)<br/>
@@ -33,4 +33,4 @@
 [Pocketstation](../pocketstation.md)<br/>
 
 #### Pinouts
-[Pinouts - Controller Ports and Memory-Card Ports](../../pinouts/controller-ports-and-memory-card-ports.md#pinouts-controller-ports-and-memory-card-ports)<br/>
+[Controller Ports and Memory-Card Ports](../../pinouts/controller-ports-and-memory-card-ports.md#controller-ports-and-memory-card-ports)<br/>

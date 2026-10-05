@@ -1,4 +1,4 @@
-#   Controllers - Additional Inputs
+#   Additional Inputs
 #### Reset Button
 PSX only (not PSone). Reboots the PSX via /RESET signal. Probably including for
 forcefully getting through the WHOLE BIOS Intro, making it rather

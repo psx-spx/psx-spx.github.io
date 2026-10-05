@@ -1,4 +1,4 @@
-#   GPU Render Polygon Commands
+#   Render Polygon Commands
 When the upper 3 bits of the first GP0 command are set to 1 (001), then the command can
 be decoded using the following bitfield:
 ```

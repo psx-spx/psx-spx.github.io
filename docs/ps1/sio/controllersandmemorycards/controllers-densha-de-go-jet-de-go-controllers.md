@@ -1,4 +1,4 @@
-# Controllers - Densha de Go! / Jet de Go! Controllers
+# Densha de Go! / Jet de Go! Controllers
 Controllers used for Taito's Densha de Go! and Jet de Go! series. Unknown what
 method is being used by Densha de Go! and Jet de Go! games for detecting these
 controllers.

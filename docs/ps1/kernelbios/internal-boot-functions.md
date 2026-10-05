@@ -1,4 +1,4 @@
-#   BIOS Internal Boot Functions
+#   Internal Boot Functions
 #### A(45h) - init\_a0\_b0\_c0\_vectors
 Copies the three default four-opcode handlers for the A(NNh),B(NNh),C(NNh)
 functions to A00000A0h..A00000CFh.<br/>

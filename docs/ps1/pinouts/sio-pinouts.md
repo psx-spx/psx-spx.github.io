@@ -1,4 +1,4 @@
-#   Pinouts - SIO Pinouts
+#   SIO Pinouts
 #### Serial Port
 That port exists only on original Playstation (not on the PSone). The shape of
 the Serial Port is identical to the 12pin Multiout (audio/video) port, but with

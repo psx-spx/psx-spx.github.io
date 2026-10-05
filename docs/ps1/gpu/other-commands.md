@@ -1,4 +1,4 @@
-#   GPU Other Commands
+#   Other Commands
 #### GP0(1Fh) - Interrupt Request (IRQ1)
 ```
   1st  Command           (Cc000000h)                    ;GP1.R.24

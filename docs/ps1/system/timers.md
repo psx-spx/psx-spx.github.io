@@ -78,7 +78,7 @@ register `COMP` but symbol names in PS1 libraries refer to it as `TARGET`.
 #### Dotclock/Hblank
 For more info on dotclock and hblank timings, see:
 
-[GPU Timings](../gpu/timings.md#gpu-timings)
+[Timings](../gpu/timings.md#timings)
 
 Caution: Reading the Current Counter Value can be a little unstable (when using
 dotclk or hblank as clock source); the GPU clock isn't in sync with the CPU

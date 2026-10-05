@@ -1,4 +1,4 @@
-#   Pinouts - CLK Pinouts
+#   CLK Pinouts
 The "should-be" CPU clock is 33.868800 Hz (ie. the 44100Hz CDROM/Audio clock,
 multiplied by 300h). However, the different PSX/PSone boards are using
 different oscillators, multipliers and dividers, which aren't exactly reaching

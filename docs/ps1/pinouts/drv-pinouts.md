@@ -1,6 +1,6 @@
-#   Pinouts - DRV Pinouts
+#   DRV Pinouts
 #### IC304 - 52pin/80pin - Motorola HC05 8bit CPU
-[Pinouts - HC05 Pinouts](hc05-pinouts.md#pinouts-hc05-pinouts)<br/>
+[HC05 Pinouts](hc05-pinouts.md#hc05-pinouts)<br/>
 
 #### IC305 - SONY CXD1815Q - CDROM Decoder/FIFO (used on PU-8, PU-16, PU-18)
 ```

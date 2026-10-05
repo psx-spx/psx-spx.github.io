@@ -1,4 +1,4 @@
-#   Controllers - Lightguns
+#   Lightguns
 There are two different types of PSX lightguns (which are incompatible with
 each other).<br/>
 
@@ -6,12 +6,12 @@ each other).<br/>
 Namco's Cinch-based lightguns are extracting Vsync/Hsync timings from the video
 signal (via a cinch adaptor) (so they are working completely independed of
 software timings).<br/>
-[Controllers - Lightguns - Namco (GunCon)](controllers-lightguns-namco-guncon.md#controllers-lightguns-namco-guncon)<br/>
+[Lightguns - Namco (GunCon)](controllers-lightguns-namco-guncon.md#lightguns-namco-guncon)<br/>
 
 #### Konami Lightgun (IRQ10)
 Konami's IRQ10-based lightguns are using the lightgun input on the controller
 slot (which requires IRQ10/timings being properly handled at software side).<br/>
-[Controllers - Lightguns - Konami Justifier/Hyperblaster (IRQ10)](controllers-lightguns-konami-justifier-hyperblaster-irq10.md#controllers-lightguns-konami-justifierhyperblaster-irq10)<br/>
+[Lightguns - Konami Justifier/Hyperblaster (IRQ10)](controllers-lightguns-konami-justifier-hyperblaster-irq10.md#lightguns-konami-justifierhyperblaster-irq10)<br/>
 The IRQ10-method is reportedly less accurate (although that may be just due to
 bugs at software side).<br/>
 
@@ -23,7 +23,7 @@ additionally have a rumble/vibration function; though unknown how that rumble
 feature is accessed, and which games are supporting it).<br/>
 
 #### Lightgun Games
-[Controllers - Lightguns - PSX Lightgun Games](controllers-lightguns-psx-lightgun-games.md#controllers-lightguns-psx-lightgun-games)<br/>
+[Lightguns - PSX Lightgun Games](controllers-lightguns-psx-lightgun-games.md#lightguns-psx-lightgun-games)<br/>
 
 #### Compatibilty Notes (IRQ10 vs Cinch, PAL vs NTSC, Calibration)
 Some lightguns are reportedly working only with PAL or only with NTSC games

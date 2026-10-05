@@ -1,8 +1,8 @@
-#   BIOS Memory Card Functions
+#   Memory Card Functions
 #### General File Functions
 Memory Cards aka Backup Units (bu) are basically accessed via normal file
 functions, with device names "bu00:" (Slot 1) and "bu10:" (Slot 2),<br/>
-[BIOS File Functions](file-functions.md#bios-file-functions)<br/>
+[File Functions](file-functions.md#file-functions)<br/>
 Before using the file functions for memory cards, first call
 InitCARD2(pad\_enable), then StartCARD2(), and then \_bu\_init().<br/>
 

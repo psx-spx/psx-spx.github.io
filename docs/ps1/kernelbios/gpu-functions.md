@@ -1,4 +1,4 @@
-#   BIOS GPU Functions
+#   GPU Functions
 #### A(48h) - SendGP1Command(gp1cmd)
 Writes [1F801814h]=gp1cmd. There's no return value (r2 is left unchanged).<br/>
 

@@ -1,4 +1,4 @@
-#   Pinouts - Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150
+#   Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150
 This applies for two controller versions:<br/>
 ```
   SCPH-1150 Analog Pad with Single Rumble Motor (japan only)

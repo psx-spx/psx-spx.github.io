@@ -1,4 +1,4 @@
-#   Pinouts - HC05 Pinouts
+#   HC05 Pinouts
 #### Motorola HC05 chip versions for PSX cdrom control
 ```
   80pin "4246xx" - MC68HC05L16, on-chip ROM (DTL-H120x & old retail consoles)
@@ -169,6 +169,6 @@ OSC input (internally HC05 is running at OSC/2, ie. around 2MHz):<br/>
 #### HC05 - 32pin/64pin Versions
 Sony's Digital Joypad and Mouse contain 32pin CPUs, which are probably also
 HC05's:<br/>
-[Pinouts - Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080](component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080.md#pinouts-component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080)<br/>
+[Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080](component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080.md#component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080)<br/>
 Moreover, some old memory cards contain a 64pin Motorola SC419510FU (probably
 also a HC05) with separate Atmel AT29LV010A (128Kx8 FLASH).<br/>

@@ -1,4 +1,4 @@
-#   Pinouts - CPU Pinouts
+#   CPU Pinouts
 #### CPU Pinouts (IC103)
 
 | Pin | Name                     | Pin | Name              | Pin | Name       | Pin | Name         |

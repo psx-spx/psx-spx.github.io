@@ -1,4 +1,4 @@
-#   Controllers - Configuration Commands
+#   Configuration Commands
 Some controllers can be switched from Normal Mode to Config Mode. The Config
 Mode was invented for activating the 2nd rumble motor in SCPH-1200 analog
 joypads. Additionally, the Config commands can switch between analog/digital
@@ -179,12 +179,12 @@ Otherwise --\> returns ee=00h.<br/>
 Purpose unknown. The command does not seem to be used by any games.<br/>
 
 #### Config Mode - Command 4Dh "M" - Get/Set RumbleProtocol
-[Controllers - Vibration/Rumble Control](controllers-vibration-rumble-control.md#controllers-vibrationrumble-control)<br/>
+[Vibration/Rumble Control](controllers-vibration-rumble-control.md#vibrationrumble-control)<br/>
 
 #### Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?
 #### Config Mode - Command 41h "A" Dualshock2: Get Reply Capabilities
 #### Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol
-[Controllers - Analog Buttons (Dualshock2)](controllers-analog-buttons-dualshock2.md#controllers-analog-buttons-dualshock2)<br/>
+[Analog Buttons (Dualshock2)](controllers-analog-buttons-dualshock2.md#analog-buttons-dualshock2)<br/>
 
 #### Config Mode - Command 49h "I" - Unused
 #### Config Mode - Command 4Ah "J" - Unused

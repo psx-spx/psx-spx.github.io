@@ -1,4 +1,4 @@
-#   BIOS Number/String/Character Conversion
+#   Number/String/Character Conversion
 #### A(0Eh) - abs(val)
 #### A(0Fh) - labs(val)  ;exactly same as "abs"
 Returns the absolute value (if val\<0 then R2=-val, else R2=val).<br/>

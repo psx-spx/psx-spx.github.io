@@ -1,4 +1,4 @@
-#   Controllers - Misc
+#   Misc
 #### Standard Controllers
 ```
   SCPH-1010  digital joypad (with short cable)

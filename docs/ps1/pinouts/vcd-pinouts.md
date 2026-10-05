@@ -1,4 +1,4 @@
-#   Pinouts - VCD Pinouts
+#   VCD Pinouts
 SCPH-5903 Video CD PlayStation<br/>
 
 #### VCD Mainboard "PU-16, 1-655-191-11" Component List

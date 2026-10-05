@@ -1,4 +1,4 @@
-#   Controllers - Mouse
+#   Mouse
 #### Sony Mouse Controller
 ```
   __Halfword 0 (Controller Info)________________
@@ -118,7 +118,7 @@ Cable:<br/>
 Some keyboard adaptors are also including a mouse adaptor feature (either by
 simulating normal Sony Mouse controller data, or via more uncommon ways like
 using the PSX expansion port).<br/>
-[Controllers - Keyboards](controllers-keyboards.md#controllers-keyboards)<br/>
+[Keyboards](controllers-keyboards.md#keyboards)<br/>
 
 #### RS232 Mice
 Below is some info on RS232 serial mice. That info isn't directly PSX related

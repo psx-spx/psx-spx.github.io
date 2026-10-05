@@ -1,4 +1,4 @@
-#   Controllers - Racing Controllers
+#   Racing Controllers
 #### neGcon Racing Controller (Twist) (NPC-101/SLPH-00001/SLEH-0003)
 ```
   __Halfword 0 (Controller Info)_______________________________________________

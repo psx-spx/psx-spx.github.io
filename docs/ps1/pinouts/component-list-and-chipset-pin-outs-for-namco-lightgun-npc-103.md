@@ -1,4 +1,4 @@
-#   Pinouts - Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103
+#   Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103
 #### Schematic
 http://www.nicolaselectronics.be/reverse-engineering-the-playstation-g-con45/<br/>
 

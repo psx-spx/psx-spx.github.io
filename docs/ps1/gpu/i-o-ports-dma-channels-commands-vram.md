@@ -1,4 +1,4 @@
-#   GPU I/O Ports, DMA Channels, Commands, VRAM
+#   I/O Ports, DMA Channels, Commands, VRAM
 #### GPU I/O Ports (`0x1f801810`, `0x1f801814`)
 ```
   Port        Name  Dir    Expl.

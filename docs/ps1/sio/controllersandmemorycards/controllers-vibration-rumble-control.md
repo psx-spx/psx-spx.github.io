@@ -1,4 +1,4 @@
-#   Controllers - Vibration/Rumble Control
+#   Vibration/Rumble Control
 Rumble (aka "Vibration Function") is basically controlled by two previously
 unused bytes of the standard controller Read command.<br/>
 There are two methods to control the rumble motors, the old method is very
@@ -43,7 +43,7 @@ than 16 new commands (the rumble relevant commands are 43h and 4Dh, also,
 command 44h may be useful for activating analog inputs by software, and, once
 when rumble is unlocked, command 42h is used to control the rumble motors).
 Anyways, here's the full command set...<br/>
-[Controllers - Configuration Commands](controllers-configuration-commands.md#controllers-configuration-commands)<br/>
+[Configuration Commands](controllers-configuration-commands.md#configuration-commands)<br/>
 And, the rumble-specific config command is described below...<br/>
 
 #### Config Mode - Command 4Dh "M" - Get/Set RumbleProtocol

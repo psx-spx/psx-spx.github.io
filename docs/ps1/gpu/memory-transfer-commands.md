@@ -1,4 +1,4 @@
-#   GPU Memory Transfer Commands
+#   Memory Transfer Commands
 
 The next three commands being described are when the high 3 bits are set to the
 values 4 (100), 5 (101), and 6 (110). For them, the remaining 29 bits are ignored,

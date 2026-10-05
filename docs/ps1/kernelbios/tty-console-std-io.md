@@ -1,4 +1,4 @@
-#   BIOS TTY Console (std\_io)
+#   TTY Console (std\_io)
 #### A(3Fh) - Printf(txt,param1,param2,etc.) - Print string to console
 ```
   in:  A0                     Pointer to 0 terminated string

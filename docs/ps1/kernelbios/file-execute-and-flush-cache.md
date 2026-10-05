@@ -1,4 +1,4 @@
-#   BIOS File Execute and Flush Cache
+#   File Execute and Flush Cache
 #### A(41h) - LoadTest(filename, headerbuf)
 Loads the 800h-byte exe file header to an internal sector buffer, and does then
 copy bytes [10h..4Bh] of that header to headerbuf[00h..3Bh].<br/>

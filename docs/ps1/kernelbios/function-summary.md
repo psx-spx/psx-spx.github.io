@@ -1,4 +1,4 @@
-#   BIOS Function Summary
+#   Function Summary
 #### Parameters, Registers, Stack
 Argument(s) are passed in R4,R5,R6,R7,[SP+10h],[SP+14h],etc.<br/>
 Caution: When calling a sub-function with N parameters, the caller MUST always

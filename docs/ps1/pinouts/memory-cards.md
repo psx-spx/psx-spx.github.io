@@ -1,4 +1,4 @@
-#   Pinouts - Memory Cards
+#   Memory Cards
 #### Sony Playstation Memory Card (SCPH-1020)
 The "SONY CXD8732AQ" chip is installed on memory cards with "SPC02K1020B"
 boards, however, the text layer on the board says that it's an "LC86F8604A"
@@ -53,4 +53,4 @@ memory cards before 1998?<br/>
 
 #### Note
 For the actual pin-outs of the cart-edge connector, see<br/>
-[Pinouts - Controller Ports and Memory-Card Ports](controller-ports-and-memory-card-ports.md#pinouts-controller-ports-and-memory-card-ports)<br/>
+[Controller Ports and Memory-Card Ports](controller-ports-and-memory-card-ports.md#controller-ports-and-memory-card-ports)<br/>

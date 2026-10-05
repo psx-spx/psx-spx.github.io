@@ -1,4 +1,4 @@
-#   Pinouts - Audio, Video, Power, Expansion Ports
+#   Audio, Video, Power, Expansion Ports
 #### AV Multi Out (Audio/Video Port)
 ```
   1      RGB-Video Green

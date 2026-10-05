@@ -143,7 +143,7 @@ characters 20h..7Fh (so, in the 8bit form, the title could be theoretically up
 to 64 characters long, but, nethertheless, the BIOS displays only max 32
 chars).<br/>
 For displaying Titles, the BIOS includes a complete Shift-JIS character set,<br/>
-[BIOS Character Sets](../../kernelbios/character-sets.md#bios-character-sets)<br/>
+[Character Sets](../../kernelbios/character-sets.md#character-sets)<br/>
 Shift-JIS is focused on asian languages, and does NOT include european letters
 (eg. such with accent marks). Although the non-japanese PSX BIOSes DO include a
 european character set, the BIOS memory card manager DOESN'T seem to translate

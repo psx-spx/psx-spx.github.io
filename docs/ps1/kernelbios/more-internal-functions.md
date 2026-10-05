@@ -1,4 +1,4 @@
-#   BIOS More Internal Functions
+#   More Internal Functions
 Below are mainly internally used device related subfunctions.<br/>
 
 #### Internal Device Stuff

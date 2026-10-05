@@ -1,4 +1,4 @@
-#   BIOS Memory Map
+#   Memory Map
 #### BIOS ROM Map (512Kbytes)
 ```
   BFC00000h Kernel Part 1  (code/data executed in uncached ROM)

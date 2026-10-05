@@ -476,7 +476,7 @@ in a straight line). Note: The GPU probably renders straight lines as invisble
 ```
 Adds three or four Z values together and multplies them by a fixed point value.
 The result can be used as index in the GPU's Ordering Table (OT).<br/>
-[GPU Depth Ordering](../../gpu/depth-ordering.md#gpu-depth-ordering)<br/>
+[Depth Ordering](../../gpu/depth-ordering.md#depth-ordering)<br/>
 The scaling factors would be usually ZSF3=N/30h and ZSF4=N/40h, where "N" is
 the number of entries in the OT (max 10000h). SZn and OTZ are unsigned 16bit
 values, for whatever reason ZSFn registers are signed 16bit values (negative

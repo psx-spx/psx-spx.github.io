@@ -1,4 +1,4 @@
-#   Controllers - Analog Buttons (Dualshock2)
+#   Analog Buttons (Dualshock2)
 Dualshock2 has three new commands (40h,41h,4Fh) for configuring analog buttons.
 Additionally, Command 45h does return a different type byte for Dualshock2.<br/>
 Dualshock2 is a PS2 controller. However, it can be also used with PSX games

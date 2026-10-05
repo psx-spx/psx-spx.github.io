@@ -1,4 +1,4 @@
-#   Pinouts - MEM Pinouts
+#   MEM Pinouts
 #### IC102 - BIOS ROM (32pin, 512Kx8, used on LATE-PU-8 boards, and newer boards)
 ```
   1-A19  5-A7  9-A3   13-D0   17-D3  21-D7   25-A11  29-A14

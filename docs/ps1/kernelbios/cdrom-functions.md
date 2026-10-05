@@ -1,10 +1,10 @@
-#   BIOS CDROM Functions
+#   CDROM Functions
 #### General File Functions
 CDROMs are basically accessed via normal file functions, with device name
 "cdrom:" (which is an abbreviation for "cdrom0:", anyways, the port number is
 ignored).<br/>
-[BIOS File Functions](file-functions.md#bios-file-functions)<br/>
-[BIOS File Execute and Flush Cache](file-execute-and-flush-cache.md#bios-file-execute-and-flush-cache)<br/>
+[File Functions](file-functions.md#file-functions)<br/>
+[File Execute and Flush Cache](file-execute-and-flush-cache.md#file-execute-and-flush-cache)<br/>
 Before starting the boot executable, the BIOS automatically calls _96_init(), so
 the game doesn't need to do any initializations before using CDROM file
 functions.<br/>

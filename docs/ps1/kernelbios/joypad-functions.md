@@ -1,4 +1,4 @@
-#   BIOS Joypad Functions
+#   Joypad Functions
 #### Pad Input
 Joypads should be initialized via InitPAD2(buf1,22h,buf2,22h), and StartPAD2().
 The main program can read the pad data from the buf1/buf2 addresses (including
