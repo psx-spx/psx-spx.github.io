@@ -7,29 +7,34 @@ on a PS2 console).<br/>
 The analog button feature is reportedly rarely used by PS2 games (and there
 aren't any PSX games known to use it).<br/>
 
-#### Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?
+#### Config Mode - Command 40h - VrefParam
 ```
   Send  01h 40h 00h Idx Val 00h 00h 00h 00h  ;<-- Set NEW Val, array[Idx]=Val
   Reply HiZ F3h 5Ah 00h 00h Val 00h 00h 00h  ;<-- Old Val (or FFh when Idx>0Bh)
 ```
-Allows to change twelve 3bit values (with Idx=00h..0Bh, and Val=00h..03h).
-Default is Val=02h. Purpose is unknown, the 12 values might be related to the
-12 analog buttons, but there is no noticable difference between Val=0,1,2,3.
-Maybe it does have some subtle effects on things like...<br/>
+Allows to change twelve values (with Idx=00h..0Bh, and Val=00h..03h), one
+for each of the twelve analog buttons. Default is Val=02h. The PS2 IOP
+controller driver (padman) sends this command for all twelve indices whenever
+it enables the analog buttons, with values set by the game (padSetVrefParam).
+The name suggests a reference level for each pressure sensor, but there is no
+noticable difference between Val=0,1,2,3. It might have subtle effects on
+things like...<br/>
 ```
   Digital button sensitivity, or Analog button sensitivity, or
   Analog button bit-depth/conversion speed, or something else?
 ```
 
-#### Config Mode - Command 41h "A" Dualshock2: Get Reply Capabilities
+#### Config Mode - Command 41h - QueryButtonMask
 ```
   Send  01h 41h 00h 00h 00h 00h 00h 00h 00h
   Reply HiZ F3h 5Ah FFh FFh 03h 00h 00h 00h
 ```
-This seems to return a constant bitmask indicating which reply bytes can be
-enabled/disabled via Command 4Fh (ie. 3FFFFh = 18 bits).<br/>
+Returns a constant bitmask indicating which reply bytes can be enabled/disabled
+via Command 4Fh (ie. 3FFFFh = 18 bits). The PS2 libpad uses it to detect
+analog button support: padInfoPressMode() returns true only when the mask is
+3FFFFh.<br/>
 
-#### Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol
+#### Config Mode - Command 4Fh - SetButtonInfo
 ```
   Send  01h 4Fh 00h aa  bb  cc  dd  ee  ff
   Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
