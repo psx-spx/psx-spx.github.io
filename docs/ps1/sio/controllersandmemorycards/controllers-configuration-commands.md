@@ -7,6 +7,19 @@ analog inputs (on Dualshock2), and let software query which modes and
 actuators the controller supports. Sony calls these "extended protocol"
 controllers. The PS2 kept the same protocol and only added the Dualshock2
 analog button commands.<br/>
+Sony's PS2 documentation names the two protocol levels of the PlayStation
+Controller Protocol (PSCTP):<br/>
+```
+  CTP1.0  No config mode, no vibration     eg. digital pad (41h), analog
+          (minimum functions)                  joystick (53h), SCPH-1180
+          (the SCPH-1150, which has a motor but no config mode, is
+          treated by libpad as a CTP1.0 special case)
+  CTP2.0  Config mode and vibration        eg. DualShock (73h), DualShock 2 (79h)
+          (extension of CTP1.0)
+```
+All the Config Mode commands below are CTP2.0 commands. Commands 40h, 41h and
+4Fh are additionally only implemented by the DualShock 2; on PSX/PSone
+DualShock pads they return 00h bytes and have no effect.<br/>
 
 Sony's PS1 documentation does not name the raw command bytes, only the libpad
 functions built on them. The command names below are the ones used by the PS2
