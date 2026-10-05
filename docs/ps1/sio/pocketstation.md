@@ -984,9 +984,10 @@ setting (ie. the delay skips the unstable switch bound period, and allows the
 signal to stabilize).<br/>
 
 #### IOP\_START/IOP\_STOP.Bit1
-The BIOS adjusts this bit somehow in relation to communication. Unknown
-when/why/how it must be used. For details on IOP\_START/IOP\_STOP see Power
-Control chapter.<br/>
+The BIOS adjusts this bit somehow in relation to communication. The libmcx
+function McxSetLED uses it to switch the red LED (IOP\_START=On,
+IOP\_STOP=Off), see BU Command 5Ch. For details on IOP\_START/IOP\_STOP see
+Power Control chapter.<br/>
 
 #### Opcode E6000010h (The Undefined Instruction) - Write chr(r0) to TTY
 This opcode is used by the SN Systems emulator to write chr(r0) to a TTY style
@@ -1076,7 +1077,7 @@ bits... or vice-versa...? Writing "0" bits to either port seems to leave that
 bits unchanged. The meaning of most bits is still unknown:<br/>
 ```
   0    Unknown, STARTED by Kernel upon reset
-  1    Red LED, Communication related (START=Whatever, STOP=Whatelse) (?)
+  1    Red LED, Communication related (START=On, STOP=Off)
   2    Unknown, STARTED by Kernel upon reset
   3    Unknown, STARTED by Kernel upon reset
   4    Never STARTED nor STOPPED by BIOS (maybe an INPUT, read via IOP_DATA)
@@ -1641,11 +1642,9 @@ padded with jump opcodes which hang the CPU in endless loops on newer "110"
 version).<br/>
 
 #### SWI 18h - FlashReadWhateverByte(sector)
-Returns [8000000h+sector\*80h+7Eh] AND 00FFh. Purpose is totally unknown... the
-actual FLASH memory doesn't contain any relevant information at that locations
-(eg. the in the directory sectors, that byte is unused, usually zero)... and,
-reading some kind of status or manufacturer information would first require to
-command the hardware to output that info...?<br/>
+Returns [8000000h+sector\*80h+7Eh] AND 00FFh. In the directory sectors, that
+byte is usually zero; it is probably the application/data ID flag set by libmcx
+McxExecFlag (see BU Command 57h).<br/>
 
 
 
@@ -1702,7 +1701,9 @@ It's important that the SWI service routine use a 16-bit load to fetch the comme
 
 ##   Pocketstation BU Command Summary
 The Pocketstation supports the standard Memory Card commands (Read Sector,
-Write Sector, Get Info), plus a couple of special commands.<br/>
+Write Sector, Get Info), plus a couple of special commands. As on normal memory
+cards, the address byte is 81h plus the Multi Tap slot in the low nibble (81h
+for a directly connected card).<br/>
 
 #### BU Command Summary
 ```
@@ -1714,7 +1715,7 @@ Write Sector, Get Info), plus a couple of special commands.<br/>
   55h  N/A
   56h  N/A
   57h  Standard Write Sector command
-  58h  Get an ID or Version value or so
+  58h  Probe PDA connection status (reply 01h,01h)
   59h  Prepare File Execution with Dir_index, and Parameter
   5Ah  Get Dir_index, ComFlags, F_SN, Date, and Time
   5Bh  Execute Function and transfer data from Pocketstation to PSX
@@ -1725,11 +1726,30 @@ Write Sector, Get Info), plus a couple of special commands.<br/>
 ```
 Commands 5Bh and 5Ch can use the following functions:<br/>
 ```
-  FUNC 00h - Get or Set Date/Time
-  FUNC 01h - Get or Set Memory Block
-  FUNC 02h - Get or Set Alarm/Flags
+  FUNC 00h - Get or Set Date/Time           ;sceMcxDevRtc
+  FUNC 01h - Get or Set Memory Block        ;sceMcxDevMem
+  FUNC 02h - Get or Set Alarm/Flags         ;sceMcxDevUifs
   FUNC 03h - Custom Function 3              ;via SWI 17h, GetPtrToFunc3addr()
   FUNC 80h..FFh - Custom Functions 80h..FFh ;via Function Table in File Header
+```
+Sony calls FUNC 00h..02h the reserved device numbers (RTC read/write, PDA memory
+read/write, and user interface status read/write), and the FUNC 80h..FFh table
+in the file header the device entry table.<br/>
+Sony calls the Pocketstation "PDA". The names below are the functions in Sony's
+PSX-side PDA library (libmcx) that send each command:<br/>
+```
+  50h  Not sent by any libmcx function
+  52h  McxExecFlag (read directory frame)
+  53h  McxGetInfo (undocumented)
+  57h  McxExecFlag (write directory frame)
+  58h  McxCardType (via undocumented McxGetMcxInfo)
+  59h  McxGetApl, McxExecApl
+  5Ah  McxAllInfo
+  5Bh  McxReadDev, McxGetTime, McxGetMem, McxGetSerial, McxGetUIFS
+  5Ch  McxWriteDev, McxSetTime, McxSetMem, McxSetLED, McxSetUIFS
+  5Dh  McxShowTrans, McxHideTrans
+  5Eh  McxCurrCtrl
+  5Fh  McxFlashAcs
 ```
 
 
@@ -1751,7 +1771,7 @@ with original cards).<br/>
 
 #### BU Command 53h (Get ID)
 The Get ID command (53h) returns exactly the same values as normal original
-Sony memory cards.<br/>
+Sony memory cards. libmcx sends it in the undocumented McxGetInfo function.<br/>
 
 #### BU Command 57h (Write Sector)
 The Write Sector command has two new error codes (additonally to the normal
@@ -1762,6 +1782,14 @@ codes are (see below for details):<br/>
   FEh Reject write to write-protected Broken Sector region (sector 16..55)
 ```
 And, like Read Sector, it returns 00h instead of "(pre)" as dummy values.<br/>
+
+#### McxExecFlag (Directory Byte 7Eh)
+libmcx uses the standard Read and Write Sector commands only in
+McxExecFlag(block,exec) ("Set the PDA application / data ID flag"), with
+block=1..15. It reads that directory frame with command 52h, sets byte 7Eh to
+the flag value and byte 7Fh to the new XOR checksum, and writes the frame back
+with command 57h. The
+Pocketstation can read that byte via SWI 18h.<br/>
 
 #### Write Error Code FDh (Directory Entries of currently executed file)
 The FDh error code is intended to prevent the PSX bootmenu (or other PSX games)
@@ -1806,8 +1834,9 @@ see SWI 0Bh aka ClearComFlagsBit10(), and BU Command 5Dh.<br/>
   VAL  00h   Send new [0CAh], receive length of following data (00h)
 ```
 Might be somehow related to FUNC 03h...?<br/>
+Not sent by any libmcx function.<br/>
 
-#### BU Command 58h (Get an ID or Version value or so)
+#### BU Command 58h (Probe PDA connection status)
 ```
   Send Reply Comment
   81h  N/A   Memory Card Access
@@ -1816,6 +1845,10 @@ Might be somehow related to FUNC 03h...?<br/>
   (0)  01h   Send dummy/zero, receive whatever value           (01h)
   (0)  01h   Send dummy/zero, receive another value            (01h)
 ```
+Sent by libmcx McxCardType ("Probe PDA connection status"), via the
+undocumented McxGetMcxInfo, which stores the two reply bytes after the length
+byte. McxCardType returns success when a PDA was detected, and McxErrInvalid
+for a plain memory card.<br/>
 
 #### BU Command 59h (Prepare File Execution with Dir\_index, and Parameter)
 ```
@@ -1851,6 +1884,9 @@ request is: To reset the RTC time/date and to start the GUI with uninitialized
 irq/svc stack pointers, so this unpleasant and bugged feature shouldn't ever be
 used). Finally, dir\_index=FFFFh allows to read the current dir\_index value
 (which could be also read via BU Command 5Ah).<br/>
+libmcx McxGetApl sends dir\_index=FFFFh and returns the current dir\_index.
+McxExecApl(aplno,arg) ("Execute a PDA application") sends aplno as dir\_index
+and arg as parameter; a negative aplno is sent as FFFEh.<br/>
 
 #### BU Command 5Ah (Get Dir\_index, ComFlags, F\_SN, Date, and Time)
 ```
@@ -1879,6 +1915,8 @@ used). Finally, dir\_index=FFFFh allows to read the current dir\_index value
 ```
 At midnight, the function may accidently return the date for the old day, and
 the time for the new day.<br/>
+Sent by libmcx McxAllInfo ("Get all PDA information"), which stores the 18
+bytes in a state buffer.<br/>
 
 #### BU Command 5Eh (Get-and-Send ComFlags.bit1,3,2)
 ```
@@ -1890,6 +1928,9 @@ the time for the new day.<br/>
   NEW  OLD   Send new ComFlags.bit3, receive old ComFlags.bit3 (00h or 01h)
   NEW  OLD   Send new ComFlags.bit2, receive old ComFlags.bit2 (00h or 01h)
 ```
+Sent by libmcx McxCurrCtrl(sound,infred,led) ("Control current capacity"),
+with each value 1=Disable or 0=Enable, sent in that order (ie. bit1=Speaker,
+bit3=Infrared, bit2=LED).<br/>
 
 #### BU Command 5Fh (Get-and-Send ComFlags.bit0)
 ```
@@ -1899,6 +1940,9 @@ the time for the new day.<br/>
   (0)  01h   Send dummy/zero, receive length of following data (01h)
   NEW  OLD   Send new ComFlags.bit0, receive old ComFlags.bit0 (00h or 01h)
 ```
+Sent by libmcx McxFlashAcs(mode) ("Set a PDA application's flash memory write
+priority"). Mode 0 allows communication to be suspended so that the PDA
+application can write to flash, mode 1 disables flash writing.<br/>
 
 
 
@@ -1918,6 +1962,10 @@ the time for the new day.<br/>
    <-------- at this point, the function is executed for the second time
 ```
 See below for more info on the FUNC value and the corresponding functions.<br/>
+Sent by libmcx McxReadDev(dev,param,data) ("Read from the PDA device"), with
+dev=FUNC. The wrappers are McxGetTime (FUNC 00h), McxGetMem (FUNC 01h, address
+and length, max 80h bytes), McxGetSerial (FUNC 01h, reads 4 bytes at 06000300h,
+F\_SN), and McxGetUIFS (FUNC 02h).<br/>
 
 #### BU Command 5Ch (Execute Function and transfer data from PSX to Pocketstation)
 ```
@@ -1934,6 +1982,12 @@ See below for more info on the FUNC value and the corresponding functions.<br/>
    <-------- at this point, the function is executed for the second time
 ```
 See below for more info on the FUNC value and the corresponding functions.<br/>
+Sent by libmcx McxWriteDev ("Write to a PDA device"). The wrappers are
+McxSetTime (FUNC 00h), McxSetMem (FUNC 01h), McxSetLED (FUNC 01h, writes one
+byte 02h to 0D800008h for LED on, or to 0D800004h for LED off, ie. IOP\_START
+or IOP\_STOP bit1), and McxSetUIFS (FUNC 02h). McxSetTime reorders its time
+argument into the FUNC 00h byte order (day, month, year, century, second,
+minute, hour, day of week), and sends the day of week plus 1.<br/>
 
 #### BU Command 5Dh (Execute Custom Download Notification Function)
 Can be used to notify the GUI (or games that do support this function) about
@@ -1971,6 +2025,10 @@ games should probably handle that bits in the same fashion, too):<br/>
 If PSX games send any of the standard commands (52h,53h,57h) to access the
 memory card without using command 5Dh, then GUI automatically sets the duration
 to 01h (and pauses sound only for that short duration).<br/>
+Sent by libmcx McxShowTrans(dir,timeout) and McxHideTrans ('Show/Hide the
+"data transfer" display'). The first value byte is dir (00h=PDA to PSX,
+other=PSX to PDA), the last is the timeout. McxHideTrans sends the byte after
+dir (value.8-15) as 01h.<br/>
 
 #### FUNC 00h - Get or Set Date/Time (FUNC0)
 LEN1 is 00h (no parameters), and LEN2 is 08h (eight data bytes):<br/>
@@ -2032,6 +2090,10 @@ Kernel RAM when leaving the GUI). The only workaround is:<br/>
 Test if the GUI is running, if so, restart it via Command 59h (with
 dir\_index=0, and param=0120h or similar, ie. with param.bit8 set), then execute
 FUNC2, then restart the GUI again (this time with param.bit8 zero).<br/>
+Sony's field names for this data (user interface status, UIFS) are AMin
+(bit0-7), AHour (bit8-15), Alarm (bit16), KeyLock (bit17), Volume (bit18-19),
+AreaCode (bit20-22, read-only), RtcSet (bit23), and Font (the charset address,
+read-only).<br/>
 
 #### FUNC 03h - Custom Function 3 (aka FUNC3)
 LEN1 is 04h (fixed) (four parameters bytes):<br/>
