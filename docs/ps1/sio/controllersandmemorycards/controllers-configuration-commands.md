@@ -155,7 +155,7 @@ alignment.<br/>
   Acts  Number of actuators (02h)                           (see Command 46h)
   Comb  Number of actuator combination lists (01h)          (see Command 47h)
 ```
-The values in brackets are those returned by SCPH-1200 and Dualshock2 pads.
+The values in brackets are those returned by SCPH-1200, SCPH-110 and Dualshock2 pads.
 Because the analog pad's mode table is {Digital, Analog}, the Cur byte doubles
 as the LED state. libpad uses Modes, Acts and Comb to size its tables, and
 PadSetMainMode only accepts mode indices below Modes.<br/>
@@ -174,7 +174,7 @@ PadInfoAct(port, actuator, term) returns these fields:<br/>
   Size      bit0-7   InfoActSize  Parameter size (00h=1 bit on/off, 01h..=bytes)
   Curr      bit0-7   InfoActCurr  Maximum current drain (1 unit = 10mA)
 ```
-SCPH-1200 and Dualshock2 pads return:<br/>
+SCPH-1200, SCPH-110 and Dualshock2 pads return:<br/>
 ```
   ii=00h  Func=01h Sub=02h Size=00h Curr=0Ah  Right/small motor, on/off, 10 units
   ii=01h  Func=01h Sub=01h Size=01h Curr=14h  Left/large motor, 1 byte, 20 units
@@ -193,8 +193,8 @@ motor (which can't be queried) as PadCurrCTP1=10 units.<br/>
   Reply HiZ F3h 5Ah 00h 00h Num A0  A1  00h
 ```
 Returns actuator combination list number ii (00h..Comb-1): Num is the number
-of actuators in the list, followed by the actuator numbers. SCPH-1200 and
-Dualshock2 pads have one list, Num=02h with actuators 00h and 01h; for ii=01h
+of actuators in the list, followed by the actuator numbers. SCPH-1200, SCPH-110
+and Dualshock2 pads have one list, Num=02h with actuators 00h and 01h; for ii=01h
 and up they return all zeroes. libpad's PadInfoComb(port, list, offs) returns
 Num for offs=-1 and the actuator numbers for offs=0 and up. When a list has
 more entries than fit in the reply, libpad reads the remainder with Command
@@ -207,12 +207,12 @@ more entries than fit in the reply, libpad reads the remainder with Command
 ```
 Sent by libpad without parameters after Command 47h, when the combination
 list has more than three entries. No known controller has such a list, and
-SCPH-1200 and Dualshock2 pads return 00h bytes.<br/>
+SCPH-1200, SCPH-110 and Dualshock2 pads return 00h bytes.<br/>
 
 #### Config Mode - Command 4Ch - QueryMode
 ```
-  Send  01h 4Ch 00h ii  00h 00h 00h 00h  00h
-  Reply Hiz F3h 5Ah 00h 00h 00h IdHi IdLo 00h
+  Send  01h 4Ch 00h ii  00h 00h  00h  00h 00h
+  Reply Hiz F3h 5Ah 00h 00h IdHi IdLo 00h 00h
 ```
 Returns entry ii (00h..Modes-1) of the controller's mode ID table, as a 16bit
 value. The IDs are the controller type nibble of the normal mode ID byte
