@@ -88,9 +88,13 @@ def _theme(svg, prefix, alt, unknown):
 def on_page_markdown(markdown, page, config, files):
     docs = config['docs_dir']
     here = os.path.dirname(page.file.src_path)
-    lines, out, n = markdown.split('\n'), [], 0
+    lines, out, n, fence = markdown.split('\n'), [], 0, None
     for line in lines:
-        m = IMAGE.match(line)
+        # an image line inside a fenced block is an example, not a figure
+        f = re.match(r'\s*(`{3,}|~{3,})', line)
+        if f and (fence is None or f.group(1).startswith(fence)):
+            fence = None if fence else f.group(1)[:3]
+        m = fence is None and IMAGE.match(line)
         path = m and os.path.normpath(os.path.join(docs, here, m.group(2)))
         if not m or '://' in m.group(2) or not path.startswith(docs + os.sep) \
                 or not os.path.isfile(path):
