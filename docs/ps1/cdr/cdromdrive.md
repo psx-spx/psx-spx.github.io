@@ -272,6 +272,9 @@ of the following values:<br/>
   5    Error        Command error, read error, license string error or lid opened
   6-7  -
 ```
+Emulators and other documentation commonly call these causes INT1 to INT5:
+INT1 is data ready, INT2 is complete, INT3 is acknowledge, INT4 is end and INT5
+is error.<br/>
 The response interrupts are queued. For example, if the first response is an
 acknowledge and the second an error, the acknowledge is delivered first and the
 error is not delivered until the CPU has cleared the acknowledge (the causes are
