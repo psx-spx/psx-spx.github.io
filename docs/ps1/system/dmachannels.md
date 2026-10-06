@@ -259,7 +259,7 @@ channels put a fixed address on the bus for the whole transfer, in either
 direction. It stays the same across words and across the 8bit or 16bit units
 of a word, where a CPU access steps A0..A1:
 ```
-  DMA3 CDROM  1F801802h
+  DMA3 CDROM  1F801802h  (writes too, not the 1F801801h WRDATA port)
   DMA4 SPU    1F801DB0h  (not the 1F801DA8h data port)
   DMA5 PIO    The DEV0 base address, all bits, see 1F801000h
 ```
