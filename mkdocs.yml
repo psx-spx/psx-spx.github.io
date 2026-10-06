@@ -30,6 +30,7 @@ theme:
 
 hooks:
   - tools/bitfields/hook.py
+  - tools/figures/hook.py
   - tools/redirects/hook.py
 
 plugins:
