@@ -32,6 +32,21 @@
 [data-md-color-scheme="slate"] {
   --psx-fig-signal: #3fb950;
 }
+/* Screen only: the PDF is rendered for print and keeps the drawn colours. */
+@media screen {
+  .psx-figure .pf-fill-fg { fill: var(--md-default-fg-color); }
+  .psx-figure .pf-stroke-fg { stroke: var(--md-default-fg-color); }
+  .psx-figure .pf-fill-light { fill: var(--md-default-fg-color--light); }
+  .psx-figure .pf-stroke-light { stroke: var(--md-default-fg-color--light); }
+  .psx-figure .pf-fill-lighter { fill: var(--md-default-fg-color--lighter); }
+  .psx-figure .pf-stroke-lighter { stroke: var(--md-default-fg-color--lighter); }
+  .psx-figure .pf-fill-lightest { fill: var(--md-default-fg-color--lightest); }
+  .psx-figure .pf-stroke-lightest { stroke: var(--md-default-fg-color--lightest); }
+  .psx-figure .pf-fill-bg { fill: var(--md-code-bg-color); }
+  .psx-figure .pf-stroke-bg { stroke: var(--md-code-bg-color); }
+  .psx-figure .pf-fill-signal { fill: var(--psx-fig-signal); }
+  .psx-figure .pf-stroke-signal { stroke: var(--psx-fig-signal); }
+}
 .psx-figure {
   margin: 1em 0;
   overflow-x: auto;
