@@ -1,11 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="830" height="320" viewBox="0 0 830 320" style="max-width:100%;background-color:white" role="img" aria-label="CD subsystem with a combined chip (SCPH-7500 and later)">
+<svg xmlns="http://www.w3.org/2000/svg" width="580" height="320" viewBox="0 0 580 320" style="max-width:100%;background-color:white" role="img" aria-label="CD subsystem with a combined chip (PU-22 and later)">
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker></defs>
 <polyline fill="none" points="170,50 320,50" stroke="#1a7f37" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>
 <text x="245" y="44" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">host bus</text>
 <polyline fill="none" points="320,70 170,70" stroke="#1a7f37" stroke-width="2" marker-end="url(#a)"/>
 <text x="245" y="64" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">IRQ2</text>
-<polyline fill="none" points="550,75 680,75" stroke="#1a7f37" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="615" y="69" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">sectors</text>
 <polyline fill="none" points="435,130 435,240" stroke="#1a7f37" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>
 <text x="442" y="182" font-family="monospace" font-size="11" text-anchor="start" fill="#444">register bus,</text>
 <text x="442" y="196" font-family="monospace" font-size="11" text-anchor="start" fill="#444">commands, SubQ</text>
@@ -15,9 +13,8 @@
 <text x="435.0" y="48" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle" fill="#222">Combo chip</text>
 <text x="435.0" y="64" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">CXD2938Q / CXD2941R</text>
 <text x="435.0" y="78" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">decoder + DSP + SPU</text>
-<text x="435.0" y="92" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">internal links unknown</text>
-<rect x="680" y="50" width="130" height="50" rx="4" fill="#f6f8fa" stroke="#222" stroke-width="1.5"/>
-<text x="745.0" y="68" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle" fill="#222">Sector SRAM</text>
+<text x="435.0" y="92" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">sector buffer inside</text>
+<text x="435.0" y="106" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">internal links unknown</text>
 <rect x="320" y="240" width="230" height="60" rx="4" fill="#f6f8fa" stroke="#222" stroke-width="1.5"/>
 <text x="435.0" y="258" font-family="monospace" font-size="13" font-weight="bold" text-anchor="middle" fill="#222">Mechacon</text>
 <text x="435.0" y="274" font-family="monospace" font-size="11" text-anchor="middle" fill="#444">MC68HC05</text>

@@ -61,10 +61,12 @@ amplifier in place of the CXD2545Q.<br/>
   it with the volume set in
   [AVOLL/AVOLR](../spu/soundprocessingunitspu.md#0x1f801db0-avoll-i2sacd-rom-volume-left).
 
-From the SCPH-7500 onwards, the decoder, the DSP and the SPU are a single chip
-(CXD2938Q, or CXD2941R with the SPU RAM included), and the HC05 remains a
-separate chip. How the parts are connected inside the combined chip is not
-known. The registers seen by the CPU behave like those of the separate decoder,
+Later boards merge the chips in two steps. On PU-20 boards, the decoder and the
+DSP are a single chip (CXD1817R) and the SPU is still separate. From PU-22
+onwards, the decoder, the DSP and the SPU are a single chip (CXD2938Q, or
+CXD2941R with the SPU RAM included), and there is no separate sector SRAM. The
+HC05 remains a separate chip on every board. How the parts are connected inside
+the combined chips is not known. The registers seen by the CPU behave like those of the separate decoder,
 as far as is known.<br/>
 
 ![CD subsystem with a combined chip](diagrams/cdrom-combined.svg)

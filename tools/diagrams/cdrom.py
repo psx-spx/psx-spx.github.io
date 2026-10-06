@@ -85,18 +85,16 @@ def combined():
     boxes = [
         (20, 30, 150, 80, 'CPU'),
         (320, 30, 230, 100, 'Combo chip', 'CXD2938Q / CXD2941R', 'decoder + DSP + SPU',
-         'internal links unknown'),
-        (680, 50, 130, 50, 'Sector SRAM'),
+         'sector buffer inside', 'internal links unknown'),
         (320, 240, 230, 60, 'Mechacon', 'MC68HC05'),
     ]
     wires = [
         ([(170, 50), (320, 50)], '<>', 'host bus', 245, 44),
         ([(320, 70), (170, 70)], '>', 'IRQ2', 245, 64),
-        ([(550, 75), (680, 75)], '<>', 'sectors', 615, 69),
         ([(435, 130), (435, 240)], '<>', 'register bus,\ncommands, SubQ', 442, 182, 'start'),
     ]
-    render('cdrom-combined.svg', 'CD subsystem with a combined chip (SCPH-7500 and later)',
-           boxes, wires, 830, 320)
+    render('cdrom-combined.svg', 'CD subsystem with a combined chip (PU-22 and later)',
+           boxes, wires, 580, 320)
 
 
 os.makedirs(OUT, exist_ok=True)
