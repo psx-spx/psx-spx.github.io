@@ -199,9 +199,9 @@ If there are any pending cdrom interrupts from a previous command, for example a
 acknowledge, these should be cleared before sending a new command. The HC05
 does not take a command while a cause is set in HINTSTS, so a command sent early
 sits in the command register unhandled, BUSYSTS stays set, and the next command
-write overwrites it. On top of all of this, the new comamnd may possibly take precedence
+write overwrites it. On top of all of this, the new command may possibly take precedence
 over the execution of the previously submitted command (seems to be related to the 
-specific combinatiion of commands sent). Overall, this can just be avoided by just
+specific combination of commands sent). Overall, this can just be avoided by just
 servicing the previous commands interrupts first.<br/>
 
 #### `0x1f801802` (write, bank 0): `PARAMETER`
@@ -225,7 +225,7 @@ Start Interrupt on Next Command". This is actually a side effect to the decoder
 firing the BFWRDY interrupt, not an intended feature.<br/>
 
 #### `0x1f801802` (read, all banks): `RDDATA`
-After ReadS/ReadN commands have generated INT1, software must set the BFRD flag,
+After ReadS/ReadN commands have generated the data ready cause, software must set the BFRD flag,
 then wait until DRQSTS is set, the datablock (disk sector) can be then read from
 this register.<br/>
 ```
@@ -264,22 +264,24 @@ Bits 0-2 are supposed to be used as three separate IRQ flags, however the HC05
 misuses them as a single 3-bit "interrupt type" value, which always assumes one
 of the following values:<br/>
 ```
-  INT0 NoIntr      No interrupt pending
-  INT1 DataReady   New sector (ReadN/ReadS) or report packet (Play) available
-  INT2 Complete    Command finished processing (some commands, after INT3 is fired)
-  INT3 Acknowledge Command received and acknowledged (all commands)
-  INT4 DataEnd     Reached end of disc (or end of track if auto-pause enabled)
-  INT5 DiskError   Command error, read error, license string error or lid opened
-  INT6 -
-  INT7 -
+  0    -            No interrupt pending
+  1    Data ready   New sector (ReadN/ReadS) or report packet (Play) available
+  2    Complete     Command finished processing (some commands, after the acknowledge cause is fired)
+  3    Acknowledge  Command received and acknowledged (all commands)
+  4    End          Reached end of disc (or end of track if auto-pause enabled)
+  5    Error        Command error, read error, license string error or lid opened
+  6-7  -
 ```
-The response interrupts are queued, for example, if the 1st response is INT3,
-and the second INT5, then INT3 is delivered first, and INT5 is not delivered
-until INT3 is acknowledged (ie. the response interrupts are NOT ORed together
-to produce INT7 or so). BFEMPT and BFWRDY however can be ORed with the lower
-bits (i.e. BFWRDY + INT3 would give 13h).<br/>
+Emulators and other documentation commonly call these causes INT1 to INT5:
+INT1 is data ready, INT2 is complete, INT3 is acknowledge, INT4 is end and INT5
+is error.<br/>
+The response interrupts are queued. For example, if the first response is an
+acknowledge and the second an error, the acknowledge is delivered first and the
+error is not delivered until the CPU has cleared the acknowledge (the causes are
+NOT ORed together to produce 7). BFEMPT and BFWRDY however can be ORed with the lower
+bits (i.e. BFWRDY plus the acknowledge cause (3) gives 13h).<br/>
 All interrupts are always fired in response to a command with the exception of
-INT5, which may also be triggered at any time by opening the lid.<br/>
+the error cause, which may also be triggered at any time by opening the lid.<br/>
 
 #### `0x1f801803` (read, banks 0 and 2): `HINTMSK`
 #### `0x1f801802` (write, bank 1): `HINTMSK`
@@ -304,7 +306,7 @@ IRQ (even though BFEMPT and BFWRDY are never used).<br/>
 ```
 Setting bits 0-4 resets the corresponding flags in HINTSTS; normally one should
 write 07h to reset the HC05 interrupt flags, or 1Fh to acknowledge all IRQs.
-Acknowledging individual HC05 flags (e.g. writing 01h to change INT3 to INT2) is
+Acknowledging individual HC05 flags (e.g. writing 01h to change the acknowledge cause (3) to the complete cause (2)) is
 possible, if completely useless. After acknowledge, the result FIFO is drained
 and if there's been a pending command, then that command gets send to the
 controller.<br/>
@@ -315,12 +317,12 @@ which is pulled low when setting CHPRST).<br/>
 #### Caution - Unstable IRQ Flag polling
 IRQ flag changes aren't synced with the MIPS CPU clock. If more than one bit
 gets set (and the CPU is reading at the same time) then the CPU does
-occassionally see only one of the newly bits:<br/>
+occasionally see only one of the newly set bits:<br/>
 ```
-  0 ----------> 3   ;99.9%  normal case INT3's
-  0 ----------> 5   ;99%    normal case INT5's
-  0 ---> 1 ---> 3   ;0.1%   glitch: occurs about once per thousands of INT3's
-  0 ---> 4 ---> 5   ;1%     glitch: occurs about once per hundreds of INT5's
+  0 ----------> 3   ;99.9%  normal case acknowledge causes
+  0 ----------> 5   ;99%    normal case error causes
+  0 ---> 1 ---> 3   ;0.1%   glitch: occurs about once per thousands of acknowledge causes
+  0 ---> 4 ---> 5   ;1%     glitch: occurs about once per hundreds of error causes
 ```
 As workaround, do something like:<br/>
 ```
@@ -412,14 +414,14 @@ This behavior is unpredictable, so one should instead just wait for the interrup
 status bits in HINTSTS to be 0 first before sending a new command.<br/>
 
 ```
-Pause -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/Pause/Stop/SetMode/SeekL/... <br/>
-ReadN/ReadS -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/SetLoc/... <br/>
+Pause -> Wait for acknowledge IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/Pause/Stop/SetMode/SeekL/... <br/>
+ReadN/ReadS -> Wait for acknowledge IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/SetLoc/... <br/>
 ```
 Will not drop any of the two commands, thus execute sequentially.<br/>
 <br/>
 
 ```
-Stop -> Wait for INT3 IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/Pause/...<br/>
+Stop -> Wait for acknowledge IRQ -> clear IRQ (write 0x1f to HCLRCTL) -> SetMode/Pause/...<br/>
 ```
 Will drop the second response of Stop(), and then execute the next command.<br/>
 
@@ -512,58 +514,58 @@ necessarily the slot that was updated most recently.<br/>
 #### Command Summary
 | Opcode      | Command      | Parameters        | Acknowledge response                                    | Completion response                           | Notes                                            |
 | ----------: | :----------- | :---------------- | :------------------------------------------------------ | :-------------------------------------------- | :----------------------------------------------- |
-|      `0x00` | _Unused_     |                   | INT5: `0x11`, `0x40`                                    |                                               |                                                  |
-|      `0x01` | `Nop`        |                   | INT3: status                                            |                                               |                                                  |
-|      `0x02` | `Setloc`     | min, sec, frame   | INT3: status                                            |                                               |                                                  |
-|      `0x03` | `Play`       | track (optional)  | INT3: status                                            |                                               |                                                  |
-|      `0x04` | `Forward`    |                   | INT3: status                                            |                                               | Error if disc is spun down                       |
-|      `0x05` | `Backward`   |                   | INT3: status                                            |                                               | Error if disc is spun down                       |
-|      `0x06` | `ReadN`      |                   | INT3: status                                            |                                               |                                                  |
-|      `0x07` | `Standby`    |                   | INT3: status                                            | INT2: status                                  |                                                  |
-|      `0x08` | `Stop`       |                   | INT3: status                                            | INT2: status                                  |                                                  |
-|      `0x09` | `Pause`      |                   | INT3: status                                            | INT2: status                                  |                                                  |
-|      `0x0a` | `Init`       |                   | INT3: status (late)                                     | INT2: status                                  |                                                  |
-|      `0x0b` | `Mute`       |                   | INT3: status                                            |                                               |                                                  |
-|      `0x0c` | `Demute`     |                   | INT3: status                                            |                                               |                                                  |
-|      `0x0d` | `Setfilter`  | file, channel     | INT3: status                                            |                                               |                                                  |
-|      `0x0e` | `Setmode`    | mode              | INT3: status                                            |                                               |                                                  |
-|      `0x0f` | `Getparam`   |                   | INT3: status, mode, `0x00`, file, channel               |                                               |                                                  |
-|      `0x10` | `GetlocL`    |                   | INT3: min, sec, frame, mode, file, channel, sm, ci      |                                               | Error if disc is spun down                       |
-|      `0x11` | `GetlocP`    |                   | INT3: track, index, rmin, rsec, rframe, min, sec, frame |                                               | Error if disc is spun down                       |
-|      `0x12` | `Setsession` | session           | INT3: status                                            | INT2: status                                  |                                                  |
-|      `0x13` | `GetTN`      |                   | INT3: status, first, last                               |                                               |                                                  |
-|      `0x14` | `GetTD`      | track             | INT3: status, min, sec                                  |                                               |                                                  |
-|      `0x15` | `SeekL`      |                   | INT3: status                                            | INT2: status                                  |                                                  |
-|      `0x16` | `SeekP`      |                   | INT3: status                                            | INT2: status                                  |                                                  |
-| `0x17-0x18` | _Unused_     |                   | INT5: `0x11`, `0x40`                                    |                                               |                                                  |
-|      `0x19` | `Test` \*    | sub, ...          | INT3: ...                                               |                                               |                                                  |
-|      `0x1a` | `GetID` \*   |                   | INT3: status                                            | INT2/INT5: status, flag, type, atip, `"SCEx"` |                                                  |
-|      `0x1b` | `ReadS`      |                   | INT3: status                                            |                                               |                                                  |
-|      `0x1c` | `Reset`      |                   | INT3: status                                            |                                               | Reboots HC05, requires delay after sending       |
-|      `0x1d` | `GetQ` \*    | adr, point        | INT3: status                                            | INT2: subq\[10\], peakl                       | Version `0xc1`+, error if disc is spun down      |
-|      `0x1e` | `ReadTOC` \* |                   | INT3: status (late)                                     | INT2: status                                  | Version `0xc1`+                                  |
-|      `0x1f` | `VideoCD` \* | sub, ...          | INT3: status, ...                                       |                                               | SCPH-5903 only                                   |
-| `0x20-0x4f` | _Unused_     |                   | INT5: `0x11`, `0x40`                                    |                                               | Version `0xc1`+, does nothing on Japanese models |
-|      `0x50` | `Unlock0` \* |                   | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
-|      `0x51` | `Unlock1` \* | `"Licensed by"`   | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
-|      `0x52` | `Unlock2` \* | `"Sony"`          | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
-|      `0x53` | `Unlock3` \* | `"Computer"`      | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
-|      `0x54` | `Unlock4` \* | `"Entertainment"` | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
-|      `0x55` | `Unlock5` \* | `"<region>"`      | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
-|      `0x56` | `Unlock6` \* |                   | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
-|      `0x57` | `Lock` \*    |                   | INT5: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x00` | _Unused_     |                   | error: `0x11`, `0x40`                                    |                                               |                                                  |
+|      `0x01` | `Nop`        |                   | acknowledge: status                                            |                                               |                                                  |
+|      `0x02` | `Setloc`     | min, sec, frame   | acknowledge: status                                            |                                               |                                                  |
+|      `0x03` | `Play`       | track (optional)  | acknowledge: status                                            |                                               |                                                  |
+|      `0x04` | `Forward`    |                   | acknowledge: status                                            |                                               | Error if disc is spun down                       |
+|      `0x05` | `Backward`   |                   | acknowledge: status                                            |                                               | Error if disc is spun down                       |
+|      `0x06` | `ReadN`      |                   | acknowledge: status                                            |                                               |                                                  |
+|      `0x07` | `Standby`    |                   | acknowledge: status                                            | complete: status                                  |                                                  |
+|      `0x08` | `Stop`       |                   | acknowledge: status                                            | complete: status                                  |                                                  |
+|      `0x09` | `Pause`      |                   | acknowledge: status                                            | complete: status                                  |                                                  |
+|      `0x0a` | `Init`       |                   | acknowledge: status (late)                                     | complete: status                                  |                                                  |
+|      `0x0b` | `Mute`       |                   | acknowledge: status                                            |                                               |                                                  |
+|      `0x0c` | `Demute`     |                   | acknowledge: status                                            |                                               |                                                  |
+|      `0x0d` | `Setfilter`  | file, channel     | acknowledge: status                                            |                                               |                                                  |
+|      `0x0e` | `Setmode`    | mode              | acknowledge: status                                            |                                               |                                                  |
+|      `0x0f` | `Getparam`   |                   | acknowledge: status, mode, `0x00`, file, channel               |                                               |                                                  |
+|      `0x10` | `GetlocL`    |                   | acknowledge: min, sec, frame, mode, file, channel, sm, ci      |                                               | Error if disc is spun down                       |
+|      `0x11` | `GetlocP`    |                   | acknowledge: track, index, rmin, rsec, rframe, min, sec, frame |                                               | Error if disc is spun down                       |
+|      `0x12` | `Setsession` | session           | acknowledge: status                                            | complete: status                                  |                                                  |
+|      `0x13` | `GetTN`      |                   | acknowledge: status, first, last                               |                                               |                                                  |
+|      `0x14` | `GetTD`      | track             | acknowledge: status, min, sec                                  |                                               |                                                  |
+|      `0x15` | `SeekL`      |                   | acknowledge: status                                            | complete: status                                  |                                                  |
+|      `0x16` | `SeekP`      |                   | acknowledge: status                                            | complete: status                                  |                                                  |
+| `0x17-0x18` | _Unused_     |                   | error: `0x11`, `0x40`                                    |                                               |                                                  |
+|      `0x19` | `Test` \*    | sub, ...          | acknowledge: ...                                               |                                               |                                                  |
+|      `0x1a` | `GetID` \*   |                   | acknowledge: status                                            | complete/error: status, flag, type, atip, `"SCEx"` |                                                  |
+|      `0x1b` | `ReadS`      |                   | acknowledge: status                                            |                                               |                                                  |
+|      `0x1c` | `Reset`      |                   | acknowledge: status                                            |                                               | Reboots HC05, requires delay after sending       |
+|      `0x1d` | `GetQ` \*    | adr, point        | acknowledge: status                                            | complete: subq\[10\], peakl                       | Version `0xc1`+, error if disc is spun down      |
+|      `0x1e` | `ReadTOC` \* |                   | acknowledge: status (late)                                     | complete: status                                  | Version `0xc1`+                                  |
+|      `0x1f` | `VideoCD` \* | sub, ...          | acknowledge: status, ...                                       |                                               | SCPH-5903 only                                   |
+| `0x20-0x4f` | _Unused_     |                   | error: `0x11`, `0x40`                                    |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x50` | `Unlock0` \* |                   | error: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x51` | `Unlock1` \* | `"Licensed by"`   | error: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x52` | `Unlock2` \* | `"Sony"`          | error: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x53` | `Unlock3` \* | `"Computer"`      | error: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x54` | `Unlock4` \* | `"Entertainment"` | error: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x55` | `Unlock5` \* | `"<region>"`      | error: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x56` | `Unlock6` \* |                   | error: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
+|      `0x57` | `Lock` \*    |                   | error: `0x11`, `0x40` (even when successful)             |                                               | Version `0xc1`+, does nothing on Japanese models |
 | `0x58-0x5f` | _Unused_     |                   |                                                         |                                               | Crashes the HC05                                 |
-| `0x60-0xff` | _Unused_     |                   | INT5: `0x11`, `0x40`                                    |                                               |                                                  |
+| `0x60-0xff` | _Unused_     |                   | error: `0x11`, `0x40`                                    |                                               |                                                  |
 
 The following commands generate additional responses while reading:
 
 | Opcode | Command    | Data responses                                                       |
 | -----: | :--------- | :------------------------------------------------------------------- |
-| `0x03` | `Play`     | INT1: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
-| `0x04` | `Forward`  | INT1: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
-| `0x05` | `Backward` | INT1: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
-| `0x06` | `ReadN`    | INT1: status (sector data must be read separately via RDDATA or DMA) |
-| `0x1b` | `ReadS`    | INT1: status (sector data must be read separately via RDDATA or DMA) |
+| `0x03` | `Play`     | data ready: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
+| `0x04` | `Forward`  | data ready: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
+| `0x05` | `Backward` | data ready: status, track, index, (r)min, (r)sec, (r)frame, peakl, peakh   |
+| `0x06` | `ReadN`    | data ready: status (sector data must be read separately via RDDATA or DMA) |
+| `0x1b` | `ReadS`    | data ready: status (sector data must be read separately via RDDATA or DMA) |
 
 \* denotes commands that are not officially documented.
 
@@ -573,51 +575,51 @@ number as first parameter byte. The Kernel seems to be using only sub\_function
 20h (to detect the CDROM Controller version).<br/>
 ```
   sub  params  response           ;Effect
-  00h      -   INT3(stat)         ;Force motor on, clockwise, even if door open
-  01h      -   INT3(stat)         ;Force motor on, anti-clockwise, super-fast
-  02h      -   INT3(stat)         ;Force motor on, anti-clockwise, super-fast
-  03h      -   INT3(stat)         ;Force motor off (ignored during spin-up)
-  04h      -   INT3(stat)         ;Start SCEx reading and reset counters
-  05h      -   INT3(total,success);Stop SCEx reading and get counters
-  06h *    n   INT3(old)  ;\early ;Adjust balance in RAM, send CX(30+n XOR 7)
-  07h *    n   INT3(old)  ; PSX   ;Adjust gain in RAM, send CX(38+n XOR 7)
-  08h *    n   INT3(old)  ;/only  ;Adjust balance in RAM only
-  06h..0Fh -   INT5(11h,10h)      ;N/A (11h,20h when NONZERO number of params)
-  10h      -   INT3(stat) ;CX(..) ;Force motor on, anti-clockwise, super-fast
-  11h      -   INT3(stat) ;CX(03) ;Move Lens Up (leave parking position)
-  12h      -   INT3(stat) ;CX(02) ;Move Lens Down (enter parking position)
-  13h      -   INT3(stat) ;CX(28) ;Move Lens Outwards
-  14h      -   INT3(stat) ;CX(2C) ;Move Lens Inwards
-  15h      -   INT3(stat) ;CX(22) ;If motor on: Move outwards,inwards,motor off
-  16h      -   INT3(stat) ;CX(23) ;No effect?
-  17h      -   INT3(stat) ;CX(E8) ;Force motor on, clockwise, super-fast
-  18h      -   INT3(stat) ;CX(EA) ;Force motor on, anti-clockwise, super-fast
-  19h      -   INT3(stat) ;CX(25) ;No effect?
-  1Ah      -   INT3(stat) ;CX(21) ;No effect?
-  1Bh..1Fh -   INT5(11h,10h)      ;N/A (11h,20h when NONZERO number of params)
-  20h      -   INT3(yy,mm,dd,ver) ;Get cdrom BIOS date/version (yy,mm,dd,ver)
-  21h      -   INT3(n)            ;Get Drive Switches (bit0=POS0, bit1=DOOR)
-  22h ***  -   INT3("for ...")    ;Get Region ID String
-  23h ***  -   INT3("CXD...")     ;Get Chip ID String for Servo Amplifier
-  24h ***  -   INT3("CXD...")     ;Get Chip ID String for Signal Processor
-  25h ***  -   INT3("CXD...")     ;Get Chip ID String for Decoder/FIFO
-  26h..2Fh -   INT5(11h,10h)      ;N/A (11h,20h when NONZERO number of params)
-  30h *    i,x,y     INT3(stat)       ;Prototype/Debug stuff   ;\supported on
-  31h *    x,y       INT3(stat)       ;Prototype/Debug stuff   ; early PSX only
-  4xh *    i         INT3(x,y)        ;Prototype/Debug stuff   ;/
-  30h..4Fh ..        INT5(11h,10h)    ;N/A always 11h,10h (no matter of params)
-  50h      a[,b[,c]] INT3(stat)       ;Servo/Signal send CX(a:b:c)
-  51h **   39h,xx    INT3(stat,hi,lo) ;Servo/Signal send CX(39xx) with response
-  51h..5Fh -         INT5(11h,10h)    ;N/A
-  60h      lo,hi     INT3(databyte)   ;HC05 SUB-CPU read RAM and I/O ports
-  61h..70h -         INT5(11h,10h)    ;N/A
-  71h ***  adr       INT3(databyte)   ;Decoder Read one register
-  72h ***  adr,dat   INT3(stat)       ;Decoder Write one register
-  73h ***  adr,len   INT3(databytes..);Decoder Read multiple registers, bugged
-  74h ***  adr,len,..INT3(stat)       ;Decoder Write multiple registers, bugged
-  75h ***  -         INT3(lo,hi,lo,hi);Decoder Get Host Xfer Info Remain/Addr
-  76h ***  a,b,c,d   INT3(stat)       ;Decoder Prepare Transfer to/from SRAM
-  77h..FFh -         INT5(11h,10h)    ;N/A
+  00h      -   acknowledge(stat)         ;Force motor on, clockwise, even if door open
+  01h      -   acknowledge(stat)         ;Force motor on, anti-clockwise, super-fast
+  02h      -   acknowledge(stat)         ;Force motor on, anti-clockwise, super-fast
+  03h      -   acknowledge(stat)         ;Force motor off (ignored during spin-up)
+  04h      -   acknowledge(stat)         ;Start SCEx reading and reset counters
+  05h      -   acknowledge(total,success);Stop SCEx reading and get counters
+  06h *    n   acknowledge(old)  ;\early ;Adjust balance in RAM, send CX(30+n XOR 7)
+  07h *    n   acknowledge(old)  ; PSX   ;Adjust gain in RAM, send CX(38+n XOR 7)
+  08h *    n   acknowledge(old)  ;/only  ;Adjust balance in RAM only
+  06h..0Fh -   error(11h,10h)      ;N/A (11h,20h when NONZERO number of params)
+  10h      -   acknowledge(stat) ;CX(..) ;Force motor on, anti-clockwise, super-fast
+  11h      -   acknowledge(stat) ;CX(03) ;Move Lens Up (leave parking position)
+  12h      -   acknowledge(stat) ;CX(02) ;Move Lens Down (enter parking position)
+  13h      -   acknowledge(stat) ;CX(28) ;Move Lens Outwards
+  14h      -   acknowledge(stat) ;CX(2C) ;Move Lens Inwards
+  15h      -   acknowledge(stat) ;CX(22) ;If motor on: Move outwards,inwards,motor off
+  16h      -   acknowledge(stat) ;CX(23) ;No effect?
+  17h      -   acknowledge(stat) ;CX(E8) ;Force motor on, clockwise, super-fast
+  18h      -   acknowledge(stat) ;CX(EA) ;Force motor on, anti-clockwise, super-fast
+  19h      -   acknowledge(stat) ;CX(25) ;No effect?
+  1Ah      -   acknowledge(stat) ;CX(21) ;No effect?
+  1Bh..1Fh -   error(11h,10h)      ;N/A (11h,20h when NONZERO number of params)
+  20h      -   acknowledge(yy,mm,dd,ver) ;Get cdrom BIOS date/version (yy,mm,dd,ver)
+  21h      -   acknowledge(n)            ;Get Drive Switches (bit0=POS0, bit1=DOOR)
+  22h ***  -   acknowledge("for ...")    ;Get Region ID String
+  23h ***  -   acknowledge("CXD...")     ;Get Chip ID String for Servo Amplifier
+  24h ***  -   acknowledge("CXD...")     ;Get Chip ID String for Signal Processor
+  25h ***  -   acknowledge("CXD...")     ;Get Chip ID String for Decoder/FIFO
+  26h..2Fh -   error(11h,10h)      ;N/A (11h,20h when NONZERO number of params)
+  30h *    i,x,y     acknowledge(stat)       ;Prototype/Debug stuff   ;\supported on
+  31h *    x,y       acknowledge(stat)       ;Prototype/Debug stuff   ; early PSX only
+  4xh *    i         acknowledge(x,y)        ;Prototype/Debug stuff   ;/
+  30h..4Fh ..        error(11h,10h)    ;N/A always 11h,10h (no matter of params)
+  50h      a[,b[,c]] acknowledge(stat)       ;Servo/Signal send CX(a:b:c)
+  51h **   39h,xx    acknowledge(stat,hi,lo) ;Servo/Signal send CX(39xx) with response
+  51h..5Fh -         error(11h,10h)    ;N/A
+  60h      lo,hi     acknowledge(databyte)   ;HC05 SUB-CPU read RAM and I/O ports
+  61h..70h -         error(11h,10h)    ;N/A
+  71h ***  adr       acknowledge(databyte)   ;Decoder Read one register
+  72h ***  adr,dat   acknowledge(stat)       ;Decoder Write one register
+  73h ***  adr,len   acknowledge(databytes..);Decoder Read multiple registers, bugged
+  74h ***  adr,len,..acknowledge(stat)       ;Decoder Write multiple registers, bugged
+  75h ***  -         acknowledge(lo,hi,lo,hi);Decoder Get Host Xfer Info Remain/Addr
+  76h ***  a,b,c,d   acknowledge(stat)       ;Decoder Prepare Transfer to/from SRAM
+  77h..FFh -         error(11h,10h)    ;N/A
   80h..8Fh a,b       ?                ;seem to do something on PS2
 ```
 \* sub\_functions 06h..08h, 30h..31h, and 4xh are supported only in vC0 and vC1.<br/>
@@ -625,10 +627,10 @@ number as first parameter byte. The Kernel seems to be using only sub\_function
 \*\*\* sub\_functions 22h..25h, 71h..76h supported only in BIOS version vC1 and up.<br/>
 
 #### Unsupported GetQ,VCD,SecretUnlock (command 1Dh,1Fh,5xh)
-INT5 will be returned if the command is unsupported. That, WITHOUT removing the
-Parameters from the FIFO, so the parameters will be accidently passed to the
+An error cause will be returned if the command is unsupported. That, WITHOUT removing the
+Parameters from the FIFO, so the parameters will be accidentally passed to the
 NEXT command. To avoid that: clear the parameter FIFO by setting CLRPRM in
-HCLRCTL after receiving the INT5 error.<br/>
+HCLRCTL after receiving the error cause.<br/>
 
 
 
@@ -638,7 +640,7 @@ Reportedly "command does not succeed until all other commands complete. This
 can be used for synchronization - hence the name."<br/>
 Uh, actually, returns error code 40h = Invalid Command...?<br/>
 
-#### Setfilter - Command 0Dh,file,channel --\> INT3(stat)
+#### Setfilter - Command 0Dh,file,channel --\> acknowledge(stat)
 Automatic ADPCM (CD-ROM XA) filter ignores sectors except those which have the
 same channel and file numbers in their subheader. This is the mechanism used to
 select which of multiple songs in a single .XA file to play.<br/>
@@ -647,7 +649,7 @@ sectors).<br/>
 XXX err... that is... does not affect reading of non-ADPCM sectors (normal
 "data" sectors are kept received regardless of Setfilter).<br/>
 
-#### Setmode - Command 0Eh,mode --\> INT3(stat)
+#### Setmode - Command 0Eh,mode --\> acknowledge(stat)
 ```
   7   Speed       (0=Normal speed, 1=Double speed)
   6   XA-ADPCM    (0=Off, 1=Send XA-ADPCM sectors to SPU Audio Input)
@@ -664,47 +666,47 @@ controller to ignore the sector size in Bit5 (instead, the size is kept from
 the most recent Setmode command which didn't have Bit4 set). Also, Bit4 seems
 to cause the controller to ignore the \<exact\> Setloc position (instead,
 data is randomly returned from the "Setloc position minus 0..3 sectors"). And,
-Bit4 causes INT1 to return status.Bit3=set (IdError). Purpose of Bit4 is
+Bit4 causes the data ready cause to return status.Bit3=set (IdError). Purpose of Bit4 is
 unknown?<br/>
 
-#### Init - Command 0Ah --\> INT3(stat) --\> INT2(stat)
+#### Init - Command 0Ah --\> acknowledge(stat) --\> complete(stat)
 Multiple effects at once. Sets mode=20h, activates drive motor, Standby, abort
 all commands.<br/>
 If an Init command is already in progress (its second response is still pending),
-a new Init command is silently dropped with no response (neither INT3 nor INT5
+a new Init command is silently dropped with no response (neither acknowledge nor error
 is generated).<br/>
 
-#### Reset - Command 1Ch,(...) --\> INT3(stat) --\> Delay(1/8 seconds)
+#### Reset - Command 1Ch,(...) --\> acknowledge(stat) --\> Delay(1/8 seconds)
 ```
   Caution: Not supported on DTL-H2000 (v01)
 ```
 Resets the drive controller, reportedly, same as opening and closing the drive
 door. The command executes no matter if/how many parameters are used (tested
-with 0..7 params). INT3 indicates that the command was started, but there's no
-INT that would indicate when the command is finished, so, before sending any
+with 0..7 params). The acknowledge cause indicates that the command was started, but there's no
+interrupt that would indicate when the command is finished, so, before sending any
 further commands, a delay of 1/8 seconds (or 400000h clock cycles) must be
 issued by software.<br/>
 Note: Executing the command produces a click sound in the drive mechanics,
 maybe it's just a rapid motor on/off, but it might something more serious, like
 ignoring the /POS0 signal...?<br/>
 
-#### MotorOn - Command 07h --\> INT3(stat) --\> INT2(stat)
+#### MotorOn - Command 07h --\> acknowledge(stat) --\> complete(stat)
 Activates the drive motor, works ONLY if the motor was off (otherwise fails
-with INT5(stat,20h); that error code would normally indicate "wrong number of
+with error(stat,20h); that error code would normally indicate "wrong number of
 parameters", but means "motor already on" in this case).<br/>
-If no disc is present, the command fails with INT5(stat,80h).<br/>
+If no disc is present, the command fails with error(stat,80h).<br/>
 Commands like Read, Seek, and Play are automatically starting the Motor when
 needed (which makes the MotorOn command rather useless, and it's rarely used by
 any games).<br/>
 Myth: Older homebrew docs are referring to MotorOn as "Standby", claiming that
 it would work similar as "Pause", that is wrong: the command does NOT pause
-anything (if the motor is on, then it does simply trigger INT5, but without
+anything (if the motor is on, then it does simply trigger the error cause, but without
 pausing reading or playing).<br/>
 Note: The game "Nightmare Creatures 2" does actually attempt to use MotorOn to
 "pause" after reading files, but the hardware does simply ignore that attempt
-(aside from doing the INT5 thing).<br/>
+(aside from doing the error thing).<br/>
 
-#### Stop - Command 08h --\> INT3(stat) --\> INT2(stat)
+#### Stop - Command 08h --\> acknowledge(stat) --\> complete(stat)
 Stops motor with magnetic brakes (stops within a second or so) (unlike
 power-off where it'd keep spinning for about 10 seconds), and moves the drive
 head to the begin of the first track. Official way to restart is command 0Ah,
@@ -712,14 +714,14 @@ but almost any command will restart it.<br/>
 The first response returns the current status (this already with bit5 cleared),
 the second response returns the new status (with bit1 cleared).<br/>
 
-#### Pause - Command 09h --\> INT3(stat) --\> INT2(stat)
+#### Pause - Command 09h --\> acknowledge(stat) --\> complete(stat)
 Aborts Reading and Playing, the motor is kept spinning, and the drive head
 maintains the current location within reasonable error.<br/>
 The first response returns the current status (still with bit5 set if a Read
 command was active), the second response returns the new status (with bit5
 cleared).<br/>
 During certain phases of a seek operation, Pause will fail with
-INT5(stat,80h). This applies to explicit SeekL/SeekP seeks, and also to the
+error(stat,80h). This applies to explicit SeekL/SeekP seeks, and also to the
 implicit seek at the beginning of ReadN/ReadS/Play.<br/>
 
 #### Data/ADPCM Sector Filtering/Delivery
@@ -737,10 +739,10 @@ that didn't work out either, then it's silently ignoring the sector).<br/>
  try_deliver_as_data_sector:
   reject data-delivery if "try_deliver_as_adpcm_sector" did do adpcm-delivery
   reject if filter_enabled(setmode.3) AND submode is audio+realtime (bit2+bit6)
-  1st delivery attempt: send INT1+data, unless there's another INT pending
+  1st delivery attempt: send data ready+data, unless there's another INT pending
   delay, and retry at later time... but this time with file/channel checking!
   reject if filter_enabled(setmode.3) AND selected file/channel doesn't match
-  2nd delivery attempt: send INT1+data, unless there's another INT pending
+  2nd delivery attempt: send data ready+data, unless there's another INT pending
 ```
 BUG: Note that the data delivery is done in two different attempts: The first
 one regardless of file/channel, and the second one only on matching
@@ -749,7 +751,7 @@ file/channel (if filtering is enabled).<br/>
 
 
 ##   CDROM - Seek Commands
-#### Setloc - Command 02h,amm,ass,asect --\> INT3(stat)
+#### Setloc - Command 02h,amm,ass,asect --\> acknowledge(stat)
 Sets the seek target - but without yet starting the seek operation. The actual
 seek is invoked by certain commands: SeekL (Data) and SeekP (Audio) are doing
 plain seeks (and do Pause after completion). ReadN/ReadS are similar to SeekL
@@ -760,9 +762,9 @@ track). Note that each of these parameters is encoded as BCD values, not binary.
 To seek to a specific location within a specific track, use GetTD to
 get the start address of the track, and add the desired time offset to it.<br/>
 All three parameters must be valid packed BCD, with ass &lt; 60h and asect &lt; 75h;
-invalid or out-of-range values return INT5(stat,10h).<br/>
+invalid or out-of-range values return error(stat,10h).<br/>
 
-#### SeekL - Command 15h --\> INT3(stat) --\> INT2(stat)
+#### SeekL - Command 15h --\> acknowledge(stat) --\> complete(stat)
 Seek to Setloc's location in data mode (using data sector header position data,
 which works/exists only on Data tracks, not on CD-DA Audio tracks).<br/>
 After the seek, the disk stays on the seeked location forever (namely: when
@@ -773,7 +775,7 @@ two seconds or so) the second response will return an error (stat+4,04h), and
 stop the drive motor... that error doesn't appear ALWAYS though... works in
 some situations... such like when previously reading data sectors or so...?<br/>
 
-#### SeekP - Command 16h --\> INT3(stat) --\> INT2(stat)
+#### SeekP - Command 16h --\> acknowledge(stat) --\> complete(stat)
 Seek to Setloc's location in audio mode (using the Subchannel Q position data,
 which works on both Audio on Data disks).<br/>
 After the seek, the disk stays on the seeked location forever (namely: when
@@ -785,20 +787,20 @@ Note: Some older docs claim that SeekP would recurse only "MM:SS" of the
 After the seek, status is stat.bit7=0 (ie. audio playback off), until sending a
 new Play command (without parameters) to start playback at the seeked location.<br/>
 
-#### SetSession - Command 12h,session --\> INT3(stat) --\> INT2(stat)
+#### SetSession - Command 12h,session --\> acknowledge(stat) --\> complete(stat)
 Seeks to session (ie. moves the drive head to the session, with stat bit6 set
 during the seek phase).<br/>
 When issued during active-read or active-play, the command returns error code 80h.<br/>
 When issued during play-spin-up, play is aborted.<br/>
 ```
   ___Errors___
-  session = 00h causes error code 10h.     ;INT5(03h,10h), no 2nd/3rd response
+  session = 00h causes error code 10h.     ;error(03h,10h), no 2nd/3rd response
   ___On a non-multisession-disk___
-  session = 01h passes okay.               ;INT3(stat), and once INT2(stat)
-  session = 02h or higher cause seek error ;INT3(stat), and twice INT5(06h,40h)
+  session = 01h passes okay.               ;acknowledge(stat), and once complete(stat)
+  session = 02h or higher cause seek error ;acknowledge(stat), and twice error(06h,40h)
   ___On a multisession-disk with N sessions___
   session = 01h..N+1 passes okay   ;where N+1 moves to the END of LAST session
-  session = N+2 or higher cause seek error  ;2nd response = INT5(06h,20h)
+  session = N+2 or higher cause seek error  ;2nd response = error(06h,20h)
 ```
 after seek error --\> disk stops spinning at 2nd response, then restarts
 spinning for 1 second or so, then stops spinning forever... and following
@@ -811,21 +813,21 @@ There seems to be no way to determine the current sessions number (via Getparam
 or so), and more important, no way to determine if the disk is a multi-session
 disk or not... except by trial... which would stop the drive motor on seek
 errors on single-session disks...?<br/>
-For setloc, one must probably specifiy minutes within the 1st track of the new
+For setloc, one must probably specify minutes within the 1st track of the new
 session (the 1st track of 1st session usually/always starts at 00:02:00, but
 for other sessions one would need to use GetTD)...?<br/>
 
 
 
 ##   CDROM - Read Commands
-#### ReadN - Command 06h --\> INT3(stat) --\> INT1(stat) --\> datablock
-Read with retry. The command responds once with "stat,INT3", and then it's
-repeatedly sending "stat,INT1 --\> datablock", that is continued even after a
-successful read has occured; use the Pause command to terminate the repeated
-INT1 responses.<br/>
+#### ReadN - Command 06h --\> acknowledge(stat) --\> data ready(stat) --\> datablock
+Read with retry. The command responds once with "stat,acknowledge", and then it's
+repeatedly sending "stat,data ready --\> datablock", that is continued even after a
+successful read has occurred; use the Pause command to terminate the repeated
+data ready responses.<br/>
 If you are reading an unlicensed disk without a modchip or first unlocking the drive, 
-this command will first trigger INT5, without triggering INT3 or INT1.
-This INT5 is accompanied with the stat byte 0x3 and the following error byte 0x40,
+this command will first trigger an error cause, without triggering acknowledge or data ready.
+This error cause is accompanied with the stat byte 0x3 and the following error byte 0x40,
 indicating an invalid command. This can be avoided by first unlocking the drive.<br/>
 Unknown which responses are sent in case of read errors?<br/>
 ====<br/>
@@ -835,7 +837,7 @@ region does not match the console region will also return error code 40h unless
 CDDA mode is enabled.<br/>
 ====<br/>
 Actually, Read seems to work on unlicensed CD-R's, but the returned data is the
-whole sector or so (the 2048 data bytes preceeded by a 12byte header, and
+whole sector or so (the 2048 data bytes preceded by a 12byte header, and
 probably/maybe followed by error-correction info; in fact the total received
 data in the Data Fifo is 4096 bytes; the last some bytes probably being
 garbage) (however error correction is NOT performed by hardware, so the 2048
@@ -846,7 +848,7 @@ to work accurately on unlicensed CD-R's).<br/>
 ```
      ;Read occasionally returns 11h,40h ..? when TOC isn't loaded?
 ```
-After receiving INT1, the Kernel does,<br/>
+After receiving data ready, the Kernel does,<br/>
 ```
   [1F801800h]=00h
   00h=[1F801800h]
@@ -881,9 +883,9 @@ thereafter,<br/>
   [1F801801h]=09h    ;command9 (pause)
 ```
 
-#### ReadS - Command 1Bh --\> INT3(stat) --\> INT1(stat) --\> datablock
+#### ReadS - Command 1Bh --\> acknowledge(stat) --\> data ready(stat) --\> datablock
 Read without automatic retry. Not sure what that means... does WHAT on errors?
-Maybe intended for continous streaming video output (to skip bad frames, rather
+Maybe intended for continuous streaming video output (to skip bad frames, rather
 than to interrupt the stream by performing read-retrys).<br/>
 
 #### ReadN/ReadS
@@ -891,7 +893,7 @@ Both ReadN/ReadS are reading data sequentially, starting at the sector
 specified with Setloc, and then automatically reading the following sectors.<br/>
 
 #### CDROM Incoming Data / Buffer Overrun Timings
-The Read commands are continously receiving 75 sectors per second (or 150
+The Read commands are continuously receiving 75 sectors per second (or 150
 sectors at double speed), and, basically, the software must be fast enough to
 process that amount of incoming data. However, the PSX hardware includes a
 buffer that can hold up to a handful (exact number is unknown?) of sectors, so,
@@ -899,26 +901,26 @@ occasional delays of more than 1/75 seconds between processing two sectors
 aren't causing lost sectors, unless the delay(s) are summing up too much. The
 relevant steps for receiving data are:<br/>
 ```
-  Wait for Interrupt Request (INT1)          ;indicates that data is available
+  Wait for Interrupt Request (data ready)    ;indicates that data is available
   Send Data Request (BFRD=1)                 ;accept data
-  Acknowledge INT1                           ;
+  Acknowledge data ready                     ;
   Copy Data to Main RAM (via I/O or DMA)     ;read data
 ```
 The Data Request accepts the data for the currently pending interrupt, it
-should be usually issued between receiving/acknowledging INT1 (however, it can
+should be usually issued between receiving/acknowledging data ready (however, it can
 be also issued shortly after the acknowledge; even if there are further sectors
 in the buffer, there seems to be a small delay between the acknowledge and the
 next interrupt, and Data Requests during that period are still treated to
 belong to the old interrupt).<br/>
-If a buffer overrun has occured \<before\> issuing the Data Request, then
+If a buffer overrun has occurred \<before\> issuing the Data Request, then
 wrong data will be received, ie. some sectors will be skipped (the hardware
 doesn't seem to support a buffer-overrun error flag? Anyways, see GetlocL
 description for a possible way to detect buffer-overruns).<br/>
 If a buffer overrun occurs \<after\> issuing the Data Request, then the
-requested data can be still read via I/O or DMA intactly, ie. the requested
+requested data can be still read intact via I/O or DMA, ie. the requested
 data is "locked", and the overrun will affect only the following sectors.<br/>
 
-#### ReadTOC - Command 1Eh --\> INT3(stat) --\> INT2(stat)
+#### ReadTOC - Command 1Eh --\> acknowledge(stat) --\> complete(stat)
 ```
   Caution: Supported only in BIOS version vC1 and up. Not supported in vC0.
 ```
@@ -966,8 +968,8 @@ the meaning of the separate stat bits is:<br/>
 ```
 If the shell is closed, then bit4 is automatically reset to zero after reading
 stat with the Nop command (most or all other commands do not reset that bit
-after reading). If stat bit0 or bit2 is set, then the normal respons(es) and
-interrupt(s) are not send, and, instead, INT5 occurs, and an error-byte is send
+after reading). If stat bit0 or bit2 is set, then the normal response(s) and
+interrupt(s) are not send, and, instead, an error cause occurs, and an error-byte is send
 as second response byte, with the following values:<br/>
 ```
   ___These values appear in the FIRST response; with stat.bit0 set___
@@ -986,9 +988,9 @@ as second response byte, with the following values:<br/>
 when the disk is missing, or when the drive unit is disconnected from the
 mainboard.<br/>
 
-When the shell is opened, INT5 is triggered regardless of whether a command was
+When the shell is opened, the error cause is triggered regardless of whether a command was
 executing or not. When this happens, all bits except shell open and error are cleared
-in the status register. The error byte in the INT5 is set to 08h.<br/>
+in the status register. The error byte in the error cause is set to 08h.<br/>
 
 Some games send a Stop command before changing discs, but others just wait for the
 user to open the shell, causing the disc to stop. The game can then send Nop commands,
@@ -1001,7 +1003,7 @@ completion), that is important for Gran Turismo 1, which checks for seek
 completion by waiting for READ getting set (rather than waiting for SEEK
 getting cleared).<br/>
 
-#### Nop - Command 01h --\> INT3(stat)
+#### Nop - Command 01h --\> acknowledge(stat)
 Returns stat (like many other commands), and additionally does reset the shell
 open flag (for the following commands; unless the shell is still opened). This
 is different as for most or all other commands (which may return stat, but
@@ -1010,20 +1012,20 @@ In official docs, the command is eventually referred to as "Nop", believing that
 it does nothing than returning stat (ignoring the fact that it's having the
 special shell open reset feature).<br/>
 
-#### Getparam - Command 0Fh --\> INT3(stat,mode,null,file,channel)
+#### Getparam - Command 0Fh --\> acknowledge(stat,mode,null,file,channel)
 Returns stat (see Nop above), mode (see Setmode), a null byte (always 00h),
 and file/channel filter values (see Setfilter).<br/>
 
-#### GetlocL - Command 10h --\> INT3(amm,ass,asect,mode,file,channel,sm,ci)
+#### GetlocL - Command 10h --\> acknowledge(amm,ass,asect,mode,file,channel,sm,ci)
 Retrieves 4-byte sector header, plus 4-byte subheader of the current sector.
 GetlocL can be send during active Read commands (but, mind that the
-GetlocL-INT3-response can't be received until any pending Read-INT1's are
+GetlocL-acknowledge-response can't be received until any pending Read-data-ready causes are
 acknowledged).<br/>
-The PSX hardware can buffer a handful of sectors, the INT1 handler receives the
+The PSX hardware can buffer a handful of sectors, the data ready handler receives the
 \<oldest\> buffered sector, the GetlocL command returns the header and
 subheader of the \<newest\> buffered sector. Note: If the returned
 \<newest\> sector number is much bigger than the expected \<oldest\>
-sector number, then it's likely that a buffer overrun has occured.<br/>
+sector number, then it's likely that a buffer overrun has occurred.<br/>
 GetlocL fails (with error code 80h) when playing Audio CDs (or Audio Tracks on
 Data CDs). These errors occur because Audio sectors don't have any
 header/subheader (instead, equivalent data is stored in Subchannel Q, which can
@@ -1035,7 +1037,7 @@ During Seek, the drive seems to decode only Subchannel position data (but no
 header/subheader data), accordingly GetlocL won't work during seek (however,
 GetlocP does work during Seek).<br/>
 
-#### GetlocP - Command 11h - INT3(track,index,mm,ss,sect,amm,ass,asect)
+#### GetlocP - Command 11h - acknowledge(track,index,mm,ss,sect,amm,ass,asect)
 Retrieves 8 bytes of position information from Subchannel Q with ADR=1. Mainly
 intended for displaying the current audio position during Play. All results are
 in BCD.<br/>
@@ -1052,13 +1054,13 @@ in BCD.<br/>
 Note: GetlocP is also used for reading the LibCrypt protection data:<br/>
 [CDROM Protection - LibCrypt](cdromformat.md#cdrom-protection-libcrypt)<br/>
 
-#### GetTN - Command 13h --\> INT3(stat,first,last) ;BCD
+#### GetTN - Command 13h --\> acknowledge(stat,first,last) ;BCD
 Get first track number, and last track number in the TOC of the current
 Session. The number of tracks in the current session can be calculated as
 (last-first+1). The first track number is usually 01h in the first (or only)
 session, and "last track of previous session plus 1" in further sessions.<br/>
 
-#### GetTD - Command 14h,track --\> INT3(stat,mm,ss) ;BCD
+#### GetTD - Command 14h,track --\> acknowledge(stat,mm,ss) ;BCD
 For a disk with NN tracks, parameter values 01h..NNh return the start of the
 specified track, parameter value 00h returns the end of the last track, and
 parameter values bigger than NNh return error code 10h. Non-BCD parameter
@@ -1068,7 +1070,7 @@ boundaries (eg. if track=N Index=0 starts at 12:34:56, and Track=N Index=1
 starts at 12:36:56, then GetTD(N) will return 12:36, ie. the sector number is
 truncated, and the Index=0 region is skipped).<br/>
 
-#### GetQ - Command 1Dh,adr,point --\> INT3(stat) --\> INT2(10bytesSubQ,peak\_lo)
+#### GetQ - Command 1Dh,adr,point --\> acknowledge(stat) --\> complete(10bytesSubQ,peak\_lo)
 ```
   Caution: Supported only in BIOS version vC1 and up. Not supported in vC0.
   Caution: When unsupported, Parameter Fifo isn't cleared after the command.
@@ -1096,25 +1098,25 @@ seconds (to avoid this, use GetTN to see which tracks/points exist). After the
 timeout, the command starts playing track 1. If the controller wasn't already
 in audio mode before sending the command, then it does switch off the drive
 motor for a moment (that, after the timeout, and before starting playback).<br/>
-In case of timeout, the normal INT3/INT2 responses are replaced by
-INT3/INT5/INT5 (INT3 at command start, 1st INT5 at timeout/stop, and 2nd INT5
+In case of timeout, the normal acknowledge/complete responses are replaced by
+acknowledge/error/error (acknowledge at command start, 1st error at timeout/stop, and 2nd error
 at restart/play).<br/>
 Note: GetQ sends scratch noise to the SPU while seeking to the Lead-In area.<br/>
 
-#### GetID - Command 1Ah --\> INT3(stat) --\> INT2/5 (stat,flags,type,atip,"SCEx")
+#### GetID - Command 1Ah --\> acknowledge(stat) --\> complete/error (stat,flags,type,atip,"SCEx")
 ```
   Drive Status           1st Response   2nd Response
-  Door Open              INT5(11h,80h)  N/A
-  Spin-up                INT5(01h,80h)  N/A
-  Detect busy            INT5(03h,80h)  N/A
-  No Disk                INT3(stat)     INT5(08h,40h, 00h,00h, 00h,00h,00h,00h)
-  Audio Disk             INT3(stat)     INT5(0Ah,90h, 00h,00h, 00h,00h,00h,00h)
-  Unlicensed:Mode1       INT3(stat)     INT5(0Ah,80h, 00h,00h, 00h,00h,00h,00h)
-  Unlicensed:Mode2       INT3(stat)     INT5(0Ah,80h, 20h,00h, 00h,00h,00h,00h)
-  Unlicensed:Mode2+Audio INT3(stat)     INT5(0Ah,90h, 20h,00h, 00h,00h,00h,00h)
-  Debug/Yaroze:Mode2     INT3(stat)     INT2(02h,00h, 20h,00h, 20h,20h,20h,20h)
-  Licensed:Mode2         INT3(stat)     INT2(02h,00h, 20h,00h, 53h,43h,45h,4xh)
-  Modchip:Audio/Mode1    INT3(stat)     INT2(02h,00h, 00h,00h, 53h,43h,45h,4xh)
+  Door Open              error(11h,80h)  N/A
+  Spin-up                error(01h,80h)  N/A
+  Detect busy            error(03h,80h)  N/A
+  No Disk                acknowledge(stat)     error(08h,40h, 00h,00h, 00h,00h,00h,00h)
+  Audio Disk             acknowledge(stat)     error(0Ah,90h, 00h,00h, 00h,00h,00h,00h)
+  Unlicensed:Mode1       acknowledge(stat)     error(0Ah,80h, 00h,00h, 00h,00h,00h,00h)
+  Unlicensed:Mode2       acknowledge(stat)     error(0Ah,80h, 20h,00h, 00h,00h,00h,00h)
+  Unlicensed:Mode2+Audio acknowledge(stat)     error(0Ah,90h, 20h,00h, 00h,00h,00h,00h)
+  Debug/Yaroze:Mode2     acknowledge(stat)     complete(02h,00h, 20h,00h, 20h,20h,20h,20h)
+  Licensed:Mode2         acknowledge(stat)     complete(02h,00h, 20h,00h, 53h,43h,45h,4xh)
+  Modchip:Audio/Mode1    acknowledge(stat)     complete(02h,00h, 00h,00h, 53h,43h,45h,4xh)
 ```
 The status byte (ie. the first byte in the responses), may differ in some
 cases; values shown above are typically received when issuing GetID shortly
@@ -1150,20 +1152,20 @@ return four ASCII spaces (20h).<br/>
 To play CD-DA Audio CDs, init the following SPU Registers: CD Audio Volume,
 Main Volume, and SPU Control Bit0. Then send Demute command, and Play command.<br/>
 
-#### Mute - Command 0Bh --\> INT3(stat)
+#### Mute - Command 0Bh --\> acknowledge(stat)
 Turn off audio streaming to SPU (affects both CD-DA and XA-ADPCM).<br/>
 Even when muted, the CDROM controller is internally processing audio sectors
 (as seen in 1F801800h.Bit2, which works as usually for XA-ADPCM), muting is
 just forcing the CD output volume to zero.<br/>
 Mute is used by Dino Crisis 1 to mute noise during modchip detection.<br/>
 
-#### Demute - Command 0Ch --\> INT3(stat)
+#### Demute - Command 0Ch --\> acknowledge(stat)
 Turn on audio streaming to SPU (affects both CD-DA and XA-ADPCM). The Demute
 command is needed only if one has formerly used the Mute command (by default,
 the PSX is demuted after power-up (...and/or after Init command?), and is
 demuted after cdrom-booting).<br/>
 
-#### Play - Command 03h (,track) --\> INT3(stat) --\> optional INT1(report bytes)
+#### Play - Command 03h (,track) --\> acknowledge(stat) --\> optional data ready(report bytes)
 Starts CD Audio Playback. The parameter is optional, if there's no parameter
 given (or if it is 00h), then play either starts at Setloc position (if there
 was a pending unprocessed Setloc), or otherwise starts at the current location
@@ -1171,7 +1173,7 @@ was a pending unprocessed Setloc), or otherwise starts at the current location
 was already playing). For a disk with N songs, Parameters 1..N are starting the
 selected track. Parameters N+1..99h are restarting the begin of current track.
 The motor is switched off automatically when Play reaches the end of the disk,
-and INT4(stat) is generated (with stat.bit7 cleared).<br/>
+and end(stat) is generated (with stat.bit7 cleared).<br/>
 The track parameter seems to be ignored when sending Play shortly after
 power-up (ie. when the drive hasn't yet read the TOC).<br/>
 ===<br/>
@@ -1184,21 +1186,21 @@ used this to get around the PSX copy protection."<br/>
 Hmmm, what/where is the sector buffer... in the SPU?<br/>
 And, what/who are the 2.x and 3.x versions?<br/>
 
-#### Forward - Command 04h --\> INT3(stat) --\> optional INT1(report bytes)
-#### Backward - Command 05h --\> INT3(stat) --\> optional INT1(report bytes)
+#### Forward - Command 04h --\> acknowledge(stat) --\> optional data ready(report bytes)
+#### Backward - Command 05h --\> acknowledge(stat) --\> optional data ready(report bytes)
 After sending the command, the drive is in fast forward/backward mode, skipping
 every some sectors. The skipping rate is fixed (it doesn't increase after some
 seconds) (however, it increases when (as long as) sending the command again and
-again). The sound becomes (obviously) non-continous, and also rather very
+again). The sound becomes (obviously) non-continuous, and also rather very
 silent, muffled, and almost inaudible (that's making it rather useless; unless
 it's combined with a track/minute/second display). To terminate
 forward/backward, send a new Play command (with no parameters, so play starts
 at the "searched" location). Backward automatically switches to Play when
 reaching the begin of Track 1. Forward automatically Stops the drive motor with
-INT4(stat) when reaching the end of the last track.<br/>
+end(stat) when reaching the end of the last track.<br/>
 Forward/Backwards work only if the drive was in Play state, and only if Play
 had already started (ie. not shortly/immediately after a Play command); if the
-drive was not in Play state, then INT5(stat+1,80h) occurs.<br/>
+drive was not in Play state, then error(stat+1,80h) occurs.<br/>
 
 #### Setmode bits used for Play command
 During Play, only bit 7,2,1 of Setmode are used, all other Setmode bits are
@@ -1209,9 +1211,9 @@ forward effect (with audible output). Bit2 (report) activates an optional
 interrupt for Play, Forward, and Backward commands (see below). Bit1
 (autopause) pauses play at the end of the track.<br/>
 
-#### Report --\> INT1(stat,track,index,mm/amm,ss+80h/ass,sect/asect,peaklo,peakhi)
+#### Report --\> data ready(stat,track,index,mm/amm,ss+80h/ass,sect/asect,peaklo,peakhi)
 With report enabled via Setmode, the Play, Forward, and Backward commands do
-repeatedly generate INT1 interrupts, with eight bytes response length. The
+repeatedly generate data ready interrupts, with eight bytes response length. The
 interrupt isn't generated on ALL sectors, and the response changes between
 absolute time, and time within current track (the latter one indicated by bit7
 of ss):<br/>
@@ -1229,18 +1231,18 @@ one setting (but may toggle after one second; ie. after 75 frames). And, peak
 is reset after each read, so 9 of the 10 frames are lost.<br/>
 Note: Report mode affects only CD Audio (not Data, nor XA-ADPCM sectors).<br/>
 
-#### AutoPause --\> INT4(stat)
+#### AutoPause --\> end(stat)
 Autopause can be enabled/disabled via Setmode.bit1:<br/>
 ```
-  Setmode.bit1=1: AutoPause=On  --> Issue INT4(stat) and PAUSE at end of TRACK
-  Setmode.bit1=0: AutoPause=Off --> Issue INT4(stat) and STOP at end of DISC
+  Setmode.bit1=1: AutoPause=On  --> Issue end(stat) and PAUSE at end of TRACK
+  Setmode.bit1=0: AutoPause=Off --> Issue end(stat) and STOP at end of DISC
 ```
 End of Track is determined by sensing a track number transition in SubQ
 position info. After autopause, the disc stays at the \<end\> of the old
 track, NOT at the \<begin\> of the next track (so trying to resume playing
 by sending a new Play command without new Seek/Setloc command will instantly
 pause again).<br/>
-Caution: SubQ track transitions may pause instantly when accidently starting to
+Caution: SubQ track transitions may pause instantly when accidentally starting to
 play at the end of the previous track rather than at begin of desired track
 (this \<might\> happen due to seek inaccuracies, for example, GetTD does
 round down TOC entries from MM:SS:FF to MM:SS:00, which may be off by 0.99
@@ -1264,7 +1266,7 @@ the "other" sectors do contain XA-ADPCM data too, then the Setfilter command
 sectors. If the "other" sectors do contain code or data (eg. MDEC video data)
 which is wanted to be send to the CPU, then SetFilter isn't required to be
 enabled (although it shouldn't disturb reading even if it is enabled).<br/>
-If XA-ADPCM (and/or XA-Filter) is enabled via Setmode, then INT1 is generated
+If XA-ADPCM (and/or XA-Filter) is enabled via Setmode, then data ready is generated
 only for non-ADPCM sectors.<br/>
 The Setmode sector-size selection is don't care for forwarding XA-ADPCM sectors
 to the SPU (the hardware does always decompress all 900h bytes).<br/>
@@ -1281,7 +1283,7 @@ to the SPU (the hardware does always decompress all 900h bytes).<br/>
 
 
 ##   CDROM - Test Commands - Version, Switches, Region, Chipset, SCEx
-#### 19h,20h --\> INT3(yy,mm,dd,ver)
+#### 19h,20h --\> acknowledge(yy,mm,dd,ver)
 Indicates the date (Year-month-day, in BCD format) and version of the HC05
 CDROM controller BIOS. Known/existing values are:<br/>
 ```
@@ -1303,7 +1305,7 @@ CDROM controller BIOS. Known/existing values are:<br/>
   (unknown)        ;PS2,   xx xxx xxxx, late PS2 models...?
 ```
 
-#### 19h,21h --\> INT3(flags)
+#### 19h,21h --\> acknowledge(flags)
 Returns the current status of the POS0 and DOOR switches.<br/>
 ```
   Bit0   = HeadIsAtPos0 (0=No, 1=Pos0)
@@ -1312,26 +1314,26 @@ Returns the current status of the POS0 and DOOR switches.<br/>
   Bit3-7 = AlwaysZero
 ```
 
-#### 19h,22h --\> INT3("for Europe")
+#### 19h,22h --\> acknowledge("for Europe")
 ```
   Caution: Supported only in BIOS version vC1 and up. Not supported in vC0.
 ```
 Indicates the region that console is to be used in:<br/>
 ```
-  INT5(11h,10h)      --> NTSC, Japan (vC0)         --> requires "SCEI" discs
-  INT3("for Europe") --> PAL, Europe               --> requires "SCEE" discs
-  INT3("for U/C")    --> NTSC, North America       --> requires "SCEA" discs
-  INT3("for Japan")  --> NTSC, Japan / NTSC, Asia  --> requires "SCEI" discs
-  INT3("for NETNA")  --> Region-free yaroze version--> requires "SCEx" discs
-  INT3("for US/AEP") --> Region-free debug version --> accepts unlicensed CDRs
+  error(11h,10h)      --> NTSC, Japan (vC0)         --> requires "SCEI" discs
+  acknowledge("for Europe") --> PAL, Europe               --> requires "SCEE" discs
+  acknowledge("for U/C")    --> NTSC, North America       --> requires "SCEA" discs
+  acknowledge("for Japan")  --> NTSC, Japan / NTSC, Asia  --> requires "SCEI" discs
+  acknowledge("for NETNA")  --> Region-free yaroze version--> requires "SCEx" discs
+  acknowledge("for US/AEP") --> Region-free debug version --> accepts unlicensed CDRs
 ```
 The CDROMs must contain a matching SCEx string accordingly.<br/>
 The string "for Europe" does also suggest 50Hz PAL/SECAM video hardware.<br/>
 The Yaroze accepts any normal SCEE,SCEA,SCEI discs, plus special SCEW discs.<br/>
 
-#### 19h,23h --\> INT3("CXD2940Q/CXD1817Q/CXD2545Q/CXD1782BR") ;Servo Amplifier
-#### 19h,24h --\> INT3("CXD2940Q/CXD1817Q/CXD2545Q/CXD2510Q")  ;Signal Processor
-#### 19h,25h --\> INT3("CXD2940Q/CXD1817Q/CXD1815Q/CXD1199BQ") ;Decoder/FIFO
+#### 19h,23h --\> acknowledge("CXD2940Q/CXD1817Q/CXD2545Q/CXD1782BR") ;Servo Amplifier
+#### 19h,24h --\> acknowledge("CXD2940Q/CXD1817Q/CXD2545Q/CXD2510Q")  ;Signal Processor
+#### 19h,25h --\> acknowledge("CXD2940Q/CXD1817Q/CXD1815Q/CXD1199BQ") ;Decoder/FIFO
 ```
   Caution: Supported only in BIOS version vC1 and up. Not supported in vC0.
 ```
@@ -1343,7 +1345,7 @@ PSones are using CXD2938Q or possibly CXD2941R chips, but nothing called
 CXD2940Q).<br/>
 Note: Yaroze responds by CXD1815BQ instead of CXD1199BQ (but not by CXD1815Q).<br/>
 
-#### 19h,04h --\> INT3(stat) ;Read SCEx string (and force motor on)
+#### 19h,04h --\> acknowledge(stat) ;Read SCEx string (and force motor on)
 Resets the total/success counters to zero, and does then try to read the SCEx
 string from the current location (the SCEx is stored only in the Lead-In area,
 so, if the drive head is elsewhere, it will usually not find any strings,
@@ -1357,7 +1359,7 @@ Note: Like 19h,00h, this command forces the drive motor to spin at standard
 speed (synchronized with the data on the disk), works even if the shell is open
 (but stops spinning after a while if the drive is empty).<br/>
 
-#### 19h,05h --\> INT3(total,success)  ;Get SCEx Counters
+#### 19h,05h --\> acknowledge(total,success)  ;Get SCEx Counters
 Returns the total number of "Sxxx" strings received (where at least the first
 byte did match), and the number of full "SCEx" strings (where all bytes did
 match). Typically, the values are "01h,01h" for Licensed PSX Data CDs, or
@@ -1373,7 +1375,7 @@ update the counters, but does not lock/unlock the disk.<br/>
 ##   CDROM - Test Commands - Test Drive Mechanics
 Signal Processor and Servo Amplifier<br/>
 
-#### 19h,50h,msb[,mid,[lsb[,xlo]]] --\> INT3(stat)
+#### 19h,50h,msb[,mid,[lsb[,xlo]]] --\> acknowledge(stat)
 Sends an 8bit/16bit/24bit command to the hardware, depending on number of
 parameters:<br/>
 ```
@@ -1385,7 +1387,7 @@ parameters:<br/>
   0 bytes or more than 15 bytes: generates an error
 ```
 
-#### 19h,51h,msb[,mid,[lsb]] --\> INT3(stat,hi,lo)  ;BIOS vC2/vC3 only
+#### 19h,51h,msb[,mid,[lsb]] --\> acknowledge(stat,hi,lo)  ;BIOS vC2/vC3 only
 Supported by newer CDROM BIOSes only (such that use CXD2545Q or newer chips).<br/>
 Works same as 19h,50h, but does additionally receive a response.<br/>
 The command is always sending a 24bit CX(Xxxxxx) command, but it doesn't verify
@@ -1397,41 +1399,41 @@ The command can be used to send any CX(..) command, but actually it does make
 sense only for the get-status commands, see below "19h,51h,39h,xxh"
 description.<br/>
 
-#### 19h,51h,39h,xxh --\> INT3(stat,hi,lo)  ;BIOS vC2/vC3 only
+#### 19h,51h,39h,xxh --\> acknowledge(stat,hi,lo)  ;BIOS vC2/vC3 only
 Supported by newer CDROM BIOSes only (such that use CXD2545Q or newer chips).<br/>
 Sends CX(39xx) to the hardware, and receives a response (the response.hi byte
 is usually 00h for 8bit responses, or 00h..01h for 9bit responses). For
 example, this can be used to dump the Coefficient RAM.<br/>
 
-#### 19h,03h --\> INT3(stat) ;force motor off
+#### 19h,03h --\> acknowledge(stat) ;force motor off
 Forces the motor to stop spinning (ignored during spin-up phase).<br/>
 
-#### 19h,17h --\> INT3(stat) ;force motor on, clockwise, super-fast
-#### 19h,01h --\> INT3(stat) ;force motor on, anti-clockwise, super-fast
-#### 19h,02h --\> INT3(stat) ;force motor on, anti-clockwise, super-fast
-#### 19h,10h --\> INT3(stat) ;force motor on, anti-clockwise, super-fast
-#### 19h,18h --\> INT3(stat) ;force motor on, anti-clockwise, super-fast
+#### 19h,17h --\> acknowledge(stat) ;force motor on, clockwise, super-fast
+#### 19h,01h --\> acknowledge(stat) ;force motor on, anti-clockwise, super-fast
+#### 19h,02h --\> acknowledge(stat) ;force motor on, anti-clockwise, super-fast
+#### 19h,10h --\> acknowledge(stat) ;force motor on, anti-clockwise, super-fast
+#### 19h,18h --\> acknowledge(stat) ;force motor on, anti-clockwise, super-fast
 Forces the drive motor to spin at maximum speed (which is much faster than
 normal or double speed), in normal (clockwise), or reversed (anti-clockwise)
 direction. The commands work even if the shell is open. The commands do not try
 to synchronize the motor with the data on the disk (and do thus work even if no
 disk is inserted).<br/>
 
-#### 19h,00h --\> INT3(stat) ;force motor on, clockwise (even if shell open)
+#### 19h,00h --\> acknowledge(stat) ;force motor on, clockwise (even if shell open)
 This command seems to have effect only if the drive motor was off. If it was
 off, it does FFh-fills the TOC entries in RAM, and seek to the begin of the TOC
 at 98:30:00 or so (where minute=98 means minus two). From that location, it
-follows the spiral on the disk, although it does occassionally jump back some
+follows the spiral on the disk, although it does occasionally jump back some
 seconds. After clearing the TOC, the command does not write new data to the TOC
 buffer in RAM.<br/>
 Note: Like 19h,04h, this command forces the drive motor to spin at standard
 speed (synchronized with the data on the disk), works even if the shell is open
 (but stops spinning after a while if the drive is empty).<br/>
 
-#### 19h,11h --\> INT3(stat) ;Move Lens Up (leave parking position)
-#### 19h,12h --\> INT3(stat) ;Move Lens Down (enter parking position)
-#### 19h,13h --\> INT3(stat) ;Move Lens Outwards (away from center of disk)
-#### 19h,14h --\> INT3(stat) ;Move Lens Inwards (towards center of disk)
+#### 19h,11h --\> acknowledge(stat) ;Move Lens Up (leave parking position)
+#### 19h,12h --\> acknowledge(stat) ;Move Lens Down (enter parking position)
+#### 19h,13h --\> acknowledge(stat) ;Move Lens Outwards (away from center of disk)
+#### 19h,14h --\> acknowledge(stat) ;Move Lens Inwards (towards center of disk)
 Moves the laser lens. The inwards/outwards commands do move ONLY the lens (ie.
 unlike as for Seek commands, the overall-laser-unit remains in place, only the
 lens is moved).<br/>
@@ -1444,18 +1446,18 @@ this command too often may destroy the drive mechanics).<br/>
 Note: The same destructive hit-outer-edge effect happens when using Setloc/Seek
 with too large values (like minute=99h).<br/>
 
-#### 19h,16h --\> INT3(stat) ;Unknown / makes some noise if motor is on
-#### 19h,19h --\> INT3(stat) ;Unknown / no effect
-#### 19h,1Ah --\> INT3(stat) ;Unknown / makes some noise if motor is on
+#### 19h,16h --\> acknowledge(stat) ;Unknown / makes some noise if motor is on
+#### 19h,19h --\> acknowledge(stat) ;Unknown / no effect
+#### 19h,1Ah --\> acknowledge(stat) ;Unknown / makes some noise if motor is on
 Seem to have no effect?<br/>
 19h,16h seems to Move Lens Inwards, too.<br/>
 
-#### 19h,06h,new --\> INT3(old) ;Adjust balance in RAM, and apply it via CX(30+n)
-#### 19h,07h,new --\> INT3(old) ;Adjust gain in RAM, and apply it via CX(38+n)
-#### 19h,08h,new --\> INT3(old) ;Adjust balance in RAM only
+#### 19h,06h,new --\> acknowledge(old) ;Adjust balance in RAM, and apply it via CX(30+n)
+#### 19h,07h,new --\> acknowledge(old) ;Adjust gain in RAM, and apply it via CX(38+n)
+#### 19h,08h,new --\> acknowledge(old) ;Adjust balance in RAM only
 These commands are supported only by older CDROM BIOS versions (those with
 CXA1782BR Servo Amplifier).<br/>
-Later BIOSes will respond with INT5(11h,20h) when trying to use these commands
+Later BIOSes will respond with error(11h,20h) when trying to use these commands
 (because CXD2545Q and later Servo Amplifiers don't support the CX(30/38+n)
 commands).<br/>
 
@@ -1475,19 +1477,19 @@ the whole stuff seems to be dating back to prototypes. And it seems to be
 removed from later BIOSes (which appear to use "ROMSEL" as "SCLK"; for
 receiving status info from the new CXD2545Q chips).<br/>
 
-#### 19h,30h,index,dat1,dat2 --\> INT3(stat) ;Prototype/Debug stuff
-#### 19h,31h,dat1,dat2 --\> INT3(stat) ;Prototype/Debug stuff
-#### 19h,4xh,index --\> INT3(dat1,dat2) ;Prototype/Debug stuff
+#### 19h,30h,index,dat1,dat2 --\> acknowledge(stat) ;Prototype/Debug stuff
+#### 19h,31h,dat1,dat2 --\> acknowledge(stat) ;Prototype/Debug stuff
+#### 19h,4xh,index --\> acknowledge(dat1,dat2) ;Prototype/Debug stuff
 These functions are supported on older CDROM BIOS only; later BIOSes respond by
-INT5(11h,10h).<br/>
+error(11h,10h).<br/>
 The functions do not affect the CDROM operation (they do simple allow to
 transfer data between Main CPU and external debug hardware).<br/>
-Sub functions 30h and 31h may fail with INT5(11h,80h) when receiving wrong
+Sub functions 30h and 31h may fail with error(11h,80h) when receiving wrong
 signals on the serial input line.<br/>
 Sub function "4xh" value can be 40h..4Fh (don't care).<br/>
 
-#### INT5 Debug Messages
-Alongsides to INT5 errors, the BIOS is usually also sending information via the
+#### Error Debug Messages
+Alongside error causes, the BIOS is usually also sending information via the
 above serial bus (the error info is divided into multiple 8bit+16bit snippets,
 and contains stat, error code, mode, current SubQ position, and most recently
 issued command).<br/>
@@ -1498,10 +1500,10 @@ issued command).<br/>
 Caution: Below commands 19h,71h..76h are supported only in BIOS version vC1 and
 up. Not supported in vC0.<br/>
 
-#### 19h,71h,index --\> INT3(databyte) ;Read single register
+#### 19h,71h,index --\> acknowledge(databyte) ;Read single register
 index can be 00h..1Fh, bigger values seem to be mirrored to "index AND 1Fh",
 with one exception: index 13h in NOT mirrored, instead, index 33h, 53h, 93h,
-B3h, D3h, F3h return INT5(stat+1,10h), and index 73h returns INT5(stat+1,20h).<br/>
+B3h, D3h, F3h return error(stat+1,10h), and index 73h returns error(stat+1,20h).<br/>
 Aside from returning a value, the commands seem to DO something (like moving
 the drive head when a disk is inserted). Return values are usually:<br/>
 ```
@@ -1530,21 +1532,21 @@ the drive head when a disk is inserted). Return values are usually:<br/>
   15h..1Fh  C0h-filled        ;or 17h --> DEh
 ```
 
-#### 19h,72h,index,databyte --\> INT3(stat) ;Write single register
+#### 19h,72h,index,databyte --\> acknowledge(stat) ;Write single register
 ```
   ;other response on param xx16h,xx18h with xx>00h
 ```
 
-#### 19h,73h,index,len --\> INT3(databytes...) ;Read multiple registers (bugged)
-#### 19h,74h,index,len,databytes --\> INT3(stat) ;Write multiple registers (bugged)
+#### 19h,73h,index,len --\> acknowledge(databytes...) ;Read multiple registers (bugged)
+#### 19h,74h,index,len,databytes --\> acknowledge(stat) ;Write multiple registers (bugged)
 Same as read/write single register, but trying to transfer multiple registers
 at once. BUG: The transfer should range from 00h to len-1, but the loop counter
 is left uninitialized (set to X=48h aka "command number 19h-minus-1-mul-2"
 instead of X=00h). Causing to the function to read/write garbage at index
 48h..FFh, it does then wrap to 00h and do the correct intended transfer, but
-the preceeding bugged part may have smashed RAM or I/O ports.<br/>
+the preceding bugged part may have smashed RAM or I/O ports.<br/>
 
-#### 19h,75h --\> INT3(remain.lo,remain.hi,addr.lo,addr.hi) ;Get Host Xfer Info
+#### 19h,75h --\> acknowledge(remain.lo,remain.hi,addr.lo,addr.hi) ;Get Host Xfer Info
 Returns a 4-byte value. In my early tests, on the first day it returned
 B1h,CEh,4Ch,01h, on the next day 2Ch,E4h,95h,D5h, and on all following days
 00h,C0h,00h,00h (no idea why/where the earlier values came from).<br/>
@@ -1558,14 +1560,14 @@ That two bytes are 0Ch,08h after Read commands.<br/>
   changes to [1F1h] which may occur after read command (eg. may be 20h)
 ```
 
-#### 19h,76h,len\_lo,len\_hi,addr\_lo,addr\_hi --\> INT3(stat) ;Prepare SRAM Transfer
+#### 19h,76h,len\_lo,len\_hi,addr\_lo,addr\_hi --\> acknowledge(stat) ;Prepare SRAM Transfer
 Prepare Transfer to/from 32K SRAM.<br/>
-After INT3, data can be read (same way as sector data after INT1).<br/>
+After acknowledge, data can be read (same way as sector data after data ready).<br/>
 
 
 
 ##   CDROM - Test Commands - Read HC05 SUB-CPU RAM and I/O Ports
-#### 19h,60h,addr\_lo,addr\_hi --\> INT3(data) ;Read one byte from Drive RAM or I/O
+#### 19h,60h,addr\_lo,addr\_hi --\> acknowledge(data) ;Read one byte from Drive RAM or I/O
 Reads one byte from the controller's RAM or I/O area, see the memory map below
 for more info. Among others, the command allows to read Subchannel Q data, eg.
 at \[200h..209h\], including ADR=2/UPC/EAN and ADR=3/ISRC values (which are
@@ -1702,7 +1704,7 @@ Other/invalid addresses are:<br/>
 ```
 
 #### DTL-H2000 Memory Map
-This version allows to read the whole 64Kbyte memory space (withou mirroring
+This version allows to read the whole 64Kbyte memory space (without mirroring
 everything to first 300h bytes). I/O Ports and Variables are at different
 locations:<br/>
 ```
@@ -1738,13 +1740,13 @@ Lead-In, bytes 7..9 are overwritten by the position value from bytes 3..5. The
 
 
 ##   CDROM - Secret Unlock Commands
-#### SecretUnlockPart1 - Command 50h --\> INT5(11h,40h)
-#### SecretUnlockPart2 - Command 51h,"Licensed by" --\> INT5(11h,40h)
-#### SecretUnlockPart3 - Command 52h,"Sony" --\> INT5(11h,40h)
-#### SecretUnlockPart4 - Command 53h,"Computer" --\> INT5(11h,40h)
-#### SecretUnlockPart5 - Command 54h,"Entertainment" --\> INT5(11h,40h)
-#### SecretUnlockPart6 - Command 55h,\<region\> --\> INT5(11h,40h)
-#### SecretUnlockPart7 - Command 56h --\> INT5(11h,40h)
+#### SecretUnlockPart1 - Command 50h --\> error(11h,40h)
+#### SecretUnlockPart2 - Command 51h,"Licensed by" --\> error(11h,40h)
+#### SecretUnlockPart3 - Command 52h,"Sony" --\> error(11h,40h)
+#### SecretUnlockPart4 - Command 53h,"Computer" --\> error(11h,40h)
+#### SecretUnlockPart5 - Command 54h,"Entertainment" --\> error(11h,40h)
+#### SecretUnlockPart6 - Command 55h,\<region\> --\> error(11h,40h)
+#### SecretUnlockPart7 - Command 56h --\> error(11h,40h)
 ```
   Caution: Supported only in BIOS version vC1 and up. Not supported in vC0.
   Caution: Supported only in Europe/USA. Nonfunctional in Japan/Asia.
@@ -1769,14 +1771,14 @@ same for games that set the "HCRISD" I/O port bit. On the contrary,
 opening/closing the drive door does not affect the unlocking state.<br/>
 The commands have been discovered in September 2013, and appear to be supported
 by all CDROM BIOS versions (from old PSXes up to later PSones).<br/>
-Note that the commands do always respond with INT5 errors (even on successful
+Note that the commands do always respond with error causes (even on successful
 unlocking).<br/>
 Japanese consoles are internally containing code for processing the Secret
 Unlock commands, but they are not actually executing that code, and even if
 they would do so: they are ignoring the resulting unlocking flag, making the
 commands nonfunctional in Japan/Asia regions.<br/>
 
-#### SecretLock - Command 57h --\> INT5(11h,40h)
+#### SecretLock - Command 57h --\> error(11h,40h)
 Undoes the unlocking and restores the normal locked state (same happens when
 sending the Unlocking commands in wrong order or with wrong parameters).<br/>
 
@@ -1794,11 +1796,11 @@ might hit a RET opcode and recover from the crash.<br/>
 ```
 
 ```
-  1Fh VideoCD      sub,a,b,c,d,e   INT3(stat,a,b,c,d,e)   ;<-- SCPH-5903 only
-  1Fh..4Fh -       -               INT5(11h,40h)  ;-Unused/invalid
+  1Fh VideoCD      sub,a,b,c,d,e   acknowledge(stat,a,b,c,d,e)   ;<-- SCPH-5903 only
+  1Fh..4Fh -       -               error(11h,40h)  ;-Unused/invalid
 ```
 
-#### VideoCdSio - Cmd 1Fh,01h,JoyL,JoyH,State,Task,0 --\> INT3(stat,req,mm,ss,ff,x)
+#### VideoCdSio - Cmd 1Fh,01h,JoyL,JoyH,State,Task,0 --\> acknowledge(stat,req,mm,ss,ff,x)
 The JoyL/JoyH bytes contain 16bit button (and drive door) bits:<br/>
 ```
   0  Drive Door  (0=Open)    (from CDROM stat bit4) ;Open
@@ -1830,25 +1832,25 @@ The Task byte can be:<br/>
   00h = Confirms that "Tocread" (aka setsession 1) request was processed
   01h = Detect VCD Disc (used on power-up, and after door open) (after spin-up)
   02h = Handshake (request ack response)
-  0Ah = Door opened during play (int5/door error)
+  0Ah = Door opened during play (error/door error)
   80h = No disc
   FFh = No change (nop)
 ```
-The req byte in the INT3 response can be:<br/>
+The req byte in the acknowledge response can be:<br/>
 ```
-  00h  Normal (no special event occured and no action requested)
+  00h  Normal (no special event occurred and no action requested)
   01h  Request CD to Seek_and_play (using mm:ss:ff response parameter bytes)
-  02h  Request CD to Pause                ;cmd(09h)    -->int3(stat),int2(stat)
-  03h  Request CD to Stop                 ;cmd(08h)    -->int3(stat),int2(stat)
-  04h  Request CD to Tocread (setsession1);cmd(12h,01h)-->int3(stat),int2(stat)
+  02h  Request CD to Pause                ;cmd(09h)    -->acknowledge(stat),complete(stat)
+  03h  Request CD to Stop                 ;cmd(08h)    -->acknowledge(stat),complete(stat)
+  04h  Request CD to Tocread (setsession1);cmd(12h,01h)-->acknowledge(stat),complete(stat)
   05h  Handshake Command was processed, and this is the "ack" response
-  06h  Request CD to Fast Forward         ;cmd(04h)    -->int3(stat)
-  07h  Request CD to Fast Backward        ;cmd(05h)    -->int3(stat)
+  06h  Request CD to Fast Forward         ;cmd(04h)    -->acknowledge(stat)
+  07h  Request CD to Fast Backward        ;cmd(05h)    -->acknowledge(stat)
   80h  Detect Command was processed, and disc was detected as VCD
   81h  Detect Command was processed, and disc was detected as Non-VCD
 ```
 
-#### VideoCdSwitch - Cmd 1Fh,02h,flag,x,x,x,x --\> INT3(stat,0,0,x,x,x)
+#### VideoCdSwitch - Cmd 1Fh,02h,flag,x,x,x,x --\> acknowledge(stat,0,0,x,x,x)
 ```
   00h      = Normal PSX Mode  (PortF.3=LOW)  (Audio/Video from GPU/SPU chips)
   01h..FFh = Special VCD Mode (PortF.3=HIGH) (Audio/Video from MDEC/OSD chips)
@@ -1864,9 +1866,9 @@ Compared to the original C1h version, there are only a few changes: A
 initialization function for initializing port F on power-up. And new command
 (command 1Fh, inserted in the various command tables), with two subfunctions
 (01h and 02h):<br/>
-- Command 1Fh,01h,a,b,c,d,e --\> INT3(stat,a,b,c,d,e) Serial 5-byte
+- Command 1Fh,01h,a,b,c,d,e --\> acknowledge(stat,a,b,c,d,e) Serial 5-byte
 read-write<br/>
-- Command 1Fh,02h,v,x,x,x,x --\> INT3(stat,0,0,x,x,x) Toggle 1bit (port
+- Command 1Fh,02h,v,x,x,x,x --\> acknowledge(stat,0,0,x,x,x) Toggle 1bit (port
 F.bit3)<br/>
 Whereas,<br/>
 ```
@@ -1934,19 +1936,19 @@ e.g. SetMode:
 #### Responses
 The PSX can deliver one INT after another. Instead of using a real queue, it's
 merely using some flags that do indicate which INT(s) need to be delivered.
-Basically, there seem to be two flags: One for Second Response (INT2), and one
-for Data/Report Response (INT1). There is no flag for First Response (INT3);
-because that INT is generated immediately after executing a command.<br/>
+Basically, there seem to be two flags: One for Second Response (complete), and one
+for Data/Report Response (data ready). There is no flag for First Response (acknowledge);
+because that cause is generated immediately after executing a command.<br/>
 The flag mechanism means that the SUB-CPU cannot hold more than one undelivered
-INT1. That, although the CDROM Decoder does notify the SUB-CPU about all newly
+data ready. That, although the CDROM Decoder does notify the SUB-CPU about all newly
 received sectors, and it can hold up to eight sectors in the 32K SRAM. However,
 the SUB-CPU BIOS merely sets a sector-delivery-needed flag (instead of
 memorizing which/how many sectors need to be delivered, and, accordingly, the
 PSX can use only three of the available eight SRAM slots: One for currently
-pending INT1, one for undelivered INT1, and one for currently/incompletely
+pending data ready, one for undelivered data ready, and one for currently/incompletely
 received sector).<br/>
 
-#### First Response (INT3) (or INT5 if failed)
+#### First Response (acknowledge) (or error if failed)
 The first response is sent immediately after processing a command. In detail:<br/>
 The mainloop checks for incoming commands once every some clock cycles, and
 executes commands under following condition:<br/>
@@ -1954,7 +1956,7 @@ executes commands under following condition:<br/>
   Main CPU has sent a command, AND, there is no INT pending
   (if an INT is pending, then the command won't be executed yet, but will be
   executed in following mainloop cycles; once when INT got acknowledged)
-  (even if no INT is pending, the mainloop may generate INT1/INT2 before
+  (even if no INT is pending, the mainloop may generate data ready/complete before
   executing the command, if so, as said above, the command won't execute yet)
 ```
 Once when the command gets executed it will sent the first response immediately
@@ -1964,19 +1966,19 @@ initializations). Anyways, there will be no other INTs generated during command
 execution, so once when the command execution has started, it's guaranteed that
 the next INT will contain the first response.<br/>
 
-#### Second Responses (INT2) (or INT5 if failed)
+#### Second Responses (complete) (or error if failed)
 Some commands do send a second response after actual command execution:<br/>
 ```
-  07h MotorOn    E -               INT3(stat), INT2(stat)
-  08h Stop       E -               INT3(stat), INT2(stat)
-  09h Pause      E -               INT3(stat), INT2(stat)
-  0Ah Init         -               INT3(late-stat), INT2(stat)
-  12h SetSession E session         INT3(stat), INT2(stat)
-  15h SeekL      E -               INT3(stat), INT2(stat)  ;\use prior Setloc
-  16h SeekP      E -               INT3(stat), INT2(stat)  ;/to set target
-  1Ah GetID      E -               INT3(stat), INT2/5(stat,flg,typ,atip,"SCEx")
-  1Dh GetQ       E adr,point       INT3(stat), INT2(10bytesSubQ,peak_lo)
-  1Eh ReadTOC      -               INT3(late-stat), INT2(stat)
+  07h MotorOn    E -               acknowledge(stat), complete(stat)
+  08h Stop       E -               acknowledge(stat), complete(stat)
+  09h Pause      E -               acknowledge(stat), complete(stat)
+  0Ah Init         -               acknowledge(late-stat), complete(stat)
+  12h SetSession E session         acknowledge(stat), complete(stat)
+  15h SeekL      E -               acknowledge(stat), complete(stat)  ;\use prior Setloc
+  16h SeekP      E -               acknowledge(stat), complete(stat)  ;/to set target
+  1Ah GetID      E -               acknowledge(stat), complete/error(stat,flg,typ,atip,"SCEx")
+  1Dh GetQ       E adr,point       acknowledge(stat), complete(10bytesSubQ,peak_lo)
+  1Eh ReadTOC      -               acknowledge(late-stat), complete(stat)
 ```
 In some cases (like seek or spin-up), it may take more than a second until the
 2nd response is sent.<br/>
@@ -1984,19 +1986,19 @@ It should be highly recommended to WAIT until the second response is generated
 BEFORE sending a new command (it wouldn't make too much sense to send a new
 command between first and second response, and results would be unknown, and
 probably totally unpredictable).<br/>
-Error Notes: If the command has been rejected (INT5 sent as 1st response) then
+Error Notes: If the command has been rejected (error sent as 1st response) then
 the 2nd response isn't sent (eg. on wrong number of parameters, or if disc
-missing). If the command fails at a later stage (INT5 as 2nd response), then
-there are cases where another INT5 occurs as 3rd response (eg. on
+missing). If the command fails at a later stage (error as 2nd response), then
+there are cases where another error occurs as 3rd response (eg. on
 SetSession=02h on non-multisession-disk).<br/>
 
-#### Data/Report Responses (INT1)
+#### Data/Report Responses (data ready)
 ```
-  03h Play       E (track)         INT3(stat), optional INT1(report bytes)
-  04h Forward    E -               INT3(stat), optional INT1(report bytes)
-  05h Backward   E -               INT3(stat), optional INT1(report bytes)
-  06h ReadN      E -               INT3(stat), INT1(stat), datablock
-  1Bh ReadS      E?-               INT3(stat), INT1(stat), datablock
+  03h Play       E (track)         acknowledge(stat), optional data ready(report bytes)
+  04h Forward    E -               acknowledge(stat), optional data ready(report bytes)
+  05h Backward   E -               acknowledge(stat), optional data ready(report bytes)
+  06h ReadN      E -               acknowledge(stat), data ready(stat), datablock
+  1Bh ReadS      E?-               acknowledge(stat), data ready(stat), datablock
 ```
 
 
@@ -2055,13 +2057,13 @@ probably causing the drive head to be moved too far on such discs, which will
 raise the seek time as the head needs to be moved backwards to compensate that
 error).<br/>
 
-#### INT1 Rate
+#### Data Ready Rate
 ```
   Command                Average   Min       Max
   Read (single speed)    006e1cdh  00686dah..0072732h
   Read (double speed)    0036cd2h  00322dfh..003ab2bh
 ```
-The INT1 rate needs to be precise for CD-DA and CD-XA Audio streaming, exact
+The data ready rate needs to be precise for CD-DA and CD-XA Audio streaming, exact
 clock cycle values should be: SystemClock\*930h/4/44100Hz for Single Speed (and
 half as much for Double Speed) (the "Average" values are AVERAGE values, not
 exact values).<br/>
@@ -2076,16 +2078,16 @@ The CDROM sector buffer is 32Kx8 SRAM (IC303). The buffer is apparently divided
 into 8 slots, theoretically allowing to buffer up to 8 sectors.<br/>
 BUG: The drive controller seems to allow only 2 of those 8 sectors (the oldest
 sector, and the current/newest sector).<br/>
-Ie. after processing the INT1 for the oldest sector, one would expect the
-controller to generate another INT1 for next newer sector - but instead it
-appears to jump directly to INT1 for the newest sector (skipping all other
+Ie. after processing the data ready for the oldest sector, one would expect the
+controller to generate another data ready for next newer sector - but instead it
+appears to jump directly to data ready for the newest sector (skipping all other
 unprocessed sectors). There is no known way to get around that effect.<br/>
 So far, the big 32Kbyte buffer is entirely useless (the two accessible sectors
 could have been as well stored in a 8Kbyte chip) (unless, maybe the 32Kbytes
 have been intended for some error-correction "read-ahead" purposes, rather than
 as "look-back" buffer for old sectors; one of the unused slots might be also
 used for XA-ADPCM sectors).<br/>
-The bottom line is that one should process INT1's as soon as possible (ie.
+The bottom line is that one should process data ready causes as soon as possible (ie.
 before the cdrom controller receives and skips further sectors). Otherwise
 sectors would be lost without notice (there appear to be absolutely no overrun
 status flags, nor overrun error interrupts).<br/>
@@ -2093,41 +2095,41 @@ status flags, nor overrun error interrupts).<br/>
 #### Sector Buffer Test Cases
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
-  Process INT1 --> receives sector header for 0:2:1
-  Process INT1 --> receives sector header for 0:2:2
-  Process INT1 --> receives sector header for 0:2:3
+  Process data ready --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:1
+  Process data ready --> receives sector header for 0:2:2
+  Process data ready --> receives sector header for 0:2:3
 ```
-Above shows the normal flow when processing INT1's as they arise. Now,
-inserting delays (and not processing INT1's during that delays):<br/>
+Above shows the normal flow when processing data ready causes as they arise. Now,
+inserting delays (and not processing data ready causes during that delays):<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   delay(1)
-  Process INT1 --> receives sector header for 0:2:1 (oldest sector)
-  Process INT1 --> receives sector header for 0:2:6 (newest sector)
-  Process INT1 --> receives sector header for 0:2:7 (next sector)
+  Process data ready --> receives sector header for 0:2:1 (oldest sector)
+  Process data ready --> receives sector header for 0:2:6 (newest sector)
+  Process data ready --> receives sector header for 0:2:7 (next sector)
 ```
 Above suggests that the CDROM buffer can hold max 2 sectors (the oldest and
 current one). However, using a longer delay:<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   delay(2)
-  Process INT1 --> receives sector header for 0:2:9  (oldest/overwritten)
-  Process INT1 --> receives sector header for 0:2:11 (newest sector)
-  Process INT1 --> receives sector header for 0:2:12 (next sector)
+  Process data ready --> receives sector header for 0:2:9  (oldest/overwritten)
+  Process data ready --> receives sector header for 0:2:11 (newest sector)
+  Process data ready --> receives sector header for 0:2:12 (next sector)
 ```
 Above indicates that sector buffer can hold 8 sectors (as the sector 1 slot is
 overwritten by sector 9). And, another test with even longer delay:<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   delay(3)
-  Process INT1 --> receives sector header for 0:2:17 (currently received)
-  Process INT1 --> receives sector header for 0:2:16 (newest full sector)
-  Process INT1 --> receives sector header for 0:2:17 (next sector)
-  Process INT1 --> receives sector header for 0:2:18 (next sector)
+  Process data ready --> receives sector header for 0:2:17 (currently received)
+  Process data ready --> receives sector header for 0:2:16 (newest full sector)
+  Process data ready --> receives sector header for 0:2:17 (next sector)
+  Process data ready --> receives sector header for 0:2:18 (next sector)
 ```
 Above is a special case where sector 17 appears twice; the first one is the
 sector 1 slot (which was overwritten by sector 9, and apparently then half
@@ -2136,193 +2138,193 @@ overwritten by sector 17).<br/>
 #### Sector Buffer VS GetlocL Response Tests
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   GetlocL
-  Process INT3 --> receives getloc info for 0:2:0
-  Process INT1 --> receives sector header for 0:2:1
-  Process INT1 --> receives sector header for 0:2:2
-  Process INT1 --> receives sector header for 0:2:3
+  Process acknowledge --> receives getloc info for 0:2:0
+  Process data ready --> receives sector header for 0:2:1
+  Process data ready --> receives sector header for 0:2:2
+  Process data ready --> receives sector header for 0:2:3
 ```
 Another test, with Delay BEFORE Getloc:<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Delay(1)
   GetlocL
-  Process INT1 --> receives sector header for 0:2:1
-  Process INT3 --> receives getloc info for 0:2:6
-  Process INT1 --> receives sector header for 0:2:6
-  Process INT1 --> receives sector header for 0:2:7
+  Process data ready --> receives sector header for 0:2:1
+  Process acknowledge --> receives getloc info for 0:2:6
+  Process data ready --> receives sector header for 0:2:6
+  Process data ready --> receives sector header for 0:2:7
 ```
 Another test, with Delay AFTER Getloc:<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   GetlocL
   Delay(1)
-  Process INT3 --> receives getloc info for 0:2:0
-  Process INT1 --> receives sector header for 0:2:5
-  Process INT1 --> receives sector header for 0:2:6
-  Process INT1 --> receives sector header for 0:2:7
+  Process acknowledge --> receives getloc info for 0:2:0
+  Process data ready --> receives sector header for 0:2:5
+  Process data ready --> receives sector header for 0:2:6
+  Process data ready --> receives sector header for 0:2:7
 ```
 Another test, with Delay BEFORE and AFTER Getloc:<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Delay(1)
   GetlocL
   Delay(1)
-  Process INT1 --> receives sector header for 0:2:9
-  Process INT1 --> receives sector header for 0:2:11
-  Process INT3 --> receives getloc info for 0:2:12
-  Process INT1 --> receives sector header for 0:2:12
-  Process INT1 --> receives sector header for 0:2:13
+  Process data ready --> receives sector header for 0:2:9
+  Process data ready --> receives sector header for 0:2:11
+  Process acknowledge --> receives getloc info for 0:2:12
+  Process data ready --> receives sector header for 0:2:12
+  Process data ready --> receives sector header for 0:2:13
 ```
 
 #### Sector Buffer VS Pause Response Tests
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Pause
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 Another test, with Delay BEFORE Pause:<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Delay(1)
   Pause
-  Process INT1 --> receives sector header for 0:2:1 (oldest)
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process data ready --> receives sector header for 0:2:1 (oldest)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 Another test, with Delay AFTER Pause:<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Pause
   Delay(1)
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 Another test, with Delay BEFORE and AFTER Pause:<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Delay(1)
   Pause
   Delay(1)
-  Process INT1 --> receives sector header for 0:2:9 (oldest/overwritten)
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process data ready --> receives sector header for 0:2:9 (oldest/overwritten)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 For above: Note that, despite of Pause, the CDROM is still writing to the
 internal buffer (and overwrites slot 1 by sector 9) (this might be because the
-Pause command isn't processed at all until INT1 is processed).<br/>
+Pause command isn't processed at all until data ready is processed).<br/>
 
 #### Double Commands (Getloc then Pause)
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   GetlocL
   Pause
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 Another test,<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Delay(1)
   GetlocL
   Pause
-  Process INT1 --> receives sector header for 0:2:1
-  Process INT1 --> receives sector header for 0:2:6
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process data ready --> receives sector header for 0:2:1
+  Process data ready --> receives sector header for 0:2:6
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 Another test,<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   GetlocL
   Delay(1)
   Pause
-  Process INT3 --> receives getloc info for 0:2:0 (first getloc response)
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process acknowledge --> receives getloc info for 0:2:0 (first getloc response)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 Another test,<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Delay(1)
   GetlocL
   Delay(1)
   Pause
-  Process INT1 --> receives sector header for 0:2:9 (oldest/overwritten)
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process data ready --> receives sector header for 0:2:9 (oldest/overwritten)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 
 #### Double Commands (Pause then Getloc)
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Pause
   GetlocL
-  Process INT3 --> receives getloc info for 0:2:0 (first getloc response)
-  Process INT1 --> receives sector header for 0:2:1
-  Process INT1 --> receives sector header for 0:2:2
-  Process INT1 --> receives sector header for 0:2:3
+  Process acknowledge --> receives getloc info for 0:2:0 (first getloc response)
+  Process data ready --> receives sector header for 0:2:1
+  Process data ready --> receives sector header for 0:2:2
+  Process data ready --> receives sector header for 0:2:3
 ```
 Another test,<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Delay(1)
   Pause
   GetlocL
-  Process INT1 --> receives sector header for 0:2:1
-  Process INT3 --> receives getloc info for 0:2:6 (first getloc response)
-  Process INT1 --> receives sector header for 0:2:6
-  Process INT1 --> receives sector header for 0:2:7
+  Process data ready --> receives sector header for 0:2:1
+  Process acknowledge --> receives getloc info for 0:2:6 (first getloc response)
+  Process data ready --> receives sector header for 0:2:6
+  Process data ready --> receives sector header for 0:2:7
 ```
 Another test,<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Pause
   Delay(1)
   GetlocL
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT3 --> receives getloc info for 0:2:6 (first getloc response)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process acknowledge --> receives getloc info for 0:2:6 (first getloc response)
   (No further INT's, ie. read is paused, but second-pause-response is lost).
 ```
 Another test,<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Pause
   Delay(1)
   GetlocL
   Delay(1)
-  Process INT3 --> receives stat=22h (first pause response)
-  Process INT3 --> receives getloc info for 0:2:6 (first getloc response)
-  Process INT2 --> receives stat=02h (second pause response)
+  Process acknowledge --> receives stat=22h (first pause response)
+  Process acknowledge --> receives getloc info for 0:2:6 (first getloc response)
+  Process complete --> receives stat=02h (second pause response)
 ```
 Another test,<br/>
 ```
   Setloc(0:2:0)+Read
-  Process INT1 --> receives sector header for 0:2:0
+  Process data ready --> receives sector header for 0:2:0
   Delay(1)
   Pause
   Delay(1)
   GetlocL
-  Process INT1 --> receives sector header for 0:2:9
-  Process INT1 --> receives sector header for 0:2:11
-  Process INT3 --> receives getloc info for 0:2:12 (first getloc response)
-  Process INT1 --> receives sector header for 0:2:12
-  Process INT1 --> receives sector header for 0:2:13
+  Process data ready --> receives sector header for 0:2:9
+  Process data ready --> receives sector header for 0:2:11
+  Process acknowledge --> receives getloc info for 0:2:12 (first getloc response)
+  Process data ready --> receives sector header for 0:2:12
+  Process data ready --> receives sector header for 0:2:13
 ```
