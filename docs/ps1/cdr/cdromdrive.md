@@ -199,9 +199,9 @@ If there are any pending cdrom interrupts from a previous command, for example a
 acknowledge, these should be cleared before sending a new command. The HC05
 does not take a command while a cause is set in HINTSTS, so a command sent early
 sits in the command register unhandled, BUSYSTS stays set, and the next command
-write overwrites it. On top of all of this, the new comamnd may possibly take precedence
+write overwrites it. On top of all of this, the new command may possibly take precedence
 over the execution of the previously submitted command (seems to be related to the 
-specific combinatiion of commands sent). Overall, this can just be avoided by just
+specific combination of commands sent). Overall, this can just be avoided by just
 servicing the previous commands interrupts first.<br/>
 
 #### `0x1f801802` (write, bank 0): `PARAMETER`
@@ -314,7 +314,7 @@ which is pulled low when setting CHPRST).<br/>
 #### Caution - Unstable IRQ Flag polling
 IRQ flag changes aren't synced with the MIPS CPU clock. If more than one bit
 gets set (and the CPU is reading at the same time) then the CPU does
-occassionally see only one of the newly bits:<br/>
+occasionally see only one of the newly set bits:<br/>
 ```
   0 ----------> 3   ;99.9%  normal case acknowledge causes
   0 ----------> 5   ;99%    normal case error causes
@@ -625,7 +625,7 @@ number as first parameter byte. The Kernel seems to be using only sub\_function
 
 #### Unsupported GetQ,VCD,SecretUnlock (command 1Dh,1Fh,5xh)
 An error cause will be returned if the command is unsupported. That, WITHOUT removing the
-Parameters from the FIFO, so the parameters will be accidently passed to the
+Parameters from the FIFO, so the parameters will be accidentally passed to the
 NEXT command. To avoid that: clear the parameter FIFO by setting CLRPRM in
 HCLRCTL after receiving the error cause.<br/>
 
@@ -810,7 +810,7 @@ There seems to be no way to determine the current sessions number (via Getparam
 or so), and more important, no way to determine if the disk is a multi-session
 disk or not... except by trial... which would stop the drive motor on seek
 errors on single-session disks...?<br/>
-For setloc, one must probably specifiy minutes within the 1st track of the new
+For setloc, one must probably specify minutes within the 1st track of the new
 session (the 1st track of 1st session usually/always starts at 00:02:00, but
 for other sessions one would need to use GetTD)...?<br/>
 
@@ -820,7 +820,7 @@ for other sessions one would need to use GetTD)...?<br/>
 #### ReadN - Command 06h --\> acknowledge(stat) --\> data ready(stat) --\> datablock
 Read with retry. The command responds once with "stat,acknowledge", and then it's
 repeatedly sending "stat,data ready --\> datablock", that is continued even after a
-successful read has occured; use the Pause command to terminate the repeated
+successful read has occurred; use the Pause command to terminate the repeated
 data ready responses.<br/>
 If you are reading an unlicensed disk without a modchip or first unlocking the drive, 
 this command will first trigger an error cause, without triggering acknowledge or data ready.
@@ -834,7 +834,7 @@ region does not match the console region will also return error code 40h unless
 CDDA mode is enabled.<br/>
 ====<br/>
 Actually, Read seems to work on unlicensed CD-R's, but the returned data is the
-whole sector or so (the 2048 data bytes preceeded by a 12byte header, and
+whole sector or so (the 2048 data bytes preceded by a 12byte header, and
 probably/maybe followed by error-correction info; in fact the total received
 data in the Data Fifo is 4096 bytes; the last some bytes probably being
 garbage) (however error correction is NOT performed by hardware, so the 2048
@@ -882,7 +882,7 @@ thereafter,<br/>
 
 #### ReadS - Command 1Bh --\> acknowledge(stat) --\> data ready(stat) --\> datablock
 Read without automatic retry. Not sure what that means... does WHAT on errors?
-Maybe intended for continous streaming video output (to skip bad frames, rather
+Maybe intended for continuous streaming video output (to skip bad frames, rather
 than to interrupt the stream by performing read-retrys).<br/>
 
 #### ReadN/ReadS
@@ -890,7 +890,7 @@ Both ReadN/ReadS are reading data sequentially, starting at the sector
 specified with Setloc, and then automatically reading the following sectors.<br/>
 
 #### CDROM Incoming Data / Buffer Overrun Timings
-The Read commands are continously receiving 75 sectors per second (or 150
+The Read commands are continuously receiving 75 sectors per second (or 150
 sectors at double speed), and, basically, the software must be fast enough to
 process that amount of incoming data. However, the PSX hardware includes a
 buffer that can hold up to a handful (exact number is unknown?) of sectors, so,
@@ -909,12 +909,12 @@ be also issued shortly after the acknowledge; even if there are further sectors
 in the buffer, there seems to be a small delay between the acknowledge and the
 next interrupt, and Data Requests during that period are still treated to
 belong to the old interrupt).<br/>
-If a buffer overrun has occured \<before\> issuing the Data Request, then
+If a buffer overrun has occurred \<before\> issuing the Data Request, then
 wrong data will be received, ie. some sectors will be skipped (the hardware
 doesn't seem to support a buffer-overrun error flag? Anyways, see GetlocL
 description for a possible way to detect buffer-overruns).<br/>
 If a buffer overrun occurs \<after\> issuing the Data Request, then the
-requested data can be still read via I/O or DMA intactly, ie. the requested
+requested data can be still read intact via I/O or DMA, ie. the requested
 data is "locked", and the overrun will affect only the following sectors.<br/>
 
 #### ReadTOC - Command 1Eh --\> acknowledge(stat) --\> complete(stat)
@@ -965,7 +965,7 @@ the meaning of the separate stat bits is:<br/>
 ```
 If the shell is closed, then bit4 is automatically reset to zero after reading
 stat with the Nop command (most or all other commands do not reset that bit
-after reading). If stat bit0 or bit2 is set, then the normal respons(es) and
+after reading). If stat bit0 or bit2 is set, then the normal response(s) and
 interrupt(s) are not send, and, instead, an error cause occurs, and an error-byte is send
 as second response byte, with the following values:<br/>
 ```
@@ -1022,7 +1022,7 @@ The PSX hardware can buffer a handful of sectors, the data ready handler receive
 \<oldest\> buffered sector, the GetlocL command returns the header and
 subheader of the \<newest\> buffered sector. Note: If the returned
 \<newest\> sector number is much bigger than the expected \<oldest\>
-sector number, then it's likely that a buffer overrun has occured.<br/>
+sector number, then it's likely that a buffer overrun has occurred.<br/>
 GetlocL fails (with error code 80h) when playing Audio CDs (or Audio Tracks on
 Data CDs). These errors occur because Audio sectors don't have any
 header/subheader (instead, equivalent data is stored in Subchannel Q, which can
@@ -1188,7 +1188,7 @@ And, what/who are the 2.x and 3.x versions?<br/>
 After sending the command, the drive is in fast forward/backward mode, skipping
 every some sectors. The skipping rate is fixed (it doesn't increase after some
 seconds) (however, it increases when (as long as) sending the command again and
-again). The sound becomes (obviously) non-continous, and also rather very
+again). The sound becomes (obviously) non-continuous, and also rather very
 silent, muffled, and almost inaudible (that's making it rather useless; unless
 it's combined with a track/minute/second display). To terminate
 forward/backward, send a new Play command (with no parameters, so play starts
@@ -1239,7 +1239,7 @@ position info. After autopause, the disc stays at the \<end\> of the old
 track, NOT at the \<begin\> of the next track (so trying to resume playing
 by sending a new Play command without new Seek/Setloc command will instantly
 pause again).<br/>
-Caution: SubQ track transitions may pause instantly when accidently starting to
+Caution: SubQ track transitions may pause instantly when accidentally starting to
 play at the end of the previous track rather than at begin of desired track
 (this \<might\> happen due to seek inaccuracies, for example, GetTD does
 round down TOC entries from MM:SS:FF to MM:SS:00, which may be off by 0.99
@@ -1420,7 +1420,7 @@ disk is inserted).<br/>
 This command seems to have effect only if the drive motor was off. If it was
 off, it does FFh-fills the TOC entries in RAM, and seek to the begin of the TOC
 at 98:30:00 or so (where minute=98 means minus two). From that location, it
-follows the spiral on the disk, although it does occassionally jump back some
+follows the spiral on the disk, although it does occasionally jump back some
 seconds. After clearing the TOC, the command does not write new data to the TOC
 buffer in RAM.<br/>
 Note: Like 19h,04h, this command forces the drive motor to spin at standard
@@ -1486,7 +1486,7 @@ signals on the serial input line.<br/>
 Sub function "4xh" value can be 40h..4Fh (don't care).<br/>
 
 #### Error Debug Messages
-Alongsides to error causes, the BIOS is usually also sending information via the
+Alongside error causes, the BIOS is usually also sending information via the
 above serial bus (the error info is divided into multiple 8bit+16bit snippets,
 and contains stat, error code, mode, current SubQ position, and most recently
 issued command).<br/>
@@ -1541,7 +1541,7 @@ at once. BUG: The transfer should range from 00h to len-1, but the loop counter
 is left uninitialized (set to X=48h aka "command number 19h-minus-1-mul-2"
 instead of X=00h). Causing to the function to read/write garbage at index
 48h..FFh, it does then wrap to 00h and do the correct intended transfer, but
-the preceeding bugged part may have smashed RAM or I/O ports.<br/>
+the preceding bugged part may have smashed RAM or I/O ports.<br/>
 
 #### 19h,75h --\> acknowledge(remain.lo,remain.hi,addr.lo,addr.hi) ;Get Host Xfer Info
 Returns a 4-byte value. In my early tests, on the first day it returned
@@ -1701,7 +1701,7 @@ Other/invalid addresses are:<br/>
 ```
 
 #### DTL-H2000 Memory Map
-This version allows to read the whole 64Kbyte memory space (withou mirroring
+This version allows to read the whole 64Kbyte memory space (without mirroring
 everything to first 300h bytes). I/O Ports and Variables are at different
 locations:<br/>
 ```
@@ -1835,7 +1835,7 @@ The Task byte can be:<br/>
 ```
 The req byte in the acknowledge response can be:<br/>
 ```
-  00h  Normal (no special event occured and no action requested)
+  00h  Normal (no special event occurred and no action requested)
   01h  Request CD to Seek_and_play (using mm:ss:ff response parameter bytes)
   02h  Request CD to Pause                ;cmd(09h)    -->acknowledge(stat),complete(stat)
   03h  Request CD to Stop                 ;cmd(08h)    -->acknowledge(stat),complete(stat)
