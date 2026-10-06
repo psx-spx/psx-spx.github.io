@@ -252,6 +252,19 @@ Additionally, the CPU operation resumes during periods when DMA gets interrupted
 (ie. after SyncMode 1 blocks, after SyncMode 2 list entries) (or in SyncMode 0
 with Chopping enabled).<br/>
 
+#### Address Bus during DMA
+DMA transfers to the GPU and MDEC, and DMA6, do not touch A0..A23: the
+address of the last CPU access to the external bus stays there. The other
+channels put a fixed address on the bus for the whole transfer, in either
+direction. It stays the same across words and across the 8bit or 16bit units
+of a word, where a CPU access steps A0..A1:
+```
+  DMA3 CDROM  1F801802h
+  DMA4 SPU    1F801DB0h  (not the 1F801DA8h data port)
+  DMA5 PIO    The DEV0 base address, all bits, see 1F801000h
+```
+<br/>
+
 #### PS2 IOP DMA
 The PS2's IOP has an extended DMA unit with more channels, new control registers
 and an additional chain mode (SyncMode=3). For more details, see:<br/>

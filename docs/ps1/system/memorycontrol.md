@@ -14,7 +14,9 @@ bottommost N bits (where N = number of address lines, as set in register
 1F801008h). For instance, if the number of DEV0 address lines is set to 8,
 setting this register to 1F000000h or 1F0000FFh has the same effect.<br/>
 When performing a PIO DMA transfer, however, all bits of this register are
-output on the bus regardless of the currently set region size. The System 573
+output on the bus regardless of the currently set region size, and stay there
+for the whole transfer: with the base set to 1F4812A4h, DMA5 drives 4812A4h,
+while a CPU write to 1F480000h drives 480000h..480003h. The System 573
 relies on this behavior as it changes the base address to 1F480000h prior to
 reading data from the IDE CD-ROM using DMA (and does not reset it to 1F000000h
 afterwards).<br/>
