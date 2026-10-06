@@ -12,10 +12,11 @@ it was drawn with, so a figure only has to be drawn in the palette below:
     #f6f8fa / #efefef / white   box fills        -> code background
     #1a7f37             signals and wires        -> --psx-fig-signal
 
-The original fill/stroke attributes stay in place. Browsers apply the style
-attribute added next to them; WeasyPrint ignores var() there, so the PDF
-falls back to the attributes and keeps the light-theme colours. A colour not
-in the table is left alone and reported in the build log.
+Each themed element gets a class naming its role (pf-fill-fg, pf-stroke-signal,
+...), and docs/css/extra.css colours those classes inside @media screen. The
+original fill/stroke attributes stay in place, so the PDF, which is rendered
+for print, keeps the colours the figure was drawn with. A colour not in the
+table is left alone and reported in the build log.
 
 Wired up in mkdocs.yml after the bitfield hook, which inserts image lines of
 its own:
@@ -30,19 +31,19 @@ import re
 MARKER = '</div><!-- psx-figure -->'
 
 THEME = {
-    '#222': 'var(--md-default-fg-color)',
-    'black': 'var(--md-default-fg-color)',
-    '#000': 'var(--md-default-fg-color)',
-    '#444': 'var(--md-default-fg-color--light)',
-    '#555': 'var(--md-default-fg-color--light)',
-    '#888': 'var(--md-default-fg-color--lighter)',
-    '#ccc': 'var(--md-default-fg-color--lightest)',
-    '#ddd': 'var(--md-default-fg-color--lightest)',
-    '#f6f8fa': 'var(--md-code-bg-color)',
-    '#efefef': 'var(--md-code-bg-color)',
-    'white': 'var(--md-code-bg-color)',
-    '#fff': 'var(--md-code-bg-color)',
-    '#1a7f37': 'var(--psx-fig-signal)',
+    '#222': 'fg',
+    'black': 'fg',
+    '#000': 'fg',
+    '#444': 'light',
+    '#555': 'light',
+    '#888': 'lighter',
+    '#ccc': 'lightest',
+    '#ddd': 'lightest',
+    '#f6f8fa': 'bg',
+    '#efefef': 'bg',
+    'white': 'bg',
+    '#fff': 'bg',
+    '#1a7f37': 'signal',
 }
 
 IMAGE = re.compile(r'^!\[(.*)\]\(([^)\s]+\.svg)\)\s*$')    # alt text may hold ]
@@ -69,17 +70,17 @@ def _theme(svg, prefix, alt, unknown):
             if alt and 'aria-label=' not in attrs:
                 attrs += f' aria-label="{_esc(alt)}"'
             return f'<svg{attrs}{close}>'
-        css = []
+        roles = []
         for prop, colour in PAINT.findall(attrs):
             key = colour.strip().lower()
             if key in ('none', 'transparent') or key.startswith('url('):
                 continue
             if key in THEME:
-                css.append(f'{prop}:{THEME[key]}')
+                roles.append(f'pf-{prop}-{THEME[key]}')
             else:
                 unknown.add(colour)
-        if css and 'style=' not in attrs:
-            attrs += f' style="{";".join(css)}"'
+        if roles and 'class=' not in attrs:
+            attrs += f' class="{" ".join(roles)}"'
         return f'<{name}{attrs}{close}>'
 
     return TAG.sub(tag, svg)
