@@ -1,5 +1,6 @@
 #   CDROM Drive
 #### Playstation CDROM I/O Ports
+[CDROM Subsystem Overview](#cdrom-subsystem-overview)<br/>
 [CDROM Controller I/O Ports](#cdrom-controller-io-ports)<br/>
 
 #### Playstation CDROM Commands
@@ -23,6 +24,117 @@
 
 #### Playstation CDROM Coprocessor
 [CDROM Internal Info on PSX CDROM Controller](cdrominternalinfoonpsxcdromcontroller.md)<br/>
+
+
+
+##   CDROM Subsystem Overview
+The CD-ROM drive is not a single controller. It is several chips, each with its
+own buses, and the CPU talks to only one of them.
+
+![CD subsystem with separate chips](diagrams/cdrom-separate.svg)
+
+The diagram shows a PU-18 board (SCPH-5501). Older boards use a CXD1199BQ
+decoder, and a CXD2510Q signal processor with a separate CXA1782BR servo
+amplifier in place of the CXD2545Q.<br/>
+
+- **Decoder** (CXD1199BQ, CXD1815Q). The only CD chip on the CPU bus, at
+  1F801800h..1F801803h, and the source of IRQ2. It receives the serial data
+  stream from the DSP, finds the sector headers, checks and corrects the sectors
+  (EDC/ECC) and stores them in its 32 KB sector SRAM, where the CPU reads them
+  through RDDATA. It decodes XA-ADPCM, applies the ATV volume matrix, and sends
+  the CD-DA and XA-ADPCM audio to the SPU's CD audio input. It also holds the
+  mailboxes between the CPU and the HC05: the command register, the parameter
+  and result FIFOs, and the interrupt cause bits. The HC05 reaches it through a
+  separate set of registers on a second bus, described in
+  [CDROM Internal Info on PSX CDROM Controller](cdrominternalinfoonpsxcdromcontroller.md).
+- **Mechacon** (MC68HC05). A microcontroller running firmware from its own ROM.
+  It executes the commands: it controls the DSP and the servos with serial
+  commands, reads SubQ directly from the DSP, programs the decoder (decoding
+  mode, sector addresses, CD-DA and ADPCM mutes), writes the result bytes and
+  posts the interrupt causes. It has no access to the CPU bus; everything it
+  says to the CPU goes through the decoder.
+- **DSP** (CXD2545Q). Demodulates EFM, performs the C1/C2 error correction and
+  decodes the subcode. Sector data goes to the decoder together with the C2
+  error flags, and SubQ goes to the HC05. It also runs the focus, tracking,
+  sled and spindle servos through the motor driver.
+- **SPU**. Receives the decoder's audio output on its first I2S input and mixes
+  it with the volume set in
+  [AVOLL/AVOLR](../spu/soundprocessingunitspu.md#0x1f801db0-avoll-i2sacd-rom-volume-left).
+
+From the SCPH-7500 onwards, the decoder, the DSP and the SPU are a single chip
+(CXD2938Q, or CXD2941R with the SPU RAM included), and the HC05 remains a
+separate chip. How the parts are connected inside the combined chip is not
+known. The registers seen by the CPU behave like those of the separate decoder,
+as far as is known.<br/>
+
+![CD subsystem with a combined chip](diagrams/cdrom-combined.svg)
+
+#### Command path
+A command goes through the decoder and the HC05 in these steps:<br/>
+
+1. The CPU writes the parameters to PARAMETER. They are queued in the decoder.
+2. The CPU writes the command byte to COMMAND. The decoder latches it, sets
+   BUSYSTS, and raises a "host command" flag in the interrupt status it
+   presents to the HC05.
+3. The HC05 firmware is a single loop that services the servos, SubQ, its
+   timers and the decoder in turn. Once per pass, it reads the decoder's
+   interrupt status. The decoder's interrupt line to the HC05 is not used as an
+   interrupt. The command therefore waits in the decoder until the loop comes
+   around, and how long that takes depends on what else the pass has to do (see
+   [Response Timings](#cdrom-response-timings)).
+4. Before taking the command, the HC05 checks the cause bits that the CPU sees
+   in HINTSTS. If the CPU has not cleared the previous cause yet, the command is
+   left where it is, and the check is repeated on the next pass.
+5. The HC05 reads the command byte, reads parameters until the FIFO is empty,
+   checks their count, and runs the command.
+6. The HC05 writes the response bytes to the result FIFO, clears the host
+   command flag and BUSYSTS, and then writes the cause (acknowledge, or error)
+   into the decoder. The decoder shows it in HINTSTS bits 0-2 and raises IRQ2 if
+   HINTMSK allows it.
+7. The CPU reads RESULT and clears the cause through HCLRCTL. The HC05 sees the
+   cleared bits on a later pass. It checks the same bits before posting a second
+   response (complete, or error) and before taking the next command.
+
+This has consequences for the CPU side:<br/>
+
+- The time between a command write and its acknowledge varies from one command
+  to the next, because it depends on where the HC05's loop is when the command
+  arrives.
+- BUSYSTS is cleared by the HC05, just before it posts the acknowledge or error
+  cause.
+- The command register holds one byte. A command written before the HC05 has
+  taken the previous one replaces it.
+- A command written while a cause is still set in HINTSTS waits until the CPU
+  clears that cause.
+- The HC05 reads the parameters when it takes the command, so all of them have
+  to be written before the command byte.
+
+#### Register ownership
+Every register is in the decoder, but they are used by different parties:<br/>
+```
+  Register          Used by
+  HSTS.BUSYSTS      set by the decoder on a COMMAND write, cleared by the HC05
+  HSTS.RSLRRDY      result FIFO state; the HC05 fills the FIFO
+  HSTS (others)     decoder: parameter FIFO, data transfer, ADPCM state
+  ADDRESS           decoder only (register bank)
+  COMMAND           read by the HC05 on its next pass
+  PARAMETER         read by the HC05 when it takes the command
+  RESULT            written by the HC05
+  HINTSTS bits 0-2  written by the HC05, which also reads them back to see
+                    whether the CPU has cleared them
+  HINTSTS bits 3-4  decoder only (sound map)
+  HINTMSK           decoder only, gates IRQ2 (the HC05 cannot read it)
+  HCLRCTL           CLRINT clears the bits written by the HC05; CHPRST resets
+                    the decoder and flags the reset to the HC05; the other
+                    bits are decoder only
+  HCHPCTL           decoder only (sector buffer transfers, sound map)
+  RDDATA, WRDATA    decoder only
+  CI                decoder only (sound map)
+  ATV0..ATV3        decoder only
+  ADPCTL            decoder only
+```
+The Mute and Demute commands do not use ADPCTL. The HC05 sets or clears the
+decoder's own CD-DA and ADPCM mute bits, which are separate from ADPMUTE.<br/>
 
 
 
@@ -64,7 +176,7 @@ features such as the sound map functionality).
   4   PRMWRDY  Parameter write ready (R, 1=parameter FIFO not full)
   5   RSLRRDY  Result read ready     (R, 1=result FIFO not empty)
   6   DRQSTS   Data request          (R, 1=one or more RDDATA reads or WRDATA writes pending)
-  7   BUSYSTS  Busy status           (R, 1=HC05 busy acknowledging command)
+  7   BUSYSTS  Busy status           (R, 1=command written, not yet acknowledged by the HC05)
 ```
 Writing a value to the low 2 bits of this address changes the bank to said value. 
 Likewise, the low 2 bits of this address can be read to get the current bank.
@@ -73,20 +185,21 @@ Likewise, the low 2 bits of this address can be read to get the current bank.
 ```
   0-7  Command Byte
 ```
-Writing to this address sends the command byte to the HC05, which will proceed
-to drain the parameter FIFO, process the command, push any return values into
-the result FIFO and fire INT3 (or INT5 if an error occurs).<br/>
+Writing to this address stores the command byte in the decoder and sets
+BUSYSTS. The HC05 picks it up the next time its main loop reads the decoder
+(see [Command path](#command-path)), drains the parameter FIFO, processes the
+command, pushes any return values into the result FIFO and posts the
+acknowledge cause (or the error cause if an error occurs).<br/>
 Command/Parameter processing is indicated by BUSYSTS.<br/>
 When that bit gets zero, the response can be read immediately (immediately for
 MOST commands, but not ALL commands; so better wait for the IRQ).<br/>
 Alternately, you can wait for an IRQ (which seems to take place MUCH later),
 and then read the response.<br/>
-If there are any pending cdrom interrupts from a previous command, for example, an
-INT3/Acknowledge, these should be cleared before sending a new command. If a new 
-command is sent early anyway, the behavior becomes unpredictable. For one, BUSYSTS 
-will stay set from the last command. In addition to this, the new command will simplily
-sit in the command register unhandled and can be easily overwritten by new commands
-that are sent. On top of all of this, the new comamnd may possibly take precedence
+If there are any pending cdrom interrupts from a previous command, for example an
+acknowledge, these should be cleared before sending a new command. The HC05
+does not take a command while a cause is set in HINTSTS, so a command sent early
+sits in the command register unhandled, BUSYSTS stays set, and the next command
+write overwrites it. On top of all of this, the new comamnd may possibly take precedence
 over the execution of the previously submitted command (seems to be related to the 
 specific combinatiion of commands sent). Overall, this can just be avoided by just
 servicing the previous commands interrupts first.<br/>
@@ -281,8 +394,10 @@ playback of XA-ADPCM sectors from the disc). Uses the same format as the
 Indicates ready-to-send-new-command,<br/>
 ```
   0=Ready to send a new command
-  1=Busy sending a command/parameters
+  1=Command written, not yet taken and acknowledged by the HC05
 ```
+The decoder sets this bit when COMMAND is written. Only the HC05 clears it,
+just before it posts the acknowledge or error cause.<br/>
 Trying to send a new command in the Busy-phase causes malfunction (the older
 command seems to get lost, the newer command executes and returns its results
 and triggers an interrupt, but, thereafter, the controller seems to hang). So,
