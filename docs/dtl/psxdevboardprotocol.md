@@ -426,6 +426,46 @@ All register accesses go through base+C: write the bank number shifted left by 4
   Address space: 26-bit frame address, shifted left 4 for byte address
 ```
 
+#### PA Trigger Configuration
+All registers are 16-bit, accessed through the control port at base+0xC: write the bank number shifted left by 4, then write the value. Banks 1-10 are written before the start command.
+```
+  Bank 1   bits 7-0   Byte lane select (0 = lane compared), set from the match mode (unverified)
+           bits 10-8  Trigger position, 1..6 (see below)
+  Bank 2   Address window start, bits A20-A11 in bits 9-0, A22 in bit 10, A23 in bit 12
+  Bank 3   Address window start, bits A9-A2 in bits 7-0, A21 in bit 8, A10 in bit 9
+  Bank 4   Address window end, same layout as bank 2
+  Bank 5   Address window end, same layout as bank 3
+  Bank 6   Data value 1, bits 15-0
+  Bank 7   Data value 1, bits 31-16
+  Bank 8   Data value 2, bits 15-0
+  Bank 9   Data value 2, bits 31-16
+  Bank 10  bit 0-2   Device signal trigger enables (unverified)
+           bit 3     Trigger on address window match
+           bit 4     Trigger on data match (only reliable together with bit 3)
+           bit 6     Always set by LIBPA; when clear the trigger frame is the first frame of the buffer
+           bit 7     Wait for the trigger button before arming
+           bit 15    Always set by LIBPA, no observed effect
+```
+Only address bits A23-A2 are compared, so the KSEG segment bits of an address do not matter. With bits 3 and 4 both clear, no condition is checked and the capture triggers immediately. With both set, a single write of value 1 to an address in the window triggers the capture, and the trigger frame is the frame of that write; a wrong address or wrong data does not trigger. A window with start = end and value 1 = value 2 selects one address and one value; LIBPA's defaults (window 80010000h-FFFFFFFFh, values 00000000h-FFFFFFFFh) suggest both are ranges (unverified).
+
+Status (bank 0, bits 1-0) after the start command:
+```
+  0  Idle, or capture complete
+  1  Waiting for the trigger button (bank 10 bit 7 set)
+  2  Armed, waiting for the trigger condition
+```
+Clearing bank 10 bit 7 skips the button wait and arms immediately. LIBPA's default configuration (banks 1-10 = 0100h 0020h 0000h 17FFh 03FFh 0000h 0000h FFFFh FFFFh 87C0h) waits for the button forever; the same configuration with bank 10 = 8740h free-runs and fills the buffer about 0.13 seconds after the start command.
+
+The trace buffer is a ring: capture continues after the trigger and stops so that a fixed share of the 4M frames precedes the trigger frame. The trigger position field in bank 1 bits 10-8 selects that share. Each step adds about 560K frames (16.5 ms, one NTSC field) before the trigger:
+```
+  1  about 3% before the trigger (LIBPA default)
+  2  about 17%
+  3  about 30%
+  4  about 43%
+  5  about 57%
+  6  about 70%
+```
+
 #### PA Capture Frame Format
 Each captured frame is 16 bytes (128 bits): the state of the analyzer's input lines sampled once per 33.8688 MHz CPU clock cycle. The hardware records raw signal levels only; all bus cycle classification (idle, refresh, DMA, etc.) is done in software by LIBPA.DLL, which tracks RAS/CAS sequences, chip selects and strobes across consecutive frames.
 
@@ -564,8 +604,8 @@ The bus type classification is not stored in the capture data. It is derived at 
 #### PA Not Yet Documented
 The following aspects of the PA hardware and software have not been reverse-engineered:
 ```
-  - Trigger configuration (the meaning of the registers in banks 1-10 that
-    control what conditions start and stop a capture)
+  - Trigger configuration bits marked "unverified" in the trigger section
+    above, including the device signal triggers (GUNINT, RXD1, DSR1)
   - The VRAM bus decoder's full state machine (multi-cycle classification of
     Read vs Write vs Block Write vs Read-Modify-Write vs Texture Read vs CLUT Read)
   - The purpose of frame bit 21 (refresh-only pulse) and what drives PC2 (bit 31)
