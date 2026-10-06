@@ -23,3 +23,21 @@
 .md-typeset table {
   white-space: nowrap;
 }
+
+/* Figures inlined by tools/figures/hook.py; their colours come from the
+   palette, plus this one for signals and wires. */
+:root {
+  --psx-fig-signal: #1a7f37;
+}
+[data-md-color-scheme="slate"] {
+  --psx-fig-signal: #3fb950;
+}
+.psx-figure {
+  margin: 1em 0;
+  overflow-x: auto;
+}
+.psx-figure svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
