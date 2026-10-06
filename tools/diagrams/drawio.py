@@ -32,6 +32,7 @@ PAGES = {
     'mdec': 'ps1/cpu/mdec/diagrams/mdec.svg',
     'spu': 'ps1/spu/diagrams/spu.svg',
     'cdrom': 'ps1/cdr/diagrams/cdrom-blocks.svg',
+    'sys573-digitalio': 'arcade/konami/573/diagrams/digital-io.svg',
 }
 
 INK, NOTE, DIM, FILL, SIGNAL = '#222', '#444', '#888', '#f6f8fa', '#1a7f37'
