@@ -2,6 +2,8 @@
 The MDEC is a JPEG-style Macroblock Decoder, that can decompress pictures (or a
 series of pictures, for being displayed as a movie).<br/>
 
+![MDEC block diagram](diagrams/mdec.svg)
+
 [MDEC I/O Ports](#mdec-io-ports)<br/>
 [MDEC Commands](#mdec-commands)<br/>
 [MDEC Decompression](#mdec-decompression)<br/>

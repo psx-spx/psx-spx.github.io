@@ -14,6 +14,8 @@ Sony designed for the SNES. The main differences are:
 - "external" audio inputs (from the CD-ROM drive and parallel port) are now
   digital and can be sent through reverb.
 
+![SPU block diagram](diagrams/spu.svg)
+
 [SPU Overview](#spu-overview)<br/>
 [SPU ADPCM Samples](#spu-adpcm-samples)<br/>
 [SPU ADPCM Pitch](#spu-adpcm-pitch)<br/>

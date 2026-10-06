@@ -71,6 +71,10 @@ as far as is known.<br/>
 
 ![CD subsystem with a combined chip](diagrams/cdrom-combined.svg)
 
+Inside the chips, the same subsystem breaks down into these blocks:<br/>
+
+![CD subsystem block diagram](diagrams/cdrom-blocks.svg)
+
 #### Command path
 A command goes through the decoder and the HC05 in these steps:<br/>
 
