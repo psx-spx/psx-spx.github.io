@@ -114,10 +114,10 @@ nav:
       - ps1/sio/controllersandmemorycards/controllers-standard-digital-analog-controllers.md
       - ps1/sio/controllersandmemorycards/controllers-mouse.md
       - ps1/sio/controllersandmemorycards/controllers-racing-controllers.md
-      - ps1/sio/controllersandmemorycards/controllers-lightguns.md
-      - ps1/sio/controllersandmemorycards/controllers-lightguns-namco-guncon.md
-      - ps1/sio/controllersandmemorycards/controllers-lightguns-konami-justifier-hyperblaster-irq10.md
-      - ps1/sio/controllersandmemorycards/controllers-lightguns-psx-lightgun-games.md
+      - Lightguns:
+        - ps1/sio/controllersandmemorycards/lightguns/index.md
+        - ps1/sio/controllersandmemorycards/lightguns/namco-guncon.md
+        - ps1/sio/controllersandmemorycards/lightguns/konami-justifier-hyperblaster.md
       - ps1/sio/controllersandmemorycards/controllers-configuration-commands.md
       - ps1/sio/controllersandmemorycards/controllers-vibration-rumble-control.md
       - ps1/sio/controllersandmemorycards/controllers-analog-buttons-dualshock2.md

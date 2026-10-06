@@ -1,4 +1,4 @@
-#   Lightguns - Namco (GunCon)
+#   Namco GunCon
 #### GunCon Cinch-based Lightguns (Namco)
 ```
   __Halfword 0 (Controller Info)___________________
@@ -93,4 +93,4 @@ X=X\*320/385).<br/>
 ```
 
 #### See also
-[Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103](../../pinouts/component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103.md#component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103)<br/>
+[Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103](../../../pinouts/component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103.md#component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103)<br/>

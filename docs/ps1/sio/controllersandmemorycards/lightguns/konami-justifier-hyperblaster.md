@@ -1,4 +1,4 @@
-#   Lightguns - Konami Justifier/Hyperblaster (IRQ10)
+#   Konami Justifier/Hyperblaster (IRQ10)
 #### Overall IRQ10-Based Lightgun Access
 ```
   Send  01h 42h 00h x0h 00h
@@ -52,10 +52,10 @@ should not block the bus for longer periods). In practice, most programmers
 probably don't realize how to do that, to the worst, Sony seems to have
 delivered a slightly bugged library (libgun) to developers.<br/>
 For details on Timers, see:<br/>
-[Timers](../../system/timers.md)<br/>
+[Timers](../../../system/timers.md)<br/>
 In some consoles, IRQ10 seems to be routed through a Secondary IRQ Controller,
 see:<br/>
-[DEV8 DTL-H2000 I/O Ports](../../pio/expansionportpio.md#dev8-dtl-h2000-io-ports)<br/>
+[DEV8 DTL-H2000 I/O Ports](../../../pio/expansionportpio.md#dev8-dtl-h2000-io-ports)<br/>
 
 #### IRQ10 Priority
 For processing IRQ10 as soon as possible, it should be assigned higher priority
@@ -66,7 +66,7 @@ processed shortly before processing the priority chains (the resulting IRQ
 priority isn't actually higher as when using 1st element of chain 0; the main
 difference is that it skips some time consuming code which pushes registers
 R4..R30). For details on that patch, see:<br/>
-[Patches](../../kernelbios/patches.md#patches)<br/>
+[Patches](../../../kernelbios/patches.md#patches)<br/>
 Even if IRQ10 has highest priority, execution of (older) other IRQs may cause a
 new IRQ10 to be executed delayed (because IRQs are disabled during IRQ
 handling), to avoid that problem: Best don't enable any other IRQs except IRQ0
