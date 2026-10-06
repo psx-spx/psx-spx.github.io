@@ -101,6 +101,14 @@ BIOS ROM (DEV2, 8bit) with the COM\_DELAY register at 00031125h unless noted.
   still active, and keeps /CS inactive for COM0 cycles after a write before the
   next transaction. With bit 8 cleared, both gaps are 1 cycle.
 
+These timings are the same on the SCPH-1000, SCPH-1001, SCPH-5501, SCPH-7001,
+SCPH-9002 and the DTL-H2700: the same register values give the same cycle
+counts. What does change is the COM\_DELAY value in use. The BIOS sets
+00031125h at boot, and its CD-ROM sector read code writes 0000132Ch to
+COM\_DELAY (and 00020943h to DEV5), so after the BIOS has read from the disc,
+recovery is 12 cycles and floating 3. A 32bit read of the BIOS ROM then takes
+33 CPU cycles instead of 27, and a 32bit write to the SPU 28 instead of 15.
+
 A halfword write to the SPU with 200931E1h: /CS, then a 2 cycle /WR.
 
 ![sh to the SPU](waveforms/spu-sh.svg)
