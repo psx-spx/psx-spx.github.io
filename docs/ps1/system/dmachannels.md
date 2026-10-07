@@ -251,6 +251,13 @@ and the next RAM read waits for the whole transfer.<br/>
 Additionally, the CPU operation resumes during periods when DMA gets interrupted
 (ie. after SyncMode 1 blocks, after SyncMode 2 list entries) (or in SyncMode 0
 with Chopping enabled).<br/>
+With Chopping, the channel alternates between moving 1 << N words (CHCR bits
+16-18) and leaving the bus to the CPU for 1 << N cycles (bits 20-22), plus a
+small fixed overhead per chunk (about 10 cycles for 4-word chunks, 22 for
+16-word chunks). A 1024-word RAM to GPU transfer that takes about 1100 cycles
+as a plain burst takes about 3700 with 4-word / 4-cycle windows and about 19000
+with 4-word / 64-cycle windows, so the CPU time gained costs transfer time.
+DMA6 cannot chop: its CHCR does not store bits 8 and 16-22.<br/>
 
 #### PS2 IOP DMA
 The PS2's IOP has an extended DMA unit with more channels, new control registers
