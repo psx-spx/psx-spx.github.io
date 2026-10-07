@@ -558,6 +558,19 @@ Negative volumes are phase inverted, otherwise same as positive.<br/>
 ```
 Starts the ADSR Envelope, and automatically initializes ADSR Volume to zero.<br/>
 
+#### Key On latency
+KON writes are not acted on immediately. Key On is serviced on a 2-sample grid
+(one opportunity every 1536 CPU cycles), so a write can wait up to 2 samples
+before it is picked up. For a write made right
+at a STATX.Bit11 edge, ENVX becomes nonzero 6 or 7 samples later.<br/>
+The phase of that grid relative to the capture buffer write position (see
+STATX.Bit11) is fixed for a given power-on, but differs from one power-on to the
+next. Code that times a Key On from a Bit11 edge therefore sees the sound start
+at capture buffer index 8 on some boots and index 9 on others (same console,
+same code), and an ADSR curve sampled on Bit11 edges sits up to two samples of
+envelope progress apart between such boots. Tests comparing capture buffer
+contents against a reference should allow for a one-sample offset.<br/>
+
 #### `0x1f801d8c`: `KOF0` (voice 0..15 key off, write-only)
 ```
   0-15  Voice 0..15 Off (0=No change, 1=Start Release)
