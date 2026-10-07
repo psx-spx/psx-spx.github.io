@@ -11,7 +11,7 @@ import os
 
 FONT = 'font-family="monospace"'
 INK = '#222'
-DIM = '#888'
+DIM = '#555'
 GREEN = '#1a7f37'
 OUT = os.path.join(os.path.dirname(__file__), '..', '..', 'docs', 'ps1', 'system',
                    'diagrams')
