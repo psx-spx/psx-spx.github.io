@@ -173,7 +173,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="gpu-v0" id="hRBlgJynvwc65Q3Vbs3b">
-    <mxGraphModel dx="1178" dy="664" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="680" pageHeight="590" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="680" pageHeight="530" math="0" shadow="0">
       <root>
         <mxCell id="HFMmLbQoougwVL-yMFIW-0" />
         <mxCell id="HFMmLbQoougwVL-yMFIW-1" parent="HFMmLbQoougwVL-yMFIW-0" />
@@ -209,7 +209,7 @@
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-14" edge="1" parent="HFMmLbQoougwVL-yMFIW-1" source="HFMmLbQoougwVL-yMFIW-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="HFMmLbQoougwVL-yMFIW-51">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="400" y="490" as="targetPoint" />
+            <mxPoint x="400" y="430" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="X04jE5Q2D4EDdjPK0MEA-0" edge="1" parent="HFMmLbQoougwVL-yMFIW-1" source="HFMmLbQoougwVL-yMFIW-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="HFMmLbQoougwVL-yMFIW-50">
@@ -218,13 +218,13 @@
         <mxCell id="RVXDjaJ3vL2QuIjTxBmT-0" edge="1" parent="HFMmLbQoougwVL-yMFIW-1" source="HFMmLbQoougwVL-yMFIW-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="HFMmLbQoougwVL-yMFIW-52">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="480" y="510" />
-              <mxPoint x="480" y="465" />
+              <mxPoint x="480" y="450" />
+              <mxPoint x="480" y="490" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-15" parent="HFMmLbQoougwVL-yMFIW-1" style="rounded=0;whiteSpace=wrap;html=1;" value="External RAMDAC" vertex="1">
-          <mxGeometry height="40" width="120" x="340" y="490" as="geometry" />
+          <mxGeometry height="40" width="120" x="340" y="430" as="geometry" />
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-16" parent="HFMmLbQoougwVL-yMFIW-1" style="rounded=0;whiteSpace=wrap;html=1;" value="512-byte&lt;div&gt;CLUT cache&lt;/div&gt;" vertex="1">
           <mxGeometry height="50" width="80" x="40" y="280" as="geometry" />
@@ -235,7 +235,7 @@
         <mxCell id="HFMmLbQoougwVL-yMFIW-18" parent="HFMmLbQoougwVL-yMFIW-1" style="rounded=0;whiteSpace=wrap;html=1;" value="Shading &amp;amp; modulation (with bugs)" vertex="1">
           <mxGeometry height="40" width="280" x="40" y="170" as="geometry" />
         </mxCell>
-        <mxCell id="yZ8pR6z4sTLh15TUQZI5-3" edge="1" parent="HFMmLbQoougwVL-yMFIW-1" source="HFMmLbQoougwVL-yMFIW-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="HFMmLbQoougwVL-yMFIW-15">
+        <mxCell id="3MvpmECiojRcC25dRGlV-0" edge="1" parent="HFMmLbQoougwVL-yMFIW-1" source="HFMmLbQoougwVL-yMFIW-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="HFMmLbQoougwVL-yMFIW-15">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-22" parent="HFMmLbQoougwVL-yMFIW-1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;512KB&lt;/div&gt;&lt;div&gt;dual-ported VRAM&lt;/div&gt;" vertex="1">
@@ -314,21 +314,23 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-49" edge="1" parent="HFMmLbQoougwVL-yMFIW-1" source="HFMmLbQoougwVL-yMFIW-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="HFMmLbQoougwVL-yMFIW-53">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="450" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-50" parent="HFMmLbQoougwVL-yMFIW-1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Video&lt;/div&gt;&lt;div&gt;encoder&lt;/div&gt;" vertex="1">
-          <mxGeometry height="40" width="80" x="500" y="490" as="geometry" />
+          <mxGeometry height="40" width="80" x="500" y="430" as="geometry" />
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-51" parent="HFMmLbQoougwVL-yMFIW-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div&gt;Video timing signals&lt;/div&gt;&lt;div&gt;(dotclock, hblank, vblank)&lt;/div&gt;" vertex="1">
-          <mxGeometry height="30" width="140" x="330" y="550" as="geometry" />
+          <mxGeometry height="30" width="140" x="330" y="490" as="geometry" />
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-52" parent="HFMmLbQoougwVL-yMFIW-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="RGB out" vertex="1">
-          <mxGeometry height="30" width="60" x="600" y="450" as="geometry" />
+          <mxGeometry height="20" width="50" x="600" y="480" as="geometry" />
         </mxCell>
         <mxCell id="HFMmLbQoougwVL-yMFIW-53" parent="HFMmLbQoougwVL-yMFIW-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;div&gt;Composite/&lt;/div&gt;&lt;div&gt;S-video out&lt;/div&gt;" vertex="1">
-          <mxGeometry height="30" width="70" x="600" y="495" as="geometry" />
+          <mxGeometry height="30" width="70" x="600" y="435" as="geometry" />
         </mxCell>
-        <mxCell id="yZ8pR6z4sTLh15TUQZI5-2" edge="1" parent="HFMmLbQoougwVL-yMFIW-1" source="H-srAUGrDxB472Hs2myZ-0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="HFMmLbQoougwVL-yMFIW-15">
+        <mxCell id="3MvpmECiojRcC25dRGlV-2" edge="1" parent="HFMmLbQoougwVL-yMFIW-1" source="H-srAUGrDxB472Hs2myZ-0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="HFMmLbQoougwVL-yMFIW-15">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="H-srAUGrDxB472Hs2myZ-0" parent="HFMmLbQoougwVL-yMFIW-1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;512KB&lt;/div&gt;&lt;div&gt;dual-ported VRAM&lt;/div&gt;" vertex="1">
@@ -983,7 +985,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="gSfTPbu9W_w0kpcz65R3" name="sys573-digitalio">
-    <mxGraphModel dx="1150" dy="648" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="410" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1000" pageHeight="410" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
