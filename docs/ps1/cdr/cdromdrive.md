@@ -2082,17 +2082,24 @@ exact values).<br/>
 #### Sector Buffer
 The CDROM sector buffer is 32Kx8 SRAM (IC303). The buffer is apparently divided
 into 8 slots, theoretically allowing to buffer up to 8 sectors.<br/>
-BUG: The drive controller seems to allow only 2 of those 8 sectors (the oldest
-sector, and the current/newest sector).<br/>
+BUG: The HC05 delivers only 2 of those 8 sectors (the oldest sector, and the
+current/newest sector).<br/>
 Ie. after processing the data ready for the oldest sector, one would expect the
-controller to generate another data ready for next newer sector - but instead it
-appears to jump directly to data ready for the newest sector (skipping all other
-unprocessed sectors). There is no known way to get around that effect.<br/>
-So far, the big 32Kbyte buffer is entirely useless (the two accessible sectors
-could have been as well stored in a 8Kbyte chip) (unless, maybe the 32Kbytes
-have been intended for some error-correction "read-ahead" purposes, rather than
-as "look-back" buffer for old sectors; one of the unused slots might be also
-used for XA-ADPCM sectors).<br/>
+HC05 to post another data ready for the next newer sector, but it jumps directly
+to the newest sector (skipping all other unprocessed sectors). There is no known way to get around that effect.<br/>
+The cause is in the HC05 firmware. The decoder writes every incoming sector into
+the next slot of the buffer, round-robin. The HC05 remembers only one sector:
+each time the decoder reports a new one, the HC05 reads that sector's buffer
+address (CMADR) and overwrites the address it had before. When it posts data
+ready, it points the CPU's read window at the address it holds at that moment.
+So the only two sectors the CPU can reach are the one whose data ready is
+already posted (its window was set at that point, but the decoder keeps going
+round the slots, so its data can be overwritten while the CPU waits, as in the
+test cases below) and the newest one. The sectors in between are never
+announced.<br/>
+The rest of the 32Kbytes is not all wasted: the sound map XA-ADPCM blocks are
+also stored in it (the decoder starts sound map transfers at 600Ch, 6A0Ch and
+740Ch).<br/>
 The bottom line is that one should process data ready causes as soon as possible (ie.
 before the cdrom controller receives and skips further sectors). Otherwise
 sectors would be lost without notice (there appear to be absolutely no overrun
@@ -2226,8 +2233,8 @@ Another test, with Delay BEFORE and AFTER Pause:<br/>
   Process complete --> receives stat=02h (second pause response)
 ```
 For above: Note that, despite of Pause, the CDROM is still writing to the
-internal buffer (and overwrites slot 1 by sector 9) (this might be because the
-Pause command isn't processed at all until data ready is processed).<br/>
+internal buffer (and overwrites slot 1 by sector 9), because the HC05 does not
+take the Pause command until the CPU has cleared the pending data ready.<br/>
 
 #### Double Commands (Getloc then Pause)
 ```
