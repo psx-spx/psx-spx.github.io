@@ -634,7 +634,7 @@ Describes the most recently recognised exception.
 | 8-9   | Sw       | Software Interrupts. Write to these bits to manually cause an exception. Clear them before returning from the exception handler. |
 | 10-15 | IP       | Interrupt pending field. As long as any of the bits are set they will cause an interrupt if the corresponding bit is set in IM. |
 | 16-27 |          | Not used (zero) |
-| 28-29 | CE       | Contains the coprocessor number if the exception occurred because of a coprocessor instuction for a coprocessor which wasn't enabled in SR. |
+| 28-29 | CE       | Contains the coprocessor number if the exception occurred because of a coprocessor instuction for a coprocessor which wasn't enabled in SR. Other exceptions leave it unchanged. |
 | 30    | BT       | When BD is set, BT determines whether the branch is taken. The Target Address Register holds the return address. |
 | 31    | BD       | Is set when EPC points to the branch instuction instead of the instruction in the branch delay slot, where the exception occurred. |
 
@@ -658,50 +658,33 @@ ExcCode values:
 | 0Dh-1Fh |          | Not used    |
 
 #### cop0r12 - SR - System status register (R/W)
-```
-  0     IEc Current Interrupt Enable  (0=Disable, 1=Enable) ;rfe pops IUp here
-  1     KUc Current Kernel/User Mode  (0=Kernel, 1=User)    ;rfe pops KUp here
-  2     IEp Previous Interrupt Enable                       ;rfe pops IUo here
-  3     KUp Previous Kernel/User Mode                       ;rfe pops KUo here
-  4     IEo Old Interrupt Enable                        ;left unchanged by rfe
-  5     KUo Old Kernel/User Mode                        ;left unchanged by rfe
-  6-7   -   Not used (zero)
-  8-15  Im  8 bit interrupt mask fields. When set the corresponding
-            interrupts are allowed to cause an exception.
-  16    Isc Isolate Cache (0=No, 1=Isolate)
-              When isolated, all load and store operations are targetted
-              to the cache instead of main memory. Which cache is accessed
-              depends on the BCC register (FFFE0130h): with TAG+IS1, stores
-              go to i-cache tag memory; with IS1 only, stores go to i-cache
-              code words. (Used by PSX Kernel, in combination with Port
-              FFFE0130h)
-  17    Swc Swapped cache mode (0=Normal, 1=Swapped)
-              Documented as swapping instruction and data caches. Hardware
-              testing shows no observable effect on PSX: IsC+SwC produces
-              identical results to IsC alone for both TAG and code word
-              reads/writes. The PSX kernel does not use this bit.
-              (Not used by PSX Kernel)
-  18    PZ  When set cache parity bits are written as 0.
-  19    CM  Shows the result of the last load operation with the D-cache
-            isolated. It gets set if the cache really contained data
-            for the addressed memory location.
-  20    PE  Cache parity error (Does not cause exception)
-  21    TS  TLB shutdown. Gets set if a programm address simultaneously
-            matches 2 TLB entries.
-            (initial value on reset allows to detect extended CPU version?)
-  22    BEV Boot exception vectors in RAM/ROM (0=RAM/KSEG0, 1=ROM/KSEG1)
-  23-24 -   Not used (zero)
-  25    RE  Reverse endianness   (0=Normal endianness, 1=Reverse endianness)
-              Reverses the byte order in which data is stored in
-              memory. (lo-hi -> hi-lo)
-              (Affects only user mode, not kernel mode) (?)
-              (The bit doesn't exist in PSX ?)
-  26-27 -   Not used (zero)
-  28    CU0 COP0 Enable (0=Enable only in Kernel Mode, 1=Kernel and User Mode)
-  29    CU1 COP1 Enable (0=Disable, 1=Enable) (none in PSX)
-  30    CU2 COP2 Enable (0=Disable, 1=Enable) (GTE in PSX)
-  31    CU3 COP3 Enable (0=Disable, 1=Enable) (none in PSX)
-```
+Bits listed as always zero read back 0 after writing 1. No bit reads back 1
+after writing 0.
+
+| Bits  | Mnemonic | Description |
+|-------|----------|-------------|
+| 0     | IEc | Current Interrupt Enable (0=Disable, 1=Enable). rfe pops IEp here. |
+| 1     | KUc | Current Kernel/User Mode (0=Kernel, 1=User). rfe pops KUp here. In user mode, loads and instruction fetches outside KUSEG raise AdEL, and COP0 needs CU0. |
+| 2     | IEp | Previous Interrupt Enable. rfe pops IEo here. |
+| 3     | KUp | Previous Kernel/User Mode. rfe pops KUo here. |
+| 4     | IEo | Old Interrupt Enable. Left unchanged by rfe. |
+| 5     | KUo | Old Kernel/User Mode. Left unchanged by rfe. |
+| 6-7   | -   | Always zero. |
+| 8-9   | Im  | Software interrupt mask for CAUSE bits 8-9. With IEc set, writing 1 to a CAUSE bit whose mask bit is set raises an interrupt immediately. With the mask bit clear, the CAUSE bit stays set and fires once the mask bit (and IEc) is set. |
+| 10    | Im  | Hardware interrupt mask. The interrupt controller is the only hardware interrupt source: CAUSE bit 10 reads 1 while (I\_STAT AND I\_MASK) is nonzero and drops as soon as it is zero. Individual devices are masked and acknowledged in [I\_STAT and I\_MASK](../system/interrupts.md). |
+| 11-15 | Im  | Read/write, no effect: CAUSE bits 11-15 are never set. |
+| 16    | IsC | Isolate Cache (0=No, 1=Isolate). When isolated, all load and store operations are targetted to the cache instead of main memory. Which cache is accessed depends on the BCC register (FFFE0130h): with TAG+IS1, stores go to i-cache tag memory; with IS1 only, stores go to i-cache code words. An isolated load returns the contents of the cache line selected by the address, without comparing the line's tag. (Used by PSX Kernel, in combination with Port FFFE0130h) |
+| 17    | SwC | Read/write, no effect. Documented as swapping instruction and data caches on other R3000 parts; IsC+SwC behaves the same as IsC alone for both TAG and code word reads/writes. (Not used by PSX Kernel) |
+| 18    | PZ  | Read/write, no effect on loads and stores. |
+| 19    | CM  | Read/write, holds the last value written. Documented as the hit/miss result of the last isolated load on other R3000 parts; isolated loads leave it unchanged on the PSX, whether or not the tag matches. |
+| 20    | PE  | Always zero. |
+| 21    | TS  | Always zero. |
+| 22    | BEV | Boot exception vectors in RAM/ROM (0=RAM/KSEG0, 1=ROM/KSEG1). With BEV set, exceptions no longer reach 80000080h (see Exception Vectors below). |
+| 23-27 | -   | Always zero. Bit 25 is RE (reverse endianness in user mode) on other R3000 parts; it does not exist on the PSX, and user mode byte and halfword accesses are unaffected by writing it. |
+| 28    | CU0 | COP0 Enable (0=Enable only in Kernel Mode, 1=Kernel and User Mode). |
+| 29    | CU1 | COP1 Enable. There is no COP1: with CU1=0, every COP1 opcode causes a Coprocessor Unusable Exception (excode=0Bh, CE=1), in kernel mode too. With CU1=1 they don't cause an exception, reads return garbage and swc1 stores garbage. |
+| 30    | CU2 | COP2 Enable (GTE). With CU2=0, COP2 opcodes cause a Coprocessor Unusable Exception (CE=2). |
+| 31    | CU3 | COP3 Enable. Same as CU1, with CE=3. |
 
 #### cop0r14 - EPC - Return Address from Trap (R)
 ```
