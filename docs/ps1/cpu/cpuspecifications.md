@@ -632,7 +632,7 @@ Describes the most recently recognised exception.
 | 2-6   | ExcCode  | Describes what kind of exception occured (see below) |
 | 7     |          | Not used (zero) |
 | 8-9   | Sw       | Software Interrupts. Write to these bits to manually cause an exception. Clear them before returning from the exception handler. |
-| 10-15 | IP       | Interrupt pending field. As long as any of the bits are set they will cause an interrupt if the corresponding bit is set in IM. |
+| 10-15 | IP       | Interrupt pending field. As long as any of the bits are set they will cause an interrupt if the corresponding bit is set in IM. On the PSX only bit 10 is connected, to the interrupt controller, see [Interrupt lines](#interrupt-lines). |
 | 16-27 |          | Not used (zero) |
 | 28-29 | CE       | Contains the coprocessor number if the exception occurred because of a coprocessor instuction for a coprocessor which wasn't enabled in SR. Other exceptions leave it unchanged. |
 | 30    | BT       | When BD is set, BT determines whether the branch is taken. The Target Address Register holds the return address. |
@@ -685,6 +685,18 @@ after writing 0.
 | 29    | CU1 | COP1 Enable. There is no COP1: with CU1=0, every COP1 opcode causes a Coprocessor Unusable Exception (excode=0Bh, CE=1), in kernel mode too. With CU1=1 they don't cause an exception, reads return garbage and swc1 stores garbage. |
 | 30    | CU2 | COP2 Enable (GTE). With CU2=0, COP2 opcodes cause a Coprocessor Unusable Exception (CE=2). |
 | 31    | CU3 | COP3 Enable. Same as CU1, with CE=3. |
+
+#### Interrupt lines
+The R3000 has two software and six hardware interrupt lines, and IM and IP
+keep the meaning the R3000 manual gives them, one mask bit per line. On the PSX
+only hardware line 0 (IP/IM bit 10) is connected. It carries the output of the
+interrupt controller, (I\_STAT AND I\_MASK) != 0, which ORs all eleven
+[interrupt sources](../system/interrupts.md) into that one line. IP11-15 are
+never driven. A handler reads I\_STAT to find the source, devices are masked in
+I\_MASK, IM10 is the master gate for all of them, and acknowledging in I\_STAT
+drops IP10 at once, because CAUSE holds no latch for it.<br/>
+
+![Interrupt requests from I_STAT to the CPU exception](../system/diagrams/interrupt-chain.svg)
 
 #### cop0r14 - EPC - Return Address from Trap (R)
 ```
