@@ -9,6 +9,10 @@ code is received it will start accepting commands for about 2000-2500 ms, then
 become unresponsive again. It will initially behave as two different devices,
 one with address 01h acting like a standard digital controller and the other
 with address 61h exposing IR codes as received from the remote.<br/>
+All transfers to address 61h are 7 bytes long. The PS2 IOP remote driver (rmman)
+names the commands 04h=poll, 06h=init, and 0Fh=find. It keeps state for up to
+4 slots per port, but never sends the slot number, so a receiver behind a Multi
+Tap is not actually addressed.<br/>
 
 #### Command 04h - IR poll (and disable controller mode)
 ```
@@ -48,22 +52,46 @@ restore controller functionality (see below), unknown if there is also a
 watchdog to automatically restore controller mode if no IR poll commands are
 issued.<br/>
 
-#### Command 06h, 03h - Re-enable controller mode
+#### Command 06h - Init (set power mode)
 ```
   Send Reply Comment
   61h  N/A   IR receiver address
   06h  12h   Receive ID bits 0-7, send command byte 1
-  03h  5Ah   Receive ID bits 8-15, send command byte 2
+  MODE 5Ah   Receive ID bits 8-15, send power mode
   00h  ?     Receive unknown data, send padding
   00h  ?
   00h  ?
   00h  ?
 ```
+The third byte is the driver's "power mode". The driver sends 00h when a game
+opens the port (enabling remote mode), and 03h when it closes the port
+(re-enabling controller mode). Other values are not used by the driver.<br/>
 
-#### Command 0Fh - Unknown
-This command exists (the receiver will keep pulling /ACK low) but its purpose is
-currently unknown. It could possibly be an alternate poll command that does not
-disable controller mode.<br/>
+#### Command 0Fh - Find
+```
+  Send Reply Comment
+  61h  N/A   IR receiver address
+  0Fh  ID    Receive ID bits 0-7, send command byte
+  00h  ?     Receive unknown data, send padding
+  00h  ?
+  00h  ?
+  00h  ?
+  00h  ?
+```
+The receiver keeps pulling /ACK low for this command. The driver checks the ID
+byte (the reply to the 0Fh byte):<br/>
+```
+  12h       Receiver present and ready
+  1Fh       Receiver present but not initialized (driver sends 06h right away)
+  Other     No receiver
+```
+
+#### Driver timing
+The driver polls with command 04h once per vblank. When no receiver answers, it
+retries command 0Fh every 11th vblank. After 10 consecutive failed polls or
+inits it goes back to probing with command 0Fh. A transfer counts as successful
+if it completed without an /ACK timeout. This fits the receiver being
+unresponsive until a button is pressed.<br/>
 
 #### IR code format
 The DVD remote always emits 20-bit IR codes. The receiver does return the length
@@ -123,13 +151,10 @@ released (with the total number of codes sent always being a multiple of 6 in
 this case).<br/>
 
 #### Built-in IR receivers
-In later PS2 models, Sony integrated the IR receiver into the console. Assuming
-the built-in receivers used the same circuitry as the external dongle, this may
-explain its weird behavior: the receiver was likely designed to be wired in
-parallel with one of the controller ports, and to be unresponsive until the
-remote is actually in use to avoid interfering with another controller plugged
-into the same port. Whether or not the integrated receivers are connected this
-way has not been confirmed.<br/>
+In later PS2 models, Sony integrated the IR receiver into the console. The
+driver for these consoles (rmman2) does not use the controller port at all; it
+reads the remote through the CDVD mechacon via S-command 1Eh (and 20h). The PSX
+DESR version reads it through its DVR subsystem.<br/>
 There is a second revision of the DVD remote with power and eject buttons, meant
 to be used with the PS2 models that have a built-in receiver. Weirdly enough,
 however, it seems to be incompatible with the older receiver dongle.<br/>
