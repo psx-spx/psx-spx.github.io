@@ -1911,15 +1911,26 @@ the final analog audio amplifier). All other SPUCNT bits can be zero for VCD.<br
 ##   CDROM - Mainloop/Responses
 #### SUB-CPU Mainloop
 The SUB-CPU is running a mainloop that is handling hardware events (by simple
-polling, not by IRQs):<br/>
+polling, not by IRQs). Each pass goes through these steps, in this order:<br/>
 ```
-  check for incoming sectors (from CDROM decoder)
-  check for incoming commands (from Main CPU)
-  do maintenance stuff on the drive mechanics
+  drive mechanics
+  receive SubQ from the DSP
+  timed maintenance (seek, focus and door timeouts, etc.)
+  read the decoder's status, then:
+    take a new command and post its acknowledge (or error)
+    deliver a received sector, posting data ready
+  post a pending complete
+  post a pending error
+  post a pending end
 ```
-There is no fixed priority: if both incoming sector and incoming command are
-present, then the SUB-CPU may handle either one, depending on which portion of
-the mainloop it is currently executing.<br/>
+Every step that posts a cause first reads back the cause bits that the CPU sees
+in HINTSTS, and does nothing if they are not zero. A pass can therefore post at
+most one cause, and nothing more is posted until the CPU has cleared it. Within
+a pass, a new command comes before a received sector, which comes before the
+pending complete, error and end causes.<br/>
+There is no fixed priority across passes: an event that arrives after the
+mainloop has gone past its step waits for the next pass, so a sector can be
+delivered before a command that was written a moment earlier.<br/>
 There is no fixed timing: if the mainloop is just checking for a specific
 event, then a new event may be processed immediately, otherwise it may take
 whole mainloop cycle until the SUB-CPU sees the event.<br/>
@@ -1940,11 +1951,10 @@ e.g. SetMode:
 
 
 #### Responses
-The PSX can deliver one INT after another. Instead of using a real queue, it's
-merely using some flags that do indicate which INT(s) need to be delivered.
-Basically, there seem to be two flags: One for Second Response (complete), and one
-for Data/Report Response (data ready). There is no flag for First Response (acknowledge);
-because that cause is generated immediately after executing a command.<br/>
+The PSX can deliver one cause after another. Instead of using a real queue, the
+HC05 keeps one flag per cause that has to be delivered later: complete, data
+ready, error and end. There is no flag for the first response (acknowledge),
+because that cause is posted as soon as the command has been executed.<br/>
 The flag mechanism means that the SUB-CPU cannot hold more than one undelivered
 data ready. That, although the CDROM Decoder does notify the SUB-CPU about all newly
 received sectors, and it can hold up to eight sectors in the 32K SRAM. However,
