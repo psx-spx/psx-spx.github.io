@@ -108,6 +108,11 @@ counts. What does change is the COM\_DELAY value in use. The BIOS sets
 COM\_DELAY (and 00020943h to DEV5), so after the BIOS has read from the disc,
 recovery is 12 cycles and floating 3. A 32bit read of the BIOS ROM then takes
 33 CPU cycles instead of 27, and a 32bit write to the SPU 28 instead of 15.
+Back-to-back byte reads slow down as well: about 28 cycles each instead of 21
+from the SPU, and about 18 instead of 10 from the CD-ROM controller. The SPU
+change follows COM\_DELAY alone. The CD-ROM one needs both values: with DEV5 at
+00020843h (recovery off) CD-ROM byte reads stay at 10 cycles whatever COM\_DELAY
+holds, and with 00020943h they take 11 cycles under 00031125h.
 
 A halfword write to the SPU with 200931E1h: /CS, then a 2 cycle /WR.
 
