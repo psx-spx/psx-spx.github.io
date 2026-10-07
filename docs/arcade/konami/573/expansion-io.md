@@ -93,6 +93,8 @@ board also features 128 KB of SRAM used as a cache, RS-232 and ARCnet
 transceivers for communication with other hardware and a DS2401 serial number
 chip, used to prevent usage of the same security cartridge on more than one 573.
 
+![Digital I/O board block diagram](diagrams/digital-io.svg)
+
 The vast majority of the registers provided by this board (including some but
 not all light outputs) are handled by its FPGA, which requires a configuration
 bitstream to be uploaded to it in order to work. Registers in the

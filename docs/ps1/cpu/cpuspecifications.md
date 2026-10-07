@@ -11,6 +11,8 @@ all part of the same chip, as its [pinout](../pinouts/cpu-pinouts.md) and the
 [chipset summary](../pinouts/chipset-summary.md) show, even where their pages
 sit under System or Serial Ports.<br/>
 
+![CPU chip block diagram](diagrams/cpu-soc.svg)
+
 #### CPU
 [CPU Registers](#cpu-registers)<br/>
 [CPU Opcode Encoding](#cpu-opcode-encoding)<br/>

@@ -46,7 +46,8 @@ THEME = {
     '#1a7f37': 'signal',
 }
 
-IMAGE = re.compile(r'^!\[(.*)\]\(([^)\s]+\.svg)\)\s*$')    # alt text may hold ]
+# Leading indent is kept, so a figure inside a content tab stays in the tab.
+IMAGE = re.compile(r'^( *)!\[(.*)\]\(([^)\s]+\.svg)\)\s*$')  # alt text may hold ]
 TAG = re.compile(r'<([a-zA-Z]+)\b([^<>]*?)(/?)>')
 PAINT = re.compile(r'\b(fill|stroke)="([^"]*)"')
 ID = re.compile(r'\bid="([^"]+)"')
@@ -96,8 +97,8 @@ def on_page_markdown(markdown, page, config, files):
         if f and (fence is None or f.group(1).startswith(fence)):
             fence = None if fence else f.group(1)[:3]
         m = fence is None and IMAGE.match(line)
-        path = m and os.path.normpath(os.path.join(docs, here, m.group(2)))
-        if not m or '://' in m.group(2) or not path.startswith(docs + os.sep) \
+        path = m and os.path.normpath(os.path.join(docs, here, m.group(3)))
+        if not m or '://' in m.group(3) or not path.startswith(docs + os.sep) \
                 or not os.path.isfile(path):
             out.append(line)
             continue
@@ -107,11 +108,12 @@ def on_page_markdown(markdown, page, config, files):
         svg = open(path, encoding='utf-8').read()
         svg = re.sub(r'<\?xml[^>]*\?>\s*', '', svg).strip()
         svg = _theme(svg, f'fig{n}-{re.sub(r"[^A-Za-z0-9-]", "-", name)}',
-                     m.group(1), unknown)
+                     m.group(2), unknown)
         if unknown:
-            print(f'WARNING -  Figure {m.group(2)} on {page.file.src_path}: colours '
+            print(f'WARNING -  Figure {m.group(3)} on {page.file.src_path}: colours '
                   f'not in the theme table, left as drawn: {", ".join(sorted(unknown))}')
         # No blank line after MARKER: the bitfield hook looks at the line just
         # above its table to stay idempotent across with-pdf's second pass.
-        out += ['', '<div class="psx-figure">', svg, MARKER]
+        pad = m.group(1)
+        out += [''] + [pad + x for x in ['<div class="psx-figure">'] + svg.split('\n') + [MARKER]]
     return '\n'.join(out)
