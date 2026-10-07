@@ -111,8 +111,10 @@ unsigned parameter bytes for the Color Quant Table (used for Cb and Cr).<br/>
   28-0  Not used (should be zero)  ;Bit25-28 are copied to STAT.23-26 though
 ```
 The command is followed by 64 signed halfwords with 14bit fractional part, the
-values should be usually/always the same values (based on the standard JPEG
-constants, although, MDEC(3) allows to use other values than that constants).<br/>
+values are normally the standard ones listed under set\_scale\_table (based on
+the standard JPEG constants). Other values work too: the IDCT is a plain matrix
+multiply by whatever table was uploaded, so a modified or even non-orthogonal
+matrix changes the output accordingly.<br/>
 There is no usable scale matrix until MDEC(3) has been issued: software that
 never sends one decodes to flat mid-grey, so the table is not left in place by
 the BIOS. On the other hand, the Reset bit does NOT clear the scale matrix nor
