@@ -7,7 +7,10 @@
   0x1f801814  GP1   Write  Send GP1 Commands (Display Control) (and DMA Control)
                     Read   Receive GPU Status Register
 ```
-It (=GP0 only?) has a 64-byte (16-word) command FIFO buffer.<br/>
+GP0 has a 64-byte (16-word) command FIFO buffer, in addition to the command the
+GPU is currently executing. Writing to a full FIFO does not stall the CPU and
+does not drop the new word: the newest words overwrite the oldest queued ones.
+Software must check GPUSTAT (or use DMA) before writing.<br/>
 Optionally, Port 1F801810h (Read/Write) can be also accessed via DMA2.<br/>
 The communication between the CPU and the GPU is a 32-bits data-only bus called
 the VBUS. Aside from address line 2 being connected, in order to make the difference
