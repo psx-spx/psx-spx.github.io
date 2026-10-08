@@ -259,6 +259,19 @@ as a plain burst takes about 3700 with 4-word / 4-cycle windows and about 19000
 with 4-word / 64-cycle windows, so the CPU time gained costs transfer time.
 DMA6 cannot chop: its CHCR does not store bits 8 and 16-22.<br/>
 
+#### Address Bus during DMA
+DMA transfers to the GPU and MDEC, and DMA6, do not touch A0..A23: the
+address of the last CPU access to the external bus stays there. The other
+channels put a fixed address on the bus for the whole transfer, in either
+direction. It stays the same across words and across the 8bit or 16bit units
+of a word, where a CPU access steps A0..A1:
+```
+  DMA3 CDROM  1F801802h  (writes too, not the 1F801801h WRDATA port)
+  DMA4 SPU    1F801DB0h  (not the 1F801DA8h data port)
+  DMA5 PIO    The DEV0 base address, all bits, see 1F801000h
+```
+<br/>
+
 #### PS2 IOP DMA
 The PS2's IOP has an extended DMA unit with more channels, new control registers
 and an additional chain mode (SyncMode=3). For more details, see:<br/>
