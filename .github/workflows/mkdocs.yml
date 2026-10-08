@@ -1,19 +1,16 @@
 name: Publish docs via GitHub Pages
 
-# Builds both versions of the site into one gh-pages tree:
-#   stable branch -> /       (human-written reference)
-#   master branch -> /dev/   (development version)
-# Keep this file identical on both branches.
+# master builds only the development version and replaces /dev/ inside the
+# existing gh-pages tree. The root (stable) is published by the stable branch.
 
 on:
   push:
     branches:
       - master
-      - stable
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-dev
   cancel-in-progress: true
 
 permissions:
@@ -21,7 +18,7 @@ permissions:
 
 jobs:
   build:
-    name: Deploy docs
+    name: Deploy dev docs
     runs-on: ubuntu-latest
     container: squidfunk/mkdocs-material:9.5.17
     steps:
@@ -31,34 +28,27 @@ jobs:
             jpeg-dev libffi-dev linux-headers msttcorefonts-installer pango zlib-dev
           update-ms-fonts
           fc-cache -f
-          pip install --no-cache-dir mkdocs-with-pdf ghp-import
-
-      - name: Checkout stable
-        uses: actions/checkout@v4
-        with:
-          ref: stable
-          path: stable
+          pip install --no-cache-dir mkdocs-with-pdf
 
       - name: Checkout dev
         uses: actions/checkout@v4
         with:
-          ref: master
           path: dev
 
-      - name: Build
-        run: |
-          mkdocs build --config-file stable/mkdocs.yml --site-dir "$GITHUB_WORKSPACE/site"
-          mkdocs build --config-file dev/mkdocs.yml --site-dir "$GITHUB_WORKSPACE/site/dev"
-          echo psx-spx.consoledev.net > site/CNAME
-          touch site/.nojekyll
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: pages
 
-      - name: Deploy
+      - name: Build and deploy /dev/
         run: |
           git config --global --add safe.directory '*'
-          cd dev
+          rm -rf pages/dev
+          mkdocs build --config-file dev/mkdocs.yml --site-dir "$GITHUB_WORKSPACE/pages/dev"
+          cd pages
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
-          ghp-import --no-jekyll --push --force --branch gh-pages \
-            --message "Deploy stable $(git -C ../stable rev-parse --short HEAD), dev $(git rev-parse --short HEAD)" \
-            "$GITHUB_WORKSPACE/site"
+          git add -A dev
+          git commit -m "Deploy dev $(git -C ../dev rev-parse --short HEAD)" || exit 0
+          git push origin HEAD:gh-pages
