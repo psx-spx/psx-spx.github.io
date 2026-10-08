@@ -102,6 +102,13 @@ BIOS ROM (DEV2, 8bit) with the COM\_DELAY register at 00031125h unless noted.
 - Recovery (bit 8) puts COM0 cycles between the units of a wide access, with /CS
   still active, and keeps /CS inactive for COM0 cycles after a write before the
   next transaction. With bit 8 cleared, both gaps are 1 cycle.
+- The gap between the units of a wide access combines these the same way for
+  reads and writes. With recovery and no hold or floating period, it is COM0
+  (5 cycles), plus one cycle when pre-strobe (bit 11) is set, measured with
+  COM3 = 1. With a hold (writes) or floating (reads) period as well, it is that
+  period plus COM0 plus the strobe setup cycle: 7 cycles between the bytes of a
+  BIOS ROM read with 0013253Fh, and 7 between the halves of an SPU read with
+  200935E1h.
 
 These timings are the same on the SCPH-1000, SCPH-1001, SCPH-5501, SCPH-7001,
 SCPH-9002 and the DTL-H2700: the same register values give the same cycle
