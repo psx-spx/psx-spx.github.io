@@ -1,32 +1,64 @@
 name: Publish docs via GitHub Pages
+
+# Builds both versions of the site into one gh-pages tree:
+#   stable branch -> /       (human-written reference)
+#   master branch -> /dev/   (development version)
+# Keep this file identical on both branches.
+
 on:
   push:
     branches:
       - master
+      - stable
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
     name: Deploy docs
     runs-on: ubuntu-latest
+    container: squidfunk/mkdocs-material:9.5.17
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: |
+          apk add --no-cache bash git build-base cairo cairo-gobject fontconfig gdk-pixbuf \
+            jpeg-dev libffi-dev linux-headers msttcorefonts-installer pango zlib-dev
+          update-ms-fonts
+          fc-cache -f
+          pip install --no-cache-dir mkdocs-with-pdf ghp-import
 
-      - name: Cancel previous run
-        uses: n1hility/cancel-previous-runs@v2
+      - name: Checkout stable
+        uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: stable
+          path: stable
 
-      - name: Recall previous docker images
-        uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          path: dev
 
-      - name: Deploy docs
-        uses: nicolasnoble/mkdocs-deploy-gh-pages@master
-        # Or use mhausenblas/mkdocs-deploy-gh-pages@nomaterial to build without the mkdocs-material theme
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_DOMAIN: psx-spx.consoledev.net
-          CONFIG_FILE: mkdocs.yml
-          EXTRA_PACKAGES: build-base cairo cairo-gobject fontconfig gdk-pixbuf jpeg-dev libffi-dev msttcorefonts-installer pango zlib-dev
-          POST_INSTALL: update-ms-fonts && fc-cache -f
+      - name: Build
+        run: |
+          mkdocs build --config-file stable/mkdocs.yml --site-dir "$GITHUB_WORKSPACE/site"
+          mkdocs build --config-file dev/mkdocs.yml --site-dir "$GITHUB_WORKSPACE/site/dev"
+          echo psx-spx.consoledev.net > site/CNAME
+          touch site/.nojekyll
+
+      - name: Deploy
+        run: |
+          git config --global --add safe.directory '*'
+          cd dev
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
+          ghp-import --no-jekyll --push --force --branch gh-pages \
+            --message "Deploy stable $(git -C ../stable rev-parse --short HEAD), dev $(git rev-parse --short HEAD)" \
+            "$GITHUB_WORKSPACE/site"
