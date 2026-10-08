@@ -674,6 +674,9 @@ The address errors occur when attempting to read outside of KUseg in user mode
 and when the address is misaligned. (See also: Bad Address register)
 
 #### cop0r12 - SR - System status register (R/W)
+The core is LSI's CW33300, not a stock R3000, and its COP0 differs from the
+R3000's. LSI's "L64360" datasheet, which uses the same core, is the closest
+reference; generic R3000 manuals describe bits this core does not have.
 
 | Bits  | Name | Read | Function |
 |-------|------|------|----------|
@@ -694,7 +697,7 @@ and when the address is misaligned. (See also: Bad Address register)
 | 20    | PE   | 0    | Not used |
 | 21    | TS   | 0    | Not used |
 | 22    | BEV  | R/W  | Exception vectors (0=RAM/KSEG0, 1=ROM/KSEG1) |
-| 23-27 | -    | 0    | Not used (bit 25 is RE on other R3000s) |
+| 23-27 | -    | 0    | Not used |
 | 28    | CU0  | R/W  | COP0 Enable in User Mode (Kernel Mode always) |
 | 29    | CU1  | R/W  | COP1 Enable (there is no COP1) |
 | 30    | CU2  | R/W  | COP2 Enable (GTE) |
@@ -715,18 +718,14 @@ Bits marked 0 read back 0 after writing 1. No bit reads back 1 after writing 0.
   stores go to i-cache code words. An isolated load returns the contents of the
   cache line selected by the address, without comparing the line's tag. (Used by
   PSX Kernel, in combination with Port FFFE0130h)
-- SwC: documented as swapping instruction and data caches on other R3000
-  parts. IsC+SwC behaves the same as IsC alone for both TAG and code word
-  reads/writes. (Not used by PSX Kernel)
+- SwC (bit 17): holds what is written. IsC+SwC behaves the same as IsC alone
+  for both TAG and code word reads/writes. (Not used by PSX Kernel)
 - PZ: no effect on loads and stores.
-- CM: documented as the hit/miss result of the last isolated load on other
-  R3000 parts. Isolated loads leave it unchanged on the PSX, whether or not the
-  tag matches.
+- CM (bit 19): holds what is written. Isolated loads leave it unchanged,
+  whether or not the tag matches.
 - BEV: with BEV set, exceptions no longer reach 80000080h (see Exception
   Vectors below).
-- RE (bit 25): reverse endianness in user mode on other R3000 parts. It does
-  not exist on the PSX, and user mode byte and halfword accesses are unaffected
-  by writing it.
+- Bit 25: writing it does not affect user mode byte and halfword accesses.
 - CU1, CU3: with the bit clear, every COP1 (or COP3) opcode causes a
   Coprocessor Unusable Exception (excode=0Bh, CE=1 or 3), in kernel mode too.
   With the bit set they don't cause an exception, reads return garbage and
