@@ -9,7 +9,7 @@
 <text x="650.5" y="61" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,650.5,61)">Button []</text>
 <text x="629" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">2</text>
 <rect x="581" y="15" width="43" height="92" fill="#efefef" stroke="black" stroke-width="1"/>
-<text x="602.5" y="61" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,602.5,61)">Button</text>
+<text x="602.5" y="61" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,602.5,61)">Button ()</text>
 <text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
 <rect x="533" y="15" width="43" height="92" fill="#efefef" stroke="black" stroke-width="1"/>
 <text x="554.5" y="61" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,554.5,61)">Button &gt;&lt;</text>

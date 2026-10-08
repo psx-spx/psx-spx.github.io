@@ -7783,17 +7783,16 @@ command/response has been sent/received).<br/></p>
 Bits 0-2 are supposed to be used as three separate IRQ flags, however the HC05
 misuses them as a single 3-bit "interrupt type" value, which always assumes one
 of the following values:<br/>
-<div class="highlight"><pre><span></span><code>  0    -            No interrupt pending
-  1    Data ready   New sector (ReadN/ReadS) or report packet (Play) available
-  2    Complete     Command finished processing (some commands, after the acknowledge cause is fired)
-  3    Acknowledge  Command received and acknowledged (all commands)
-  4    End          Reached end of disc (or end of track if auto-pause enabled)
-  5    Error        Command error, read error, license string error or lid opened
+<div class="highlight"><pre><span></span><code>  0    CdlNoIntr       -     No interrupt pending
+  1    CdlDataReady    INT1  New sector (ReadN/ReadS) or report packet (Play) available
+  2    CdlComplete     INT2  Command finished processing (some commands, after the acknowledge cause is fired)
+  3    CdlAcknowledge  INT3  Command received and acknowledged (all commands)
+  4    CdlDataEnd      INT4  Reached end of disc (or end of track if auto-pause enabled)
+  5    CdlDiskError    INT5  Command error, read error, license string error or lid opened
   6-7  -
 </code></pre></div>
-Emulators and other documentation commonly call these causes INT1 to INT5:
-INT1 is data ready, INT2 is complete, INT3 is acknowledge, INT4 is end and INT5
-is error.<br/>
+The names are the libcd ones; emulators and other documentation commonly call
+these causes INT1 to INT5.<br/>
 The response interrupts are queued. For example, if the first response is an
 acknowledge and the second an error, the acknowledge is delivered first and the
 error is not delivered until the CPU has cleared the acknowledge (the causes are
@@ -9651,7 +9650,7 @@ might hit a RET opcode and recover from the crash.<br/></p>
 <text x="650.5" y="61" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,650.5,61)" class="pf-fill-fg">Button []</text>
 <text x="629" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">2</text>
 <rect x="581" y="15" width="43" height="92" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
-<text x="602.5" y="61" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,602.5,61)" class="pf-fill-fg">Button</text>
+<text x="602.5" y="61" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,602.5,61)" class="pf-fill-fg">Button ()</text>
 <text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">3</text>
 <rect x="533" y="15" width="43" height="92" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
 <text x="554.5" y="61" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,554.5,61)" class="pf-fill-fg">Button &gt;&lt;</text>
