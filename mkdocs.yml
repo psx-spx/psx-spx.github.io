@@ -5,6 +5,7 @@ edit_uri: edit/master/docs/
 
 theme:
   name: material
+  custom_dir: overrides
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
