@@ -1,0 +1,4723 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/ps1/kernelbios/interrupt-exception-handling/">
+      
+      
+        <link rel="prev" href="../memory-card-functions/">
+      
+      
+        <link rel="next" href="../event-functions/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Interrupt/Exception Handling - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#interruptexception-handling" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<strong>Development version.</strong> Most changes made here since April 2026 were written by an AI and have not all been reviewed by a human.
+For the human-written reference, see the <a href="/">stable version</a>.
+
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Interrupt/Exception Handling
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    PlayStation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            PlayStation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    System
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            System
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/memorymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/iomap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/interrupts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interrupts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/dmachannels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DMA Channels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/timers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/memorycontrol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/partialwordwrites/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Partial-Word Writes to MMIO
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/unpredictablethings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unpredictable Things
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CPU
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            CPU
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpu/cpuspecifications/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Specifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpu/gte/geometrytransformationenginegte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geometry Transformation Engine (GTE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpu/gte/gtepipelinetimings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GTE Pipeline Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpu/mdec/macroblockdecodermdec/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Macroblock Decoder (MDEC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../gpu/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    GPU
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            GPU
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/i-o-ports-dma-channels-commands-vram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Ports, DMA Channels, Commands, VRAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/render-polygon-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Polygon Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/render-line-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Line Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/render-rectangle-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Rectangle Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/rendering-attributes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rendering Attributes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/memory-transfer-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Transfer Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/other-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Other Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/display-control-commands-gp1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Display Control Commands (GP1)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/status-register/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Status Register
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Versions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/depth-ordering/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Depth Ordering
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/video-memory-vram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Video Memory (VRAM)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/texture-caching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Texture Caching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/timings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU (MISC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spu/soundprocessingunitspu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sound Processing Unit (SPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CD-ROM
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            CD-ROM
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromdrive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Drive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromformat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../cdr/cdromfileformats/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    CDROM File Formats
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_5_3" id="__nav_2_5_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            CDROM File Formats
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/executables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Executables and Debug Files
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/graphics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Textures, 2D and 3D Graphics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/streaming/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Video Streaming and BS Compression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/archives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Archives
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/compression/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/diskimages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Disk Images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromvideocdsvcd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Video CDs (VCD)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Internal Info on PSX CDROM Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Serial Ports (SIO)
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Serial Ports (SIO)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../sio/controllersandmemorycards/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Controllers and Memory Cards
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_1" id="__nav_2_6_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            Controllers and Memory Cards
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controller-and-memory-card-overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controller-and-memory-card-signals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Signals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controller-and-memory-card-multitap-adaptor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Multitap Adaptor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-communication-sequence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Communication Sequence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-standard-digital-analog-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Standard Digital/Analog Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-mouse/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mouse
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-racing-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Racing Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_1_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../sio/controllersandmemorycards/lightguns/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Lightguns
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_1_9" id="__nav_2_6_1_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_6_1_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1_9">
+            <span class="md-nav__icon md-icon"></span>
+            Lightguns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/lightguns/namco-guncon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Namco GunCon
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/lightguns/konami-justifier-hyperblaster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Konami Justifier/Hyperblaster (IRQ10)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-configuration-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-vibration-rumble-control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vibration/Rumble Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-analog-buttons-dualshock2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analog Buttons (Dualshock2)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-dance-mats/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dance Mats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-pop-n-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pop'n Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-taiko-controllers-tatacon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Taiko Controllers (Tatacon)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-densha-de-go-jet-de-go-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Densha de Go! / Jet de Go! Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-fishing-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fishing Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-ps2-dvd-remote/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PS2 DVD Remote
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-i-mode-adaptor-mobile-internet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I-Mode Adaptor (Mobile Internet)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-keyboards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-additional-inputs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Additional Inputs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Misc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/memory-card-read-write-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Read/Write Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/memory-card-data-format/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Data Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/memory-card-images/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/memory-card-notes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/pocketstation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pocketstation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/serialinterfacessio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serial Interfaces (SIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            Expansion Port (PIO)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pio/expansionportpio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pio/cheatdevices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cheat Devices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Kernel (BIOS)
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Kernel (BIOS)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory-map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../function-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Function Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../file-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../file-execute-and-flush-cache/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File Execute and Flush Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cdrom-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory-card-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Interrupt/Exception Handling
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Interrupt/Exception Handling
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#inefficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inefficiency
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unstable-irq-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unstable IRQ Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b18h-resetentryint" class="md-nav__link">
+    <span class="md-ellipsis">
+      B(18h) - ResetEntryInt()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b19h-hookentryintaddr" class="md-nav__link">
+    <span class="md-ellipsis">
+      B(19h) - HookEntryInt(addr)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priority-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority Chains
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c02h-sysenqintrpprioritystruc-bugged-use-with-care" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(02h) - SysEnqIntRP(priority,struc) ;bugged, use with care
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c03h-sysdeqintrpprioritystruc-bugged-use-with-care" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(03h) - SysDeqIntRP(priority,struc) ;bugged, use with care
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sys01h-entercriticalsection-syscall-with-r401h" class="md-nav__link">
+    <span class="md-ellipsis">
+      SYS(01h) - EnterCriticalSection() ;syscall with r4=01h
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sys02h-exitcriticalsection-syscall-with-r402h" class="md-nav__link">
+    <span class="md-ellipsis">
+      SYS(02h) - ExitCriticalSection() ;syscall with r4=02h
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c0dh-setirqautoackirqflag" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(0Dh) - SetIrqAutoAck(irq,flag)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c06h-exceptionhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(06h) - ExceptionHandler()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b17h-returnfromexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      B(17h) - ReturnFromException()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c00h-enqueuetimerandvblankirqspriority-used-with-prio1" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(00h) - EnqueueTimerAndVblankIrqs(priority) ;used with prio=1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c01h-enqueuesyscallhandlerpriority-used-with-prio0" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(01h) - EnqueueSyscallHandler(priority) ;used with prio=0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c0ch-initdefintpriority-used-with-prio3" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(0Ch) - InitDefInt(priority) ;used with prio=3
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#no-nested-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      No Nested Exceptions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../thread-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Thread Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timer-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timer Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../joypad-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joypad Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gpu-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory-allocation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory-fill-copy-compare-slow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Fill/Copy/Compare (SLOW)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../string-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    String Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../number-string-character-conversion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Number/String/Character Conversion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Misc Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internal-boot-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Internal Boot Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../more-internal-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    More Internal Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pc-file-server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PC File Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tty-console-std-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TTY Console (std_io)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../character-sets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Character Sets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Control Blocks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Versions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../patches/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Patches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../pinouts/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Pinouts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/controller-ports-and-memory-card-ports/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller Ports and Memory-Card Ports
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/audio-video-power-expansion-ports/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio, Video, Power, Expansion Ports
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/sio-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SIO Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/chipset-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chipset Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/cpu-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/gpu-pinouts-for-old-160-pin-gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Pinouts (for old 160-pin GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/gpu-pinouts-for-new-208-pin-gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Pinouts (for new 208-pin GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/spu-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SPU Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/drv-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DRV Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/vcd-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VCD Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/hc05-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HC05 Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/mem-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MEM Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/clk-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLK Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/pwr-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PWR Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-110/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-multitap-scph-1070/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Multitap, SCPH-1070
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/memory-cards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Cards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/mods-nocash-psx-xboo-upload/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mods - Nocash PSX-XBOO Upload
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/mods-pal-ntsc-color-mods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mods - PAL/NTSC Color Mods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardwarenumbers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hardware Numbers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Arcade
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Arcade
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/arcadecabinets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arcade Cabinets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../arcade/konami/573/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Konami System 573
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Konami System 573
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/registers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Register Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/builtin-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Built-in I/O and JVS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/expansion-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion I/O Boards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/security-cartridges/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Security Cartridges
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/external-modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/bios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS and Bootleg Mod Boards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/drives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CD/DVD Drives
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/games/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Games and Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Dev Boards
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Dev Boards
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dtl/psxdevboardchipsets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Chipsets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dtl/psxdevboardprotocol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../aboutcredits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About & Credits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#inefficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inefficiency
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unstable-irq-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unstable IRQ Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b18h-resetentryint" class="md-nav__link">
+    <span class="md-ellipsis">
+      B(18h) - ResetEntryInt()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b19h-hookentryintaddr" class="md-nav__link">
+    <span class="md-ellipsis">
+      B(19h) - HookEntryInt(addr)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priority-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority Chains
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c02h-sysenqintrpprioritystruc-bugged-use-with-care" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(02h) - SysEnqIntRP(priority,struc) ;bugged, use with care
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c03h-sysdeqintrpprioritystruc-bugged-use-with-care" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(03h) - SysDeqIntRP(priority,struc) ;bugged, use with care
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sys01h-entercriticalsection-syscall-with-r401h" class="md-nav__link">
+    <span class="md-ellipsis">
+      SYS(01h) - EnterCriticalSection() ;syscall with r4=01h
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sys02h-exitcriticalsection-syscall-with-r402h" class="md-nav__link">
+    <span class="md-ellipsis">
+      SYS(02h) - ExitCriticalSection() ;syscall with r4=02h
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c0dh-setirqautoackirqflag" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(0Dh) - SetIrqAutoAck(irq,flag)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c06h-exceptionhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(06h) - ExceptionHandler()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b17h-returnfromexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      B(17h) - ReturnFromException()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c00h-enqueuetimerandvblankirqspriority-used-with-prio1" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(00h) - EnqueueTimerAndVblankIrqs(priority) ;used with prio=1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c01h-enqueuesyscallhandlerpriority-used-with-prio0" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(01h) - EnqueueSyscallHandler(priority) ;used with prio=0
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c0ch-initdefintpriority-used-with-prio3" class="md-nav__link">
+    <span class="md-ellipsis">
+      C(0Ch) - InitDefInt(priority) ;used with prio=3
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#no-nested-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      No Nested Exceptions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="interruptexception-handling">Interrupt/Exception Handling</h1>
+<p>The Playstation's Kernel uses an uncredible inefficient and unstable exception
+handler; which may have been believed to be very powerful and flexible.<br/></p>
+<h4 id="inefficiency">Inefficiency</h4>
+<p>For a maximum of slowness, it does always save and restore all CPU registers
+(including such that aren't used in the exception handler). It does then go
+through a list of installed interrupt handlers - and executes ALL of them. For
+example, a Timer0 IRQ is first passed to the Cdrom and Vblank handlers (which
+must reject it, no thanks), before it does eventually reach the Timer0 handler.<br/></p>
+<h4 id="unstable-irq-handling">Unstable IRQ Handling</h4>
+<p>A fundamental mistake in the exception handler is that it doesn't memorize the
+incoming IRQ flags. So the various interrupt handlers must check Port 1F801070h
+one after each other. That means, if a high priority handler has rejected IRQ
+processing (because the desired IRQ flag wasn't set at that time), then a lower
+priority handler may process it (assuming that the IRQ flag got set in the
+meantime), and, in worst case it may even acknowledge it (so the high priority
+handler does never receive it).<br/>
+To avoid such problems, there should be only ONE handler installed for each IRQ
+source. However, that isn't always possible because the Kernel automatically
+installs some predefined handlers. Most noteworthy, the totally bugged
+DefaultInterruptHandlers is always installed (and cannot be removed), so it
+does randomly trigger Events. Fortunately, it does not acknowledge the IRQs
+(unless SetIrqAutoAck was used to enable that fatal behaviour).<br/></p>
+<h4 id="b18h-resetentryint">B(18h) - ResetEntryInt()</h4>
+<p>Applies the default "Exit" structure (which consists of a pointer to
+ReturnFromException, and the Kernel's exception stacktop (minus 4, for whatever
+reason), and zeroes for the R16..R23,R28,R30 registers. Returns the address of
+that structure.<br/>
+See HookEntryInt for details.<br/></p>
+<h4 id="b19h-hookentryintaddr">B(19h) - HookEntryInt(addr)</h4>
+<p>addr points to a structure (with same format as for the setjmp function):<br/>
+<div class="highlight"><pre><span></span><code>  00h 4    r31/ra,pc ;usually ptr to ReturnFromException function
+  04h 4    r28/sp    ;usually exception stacktop, minus 4, for whatever reason
+  08h 4    r30/fp    ;usually 0
+  0Ch 4x8  r16..r23  ;usually 0
+  2Ch 4    r28/gp    ;usually 0
+</code></pre></div>
+The hook function is executed only if the ExceptionHandler has been fully
+executed (after processing an IRQ, many interrupt handlers are calling
+ReturnFromException to abort further exception handling, and thus do skip the
+hook function). Once when the hook function has finished, it should execute
+ReturnFromException. The hook function is called with r2=1 (that is important
+if the hook address was recorded with setjmp, where it "returns" to the
+setjmp caller, with r2 as "return value").<br/></p>
+<h4 id="priority-chains">Priority Chains</h4>
+<p>The Kernel's exception handler has four priority chains, each may contain one
+or more Interrupt or Exception handlers. The default handlers are:<br/></p>
+<div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="673" height="312" viewBox="0 0 673 312" role="img" aria-label="register bit layout">
+<rect x="581" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="626.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,163)" class="pf-fill-fg">CdromDmaIrq, CdromIoIrq, SyscallException</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">0</text>
+<rect x="485" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="530.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,530.5,163)" class="pf-fill-fg">CardSpecificIrq, VblankIrq, Timer2Irq...</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">1</text>
+<rect x="389" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="434.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,434.5,163)" class="pf-fill-fg">PadCardIrq</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">2</text>
+<rect x="293" y="15" width="91" height="296" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="338.5" y="163" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,338.5,163)" class="pf-fill-fg">DefInt</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">3</text>
+<rect x="5" y="15" width="283" height="296" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">7</text>
+<text x="288" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">4</text>
+</svg>
+</div>
+<p><div class="highlight"><pre><span></span><code>  Prio Chain Content
+  0    CdromDmaIrq, CdromIoIrq, SyscallException
+  1    CardSpecificIrq, VblankIrq, Timer2Irq, Timer1Irq, Timer0Irq
+  2    PadCardIrq
+  3    DefInt
+</code></pre></div>
+The exception handler calls all handlers, starting with the first element in
+the priority 0 chain (ie. usually CdromDmaIrq). The separate handlers must
+check if they want to process the IRQ (eg. CdromDmaIrq would process only CDROM
+DMA IRQs, but not joypad IRQs or so). If it has processed and acknowledged the
+IRQ, then the handler may execute ReturnFromException, which causes the
+handlers of lower priority to be skipped (if there are still other
+unacknowledge IRQs pending, then the hardware will re-enter the exception
+handler as soon as the RFE opcode in ReturnFromException does re-enable
+interrupts).<br/></p>
+<h4 id="c02h-sysenqintrpprioritystruc-bugged-use-with-care">C(02h) - SysEnqIntRP(priority,struc)  ;bugged, use with care</h4>
+<p>Inserts a new element in the specified priority chain. The new element is
+inserted at the begin of the chain, so (within that priority chain) the new
+element has highest priority.<br/>
+<div class="highlight"><pre><span></span><code>  00h 4  pointer to next element    (0=none)  ;this pointer is inserted by BIOS
+  04h 4  pointer to SECOND function (0=none)  ;executed if func1 returns r2&lt;&gt;0
+  08h 4  pointer to FIRST  function (0=none)  ;executed first
+  0Ch 4  Not used (usually zero)
+</code></pre></div>
+BUG: SysDeqIntRP can remove only the first element in the chain (see there for
+details), so adding new chain elements may cause OTHER functions to be unable
+to remove their chain elements. The BIOS seems to be occassionally
+adding/removing the "CardSpecificIrq" and "PadCardIrq" (with priority 1 and 2),
+so using that priorities may cause the BIOS to be unable to remove that IRQ
+handlers. Using priority 0 and 3 should work (as long as the software takes
+care to remove only the newest elements) (but there should be no conflicts with
+the BIOS which does never remove priority 0 and 3 elements) (leaving apart that
+DequeueCdIntr and _96_remove try to remove priority 0 elements, but that
+functions won't work anyways; due to the same bug).<br/></p>
+<h4 id="c03h-sysdeqintrpprioritystruc-bugged-use-with-care">C(03h) - SysDeqIntRP(priority,struc)  ;bugged, use with care</h4>
+<p>Removes the specified element from the specified priority chain.<br/>
+BUG: The function tries to search the whole chain (and to remove the element if
+it finds it). However, it does only check the first element properly, and,
+thereafter it reads a garbage value from an uninitialized stack location, and
+acts more or less unpredictable. So, it can remove only the first element in
+the chain, ie. it should be called only if you are SURE that there's no newer
+element in the chain, and only if you are SURE that the element IS in the
+chain.<br/></p>
+<h4 id="sys01h-entercriticalsection-syscall-with-r401h">SYS(01h) - EnterCriticalSection()  ;syscall with r4=01h</h4>
+<p>Disables interrupts by clearing SR (cop0r12) Bit 2 and 10 (of which, Bit2 gets
+copied to Bit0 once when returning from the syscall exception). Returns 1 if
+both bits were set, returns 0 if one or both of the bits were already zero.<br/></p>
+<h4 id="sys02h-exitcriticalsection-syscall-with-r402h">SYS(02h) - ExitCriticalSection()   ;syscall with r4=02h</h4>
+<p>Enables interrupts by set SR (cop0r12) Bit 2 and 10 (of which, Bit2 gets copied
+to Bit0 once when returning from the syscall exception). There's no return
+value (all registers except SR and K0 are unchanged).<br/></p>
+<h4 id="c0dh-setirqautoackirqflag">C(0Dh) - SetIrqAutoAck(irq,flag)</h4>
+<p>Specifies if the DefaultInterruptHandler shall automatically acknowledge IRQs.
+The "irq" paramter is the number of the interrupt, ie. 00h..0Ah = IRQ0..IRQ10.
+The "flag" value should be 0 to disable AutoAck, or non-zero to enable AutoAck.
+By default, AutoAck is disabled for all IRQs.<br/>
+Mind that the DefaultInterruptHandler is totally bugged. Especially the AutoAck
+feature doesn't work very well: It may cause higher priority handlers to miss
+their IRQ, and it may even cause the DefaultInterruptHandler to miss its own
+IRQs.<br/></p>
+<h4 id="c06h-exceptionhandler">C(06h) - ExceptionHandler()</h4>
+<p>The C(06h) vector points to the exception handler, ie. to the function that is
+invoked from the 4 opcodes at address 80000080h, that opcodes jump directly to
+the exception handler, so patching the C(06h) vector has no effect.<br/>
+Reading the C(06h) entry can be used to let a custom 80000080h handler pass
+control back to the default handler (that, by a "direct" jump, not by the usual
+"MOV R9,06h / CALL 0C0h" method, which would destroy main programs R9
+register).<br/>
+Also, reading C(06h) may be useful for patching the exception handler (which
+contains a bunch of NOP opcodes, which seem to be intended to insert additional
+opcodes, such like debugger exception handling) (Note: some of that NOPs are
+reserved for Memory Card IRQ handling).<br/>
+BUG: Early BIOS versions did try to examine a copy of cop0r13 in r2 register,
+but did forgot cop0r13 to r2 (so they examined garbage), this was fixed in
+newer BIOS versions, additionally, most commercial games still include patches
+for compatibility with the old BIOS.<br/></p>
+<h4 id="b17h-returnfromexception">B(17h) - ReturnFromException()</h4>
+<p>Restores the CPU registers (R1-R31,HI,LO,SR,PC) (except R26/K0) from the
+current TCB. This function is usually executed automatically at the end of the
+ExceptionHandler, however, functions in the exception chain may call
+ReturnFromException to return immediately, without processing chain elements of
+lower priority.<br/></p>
+<h4 id="c00h-enqueuetimerandvblankirqspriority-used-with-prio1">C(00h) - EnqueueTimerAndVblankIrqs(priority) ;used with prio=1</h4>
+<h4 id="c01h-enqueuesyscallhandlerpriority-used-with-prio0">C(01h) - EnqueueSyscallHandler(priority) ;used with prio=0</h4>
+<h4 id="c0ch-initdefintpriority-used-with-prio3">C(0Ch) - InitDefInt(priority) ;used with prio=3</h4>
+<p>Internally used to add some default IRQ and Exception handlers.<br/></p>
+<h4 id="no-nested-exceptions">No Nested Exceptions</h4>
+<p>The Kernel doesn't support nested exceptions, that would require a decreasing
+exception stack, however, the kernel saves the incoming CPU registers in the
+current TCB, and an exception stack with fixed start address for internal
+push/pop during exception handling. So, nesting would overwrite these values.
+Do not enable IRQs, and don't trap other exceptions (like break or syscall
+opcodes, or memory or overlow errors) during exception handling.<br/>
+Note: The execption stack has a fixed size of 1000h bytes (and is located
+somewhere in the first 64Kbytes of memory).<br/></p>
+<!-- psx-figure -->
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>

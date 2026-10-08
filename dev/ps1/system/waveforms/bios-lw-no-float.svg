@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="444" height="98" viewBox="0 0 444 98" style="max-width:100%;background-color:white" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="92" stroke="#ddd" stroke-width="1"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888">0</text>
+<line x1="84" y1="18" x2="84" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="98" y1="18" x2="98" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="112" y1="18" x2="112" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="126" y1="18" x2="126" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="140" y1="18" x2="140" y2="92" stroke="#ddd" stroke-width="1"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888">5</text>
+<line x1="154" y1="18" x2="154" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="168" y1="18" x2="168" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="182" y1="18" x2="182" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="196" y1="18" x2="196" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="210" y1="18" x2="210" y2="92" stroke="#ddd" stroke-width="1"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888">10</text>
+<line x1="224" y1="18" x2="224" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="238" y1="18" x2="238" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="252" y1="18" x2="252" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="266" y1="18" x2="266" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="280" y1="18" x2="280" y2="92" stroke="#ddd" stroke-width="1"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888">15</text>
+<line x1="294" y1="18" x2="294" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="308" y1="18" x2="308" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="322" y1="18" x2="322" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="336" y1="18" x2="336" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="350" y1="18" x2="350" y2="92" stroke="#ddd" stroke-width="1"/>
+<text x="352" y="14" font-family="monospace" font-size="12" fill="#888">20</text>
+<line x1="364" y1="18" x2="364" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="378" y1="18" x2="378" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="392" y1="18" x2="392" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="406" y1="18" x2="406" y2="92" stroke="#ddd" stroke-width="1"/>
+<line x1="420" y1="18" x2="420" y2="92" stroke="#ddd" stroke-width="1"/>
+<text x="422" y="14" font-family="monospace" font-size="12" fill="#888">25</text>
+<line x1="434" y1="18" x2="434" y2="92" stroke="#ddd" stroke-width="1"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 266,48 280,48 294,48 308,48 322,48 336,48 350,48 364,48 378,48 392,48 392,28 406,28 420,28 434,28"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black">/RD</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 126,82 140,82 154,82 168,82 182,82 182,62 196,62 196,82 210,82 224,82 238,82 252,82 252,62 266,62 266,82 280,82 294,82 308,82 322,82 322,62 336,62 336,82 350,82 364,82 378,82 392,82 392,62 406,62 420,62 434,62"/>
+</svg>

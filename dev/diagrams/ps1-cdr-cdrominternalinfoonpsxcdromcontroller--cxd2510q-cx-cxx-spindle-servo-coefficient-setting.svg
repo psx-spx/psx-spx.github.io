@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="325" viewBox="0 0 769 325" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="517" y="15" width="251" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="642.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,642.5,169.5)">8bit Unused</text>
+<text x="517" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="389" y="15" width="123" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="450.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,450.5,169.5)">4bit Unused</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">11</text>
+<text x="512" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">8</text>
+<rect x="325" y="15" width="59" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="354.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,354.5,169.5)">2bit Unused</text>
+<text x="325" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">13</text>
+<text x="384" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">12</text>
+<rect x="293" y="15" width="27" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="306.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,306.5,169.5)">1bit Gain DCLV0 overall gain (0=0dB, 1=+6dB</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">14</text>
+<rect x="261" y="15" width="27" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="274.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,274.5,169.5)">1bit Zero</text>
+<text x="261" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">15</text>
+<rect x="197" y="15" width="59" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="226.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,226.5,169.5)">2bit Gain MDS for CLVS/CLVP</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">17</text>
+<text x="256" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">16</text>
+<rect x="133" y="15" width="59" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="162.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,162.5,169.5)">2bit Gain MDP for CLVP mode</text>
+<text x="133" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">19</text>
+<text x="192" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">18</text>
+<rect x="5" y="15" width="123" height="309" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="66.5" y="169.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,66.5,169.5)">4bit Command</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">23</text>
+<text x="128" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">20</text>
+</svg>

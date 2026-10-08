@@ -1,0 +1,4913 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/arcade/konami/573/bios/">
+      
+      
+        <link rel="prev" href="../external-modules/">
+      
+      
+        <link rel="next" href="../drives/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>BIOS and Bootleg Mod Boards - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../css/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bios" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<strong>Development version.</strong> Most changes made here since April 2026 were written by an AI and have not all been reviewed by a human.
+For the human-written reference, see the <a href="/">stable version</a>.
+
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              BIOS and Bootleg Mod Boards
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    PlayStation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            PlayStation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    System
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            System
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/system/memorymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/system/iomap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/system/interrupts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interrupts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/system/dmachannels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DMA Channels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/system/timers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/system/memorycontrol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/system/partialwordwrites/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Partial-Word Writes to MMIO
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/system/unpredictablethings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unpredictable Things
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CPU
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            CPU
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cpu/cpuspecifications/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Specifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cpu/gte/geometrytransformationenginegte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geometry Transformation Engine (GTE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cpu/gte/gtepipelinetimings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GTE Pipeline Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cpu/mdec/macroblockdecodermdec/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Macroblock Decoder (MDEC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../ps1/gpu/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    GPU
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            GPU
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/i-o-ports-dma-channels-commands-vram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Ports, DMA Channels, Commands, VRAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/render-polygon-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Polygon Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/render-line-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Line Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/render-rectangle-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Rectangle Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/rendering-attributes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rendering Attributes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/memory-transfer-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Transfer Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/other-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Other Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/display-control-commands-gp1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Display Control Commands (GP1)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/status-register/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Status Register
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Versions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/depth-ordering/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Depth Ordering
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/video-memory-vram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Video Memory (VRAM)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/texture-caching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Texture Caching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/timings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/gpu/misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU (MISC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/spu/soundprocessingunitspu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sound Processing Unit (SPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CD-ROM
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            CD-ROM
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromdrive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Drive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromformat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../ps1/cdr/cdromfileformats/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    CDROM File Formats
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_5_3" id="__nav_2_5_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            CDROM File Formats
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromfileformats/executables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Executables and Debug Files
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromfileformats/graphics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Textures, 2D and 3D Graphics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromfileformats/streaming/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Video Streaming and BS Compression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromfileformats/audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromfileformats/archives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Archives
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromfileformats/compression/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromfileformats/diskimages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Disk Images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdromvideocdsvcd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Video CDs (VCD)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/cdr/cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Internal Info on PSX CDROM Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Serial Ports (SIO)
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Serial Ports (SIO)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../ps1/sio/controllersandmemorycards/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Controllers and Memory Cards
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_1" id="__nav_2_6_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            Controllers and Memory Cards
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controller-and-memory-card-overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controller-and-memory-card-signals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Signals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controller-and-memory-card-multitap-adaptor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Multitap Adaptor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-communication-sequence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Communication Sequence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-standard-digital-analog-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Standard Digital/Analog Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-mouse/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mouse
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-racing-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Racing Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_1_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../ps1/sio/controllersandmemorycards/lightguns/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Lightguns
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_1_9" id="__nav_2_6_1_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_6_1_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1_9">
+            <span class="md-nav__icon md-icon"></span>
+            Lightguns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/lightguns/namco-guncon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Namco GunCon
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/lightguns/konami-justifier-hyperblaster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Konami Justifier/Hyperblaster (IRQ10)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-configuration-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-vibration-rumble-control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vibration/Rumble Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-analog-buttons-dualshock2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analog Buttons (Dualshock2)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-dance-mats/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dance Mats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-pop-n-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pop'n Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-taiko-controllers-tatacon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Taiko Controllers (Tatacon)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-densha-de-go-jet-de-go-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Densha de Go! / Jet de Go! Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-fishing-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fishing Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-ps2-dvd-remote/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PS2 DVD Remote
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-i-mode-adaptor-mobile-internet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I-Mode Adaptor (Mobile Internet)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-keyboards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-additional-inputs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Additional Inputs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/controllers-misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Misc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/memory-card-read-write-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Read/Write Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/memory-card-data-format/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Data Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/memory-card-images/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/controllersandmemorycards/memory-card-notes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/pocketstation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pocketstation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/sio/serialinterfacessio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serial Interfaces (SIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            Expansion Port (PIO)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pio/expansionportpio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pio/cheatdevices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cheat Devices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../ps1/kernelbios/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Kernel (BIOS)
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Kernel (BIOS)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/memory-map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/function-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Function Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/file-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/file-execute-and-flush-cache/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File Execute and Flush Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/cdrom-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/memory-card-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/interrupt-exception-handling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interrupt/Exception Handling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/event-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/event-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/thread-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Thread Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/timer-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timer Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/joypad-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joypad Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/gpu-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/memory-allocation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/memory-fill-copy-compare-slow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Fill/Copy/Compare (SLOW)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/string-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    String Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/number-string-character-conversion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Number/String/Character Conversion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/misc-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Misc Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/internal-boot-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Internal Boot Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/more-internal-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    More Internal Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/pc-file-server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PC File Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/tty-console-std-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TTY Console (std_io)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/character-sets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Character Sets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/control-blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Control Blocks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Versions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/kernelbios/patches/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Patches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../ps1/pinouts/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Pinouts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/controller-ports-and-memory-card-ports/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller Ports and Memory-Card Ports
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/audio-video-power-expansion-ports/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio, Video, Power, Expansion Ports
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/sio-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SIO Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/chipset-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chipset Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/cpu-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/gpu-pinouts-for-old-160-pin-gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Pinouts (for old 160-pin GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/gpu-pinouts-for-new-208-pin-gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Pinouts (for new 208-pin GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/spu-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SPU Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/drv-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DRV Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/vcd-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VCD Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/hc05-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HC05 Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/mem-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MEM Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/clk-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLK Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/pwr-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PWR Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-110/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/component-list-and-chipset-pin-outs-for-multitap-scph-1070/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Multitap, SCPH-1070
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/memory-cards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Cards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/mods-nocash-psx-xboo-upload/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mods - Nocash PSX-XBOO Upload
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/pinouts/mods-pal-ntsc-color-mods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mods - PAL/NTSC Color Mods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../ps1/hardwarenumbers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hardware Numbers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Arcade
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Arcade
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcadecabinets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arcade Cabinets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Konami System 573
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Konami System 573
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../registers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Register Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../builtin-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Built-in I/O and JVS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../expansion-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion I/O Boards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security-cartridges/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Security Cartridges
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../external-modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    BIOS and Bootleg Mod Boards
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    BIOS and Bootleg Mod Boards
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bios" class="md-nav__link">
+    <span class="md-ellipsis">
+      BIOS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BIOS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shell-revisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shell revisions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kernel differences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boot-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Boot sequence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command-line arguments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jvs-mcu-test-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      JVS MCU test sequence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dvd-rom-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      DVD-ROM support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scrapped-cf-card-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scrapped CF card support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootleg-mod-boards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bootleg mod boards
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bootleg mod boards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddrturbo-mod-board" class="md-nav__link">
+    <span class="md-ellipsis">
+      DDRTURBO mod board
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../drives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CD/DVD Drives
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../games/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Games and Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Dev Boards
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Dev Boards
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../dtl/psxdevboardchipsets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Chipsets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../dtl/psxdevboardprotocol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../aboutcredits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About & Credits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bios" class="md-nav__link">
+    <span class="md-ellipsis">
+      BIOS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BIOS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shell-revisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shell revisions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kernel differences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boot-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Boot sequence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command-line arguments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jvs-mcu-test-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      JVS MCU test sequence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dvd-rom-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      DVD-ROM support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scrapped-cf-card-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scrapped CF card support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootleg-mod-boards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bootleg mod boards
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bootleg mod boards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddrturbo-mod-board" class="md-nav__link">
+    <span class="md-ellipsis">
+      DDRTURBO mod board
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>BIOS and Bootleg Mod Boards</h1>
+
+<h2 id="bios">BIOS</h2>
+<p>The System 573 BIOS is based on a slightly modified version of Sony's standard
+PS1 kernel, plus a custom shell executable.</p>
+<ul>
+<li><a href="#shell-revisions">Shell revisions</a></li>
+<li><a href="#kernel-differences">Kernel differences</a></li>
+<li><a href="#boot-sequence">Boot sequence</a></li>
+<li><a href="#command-line-arguments">Command-line arguments</a></li>
+<li><a href="#jvs-mcu-test-sequence">JVS MCU test sequence</a></li>
+<li><a href="#dvd-rom-support">DVD-ROM support</a></li>
+<li><a href="#scrapped-cf-card-support">Scrapped CF card support</a></li>
+</ul>
+<h3 id="shell-revisions">Shell revisions</h3>
+<p>There seem to be either three or four different versions of the BIOS, all of
+which share the same kernel but feature different shells:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ROM marking</th>
+<th style="text-align: left;">MAME ROM name</th>
+<th style="text-align: left;">SHA-1</th>
+<th style="text-align: left;">Used by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>700A01</code></td>
+<td style="text-align: left;"><code>700a01.22g</code></td>
+<td style="text-align: left;"><code>e1284add4aaddd5337bd7f4e27614460d52b5b48</code></td>
+<td style="text-align: left;">Most games</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>700A01</code></td>
+<td style="text-align: left;"><code>700a01,gchgchmp.22g</code></td>
+<td style="text-align: left;"><code>9aab8c637dd2be84d79007e52f108abe92bf29dd</code></td>
+<td style="text-align: left;">Gachagachamp</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>700A01</code></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Unknown (undumped, see below)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>700B01</code></td>
+<td style="text-align: left;"><code>700b01.22g</code></td>
+<td style="text-align: left;"><code>a2421d0a494892c0e71003c96995ce8f945064dd</code></td>
+<td style="text-align: left;">Dancing Stage EuroMIX 2</td>
+</tr>
+</tbody>
+</table>
+<p><code>700A01</code> is the earliest and most common version. The only difference between
+the two known variants of it is that they were linked to slightly different Sony
+SDK releases; Konami's own code is identical across the two. There reportedly is
+a third variant that shipped on systems that came with the JVS MCU unpopulated
+(presumably it would skip the check for it), however no evidence of its
+existence has ever been found. The shell is stored in ROM in both variants at
+<code>0xbfc40000</code>, in the form of a standard PS1 executable (including the header)
+that gets loaded at <code>0x803c0000</code> by the kernel.</p>
+<p><code>700B01</code> has a more complicated structure: it is split up into two separate
+executables, one (at <code>0xbfc28000</code>, loaded at <code>0x80010000</code>) in charge of running
+the self-test sequence and the other (at <code>0xbfc60000</code>, loaded at <code>0x80380000</code>)
+handling CD-ROM or flash booting. The overall coding style suggests that it was
+developed alongside the installers/launchers used by later Bemani games, but
+dropped as the main feature it would have introduced over the <code>700A01</code> shell -
+CF card support - was broken due to a PCB wiring mistake.</p>
+<h3 id="kernel-differences">Kernel differences</h3>
+<p>The kernel in both the <code>700A01</code> and <code>700B01</code> shells identifies itself as
+<code>Konami OS by T.H.</code> with a 1995-09-01 build date. All other Konami PS1-based
+arcade boards, with the exception of the Twinkle System, use a kernel with the
+same identifier and date (but potentially different code). The kernels used by
+other manufacturers' arcade boards also contain the same <code>T.H.</code> initials,
+possibly hinting at the fact there was a single Sony employee in charge of
+providing customized kernels to all arcade system manufacturers.</p>
+<p>While the 573's kernel is functionally identical to its retail counterpart
+(aside from its lack of support for the PS1's CD-ROM drive), several parts of it
+have been slightly tweaked to account for the hardware:</p>
+<ul>
+<li>Most CD-ROM APIs and the ISO9660 filesystem driver seem to have been purged.</li>
+<li>The code to parse <code>SYSTEM.CNF</code> and launch the boot executable from the CD-ROM
+  has been made inaccessible. The shell handles executable loading and booting
+  on its own, without ever returning to the kernel.</li>
+<li>The kernel initializes the DEV0 region and clears the watchdog periodically
+  while booting. It does <em>not</em> keep clearing it in the background (e.g. from the
+  exception handler) once the shell is loaded.</li>
+<li><code>700B01</code> performs a "memory initialization" sequence that fills various RAM
+  areas with pseudorandom values (possibly for heap debugging purposes), showing
+  <code>c1</code> through <code>c7</code> on the debugging board's 7-segment display in the process.</li>
+<li><code>700B01</code> reads register <code>0x1f40000e</code> to determine which RAM footprints on the
+  board are populated, then configures the main RAM controller accordingly.</li>
+<li>The GPU is reset and a series of color bars is displayed while the shell is
+  being relocated to RAM. This feature is also present in other non-retail
+  kernels such as the DTL-H2000's.</li>
+<li>The shell is launched through a stub that contains a
+  <code>Lisenced by Sony Computer Entertainment Inc.(SCEI)</code> [sic] string, validated
+  by the kernel in a similar (but not identical) way to PS1 expansion port ROMs.</li>
+</ul>
+<h3 id="boot-sequence">Boot sequence</h3>
+<p>All variants of the shell are far simpler than their PS1 counterparts, as they
+lack any kind of UI (aside from a non-interactive status screen) and have <em>no</em>
+<em>copy protection or anti-piracy checks</em> of any kind. Once loaded by the kernel,
+they start by initializing the system bus and proceed to run a hardware
+self-test. The outcome of all checks is displayed on screen, with the following
+ones being performed:</p>
+<ul>
+<li><code>22G</code>: BIOS ROM integrity check. A checksum is computed and verified against
+  the one present in the ROM at <code>0xbfc7fffc-0xbfc7ffff</code>;</li>
+<li><code>16H</code>, <code>16G</code>, <code>14H</code>, <code>14G</code>: main RAM read/write test (first row of chips on
+  the board, closest to the CPU);</li>
+<li><code>12H</code>, <code>12G</code>, <code>9H</code>, <code>9G</code>: main RAM read/write test (second row of chips on the
+  board, closest to the JAMMA connector);</li>
+<li><code>4L</code>, <code>4P</code>: VRAM read/write test. This causes the 573 to briefly display
+  random pixels as framebuffers are overwritten during the check;</li>
+<li><code>10Q</code>: SPU RAM read/write test;</li>
+<li><code>18E</code>: JVS MCU reset and status check;</li>
+<li><code>CDR</code>: ATAPI CD-ROM drive initialization and executable loading.</li>
+</ul>
+<p><strong>NOTE</strong>: <code>700A01</code> shells do not actually test <code>4P</code>! The GPU starts up in 1 MB
+VRAM mode by default and the shell does not enable the chip select for the
+second bank, so the first VRAM chip is tested twice instead. This bug was fixed
+in the <code>700B01</code> shell, which initializes the GPU correctly.</p>
+<p>If any check fails the shell locks up, shows a blinking "HARDWARE ERROR...
+RESET" prompt and stops clearing the watchdog after a few seconds, causing the
+573 to reboot. Otherwise, the state of DIP switch 4 is checked and the shell
+attempts to load an executable from four different sources in the following
+order:</p>
+<ul>
+<li>PCMCIA flash card in slot 2 (if inserted and DIP switch 4 is on);</li>
+<li>PCMCIA flash card in slot 1 (if inserted and DIP switch 4 is on);</li>
+<li>Internal flash memory (if DIP switch 4 is on);</li>
+<li><code>PSX.EXE</code> in the root directory of the disc inserted in the CD-ROM drive. The
+  drive is only initialized after booting from flash or PCMCIA fails or if DIP
+  switch 4 is off, thus the shell will not error out if a drive is not connected
+  but a boot executable is present on the flash. Note that the drive must be set
+  up as an IDE primary/master device using the appropriate jumpers.</li>
+</ul>
+<p>As with Sony's PS1 shell, the 573 shell's ISO9660 filesystem driver only
+implements a minimal subset of the specification and may not properly support
+non-8.3 file names. It also <strong>only allocates 2 KB for the disc's path table</strong>,
+so the total number of directories on the disc must be kept to a minimum in
+order to prevent the shell from crashing. Unlike the PS1, however, the 573
+ignores <code>SYSTEM.CNF</code> completely regardless of whether or not it is present on
+the disc; the shell is hardcoded to always load <code>PSX.EXE</code>. Homebrew discs can
+take advantage of this behavior to provide separate PS1 and 573 executables
+instead of detecting the system type at runtime.</p>
+<p>If DIP switch 4 is on, the shell expects to find a standard PS1 executable
+(including the full 2048-byte header) at offset <code>0x24</code> on either the built-in
+flash memory or one of the two PCMCIA flash cards, preceded by a CRC32 checksum
+of it at offset <code>0x20</code>. The CRC is stored in little endian format and is <em>not</em>
+calculated on the whole executable, but rather only on bytes whose offsets are a
+power of two (i.e. on bytes at <code>0x24 + 0</code>, <code>0x24 + 1</code>, <code>0x24 + 2</code>, <code>0x24 + 4</code>
+and so on). The check is implemented as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define EXE_CRC32_POLYNOMIAL 0xedb88320 </span><span class="c1">// 0x04c11db7 bit-reversed</span>
+
+<span class="kt">uint32_t</span><span class="w"> </span><span class="nf">exe_crc32</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w">   </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">crc</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mh">0xffffffff</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">offset</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">crc</span><span class="w"> </span><span class="o">^=</span><span class="w"> </span><span class="n">data</span><span class="p">[</span><span class="n">offset</span><span class="p">];</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w"> </span><span class="n">bit</span><span class="p">;</span><span class="w"> </span><span class="n">bit</span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crc</span><span class="p">;</span>
+
+<span class="w">            </span><span class="n">crc</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">temp</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                </span><span class="n">crc</span><span class="w"> </span><span class="o">^=</span><span class="w"> </span><span class="n">EXE_CRC32_POLYNOMIAL</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+<span class="w">            </span><span class="n">offset</span><span class="w"> </span><span class="o">&lt;&lt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">~</span><span class="n">crc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#define DIP_SWITCH_PTR    ((const uint32_t *) 0x1f400004)</span>
+<span class="cp">#define EXE_CRC32_PTR     ((const uint32_t *) 0x1f000020)</span>
+<span class="cp">#define EXE_HEADER_PTR    ((const uint8_t  *) 0x1f000024)</span>
+<span class="c1">// Offset of the &quot;text section size&quot; field within the executable header</span>
+<span class="cp">#define EXE_TEXT_SIZE_PTR ((const uint32_t *) 0x1f000040)</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">is_exe_valid</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">DIP_SWITCH_PTR</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span><span class="w"> </span><span class="c1">// 1 = DIP switch off</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">memcmp</span><span class="p">(</span><span class="n">EXE_HEADER_PTR</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;PS-X EXE&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// BUG: the actual size of the executable including the header is</span>
+<span class="w">    </span><span class="c1">// (2048 + *EXE_TEXT_SIZE_PTR), however neither the 700A01 nor 700B01 shells</span>
+<span class="w">    </span><span class="c1">// take this into account and instead end up ignoring the executable&#39;s last</span>
+<span class="w">    </span><span class="c1">// 2048 bytes.</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">exe_crc32</span><span class="p">(</span><span class="n">EXE_HEADER_PTR</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">EXE_TEXT_SIZE_PTR</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">crc</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">*</span><span class="n">EXE_CRC32_PTR</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Installing a new game usually involves inserting the installation disc and
+turning off DIP switch 4 in order to prevent the shell from booting the game
+currently installed on the internal flash.</p>
+<h3 id="command-line-arguments">Command-line arguments</h3>
+<p>PS1 executables are generally launched with CPU registers <code>$a0</code> and <code>$a1</code> set to
+zero, in order to make sure programs that interpret them as <code>argc</code> and <code>argv</code>
+respectively will not crash by trying to parse invalid data. The <code>700A01</code> shell
+follows this convention.</p>
+<p>The <code>700B01</code> shell, however, does pass two arguments to the executable it loads.
+<code>$a0</code> is thus set to 2, while <code>$a1</code> is set to point to an array containing
+pointers to the following strings:</p>
+<ul>
+<li><code>boot.rom=700B01</code></li>
+<li><code>boot.from=&lt;device&gt;</code>, where <code>&lt;device&gt;</code> is one of the following:</li>
+<li><code>flash.0</code> (internal flash memory)</li>
+<li><code>flash.1</code> (PCMCIA flash card in slot 1)</li>
+<li><code>flash.2</code> (PCMCIA flash card in slot 2)</li>
+<li><code>ata.2</code> (CF card in slot 2)</li>
+<li><code>cdrom</code></li>
+</ul>
+<p>The launchers used by later Bemani games use these arguments if present to
+determine where to load the main game executable from, and fall back to
+autodetecting the game's installation location otherwise.</p>
+<h3 id="jvs-mcu-test-sequence">JVS MCU test sequence</h3>
+<p>The JVS MCU check is implemented in a different way between the two shell
+revisions. While the <code>700A01</code> shell simply resets the MCU and validates the
+status and error codes, the <code>700B01</code> self-test sequence performs 35 (!)
+different checks, each validating the codes returned under different conditions.
+The following tests are done:</p>
+<ol>
+<li>Reset MCU, clear <code>JVSIRDY</code>, ensure that:<ul>
+<li>status code = 0</li>
+<li>error code = 3</li>
+<li><code>JVSIRDY</code> = 0</li>
+<li><code>JVSDRDY</code> = 0</li>
+<li>incoming JVS data = <code>0x0000</code></li>
+</ul>
+</li>
+<li>Reset MCU, write valid dummy packet header (<code>0x00e0</code>), ensure that:<ul>
+<li>status code = 2</li>
+<li>error code = 3</li>
+</ul>
+</li>
+<li>Reset MCU, write invalid dummy packet header (<code>0x001f</code>), ensure that:<ul>
+<li>status code = 2</li>
+<li>error code = 2</li>
+</ul>
+</li>
+<li>Reset MCU, write 16 dummy packets (<code>0x1fe0</code>, <code>0x0004</code>, <code>1 &lt;&lt; i</code>, checksum),
+    for each packet ensure that:<ul>
+<li>status code = 1</li>
+<li>error code = 3</li>
+</ul>
+</li>
+<li>Reset MCU, write 16 dummy packets (same as above) with an invalid checksum,
+    for each packet ensure that:<ul>
+<li>status code = 1</li>
+<li>error code = 1</li>
+</ul>
+</li>
+</ol>
+<p>It is currently unclear if any data is actually sent to the JVS bus during step
+4, as the shell may reset the MCU it before it starts sending the packet.</p>
+<h3 id="dvd-rom-support">DVD-ROM support</h3>
+<p>Even though neither of the shell versions was explicitly designed with DVD-ROM
+support in mind, it <em>is</em> possible to run games from a DVD-ROM thanks to the fact
+that the ATAPI commands used by the shell and games to read sectors from the
+disc are medium-agnostic. Games that rely on CD-DA playback obviously cannot be
+put on a DVD, however all other games (including ones that rely on the digital
+I/O board for MP3 playback) will work as long as the disc is formatted as if it
+were a typical 573 CD-ROM (ISO9660 with no extensions, no UDF, 8.3 file names
+and a path table smaller than 2 KB).</p>
+<p><strong>NOTE</strong>: due to ATAPI incompatibility issues only a very limited number of
+DVD-ROM drives will actually be recognized and work properly with the shells and
+games. This is unrelated to the DVD format itself and is purely due to the fact
+that, unlike CD-ROM drives, most DVD drives were manufactured after the ATAPI
+specification got updated in a way that broke the 573's compatibility.</p>
+<p>This accidental capability was greatly abused by bootleg Bemani "superdiscs"
+that bundled multiple games on a single DVD-ROM and shipped with a modified
+installation menu, allowing the user to pick which game to install. Each game on
+a superdisc is patched to load its files from a subdirectory rather than from
+the DVD's root.</p>
+<p>Homebrew 573 software can be distributed as an ISO9660 image larger than 650 MB
+meant to be burned to a DVD-R, if sacrificing PS1 compatibility and CD-DA
+support is an option. In such case the image shall be distributed as an <code>.iso</code>
+file with 2048-byte sectors, rather than the typical <code>.bin</code> and <code>.cue</code> file pair
+used for PS1 games with 2352-byte Mode 2 sectors.</p>
+<h3 id="scrapped-cf-card-support">Scrapped CF card support</h3>
+<p>In addition to booting from "linear" memory mapped PCMCIA flash cards, the
+<code>700B01</code> shell features a driver for CF cards and a FAT filesystem parser that
+allows it to mount a CF card inserted in PCMCIA slot 2 (via a passive
+CF-to-PCMCIA adapter), search for a flash card image file and interpret its
+contents as if it were an actual flash card, loading the executable directly
+from it. Or at least, that <em>would</em> allow it to do so, had Konami not screwed up
+the wiring of the PCMCIA slots.</p>
+<p>CF cards can operate in three different interfacing modes: memory mapped, I/O
+mapped and IDE compatibility mode. On the 573 only memory mapped mode is
+accessible as the other modes require usage of I/O chip select pins that are not
+connected. This mode, however, requires the host to issue 8-bit writes to the
+card's 16-bit bus through the use of individual chip select lines for each byte
+(<code>/CE1</code> and <code>/CE2</code>). While the PS1's CPU <em>does</em> have separate lower (<code>/WR0</code>) and
+upper (<code>/WR1</code>) byte write strobes that could have been easily adapted to the
+appropriate signals, Konami decided to cut this specific corner and shorted
+<code>/CE1</code> and <code>/CE2</code> on each PCMCIA slot together, making it impossible to issue a
+single-byte write.</p>
+<p><strong>NOTE</strong>: later revisions of the 573 main board seem to have unpopulated jumpers
+next to the PCMCIA slots that can be used to rewire the chip select signals. It
+is currently unclear if these jumpers are actually sufficient to enable CF card
+booting without any additional hardware or BIOS modifications.</p>
+<h2 id="bootleg-mod-boards">Bootleg mod boards</h2>
+<p>It is not uncommon to find 573s fitted with a bootleg BIOS "mod board" in place
+of the stock <code>700A01</code> or <code>700B01</code> mask ROM. These boards used to be bundled
+alongside bootleg game CD-ROMs and were apparently required in order to bypass
+the "anti-piracy checks" in Konami's BIOS.</p>
+<p>Of course, since neither version of the shell has any such checks, the claims
+were completely misleading. The actual purpose of these boards was not to tamper
+with the BIOS, but rather to piggyback on the system bus and provide a crude
+authentication mechanism to the bootleg game, allowing it to verify that it was
+indeed running on a 573 equipped with an appropriate mod board. In other words,
+<strong>mod boards were actually the bootleggers' implementation of Konami's</strong>
+<strong>security cartridge system</strong>, meant to prevent people from simply burning
+copies of a bootleg CD-ROM and forcing them to buy bootleg kits from whoever
+produced them instead. <em>Oh the irony.</em></p>
+<p>The added authentication circuitry will not create any issues with official nor
+homebrew software, however most of these boards feature an additional party
+trick: <em>the shell executable is altered to load a differently named executable</em>,
+making bootleg discs unable to boot on a stock 573 and vice versa. The following
+names have been found so far in modified BIOS ROMs:</p>
+<ul>
+<li><code>QSY.DXD</code></li>
+<li><code>SSW.BXF</code></li>
+<li><code>TSV.AXG</code></li>
+<li><code>GSE.NXX</code></li>
+<li><code>NSE.GXX</code></li>
+</ul>
+<p>The following names have been found on unofficial game discs, but are not
+confirmed to have ever been used in modified BIOS ROMs:</p>
+<ul>
+<li><code>OSE.FXX</code></li>
+<li><code>QSU.DXH</code></li>
+<li><code>QSX.DXE</code></li>
+<li><code>QSZ.DXC</code></li>
+<li><code>RSU.CXH</code></li>
+<li><code>RSV.CXG</code></li>
+<li><code>RSW.CXF</code></li>
+<li><code>RSZ.CXC</code></li>
+<li><code>SSX.BXE</code></li>
+<li><code>SSY.BXD</code></li>
+<li><code>TSW.AXF</code></li>
+<li><code>TSX.AXE</code></li>
+<li><code>TSY.AXD</code></li>
+<li><code>TSZ.AXC</code></li>
+</ul>
+<p>Homebrew software should thus place multiple copies of the boot executable on
+the CD-ROM to ensure any BIOS, modded or not, can successfully load it. An
+interesting side note is that, for any of these names, summing the ASCII codes
+of each character will always yield the same result. Presumably bootleggers were
+unable to find the code in charge of BIOS ROM checksum validation and found it
+easier to just turn the string into random nonsense whose checksum collided with
+the original one.</p>
+<h3 id="ddrturbo-mod-board"><code>DDRTURBO</code> mod board</h3>
+<p>Board required by and specific to the DDR Extreme PLUS hack. Unlike all other
+currently known boards, this one actually adds new functionality to the system:
+the ability to speed up MP3 playback... <em>by taking the place of the 29.45 MHz</em>
+<em>main oscillator</em> on the digital I/O board, which is desoldered and replaced
+with a bodge wire. It features three crystal oscillators supplying the following
+clocks:</p>
+<ul>
+<li><strong>29.5 MHz</strong> (0.16% faster than stock, referred to as "Normal Speed" in
+  Extreme PLUS)</li>
+<li><strong>33 MHz</strong> (12.05% faster than stock, referred to as "Speed up 10%" in Extreme
+  PLUS)</li>
+<li><strong>36 MHz</strong> (22.24% faster than stock, referred to as "Speed up 20%" in Extreme
+  PLUS)</li>
+</ul>
+<p>The board listens for reads from the upper half of BIOS ROM
+(<code>0xbfc40000-0xbfc7ffff</code>) and latches bits 5-6 of the byte read to determine
+which clock to output to the digital I/O board:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Byte read</th>
+<th style="text-align: right;">Clock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;"><code>0b*00*****</code></td>
+<td style="text-align: right;">33 MHz</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>0b*01*****</code></td>
+<td style="text-align: right;">36 MHz</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>0b*10*****</code></td>
+<td style="text-align: right;">29.5 MHz</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>0b*11*****</code></td>
+<td style="text-align: right;">Unknown (none?)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>NOTE</strong>: kernel code execution while the game is running will <em>not</em> affect the
+clock as the kernel is contained entirely within the ROM's first half. The
+second half is in fact only accessed on startup when relocating the shell
+executable to RAM and computing the ROM checksum.</p>
+<p>In order to switch clocks, Extreme PLUS always reads from one of the following
+addresses:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Address read</th>
+<th style="text-align: right;">Byte read</th>
+<th style="text-align: right;">Clock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;"><code>0xbfc40ebf</code></td>
+<td style="text-align: right;"><code>0x55</code></td>
+<td style="text-align: right;">29.5 MHz</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>0xbfc40810</code></td>
+<td style="text-align: right;"><code>0x00</code></td>
+<td style="text-align: right;">33 MHz</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>0xbfc41341</code></td>
+<td style="text-align: right;"><code>0xaa</code></td>
+<td style="text-align: right;">36 MHz</td>
+</tr>
+</tbody>
+</table>
+<p>The board's EPROM holds a copy of the 700A01 BIOS with the last byte of the
+checksum at <code>0xbfc7ffff</code> modified from <code>0xf9</code> to <code>0x39</code>. Extreme PLUS uses this
+change to detect the mod board and will refuse to run if it is not present. The
+padding byte at <code>0xbfc7fffb</code> is also changed from <code>0xff</code> to <code>0x3f</code> in order for
+the contents of the ROM to match the new checksum.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.indexes"], "search": "../../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>

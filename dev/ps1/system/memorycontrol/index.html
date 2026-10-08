@@ -1,0 +1,5510 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://psx-spx.consoledev.net/ps1/system/memorycontrol/">
+      
+      
+        <link rel="prev" href="../timers/">
+      
+      
+        <link rel="next" href="../partialwordwrites/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Memory Control - PlayStation Specifications - psx-spx</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#memory-control" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<strong>Development version.</strong> Most changes made here since April 2026 were written by an AI and have not all been reviewed by a human.
+For the human-written reference, see the <a href="/">stable version</a>.
+
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="PlayStation Specifications - psx-spx" class="md-header__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PlayStation Specifications - psx-spx
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Memory Control
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="PlayStation Specifications - psx-spx" class="md-nav__button md-logo" aria-label="PlayStation Specifications - psx-spx" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 4.27c1.38.26 3.4.87 4.5 1.23 2.75.95 3.69 2.13 3.69 4.79 0 2.6-1.6 3.58-3.64 2.6V8.05c0-.55-.1-1.08-.64-1.23-.41-.13-.65.25-.65.81v12.1L9.5 18.69V4.27m3.87 13.35 5.25-1.87c.6-.21.69-.51.21-.67-.49-.16-1.36-.11-1.96.1l-3.5 1.23v-1.96l.21-.07s1.01-.38 2.42-.51c1.43-.16 3.17.02 4.53.53 1.54.49 1.72 1.21 1.33 1.7-.4.5-1.36.85-1.36.85l-7.13 2.55v-1.88m-9.87-.2C1.93 17 1.66 16.05 2.38 15.5c.67-.5 1.8-.85 1.8-.85L8.86 13v1.88L5.5 16.09c-.6.21-.69.51-.21.67.48.16 1.36.12 1.95-.1l1.62-.58v1.69l-.32.06c-1.62.26-3.34.17-5.04-.41Z"/></svg>
+
+    </a>
+    PlayStation Specifications - psx-spx
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/psx-spx/psx-spx.github.io/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    PlayStation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            PlayStation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    System
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            System
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memorymap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iomap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interrupts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interrupts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dmachannels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DMA Channels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Memory Control
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Memory Control
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1f801000h-dev0-base-address-usually-1f000000h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801000h - DEV0 Base Address (usually 1F000000h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801004h-dev8-base-address-usually-1f802000h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801004h - DEV8 Base Address (usually 1F802000h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801008h-dev0-delaysize-usually-0013243fh-512kbytes-8bit-bus-573-24173f47h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801008h - DEV0 Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus) (573: 24173F47h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80100ch-dev1-delaysize-usually-00003022h-1-byte" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F80100Ch - DEV1 Delay/Size (usually 00003022h) (1 byte)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801010h-dev2-bios-rom-delaysize-usually-0013243fh-512kbytes-8bit-bus" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801010h - DEV2 (BIOS ROM) Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801014h-dev4-spu-delaysize-200931e1h-use-220931e1h-for-spu-ram-reads" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801014h - DEV4 (SPU) Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801018h-dev5-cd-rom-delaysize-00020843h-or-00020943h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801018h - DEV5 (CD-ROM) Delay/Size (00020843h or 00020943h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80101ch-dev8-delaysize-usually-00070777h-128-bytes-8bit-bus" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F80101Ch - DEV8 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801020h-com_delay-common_delay-00031125h-or-0000132ch-or-00001325h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801020h - COM_DELAY / COMMON_DELAY (00031125h or 0000132Ch or 00001325h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801060h-dram_ctrl-rw-usually-00000b88h-or-00000888h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801060h - DRAM_CTRL? (R/W) (usually 00000B88h) (or 00000888h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-ram-array-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Main RAM array organization
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fffe0130h-bcc-biucache-configuration-register-rw" class="md-nav__link">
+    <span class="md-ellipsis">
+      FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d-cache-mode-ram0-ds1" class="md-nav__link">
+    <span class="md-ellipsis">
+      "D-cache" mode (RAM=0, DS=1)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../partialwordwrites/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Partial-Word Writes to MMIO
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unpredictablethings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unpredictable Things
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CPU
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            CPU
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpu/cpuspecifications/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Specifications
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpu/gte/geometrytransformationenginegte/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geometry Transformation Engine (GTE)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpu/gte/gtepipelinetimings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GTE Pipeline Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpu/mdec/macroblockdecodermdec/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Macroblock Decoder (MDEC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../gpu/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    GPU
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            GPU
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/i-o-ports-dma-channels-commands-vram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I/O Ports, DMA Channels, Commands, VRAM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/render-polygon-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Polygon Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/render-line-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Line Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/render-rectangle-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Render Rectangle Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/rendering-attributes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rendering Attributes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/memory-transfer-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Transfer Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/other-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Other Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/display-control-commands-gp1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Display Control Commands (GP1)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/status-register/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Status Register
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Versions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/depth-ordering/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Depth Ordering
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/video-memory-vram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Video Memory (VRAM)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/texture-caching/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Texture Caching
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/timings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gpu/misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU (MISC)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spu/soundprocessingunitspu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sound Processing Unit (SPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    CD-ROM
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            CD-ROM
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromdrive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Drive
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromformat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../cdr/cdromfileformats/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    CDROM File Formats
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_5_3" id="__nav_2_5_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            CDROM File Formats
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/executables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Executables and Debug Files
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/graphics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Textures, 2D and 3D Graphics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/streaming/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Video Streaming and BS Compression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/archives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Archives
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/compression/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromfileformats/diskimages/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Disk Images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdromvideocdsvcd/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Video CDs (VCD)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cdr/cdrominternalinfoonpsxcdromcontroller/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Internal Info on PSX CDROM Controller
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Serial Ports (SIO)
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Serial Ports (SIO)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../sio/controllersandmemorycards/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Controllers and Memory Cards
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_1" id="__nav_2_6_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            Controllers and Memory Cards
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controller-and-memory-card-overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controller-and-memory-card-signals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Signals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controller-and-memory-card-multitap-adaptor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller and Memory Card Multitap Adaptor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-communication-sequence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Communication Sequence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-standard-digital-analog-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Standard Digital/Analog Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-mouse/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mouse
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-racing-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Racing Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_1_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../sio/controllersandmemorycards/lightguns/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Lightguns
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_1_9" id="__nav_2_6_1_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_6_1_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1_9">
+            <span class="md-nav__icon md-icon"></span>
+            Lightguns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/lightguns/namco-guncon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Namco GunCon
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/lightguns/konami-justifier-hyperblaster/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Konami Justifier/Hyperblaster (IRQ10)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-configuration-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-vibration-rumble-control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vibration/Rumble Control
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-analog-buttons-dualshock2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analog Buttons (Dualshock2)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-dance-mats/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dance Mats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-pop-n-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pop'n Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-taiko-controllers-tatacon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Taiko Controllers (Tatacon)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-densha-de-go-jet-de-go-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Densha de Go! / Jet de Go! Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-fishing-controllers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fishing Controllers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-ps2-dvd-remote/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PS2 DVD Remote
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-i-mode-adaptor-mobile-internet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    I-Mode Adaptor (Mobile Internet)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-keyboards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-additional-inputs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Additional Inputs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/controllers-misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Misc
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/memory-card-read-write-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Read/Write Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/memory-card-data-format/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Data Format
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/memory-card-images/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Images
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/controllersandmemorycards/memory-card-notes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/pocketstation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pocketstation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sio/serialinterfacessio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serial Interfaces (SIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            Expansion Port (PIO)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pio/expansionportpio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion Port (PIO)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pio/cheatdevices/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cheat Devices
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../kernelbios/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Kernel (BIOS)
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Kernel (BIOS)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/memory-map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/function-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Function Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/file-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/file-execute-and-flush-cache/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File Execute and Flush Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/cdrom-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CDROM Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/memory-card-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Card Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/interrupt-exception-handling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interrupt/Exception Handling
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/event-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/event-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Event Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/thread-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Thread Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/timer-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Timer Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/joypad-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Joypad Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/gpu-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/memory-allocation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Allocation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/memory-fill-copy-compare-slow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Fill/Copy/Compare (SLOW)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/string-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    String Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/number-string-character-conversion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Number/String/Character Conversion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/misc-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Misc Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/internal-boot-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Internal Boot Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/more-internal-functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    More Internal Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/pc-file-server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PC File Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/tty-console-std-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TTY Console (std_io)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/character-sets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Character Sets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/control-blocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Control Blocks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Versions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernelbios/patches/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Patches
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_9" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../pinouts/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Pinouts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/controller-ports-and-memory-card-ports/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controller Ports and Memory-Card Ports
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/audio-video-power-expansion-ports/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio, Video, Power, Expansion Ports
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/sio-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SIO Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/chipset-summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chipset Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/cpu-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CPU Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/gpu-pinouts-for-old-160-pin-gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Pinouts (for old 160-pin GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/gpu-pinouts-for-new-208-pin-gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GPU Pinouts (for new 208-pin GPU)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/spu-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SPU Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/drv-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DRV Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/vcd-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VCD Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/hc05-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HC05 Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/mem-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    MEM Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/clk-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLK Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/pwr-pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PWR Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-digital-joypad-scph-1080/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Digital Joypad, SCPH-1080
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1150/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1150
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-1200/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-1200
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-analog-joypad-scph-110/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Analog Joypad, SCPH-110
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-namco-lightgun-npc-103/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Namco Lightgun, NPC-103
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/component-list-and-chipset-pin-outs-for-multitap-scph-1070/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Component List and Chipset Pin-Outs for Multitap, SCPH-1070
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/memory-cards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Memory Cards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/mods-nocash-psx-xboo-upload/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mods - Nocash PSX-XBOO Upload
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pinouts/mods-pal-ntsc-color-mods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mods - PAL/NTSC Color Mods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardwarenumbers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hardware Numbers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Arcade
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Arcade
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/arcadecabinets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Arcade Cabinets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../arcade/konami/573/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Konami System 573
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Konami System 573
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/registers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Register Map
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/builtin-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Built-in I/O and JVS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/expansion-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Expansion I/O Boards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/security-cartridges/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Security Cartridges
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/external-modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    External Modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/bios/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BIOS and Bootleg Mod Boards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/drives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CD/DVD Drives
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/games/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Games and Notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arcade/konami/573/pinouts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pinouts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Dev Boards
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Dev Boards
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dtl/psxdevboardchipsets/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Chipsets
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dtl/psxdevboardprotocol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PSX Dev-Board Protocol
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../aboutcredits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About & Credits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1f801000h-dev0-base-address-usually-1f000000h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801000h - DEV0 Base Address (usually 1F000000h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801004h-dev8-base-address-usually-1f802000h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801004h - DEV8 Base Address (usually 1F802000h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801008h-dev0-delaysize-usually-0013243fh-512kbytes-8bit-bus-573-24173f47h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801008h - DEV0 Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus) (573: 24173F47h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80100ch-dev1-delaysize-usually-00003022h-1-byte" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F80100Ch - DEV1 Delay/Size (usually 00003022h) (1 byte)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801010h-dev2-bios-rom-delaysize-usually-0013243fh-512kbytes-8bit-bus" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801010h - DEV2 (BIOS ROM) Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801014h-dev4-spu-delaysize-200931e1h-use-220931e1h-for-spu-ram-reads" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801014h - DEV4 (SPU) Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801018h-dev5-cd-rom-delaysize-00020843h-or-00020943h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801018h - DEV5 (CD-ROM) Delay/Size (00020843h or 00020943h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f80101ch-dev8-delaysize-usually-00070777h-128-bytes-8bit-bus" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F80101Ch - DEV8 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801020h-com_delay-common_delay-00031125h-or-0000132ch-or-00001325h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801020h - COM_DELAY / COMMON_DELAY (00031125h or 0000132Ch or 00001325h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1f801060h-dram_ctrl-rw-usually-00000b88h-or-00000888h" class="md-nav__link">
+    <span class="md-ellipsis">
+      1F801060h - DRAM_CTRL? (R/W) (usually 00000B88h) (or 00000888h)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-ram-array-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Main RAM array organization
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fffe0130h-bcc-biucache-configuration-register-rw" class="md-nav__link">
+    <span class="md-ellipsis">
+      FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d-cache-mode-ram0-ds1" class="md-nav__link">
+    <span class="md-ellipsis">
+      "D-cache" mode (RAM=0, DS=1)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="memory-control">Memory Control</h1>
+<p>The Memory Control registers are initialized by the BIOS, and, normally
+software doesn't need to change that settings. Some registers are useful for
+expansion hardware (allowing to increase the memory size and bus width).<br/></p>
+<h4 id="1f801000h-dev0-base-address-usually-1f000000h">1F801000h - DEV0 Base Address (usually 1F000000h)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-23   Base address       (R/W)
+  24-31  Fixed, always 1Fh  (R)
+</code></pre></div>
+The behavior of this register is somewhat inconsistent. Normally, the base
+address is forcefully aligned to the DEV0 region's size by masking off the
+bottommost N bits (where N = number of address lines, as set in register
+1F801008h). For instance, if the number of DEV0 address lines is set to 8,
+setting this register to 1F000000h or 1F0000FFh has the same effect.<br/>
+When performing a PIO DMA transfer, however, all bits of this register are
+output on the bus regardless of the currently set region size, and stay there
+for the whole transfer: with the base set to 1F4812A4h, DMA5 drives 4812A4h,
+while a CPU write to 1F480000h drives 480000h..480003h. The System 573
+relies on this behavior as it changes the base address to 1F480000h prior to
+reading data from the IDE CD-ROM using DMA (and does not reset it to 1F000000h
+afterwards).<br/>
+Note: presumably the masking lets the bus interface compute addresses quickly by
+replacing masked off bits with the LSBs of the incoming address value from the
+CPU, thus only requiring a few multiplexers instead of a full adder.<br/></p>
+<h4 id="1f801004h-dev8-base-address-usually-1f802000h">1F801004h - DEV8 Base Address (usually 1F802000h)</h4>
+<p>Same as 1F801000h, however trying to use ANY other value than 1F802000h seems to
+disable the DEV8 region, rather than mapping it to the specified address
+(ie. Port 1F801004h doesn't seem to work).<br/>
+For DEV1, the address seems to be fixed (1FA00000h).<br/></p>
+<h4 id="1f801008h-dev0-delaysize-usually-0013243fh-512kbytes-8bit-bus-573-24173f47h">1F801008h - DEV0 Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus) (573: 24173F47h)</h4>
+<h4 id="1f80100ch-dev1-delaysize-usually-00003022h-1-byte">1F80100Ch - DEV1 Delay/Size (usually 00003022h) (1 byte)</h4>
+<h4 id="1f801010h-dev2-bios-rom-delaysize-usually-0013243fh-512kbytes-8bit-bus">1F801010h - DEV2 (BIOS ROM) Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus)</h4>
+<h4 id="1f801014h-dev4-spu-delaysize-200931e1h-use-220931e1h-for-spu-ram-reads">1F801014h - DEV4 (SPU) Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)</h4>
+<h4 id="1f801018h-dev5-cd-rom-delaysize-00020843h-or-00020943h">1F801018h - DEV5 (CD-ROM) Delay/Size (00020843h or 00020943h)</h4>
+<h4 id="1f80101ch-dev8-delaysize-usually-00070777h-128-bytes-8bit-bus">1F80101Ch - DEV8 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)</h4>
+<div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="299" viewBox="0 0 769 299" role="img" aria-label="register bit layout">
+<rect x="677" y="15" width="91" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="722.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,722.5,156.5)" class="pf-fill-fg">Write Delay</text>
+<text x="677" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">3</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">0</text>
+<rect x="581" y="15" width="91" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="626.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,626.5,156.5)" class="pf-fill-fg">Read Delay</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">7</text>
+<text x="672" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">4</text>
+<rect x="557" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="566.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,566.5,156.5)" class="pf-fill-fg">Recovery Period</text>
+<text x="557" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">8</text>
+<rect x="533" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="542.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,542.5,156.5)" class="pf-fill-fg">Hold Period</text>
+<text x="533" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">9</text>
+<rect x="509" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="518.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,518.5,156.5)" class="pf-fill-fg">Floating Period</text>
+<text x="509" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">10</text>
+<rect x="485" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="494.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,494.5,156.5)" class="pf-fill-fg">Pre-strobe Period</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">11</text>
+<rect x="461" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="470.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,470.5,156.5)" class="pf-fill-fg">Data Bus-width</text>
+<text x="461" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">12</text>
+<rect x="437" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="446.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,446.5,156.5)" class="pf-fill-fg">Auto Increment</text>
+<text x="437" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">13</text>
+<rect x="389" y="15" width="43" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="410.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,410.5,156.5)" class="pf-fill-fg">Unknown</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">15</text>
+<text x="432" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">14</text>
+<rect x="269" y="15" width="115" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="326.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,326.5,156.5)" class="pf-fill-fg">Number of address bits</text>
+<text x="269" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">20</text>
+<text x="384" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">16</text>
+<rect x="197" y="15" width="67" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="230.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,230.5,156.5)" class="pf-fill-fg">Unknown</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">23</text>
+<text x="264" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">21</text>
+<rect x="101" y="15" width="91" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="146.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,146.5,156.5)" class="pf-fill-fg">DMA timing override</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">27</text>
+<text x="192" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">24</text>
+<rect x="77" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="86.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,156.5)" class="pf-fill-fg">Address error flag. Write 1 to it to...</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">28</text>
+<rect x="53" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="62.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,62.5,156.5)" class="pf-fill-fg">DMA timing select</text>
+<text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">29</text>
+<rect x="29" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="38.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,156.5)" class="pf-fill-fg">Wide DMA</text>
+<text x="29" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">30</text>
+<rect x="5" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="14.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,14.5,156.5)" class="pf-fill-fg">Wait</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">31</text>
+</svg>
+</div>
+<p><div class="highlight"><pre><span></span><code>  0-3   Write Delay        (00h..0Fh=01h..10h Cycles)
+  4-7   Read Delay         (00h..0Fh=01h..10h Cycles)
+  8     Recovery Period    (0=No, 1=Yes, uses COM0 timings)
+  9     Hold Period        (0=No, 1=Yes, uses COM1 timings)
+  10    Floating Period    (0=No, 1=Yes, uses COM2 timings)
+  11    Pre-strobe Period  (0=No, 1=Yes, uses COM3 timings)
+  12    Data Bus-width     (0=8bits, 1=16bits)
+  13    Auto Increment     (0=No, 1=Yes)
+  14-15 Unknown (R/W)
+  16-20 Number of address bits (memory window size = 1 &lt;&lt; N bytes)
+  21-23 Unknown (always zero)
+  24-27 DMA timing override
+  28    Address error flag. Write 1 to it to clear it.
+  29    DMA timing select  (0=use normal timings, 1=use bits 24-27)
+  30    Wide DMA           (0=use bit 12, 1=override to full 32 bits)
+  31    Wait               (1=wait on external device before being ready)
+</code></pre></div>
+An access wider than the Data Bus-width is a single bus transaction: /CS is
+asserted once, /RD or /WR is pulsed once per 8bit or 16bit unit, and /CS is
+released only after the last one. For example, a 32bit read from the 8bit
+BIOS ROM is one /CS assertion with four /RD pulses.<br/>
+When booting, all these registers are using the maximum cycle delays for both
+reads and writes. Then, the BIOS will immediately select a faster read
+access delay, resulting in a visible speed up after the first few instructions.
+The effects aren't immediate however. The BIOS boots using the following instructions:</p>
+<div class="highlight"><pre><span></span><code>bfc00000<span class="w">    </span><span class="k">lui</span><span class="w">        </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x0013
+bfc00004<span class="w">    </span><span class="k">ori</span><span class="w">        </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x243f
+bfc00008<span class="w">    </span><span class="k">lui</span><span class="w">        </span><span class="kt">$at</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x1f80
+bfc0000c<span class="w">    </span><span class="k">sw</span><span class="w">         </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x1010(<span class="kt">$at</span>)
+bfc00010<span class="w">    </span>nop
+bfc00014<span class="w">    </span><span class="nv">li</span><span class="w">         </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x0b88
+bfc00018<span class="w">    </span><span class="k">lui</span><span class="w">        </span><span class="kt">$at</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x1f80
+bfc0001c<span class="w">    </span><span class="k">sw</span><span class="w">         </span><span class="kt">$t0</span><span class="nb">,</span><span class="w"> </span><span class="kc">0</span>x1060(<span class="kt">$at</span>)
+bfc00020<span class="w">    </span>nop
+</code></pre></div>
+<p>When using a logic analyzer to monitor the boot sequence, the instruction at
+bfc00014 is still read using the old timings since reset, and then the instruction
+at bfc00018 is finally read using the sped up timings.</p>
+<p>Reads and writes access times aren't symmetrical, and are each controlled with
+their own values. By default, DEV0 will be set to 16 cycles when writing, which
+is the slowest possible. If the programmer wants to write to a flash chip on
+DEV0, or communicate with a computer, speeding up write access is recommended.</p>
+<p>The fastest a port could go would be by setting the lowest 16 bits to zero, which
+will result in 3 CPU cycles for a single byte access.</p>
+<p>All counts below are in CPU cycles, taken from the SPU (DEV4, 16bit) and the
+BIOS ROM (DEV2, 8bit) with the COM_DELAY register at 00031125h unless noted.</p>
+<ul>
+<li>/CS goes active one cycle before /RD or /WR.</li>
+<li>/RD is active for Read Delay+1 cycles, /WR for Write Delay+1 cycles.</li>
+<li>Pre-strobe (bit 11) delays the strobe by COM3 more cycles after /CS, and takes
+  the same COM3 cycles off the strobe itself, down to a minimum of 1 cycle, so
+  the access keeps its length.</li>
+<li>Hold (bit 9) only affects writes: /CS stays active COM1 cycles after /WR goes
+  inactive, and the gap between two units of a wide write grows by COM1.</li>
+<li>Floating (bit 10) only affects reads: /CS stays active COM2 cycles after /RD
+  goes inactive, and the gap between two units of a wide read grows by COM2.</li>
+<li>Recovery (bit 8) puts COM0 cycles between the units of a wide access, with /CS
+  still active, and keeps /CS inactive for COM0 cycles after a write before the
+  next transaction. With bit 8 cleared, both gaps are 1 cycle.</li>
+<li>The gap between the units of a wide access combines these the same way for
+  reads and writes. With recovery and no hold or floating period, it is COM0
+  (5 cycles), plus one cycle when pre-strobe (bit 11) is set, measured with
+  COM3 = 1. With a hold (writes) or floating (reads) period as well, it is that
+  period plus COM0 plus the strobe setup cycle: 7 cycles between the bytes of a
+  BIOS ROM read with 0013253Fh, and 7 between the halves of an SPU read with
+  200935E1h.</li>
+</ul>
+<p>These timings are the same on the SCPH-1000, SCPH-1001, SCPH-5501, SCPH-7001,
+SCPH-9002 and the DTL-H2700: the same register values give the same cycle
+counts. What does change is the COM_DELAY value in use. The BIOS sets
+00031125h at boot, and its CD-ROM sector read code writes 0000132Ch to
+COM_DELAY (and 00020943h to DEV5), so after the BIOS has read from the disc,
+recovery is 12 cycles and floating 3. A 32bit read of the BIOS ROM then takes
+33 CPU cycles instead of 27, and a 32bit write to the SPU 28 instead of 15.
+Back-to-back byte reads slow down as well: about 28 cycles each instead of 21
+from the SPU, and about 18 instead of 10 from the CD-ROM controller. The SPU
+change follows COM_DELAY alone. The CD-ROM one needs both values: with DEV5 at
+00020843h (recovery off) CD-ROM byte reads stay at 10 cycles whatever COM_DELAY
+holds, and with 00020943h they take 11 cycles under 00031125h.</p>
+<p>A halfword write to the SPU with 200931E1h: /CS, then a 2 cycle /WR.</p>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="206" height="132" viewBox="0 0 206 132" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 154,28 168,28 182,28 196,28" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR0</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 126,82 140,82 154,82 154,62 168,62 182,62 196,62" class="pf-stroke-signal"/>
+<text x="4" y="110" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR1</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,96 84,96 98,96 112,96 126,96 126,116 140,116 154,116 154,96 168,96 182,96 196,96" class="pf-stroke-signal"/>
+</svg>
+</div>
+<p>A word write to the same register: two /WR pulses under one /CS, separated by
+the 5 cycle recovery period.</p>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="304" height="132" viewBox="0 0 304 132" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="252" y1="18" x2="252" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="266" y1="18" x2="266" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="280" y1="18" x2="280" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">15</text>
+<line x1="294" y1="18" x2="294" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 252,28 266,28 280,28 294,28" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR0</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 126,82 140,82 154,82 154,62 168,62 182,62 196,62 210,62 224,62 224,82 238,82 252,82 252,62 266,62 280,62 294,62" class="pf-stroke-signal"/>
+<text x="4" y="110" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR1</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,96 84,96 98,96 112,96 126,96 126,116 140,116 154,116 154,96 168,96 182,96 196,96 210,96 224,96 224,116 238,116 252,116 252,96 266,96 280,96 294,96" class="pf-stroke-signal"/>
+</svg>
+</div>
+<p>The same word write with bit 8 cleared (200930E1h). The two halves, and the next
+transaction, are 1 cycle apart. On a retail console this loses the high half of
+every 32bit write to the SPU.</p>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="248" height="132" viewBox="0 0 248 132" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 84,48 98,48 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 196,28 210,28 210,48 224,48 238,48" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR0</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 84,82 98,82 98,62 112,62 126,62 126,82 140,82 154,82 154,62 168,62 168,82 182,82 196,82 196,62 210,62 224,62 224,82 238,82" class="pf-stroke-signal"/>
+<text x="4" y="110" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR1</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,96 84,96 84,116 98,116 98,96 112,96 126,96 126,116 140,116 154,116 154,96 168,96 168,116 182,116 196,116 196,96 210,96 224,96 224,116 238,116" class="pf-stroke-signal"/>
+</svg>
+</div>
+<p>The same word write with bit 8 cleared and bit 9 set (200932E1h): /CS is held
+2 more cycles after each /WR, so the halves are 3 cycles apart.</p>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="304" height="132" viewBox="0 0 304 132" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="252" y1="18" x2="252" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="266" y1="18" x2="266" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="280" y1="18" x2="280" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">15</text>
+<line x1="294" y1="18" x2="294" y2="126" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,48 84,48 98,48 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 252,28 266,28 266,48 280,48 294,48" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR0</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 126,82 140,82 154,82 154,62 168,62 182,62 196,62 196,82 210,82 224,82 224,62 238,62 252,62 266,62 280,62 280,82 294,82" class="pf-stroke-signal"/>
+<text x="4" y="110" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR1</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,96 84,96 98,96 112,96 126,96 126,116 140,116 154,116 154,96 168,96 182,96 196,96 196,116 210,116 224,116 224,96 238,96 252,96 266,96 280,96 280,116 294,116" class="pf-stroke-signal"/>
+</svg>
+</div>
+<p>A word read from the BIOS ROM with 0013243Fh: four 4 cycle /RD pulses, 2 cycles
+apart (1 cycle of floating period, then 1 before the next strobe), and one more
+floating cycle before /CS goes inactive.</p>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="98" viewBox="0 0 500 98" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="252" y1="18" x2="252" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="266" y1="18" x2="266" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="280" y1="18" x2="280" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">15</text>
+<line x1="294" y1="18" x2="294" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="308" y1="18" x2="308" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="322" y1="18" x2="322" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="336" y1="18" x2="336" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="350" y1="18" x2="350" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="352" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">20</text>
+<line x1="364" y1="18" x2="364" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="378" y1="18" x2="378" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="392" y1="18" x2="392" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="406" y1="18" x2="406" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="420" y1="18" x2="420" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="422" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">25</text>
+<line x1="434" y1="18" x2="434" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="448" y1="18" x2="448" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="462" y1="18" x2="462" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="476" y1="18" x2="476" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="490" y1="18" x2="490" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 266,48 280,48 294,48 308,48 322,48 336,48 350,48 364,48 378,48 392,48 406,48 420,48 434,48 448,48 448,28 462,28 476,28 490,28" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/RD</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 126,82 140,82 154,82 168,82 182,82 182,62 196,62 210,62 210,82 224,82 238,82 252,82 266,82 266,62 280,62 294,62 294,82 308,82 322,82 336,82 350,82 350,62 364,62 378,62 378,82 392,82 406,82 420,82 434,82 434,62 448,62 462,62 476,62 490,62" class="pf-stroke-signal"/>
+</svg>
+</div>
+<p>The same read with bit 10 cleared (0013203Fh): the pulses are 1 cycle apart and
+/CS goes inactive with the last /RD.</p>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="444" height="98" viewBox="0 0 444 98" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="252" y1="18" x2="252" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="266" y1="18" x2="266" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="280" y1="18" x2="280" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">15</text>
+<line x1="294" y1="18" x2="294" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="308" y1="18" x2="308" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="322" y1="18" x2="322" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="336" y1="18" x2="336" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="350" y1="18" x2="350" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="352" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">20</text>
+<line x1="364" y1="18" x2="364" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="378" y1="18" x2="378" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="392" y1="18" x2="392" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="406" y1="18" x2="406" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="420" y1="18" x2="420" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="422" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">25</text>
+<line x1="434" y1="18" x2="434" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 266,48 280,48 294,48 308,48 322,48 336,48 350,48 364,48 378,48 392,48 392,28 406,28 420,28 434,28" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/RD</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 126,82 140,82 154,82 168,82 182,82 182,62 196,62 196,82 210,82 224,82 238,82 252,82 252,62 266,62 266,82 280,82 294,82 308,82 322,82 322,62 336,62 336,82 350,82 364,82 378,82 392,82 392,62 406,62 420,62 434,62" class="pf-stroke-signal"/>
+</svg>
+</div>
+<p>The same read with bit 11 set (00132C3Fh): each /RD starts 2 cycles after /CS
+(3 after the previous pulse, counting the floating cycle), and lasts 3 cycles
+instead of 4.</p>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="98" viewBox="0 0 500 98" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="252" y1="18" x2="252" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="266" y1="18" x2="266" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="280" y1="18" x2="280" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">15</text>
+<line x1="294" y1="18" x2="294" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="308" y1="18" x2="308" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="322" y1="18" x2="322" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="336" y1="18" x2="336" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="350" y1="18" x2="350" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="352" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">20</text>
+<line x1="364" y1="18" x2="364" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="378" y1="18" x2="378" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="392" y1="18" x2="392" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="406" y1="18" x2="406" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="420" y1="18" x2="420" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="422" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">25</text>
+<line x1="434" y1="18" x2="434" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="448" y1="18" x2="448" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="462" y1="18" x2="462" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="476" y1="18" x2="476" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="490" y1="18" x2="490" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 266,48 280,48 294,48 308,48 322,48 336,48 350,48 364,48 378,48 392,48 406,48 420,48 434,48 448,48 448,28 462,28 476,28 490,28" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/RD</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 140,62 140,82 154,82 168,82 182,82 182,62 196,62 210,62 224,62 224,82 238,82 252,82 266,82 266,62 280,62 294,62 308,62 308,82 322,82 336,82 350,82 350,62 364,62 378,62 392,62 392,82 406,82 420,82 434,82 434,62 448,62 462,62 476,62 490,62" class="pf-stroke-signal"/>
+</svg>
+</div>
+<p>The data bus width selects whether a 32bit access is two 16bit operations or
+four 8bit ones, all under one /CS. The auto-increment bit makes the address
+advance between them. With it cleared, every operation uses the starting
+address: a 32bit read of BFC00000h with DEV2 at 0013043Fh returns 13131313h
+instead of 3C080013h, and a 32bit write to the SPU writes both halves to the
+same register, the second one winning.</p>
+<p>This means it is possible to slightly shorten the read time of 4 bytes off the
+same address by disabling auto-increment, and reading a full word. The CPU will
+then read 4 bytes off the same address, and place them all into each byte of
+the loaded register.</p>
+<p>The SPU itself is 16bit only. With bit 12 cleared on DEV4, each byte is written
+as a full halfword, with FFh in bits 8-15, and the SPU ignores A0, so the odd
+byte overwrites the even one in the same register.</p>
+<p>With bit 29 set, DMA transfers use bits 24-27 instead of the normal timings:
+/WR (or /RD, for a DMA read from the device) is active for (bits 24-27)+1
+cycles with 1 cycle between pulses, whatever the Write or Read Delay and the
+COM bits say. With bit 29 cleared, DMA uses the normal timings and bits 24-27
+are ignored. A DMA block is one /CS assertion for the
+whole block. The BIOS value for DEV4, 200931E1h, has bit 29 set and bits 24-27
+at zero, so SPU DMA writes run at 1 cycle per strobe with 1 cycle between.</p>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="98" viewBox="0 0 780 98" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="252" y1="18" x2="252" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="266" y1="18" x2="266" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="280" y1="18" x2="280" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">15</text>
+<line x1="294" y1="18" x2="294" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="308" y1="18" x2="308" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="322" y1="18" x2="322" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="336" y1="18" x2="336" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="350" y1="18" x2="350" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="352" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">20</text>
+<line x1="364" y1="18" x2="364" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="378" y1="18" x2="378" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="392" y1="18" x2="392" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="406" y1="18" x2="406" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="420" y1="18" x2="420" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="422" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">25</text>
+<line x1="434" y1="18" x2="434" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="448" y1="18" x2="448" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="462" y1="18" x2="462" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="476" y1="18" x2="476" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="490" y1="18" x2="490" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="492" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">30</text>
+<line x1="504" y1="18" x2="504" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="518" y1="18" x2="518" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="532" y1="18" x2="532" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="546" y1="18" x2="546" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="560" y1="18" x2="560" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="562" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">35</text>
+<line x1="574" y1="18" x2="574" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="588" y1="18" x2="588" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="602" y1="18" x2="602" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="616" y1="18" x2="616" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="630" y1="18" x2="630" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="632" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">40</text>
+<line x1="644" y1="18" x2="644" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="658" y1="18" x2="658" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="672" y1="18" x2="672" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="686" y1="18" x2="686" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="700" y1="18" x2="700" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="702" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">45</text>
+<line x1="714" y1="18" x2="714" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="728" y1="18" x2="728" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="742" y1="18" x2="742" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="756" y1="18" x2="756" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="770" y1="18" x2="770" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 266,48 280,48 294,48 308,48 322,48 336,48 350,48 364,48 378,48 392,48 406,48 420,48 434,48 448,48 462,48 476,48 490,48 504,48 518,48 532,48 546,48 560,48 574,48 588,48 602,48 616,48 630,48 644,48 658,48 672,48 686,48 700,48 714,48 728,48 742,48 756,48 770,48" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR0</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 140,62 154,62 168,62 182,62 196,62 210,62 210,82 224,82 238,82 238,62 252,62 266,62 280,62 294,62 308,62 308,82 322,82 336,82 336,62 350,62 364,62 378,62 392,62 406,62 406,82 420,82 434,82 434,62 448,62 462,62 476,62 490,62 504,62 504,82 518,82 532,82 532,62 546,62 560,62 574,62 588,62 602,62 602,82 616,82 630,82 630,62 644,62 658,62 672,62 686,62 700,62 700,82 714,82 728,82 728,62 742,62 756,62 770,62" class="pf-stroke-signal"/>
+</svg>
+</div>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="98" viewBox="0 0 780 98" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="252" y1="18" x2="252" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="266" y1="18" x2="266" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="280" y1="18" x2="280" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">15</text>
+<line x1="294" y1="18" x2="294" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="308" y1="18" x2="308" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="322" y1="18" x2="322" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="336" y1="18" x2="336" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="350" y1="18" x2="350" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="352" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">20</text>
+<line x1="364" y1="18" x2="364" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="378" y1="18" x2="378" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="392" y1="18" x2="392" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="406" y1="18" x2="406" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="420" y1="18" x2="420" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="422" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">25</text>
+<line x1="434" y1="18" x2="434" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="448" y1="18" x2="448" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="462" y1="18" x2="462" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="476" y1="18" x2="476" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="490" y1="18" x2="490" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="492" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">30</text>
+<line x1="504" y1="18" x2="504" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="518" y1="18" x2="518" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="532" y1="18" x2="532" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="546" y1="18" x2="546" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="560" y1="18" x2="560" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="562" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">35</text>
+<line x1="574" y1="18" x2="574" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="588" y1="18" x2="588" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="602" y1="18" x2="602" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="616" y1="18" x2="616" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="630" y1="18" x2="630" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="632" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">40</text>
+<line x1="644" y1="18" x2="644" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="658" y1="18" x2="658" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="672" y1="18" x2="672" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="686" y1="18" x2="686" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="700" y1="18" x2="700" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="702" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">45</text>
+<line x1="714" y1="18" x2="714" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="728" y1="18" x2="728" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="742" y1="18" x2="742" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="756" y1="18" x2="756" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="770" y1="18" x2="770" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 266,48 280,48 294,48 308,48 322,48 336,48 350,48 364,48 378,48 392,48 406,48 420,48 434,48 448,48 462,48 476,48 490,48 504,48 518,48 532,48 546,48 560,48 574,48 588,48 602,48 616,48 630,48 644,48 658,48 672,48 686,48 700,48 714,48 728,48 742,48 756,48 770,48" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/WR0</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 140,62 154,62 154,82 168,82 168,62 182,62 182,82 196,82 196,62 210,62 210,82 224,82 224,62 238,62 238,82 252,82 252,62 266,62 266,82 280,82 280,62 294,62 294,82 308,82 308,62 322,62 322,82 336,82 336,62 350,62 350,82 364,82 364,62 378,62 378,82 392,82 392,62 406,62 406,82 420,82 420,62 434,62 434,82 448,82 448,62 462,62 462,82 476,82 476,62 490,62 490,82 504,82 504,62 518,62 518,82 532,82 532,62 546,62 546,82 560,82 560,62 574,62 574,82 588,82 588,62 602,62 602,82 616,82 616,62 630,62 630,82 644,82 644,62 658,62 658,82 672,82 672,62 686,62 686,82 700,82 700,62 714,62 714,82 728,82 728,62 742,62 742,82 756,82 756,62 770,62" class="pf-stroke-signal"/>
+</svg>
+</div>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="98" viewBox="0 0 640 98" role="img" aria-label="bus waveform">
+<line x1="70" y1="18" x2="70" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="72" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">0</text>
+<line x1="84" y1="18" x2="84" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="98" y1="18" x2="98" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="112" y1="18" x2="112" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="126" y1="18" x2="126" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="140" y1="18" x2="140" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="142" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">5</text>
+<line x1="154" y1="18" x2="154" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="168" y1="18" x2="168" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="182" y1="18" x2="182" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="196" y1="18" x2="196" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="210" y1="18" x2="210" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="212" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">10</text>
+<line x1="224" y1="18" x2="224" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="238" y1="18" x2="238" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="252" y1="18" x2="252" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="266" y1="18" x2="266" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="280" y1="18" x2="280" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="282" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">15</text>
+<line x1="294" y1="18" x2="294" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="308" y1="18" x2="308" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="322" y1="18" x2="322" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="336" y1="18" x2="336" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="350" y1="18" x2="350" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="352" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">20</text>
+<line x1="364" y1="18" x2="364" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="378" y1="18" x2="378" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="392" y1="18" x2="392" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="406" y1="18" x2="406" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="420" y1="18" x2="420" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="422" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">25</text>
+<line x1="434" y1="18" x2="434" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="448" y1="18" x2="448" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="462" y1="18" x2="462" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="476" y1="18" x2="476" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="490" y1="18" x2="490" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="492" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">30</text>
+<line x1="504" y1="18" x2="504" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="518" y1="18" x2="518" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="532" y1="18" x2="532" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="546" y1="18" x2="546" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="560" y1="18" x2="560" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="562" y="14" font-family="monospace" font-size="12" fill="#888" class="pf-fill-lighter">35</text>
+<line x1="574" y1="18" x2="574" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="588" y1="18" x2="588" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="602" y1="18" x2="602" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="616" y1="18" x2="616" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<line x1="630" y1="18" x2="630" y2="92" stroke="#ddd" stroke-width="1" class="pf-stroke-lightest"/>
+<text x="4" y="42" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/CS</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,28 84,28 98,28 112,28 112,48 126,48 140,48 154,48 168,48 182,48 196,48 210,48 224,48 238,48 252,48 266,48 280,48 294,48 308,48 322,48 336,48 350,48 364,48 378,48 392,48 406,48 420,48 434,48 448,48 462,48 476,48 490,48 504,48 518,48 532,48 546,48 560,48 574,48 588,48 602,48 616,48 630,48" class="pf-stroke-signal"/>
+<text x="4" y="76" font-family="monospace" font-size="12" fill="black" class="pf-fill-fg">/RD</text>
+<polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 126,82 140,82 140,62 154,62 154,82 168,82 168,62 182,62 182,82 196,82 196,62 210,62 210,82 224,82 224,62 238,62 238,82 252,82 252,62 266,62 266,82 280,82 280,62 294,62 294,82 308,82 308,62 322,62 322,82 336,82 336,62 350,62 350,82 364,82 364,62 378,62 378,82 392,82 392,62 406,62 406,82 420,82 420,62 434,62 434,82 448,82 448,62 462,62 462,82 476,82 476,62 490,62 490,82 504,82 504,62 518,62 518,82 532,82 532,62 546,62 546,82 560,82 560,62 574,62 574,82 588,82 588,62 602,62 602,82 616,82 616,62 630,62" class="pf-stroke-signal"/>
+</svg>
+</div>
+<p>The Wide DMA flag will enable full 32 bits DMA operations on the bus, by reusing
+the low 16-bits address signals as the high 16-bits data. This means that if
+the CPU is doing Wide DMA reads, the low 16-bits of the address bus will become
+inputs.</p>
+<p>Trying to access addresses that exceed the selected size causes a bus exception.
+Maximum size would be DEV0 = 17h (8MB), DEV2 = 16h (4MB), DEV8 = 0Dh (8KB),
+DEV1 = 15h (2MB). Trying to select larger sizes would overlap the internal I/O
+ports, and crash the PSX. The Size bits seem to be ignored for SPU/CDROM. The
+SPU timings seem to be applied for both the 200h-byte SPU region at 1F801C00h
+and for the 200h-byte unknown region at 1F801E00h.<br/></p>
+<h4 id="1f801020h-com_delay-common_delay-00031125h-or-0000132ch-or-00001325h">1F801020h - COM_DELAY / COMMON_DELAY (00031125h or 0000132Ch or 00001325h)</h4>
+<p><div class="highlight"><pre><span></span><code>  0-3   COM0 - Recovery period cycles
+  4-7   COM1 - Hold period cycles
+  8-11  COM2 - Floating release cycles
+  12-15 COM3 - Strobe active-going edge delay
+  16-31 Unknown/unused (read: always 0000h)
+</code></pre></div>
+This register contains clock cycle offsets that can be added to the Access Time
+values in Port 1F801008h..1Ch. Works (somehow) like so:<br/>
+<div class="highlight"><pre><span></span><code>  1ST=0, SEQ=0, MIN=0
+  IF Use_COM0 THEN 1ST=1ST+COM0-1, SEQ=SEQ+COM0-1
+  IF Use_COM2 THEN 1ST=1ST+COM2,   SEQ=SEQ+COM2
+  IF Use_COM3 THEN MIN=COM3
+  IF 1ST&lt;6 THEN 1ST=1ST+1   ;(somewhat like so)
+  1ST=1ST+AccessTime+2, SEQ=SEQ+AccessTime+2
+  IF 1ST&lt;(MIN+6) THEN 1ST=(MIN+6)
+  IF SEQ&lt;(MIN+2) THEN SEQ=(MIN+2)
+</code></pre></div>
+The total access time is the sum of First Access, plus any Sequential
+Access(es), eg. for a 32bit access with 8bit bus: Total=1ST+SEQ+SEQ+SEQ.<br/>
+If the access is done from code in (uncached) RAM, then 0..4 cycles are added
+to the Total value (the exact number seems to vary depending on the used COMx
+values or so).<br/></p>
+<h4 id="1f801060h-dram_ctrl-rw-usually-00000b88h-or-00000888h">1F801060h - DRAM_CTRL? (R/W) (usually 00000B88h) (or 00000888h)</h4>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="433" height="292" viewBox="0 0 433 292" role="img" aria-label="register bit layout">
+<rect x="365" y="15" width="67" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="398.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,398.5,153)" class="pf-fill-fg">Refresh hold-off during DMA (0=none...</text>
+<text x="365" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">2</text>
+<text x="432" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">0</text>
+<rect x="341" y="15" width="19" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="350.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,350.5,153)" class="pf-fill-fg">/CAS and /WE wiring</text>
+<text x="341" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">3</text>
+<rect x="293" y="15" width="43" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="314.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,314.5,153)" class="pf-fill-fg">Refresh period</text>
+<text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">5</text>
+<text x="336" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">4</text>
+<rect x="269" y="15" width="19" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="278.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,278.5,153)" class="pf-fill-fg">Unknown</text>
+<text x="269" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">6</text>
+<rect x="245" y="15" width="19" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="254.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,254.5,153)" class="pf-fill-fg">Consecutive access waitstate</text>
+<text x="245" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">7</text>
+<rect x="221" y="15" width="19" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="230.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,230.5,153)" class="pf-fill-fg">/RAS1 bank size bit 1</text>
+<text x="221" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">8</text>
+<rect x="197" y="15" width="19" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="206.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,206.5,153)" class="pf-fill-fg">/RAS0 bank size bit 1</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">9</text>
+<rect x="173" y="15" width="19" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="182.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,182.5,153)" class="pf-fill-fg">Enable /RAS1 bank</text>
+<text x="173" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">10</text>
+<rect x="149" y="15" width="19" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="158.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,153)" class="pf-fill-fg">Bank size bit 0</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">11</text>
+<rect x="77" y="15" width="67" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="110.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,153)" class="pf-fill-fg">Unknown</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">15</text>
+<text x="144" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">12</text>
+<rect x="5" y="15" width="67" height="276" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="38.5" y="153" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,153)" class="pf-fill-fg">Unused</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">31</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">16</text>
+</svg>
+</div>
+<div class="highlight"><pre><span></span><code>  0-2   Refresh hold-off during DMA  (0=none, 1..6=(4 &lt;&lt; (N-1)) cycles, 7=unlimited)
+  3     /CAS and /WE wiring          (0=common /CAS with per-byte /WE, 1=per-byte /CAS with common /WE)
+  4-5   Refresh period               (0..3=(256 + 64*N) cycles)
+  6     Unknown
+  7     Consecutive access waitstate (0=none, 1=1 cycle)
+  8     /RAS1 bank size bit 1        (see below)
+  9     /RAS0 bank size bit 1        (see below)
+  10    Enable /RAS1 bank            (0=disable/bus fault on access, 1=enable)
+  11    Bank size bit 0              (see below, common to both banks)
+  12-15 Unknown
+  16-31 Unused (Garbage)
+</code></pre></div>
+<p>The two main RAM banks are mapped in memory sequentially, /RAS1 after /RAS0.
+Each of them can be 1, 2, 4 or 8MB in size, determined as follows:
+<div class="highlight"><pre><span></span><code>  /RAS0 size = 1MB &lt;&lt; ((DRAM_CTRL.9 &lt;&lt; 1) | DRAM_CTRL.11)
+  /RAS1 size = 1MB &lt;&lt; ((DRAM_CTRL.8 &lt;&lt; 1) | DRAM_CTRL.11)
+</code></pre></div></p>
+<p>Assuming two banks of the same size, possible values for bits 8-11 are thus:
+<div class="highlight"><pre><span></span><code>  0000 = 1MB bank on /RAS0 + 15MB unmapped
+  0011 = 4MB bank on /RAS0 + 12MB unmapped
+  0100 = 1MB bank on /RAS0 +  1MB bank on /RAS1 + 14MB unmapped
+  0111 = 4MB bank on /RAS0 +  4MB bank on /RAS1 +  8MB unmapped
+  1000 = 2MB bank on /RAS0 + 14MB unmapped
+  1011 = 8MB bank on /RAS0 +  8MB unmapped
+  1100 = 2MB bank on /RAS0 +  2MB bank on /RAS1 + 12MB unmapped
+  1111 = 8MB bank on /RAS0 +  8MB bank on /RAS1
+</code></pre></div></p>
+<p>Notes:</p>
+<ul>
+<li>"Unmapped" means that the CPU generates an exception when accessing that area.</li>
+<li>The DRAM controller determines which bank to access from the CPU address bit
+  immediately above the /RAS0 bank size: A20 for 1MB, A21 for 2MB, A22 for 4MB
+  or A23 for 8MB.</li>
+<li>Bits 0-2 set how many cycles a refresh can be postponed by while the DRAM
+  controller is busy handling a DMA transfer. The default value of 0 forces DMA
+  transfers to yield to a refresh immediately. With a value of 7, refreshes
+  missed during a DMA transfer are dropped rather than caught up afterwards,
+  so a long transfer can starve the DRAM of refresh cycles. Instruction fetches
+  and data reads/writes seem to be unaffected.</li>
+<li>Bit 7 inserts an idle cycle between any two consecutive RAM accesses
+  (including refreshes), but not between each word in a DMA or instruction fetch
+  burst. Clearing it causes many games to hang during CD-ROM loading on
+  EARLY-PU-8 and LATE-PU-8 boards (but works on PU-18 onwards).</li>
+<li>Bit 3 is only implemented in later CPU revisions (verified to be nonfunctional
+  on the DTL-H2700) and swaps /CAS and /WE when set. See the CPU pinouts section
+  for more details.</li>
+</ul>
+<p>The BIOS writes different values depending on the console revision:
+<div class="highlight"><pre><span></span><code>PU-7, EARLY-PU-8:
+  0B80h    Single 2MB bank (four 512Kx8 chips), byte masking via /WE
+           (incorrectly set as an 8MB bank, correct setting would be 0880h)
+Later consoles:
+  0B88h    Single 2MB bank (one 512Kx32 chip), byte masking via /CAS
+           (incorrectly set as an 8MB bank, correct setting would be 0888h)
+DTL-H2000, DTL-H2500, DTL-H2700:
+  0B80h    Single 8MB bank (four 2Mx8 chips), byte masking via /WE
+           (correctly set as 8MB)
+System 573 (700A01, 700B01 if ASIC revision bit = 1):
+  0C80h    Two 2MB banks (four 512Kx8 chips each), byte masking via /WE
+           (correctly set as 4MB)
+System 573 (700B01 if ASIC revision bit = 0):
+  4788h    Two 4MB banks, byte masking via /CAS
+           (probably an incorrect setting for the two alternate 1Mx16 RAM
+           footprints on revision D of the PCB, labeled &quot;DR16M16&quot;)
+</code></pre></div></p>
+<p>Several retail games (Puzzle Bobble, Gundam Battle Assault 2, likely more) and
+homebrew (the FreePSXBoot BIOS shell exploit) are known to rely on the three
+accidental "mirrors" created by the BIOS incorrectly configuring the DRAM
+controller for an 8MB bank instead of 2MB; this sometimes happens due to
+developers forgetting to move the stack down from 807FFFxxh to 801FFFxxh.
+Wipeout uses the SetMem() BIOS function to shrink the bank size to 2MB.</p>
+<h4 id="main-ram-array-organization">Main RAM array organization</h4>
+<p>The 2MB main RAM is organized as 2048 rows of 256 columns, 4 bytes per column,
+ie. 1024 bytes per row.<br/>
+The CPU address maps onto the array linearly:<br/>
+<div class="highlight"><pre><span></span><code>  row    = addr[20:10]
+  column = addr[9:2]
+</code></pre></div>
+So a 1KB-aligned block is exactly one DRAM row, and crossing a 1KB boundary
+crosses a row.<br/>
+The controller uses a closed-page policy between transactions: a fresh row
+address is emitted on every transaction, even when the previous transaction
+touched the same row. Fast-page mode applies only within a single burst, so
+there is no page-hit bonus for two separate accesses to the same row.<br/>
+Refresh is distributed, one row every 256 CPU cycles, sweeping all 2048 rows in
+roughly 15.5ms.<br/></p>
+<h4 id="fffe0130h-bcc-biucache-configuration-register-rw">FFFE0130h - BCC, BIU/Cache Configuration Register (R/W)</h4>
+<!-- psx-figure --><div class="psx-figure">
+<svg xmlns="http://www.w3.org/2000/svg" width="505" height="299" viewBox="0 0 505 299" role="img" aria-label="register bit layout">
+<rect x="485" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="494.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,494.5,156.5)" class="pf-fill-fg">LOCK Enable cache lock mode</text>
+<text x="485" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">0</text>
+<rect x="461" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="470.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,470.5,156.5)" class="pf-fill-fg">INV Enable cache invalidation mode</text>
+<text x="461" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">1</text>
+<rect x="437" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="446.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,446.5,156.5)" class="pf-fill-fg">TAG Enable cache tag test mode</text>
+<text x="437" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">2</text>
+<rect x="413" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="422.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,422.5,156.5)" class="pf-fill-fg">RAM Enable cache scratchpad mode</text>
+<text x="413" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">3</text>
+<rect x="365" y="15" width="43" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="386.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,386.5,156.5)" class="pf-fill-fg">DBLKSZ Data cache refill size</text>
+<text x="365" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">5</text>
+<text x="408" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">4</text>
+<rect x="341" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="350.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,350.5,156.5)" class="pf-fill-fg">Always 0</text>
+<text x="341" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">6</text>
+<rect x="317" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="326.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,326.5,156.5)" class="pf-fill-fg">DS Enable data cache</text>
+<text x="317" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">7</text>
+<rect x="269" y="15" width="43" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="290.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,290.5,156.5)" class="pf-fill-fg">IBLKSZ Instruction cache refill size</text>
+<text x="269" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">9</text>
+<text x="312" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">8</text>
+<rect x="245" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="254.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,254.5,156.5)" class="pf-fill-fg">IS0 Always 0</text>
+<text x="245" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">10</text>
+<rect x="221" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="230.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,230.5,156.5)" class="pf-fill-fg">IS1 Enable instruction cache</text>
+<text x="221" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">11</text>
+<rect x="197" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="206.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,206.5,156.5)" class="pf-fill-fg">INTP Supposedly &quot;Interrupt polarity&quot;</text>
+<text x="197" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">12</text>
+<rect x="173" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="182.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,182.5,156.5)" class="pf-fill-fg">RDPRI Supposedly &quot;Enable read priority&quot;</text>
+<text x="173" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">13</text>
+<rect x="149" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="158.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,158.5,156.5)" class="pf-fill-fg">NOPAD Supposedly &quot;No wait state&quot;</text>
+<text x="149" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">14</text>
+<rect x="125" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="134.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,134.5,156.5)" class="pf-fill-fg">BGNT Enable bus grant</text>
+<text x="125" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">15</text>
+<rect x="101" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="110.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,110.5,156.5)" class="pf-fill-fg">LDSCH Enable load scheduling</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">16</text>
+<rect x="77" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="86.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,86.5,156.5)" class="pf-fill-fg">NOSTR No streaming</text>
+<text x="77" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">17</text>
+<rect x="5" y="15" width="67" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
+<text x="38.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,156.5)" class="pf-fill-fg">Reserved</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">31</text>
+<text x="72" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end" class="pf-fill-fg">18</text>
+</svg>
+</div>
+<p><div class="highlight"><pre><span></span><code>  0     LOCK   Enable cache lock mode              (when COP0_SR.IsC=1)
+  1     INV    Enable cache invalidation mode      (when COP0_SR.IsC=1)
+  2     TAG    Enable cache tag test mode          (when COP0_SR.IsC=1, used to flush i-cache)
+  3     RAM    Enable cache scratchpad mode        (usually 1, broken - see note)
+  4-5   DBLKSZ Data cache refill size              (usually 0, broken - see note)
+  6     -      Always 0 (R)
+  7     DS     Enable data cache                   (usually 1, disables scratchpad when 0)
+  8-9   IBLKSZ Instruction cache refill size       (0=2 words, 1=4 words/default, 2-3=invalid/crash)
+  10    IS0    Always 0 (R)                        (supposedly &quot;Enable instruction cache set 0&quot;)
+  11    IS1    Enable instruction cache
+  12    INTP   Supposedly &quot;Interrupt polarity&quot;     (usually 0)
+  13    RDPRI  Supposedly &quot;Enable read priority&quot;   (usually 1)
+  14    NOPAD  Supposedly &quot;No wait state&quot;          (usually 1)
+  15    BGNT   Enable bus grant                    (usually 1, DMA never completes when 0)
+  16    LDSCH  Enable load scheduling              (usually 1, see below)
+  17    NOSTR  No streaming                        (usually 0, see below)
+  18-31 -      Reserved (R/W)
+</code></pre></div>
+Documented in chapter 14 of the datasheet for LSI's L64360, which specifically
+states it "includes the LR33300 Family Control Registers described in the
+CW33300 manual".<br/>
+With BGNT=0, a DMA transfer that has been started waits, and it completes once
+BGNT is set again. CPU access timing is not affected.<br/>
+With LDSCH=0, a load no longer overlaps the independent instructions that
+follow it: a RAM load followed by four NOPs costs about 2 more cycles. A load
+whose result is used by the very next instruction costs the same either way.<br/>
+With NOSTR=1, instruction fetch from uncached memory is slower, by about one
+cycle per two instructions.<br/>
+Flipping INTP, RDPRI or NOPAD changes none of: RAM load, store and
+store-then-load timing, scratchpad and I/O access, uncached instruction fetch,
+or how long a DMA transfer takes while the CPU runs. INTP was only tested with
+interrupts disabled.<br/>
+IBLKSZ (bits 8-9) controls the i-cache refill burst length. With the default
+value of 1 (4-word), a cache miss at word 0 fills the entire 4-word line. With
+IBLKSZ=0 (2-word), a miss at word 0 fills only words 0 and 1. Misses at words
+1, 2, or 3 always fill from the accessed word to end-of-line regardless of
+IBLKSZ. See the <a href="../memorymap/#i-cache">i-Cache</a> section for details on fill
+behavior and per-word valid bits.<br/>
+When TAG is set and IsC is set in COP0 SR, stores to the cache address space
+write to the i-cache tag memory. The stored value is:
+<div class="highlight"><pre><span></span><code>  tag = (data AND 0Fh) OR (offset AND FFFFF000h)
+</code></pre></div>
+The low 4 bits of the write data become the per-word valid bits. The upper
+address bits come from the <strong>write offset</strong>, not the data. Writing 0 at each
+line's base address (offset = line * 16) clears the valid bits while setting
+the address portion to 0, effectively invalidating the line. Code words are not
+affected by tag writes.<br/>
+TAG mode reads (loads with TAG set in BCC and IsC set) return the valid bits in
+bits [3:0] and a tag match result in bit [4]. Bit 4 is set if the stored tag's
+address field matches the read address. The upper bits [31:5] contain code word
+data that leaks through and should be ignored. TAG mode reads are primarily
+useful for diagnostics, not for normal cache management.<br/>
+Used primarily by the BIOS to flush the i-cache in combination with the COP0
+status register, like so:<br/>
+<div class="highlight"><pre><span></span><code><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">COP0_SR</span><span class="p">;</span>
+
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IS1</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IsC</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="c1">// Clear tags (one for each 4-word line)</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="k">volatile</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">IS1</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IsC</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="c1">// Clear cache lines</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="k">volatile</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w">         </span><span class="c1">// Wait by reading dummy words from uncached RAM?</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="k">volatile</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mh">0xa0000000</span><span class="p">);</span>
+
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">RAM</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">DS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IBLKSZ_4</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IS1</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">RDPRI</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">NOPAD</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">BGNT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">LDSCH</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sr</span><span class="p">;</span>
+</code></pre></div>
+At least one game (TOCA World Touring Cars, SLES-02572) flushes the cache using
+custom code running from uncached RAM (KSEG1) instead of calling the BIOS
+function described above. It follows a slightly different sequence:
+<div class="highlight"><pre><span></span><code><span class="kt">uint32_t</span><span class="w"> </span><span class="n">bcc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BCC</span><span class="p">,</span><span class="w"> </span><span class="n">sr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">COP0_SR</span><span class="p">;</span>
+
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">BCC</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="n">LOCK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">INV</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">DS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IS0</span><span class="p">))</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">TAG</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">IS1</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IsC</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="c1">// Clear tags (one for each 4-word line)</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="k">volatile</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">BCC</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">bcc</span><span class="p">;</span>
+<span class="n">COP0_SR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sr</span><span class="p">;</span>
+</code></pre></div>
+A usable version of this code
+<a href="https://github.com/pcsx-redux/nugget/blob/main/common/hardware/flushcache.s">is available</a>.<br/></p>
+<h5 id="d-cache-mode-ram0-ds1">"D-cache" mode (RAM=0, DS=1)</h5>
+<p>Bit 3 may be cleared to unmap the scratchpad from memory and use it as a data
+cache instead, however doing so produces an unusual fill behavior due to the
+scratchpad SRAM not being equipped with tag memory; each cache line's "tag" is
+hardcoded to its respective scratchpad address. The address tag of any
+non-scratchpad load will therefore never match, and every load is a cache miss
+that fills scratchpad as a side effect.<br/>
+The miss-fill writes the loaded word into scratchpad at slot
+<code>(load_byte_addr &gt;&gt; 2) AND 0FFh</code>. The fill is <strong>word-granular</strong> regardless of
+load width: <code>lb</code>, <code>lh</code>, and <code>lw</code> all populate the full word containing the
+accessed byte/half. Each load produces exactly one word fill - there is no
+burst behavior. The most useful pattern in this mode is loading a 1KB block
+from main RAM into scratchpad with a sequence of <code>lw</code> instructions, saving
+the explicit <code>sw</code> to scratchpad that a manual copy would require.<br/>
+The mechanism has several specific characteristics, all hardware-verified on
+SCPH-5501:<br/>
+- The cache <strong>never produces a true hit</strong>. Every load is a miss-fill, even
+immediately after a previous load filled the same slot. If main RAM is
+modified between two loads of the same address (e.g. via the uncached KSEG1
+mirror), the second load sees the new RAM value.
+- <strong>KSEG1 (uncached) loads bypass the d-cache entirely.</strong> They do not fill
+scratchpad.
+- <strong>Stores do not spill into scratchpad.</strong> Only loads do. Stores in this mode
+go to main RAM (or the targeted I/O) without touching scratchpad.
+- Reads or writes targeting the scratchpad address range
+(1F800000h..1F8003FFh) <strong>deadlock the bus</strong> in this mode. With scratchpad
+disabled by RAM=0, those addresses no longer have a normal responder.
+Recovery requires a power cycle.
+- Bits 4-5 (DBLKSZ) have no effect on fill behavior in this mode, and seem
+to have no effect in normal scratchpad mode either. The CPU will always
+fetch one word at a time from RAM, rather than attempting to prefetch an
+entire line using a burst read (as it does with the i-cache).
+- Bits 0-2 (LOCK / INV / TAG) are inert when COP0 SR.IsC is clear.
+- COP0 SR.SwC has no observable effect on this behavior.<br/></p>
+<!-- psx-figure -->
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>

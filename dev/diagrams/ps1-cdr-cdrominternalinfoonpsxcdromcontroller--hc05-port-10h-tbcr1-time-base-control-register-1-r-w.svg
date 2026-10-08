@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="769" height="180" viewBox="0 0 769 180" style="max-width: 100%; background-color: white;" role="img" aria-label="register bit layout">
+<rect x="581" y="15" width="187" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="674.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,674.5,97)">T2R Timer2 Prescaler</text>
+<text x="581" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">1</text>
+<text x="768" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">0</text>
+<rect x="389" y="15" width="187" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="482.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,482.5,97)">T3R PWM Prescaler</text>
+<text x="389" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">3</text>
+<text x="576" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">2</text>
+<rect x="101" y="15" width="283" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="242.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,242.5,97)">Not used</text>
+<text x="101" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">6</text>
+<text x="384" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="end">4</text>
+<rect x="5" y="15" width="91" height="164" fill="#efefef" stroke="black" stroke-width="1"/>
+<text x="50.5" y="97" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,50.5,97)">TBCLK Time Base Clock</text>
+<text x="5" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
+</svg>

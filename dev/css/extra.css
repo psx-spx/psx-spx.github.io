@@ -1,0 +1,58 @@
+@media print {
+  .md-typeset {
+    font-size: 1rem !important;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+  }
+  .md-typeset code {
+    font-size: 1em !important;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace !important;
+  }
+  /* with-pdf gives every page after the first in a nav section a full-page
+     min-height, which can make WeasyPrint silently drop the rest of the PDF. */
+  article section + section {
+    min-height: auto !important;
+  }
+  /* It also shifts headings down one level per nav section, past h6. */
+  article h7, article h8, article h9 {
+    display: block;
+    font-weight: bold;
+    margin: 1em 0 0.5em 0.25rem;
+  }
+}
+
+.md-typeset table {
+  white-space: nowrap;
+}
+
+/* Figures inlined by tools/figures/hook.py; their colours come from the
+   palette, plus this one for signals and wires. */
+:root {
+  --psx-fig-signal: #1a7f37;
+}
+[data-md-color-scheme="slate"] {
+  --psx-fig-signal: #3fb950;
+}
+/* Screen only: the PDF is rendered for print and keeps the drawn colours. */
+@media screen {
+  .psx-figure .pf-fill-fg { fill: var(--md-default-fg-color); }
+  .psx-figure .pf-stroke-fg { stroke: var(--md-default-fg-color); }
+  .psx-figure .pf-fill-light { fill: var(--md-default-fg-color--light); }
+  .psx-figure .pf-stroke-light { stroke: var(--md-default-fg-color--light); }
+  .psx-figure .pf-fill-lighter { fill: var(--md-default-fg-color--lighter); }
+  .psx-figure .pf-stroke-lighter { stroke: var(--md-default-fg-color--lighter); }
+  .psx-figure .pf-fill-lightest { fill: var(--md-default-fg-color--lightest); }
+  .psx-figure .pf-stroke-lightest { stroke: var(--md-default-fg-color--lightest); }
+  .psx-figure .pf-fill-bg { fill: var(--md-code-bg-color); }
+  .psx-figure .pf-stroke-bg { stroke: var(--md-code-bg-color); }
+  .psx-figure .pf-fill-signal { fill: var(--psx-fig-signal); }
+  .psx-figure .pf-stroke-signal { stroke: var(--psx-fig-signal); }
+}
+.psx-figure {
+  margin: 1em 0;
+  overflow-x: auto;
+}
+.psx-figure svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
