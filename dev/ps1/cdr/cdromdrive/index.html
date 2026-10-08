@@ -7783,17 +7783,17 @@ command/response has been sent/received).<br/></p>
 Bits 0-2 are supposed to be used as three separate IRQ flags, however the HC05
 misuses them as a single 3-bit "interrupt type" value, which always assumes one
 of the following values:<br/>
-<div class="highlight"><pre><span></span><code>  0    -            No interrupt pending
-  1    Data ready   New sector (ReadN/ReadS) or report packet (Play) available
-  2    Complete     Command finished processing (some commands, after the acknowledge cause is fired)
-  3    Acknowledge  Command received and acknowledged (all commands)
-  4    End          Reached end of disc (or end of track if auto-pause enabled)
-  5    Error        Command error, read error, license string error or lid opened
+<div class="highlight"><pre><span></span><code>  0    -            -     CdlNoIntr       No interrupt pending
+  1    Data ready   INT1  CdlDataReady    New sector (ReadN/ReadS) or report packet (Play) available
+  2    Complete     INT2  CdlComplete     Command finished processing (some commands, after the acknowledge cause is fired)
+  3    Acknowledge  INT3  CdlAcknowledge  Command received and acknowledged (all commands)
+  4    End          INT4  CdlDataEnd      Reached end of disc (or end of track if auto-pause enabled)
+  5    Error        INT5  CdlDiskError    Command error, read error, license string error or lid opened
   6-7  -
 </code></pre></div>
-Emulators and other documentation commonly call these causes INT1 to INT5:
-INT1 is data ready, INT2 is complete, INT3 is acknowledge, INT4 is end and INT5
-is error.<br/>
+The first column is the name used throughout this page. INT1 to INT5 are the
+names most emulators use, and the <code>Cdl</code> constants are the ones defined in the
+official libcd headers.<br/>
 The response interrupts are queued. For example, if the first response is an
 acknowledge and the second an error, the acknowledge is delivered first and the
 error is not delivered until the CPU has cleared the acknowledge (the causes are
