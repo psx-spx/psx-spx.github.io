@@ -50,6 +50,10 @@ information is apparently passed to the DMA1 controller, so that it knows if
 and how it must re-order the data in RAM). If the output fifo is empty, then
 the bits indicate the currently processsed incoming block (ie. Cr,Cb,Y1..Y4; or
 Y for mono).<br/>
+The Data-In FIFO holds 32 words. While the decoder is blocked by an undrained
+output, bit 30 sets on the 32nd word written, and a 33rd word written then is
+lost: it is not counted in bits 0-15, and the command stays busy waiting for
+one more word.<br/>
 An error message in older versions of Sony's MDEC library refers to bit 25 as
 "RGB24", which is only correct because the library always keeps bit 26 set and
 does not support grayscale mode (and even then, the bit is *cleared* in 24bpp
