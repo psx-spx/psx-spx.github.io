@@ -14,7 +14,7 @@ import os
 import re
 
 FIELD = re.compile(r'^ {0,6}(\d+)(?:\s*-\s*(\d+))?\s+(\S.*)$')
-TRAILING_PAREN = re.compile(r'\s*\((?:[^()]|\([^()]*\))*\)\s*$')
+TRAILING_PAREN = re.compile(r'\s*\((?:[^()]|\([^()]*\))+\)\s*$')  # "()" is the Circle glyph, not an annotation
 BINARY = re.compile(r'^[01]{6,}$')
 SYMBOL = re.compile(r'^([A-Z][A-Z0-9_]{1,7})\s+(\S.*)$')
 FILLER = re.compile(r'^(garbage|not used|unused|unknown|reserved|zero|n/?a)\b', re.I)
