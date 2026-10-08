@@ -912,7 +912,7 @@ The decoded sectors themselves sit in a ring in the drive's buffer RAM, and a
 pending sector is only readable until that ring comes back around to it. On
 SCPH-9002 consoles the ring holds 8 sectors: the pending sector's data starts
 being overwritten by the sector 8 positions later about 6 sector periods after
-its data ready interrupt, and is fully replaced after 7. Other board revisions
+its data ready interrupt, the end of the sector about one period later. Other board revisions
 (with a separate 32Kx8 sector SRAM) have not been measured.<br/>
 The relevant steps for receiving data are:<br/>
 ```
@@ -934,8 +934,8 @@ doesn't seem to support a buffer-overrun error flag? Anyways, see GetlocL
 description for a possible way to detect buffer-overruns).<br/>
 Issuing the Data Request does not lock the sector's data in the buffer RAM. On
 SCPH-9002, when the transfer is done more than about 6 sector periods after the
-data ready interrupt, only the first few bytes (already moved to the data FIFO
-by the Data Request) belong to the requested sector; the rest comes from the
+data ready interrupt, only the first few bytes (presumably those the Data
+Request already moved into the data FIFO) belong to the requested sector; the rest comes from the
 sector 8 positions later. Read the data promptly after the Data Request.<br/>
 
 #### ReadTOC - Command 1Eh --\> acknowledge(stat) --\> complete(stat)
