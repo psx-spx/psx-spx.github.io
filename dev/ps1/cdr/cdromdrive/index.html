@@ -8791,11 +8791,20 @@ specified with Setloc, and then automatically reading the following sectors.<br/
 <h4 id="cdrom-incoming-data-buffer-overrun-timings">CDROM Incoming Data / Buffer Overrun Timings</h4>
 <p>The Read commands are continuously receiving 75 sectors per second (or 150
 sectors at double speed), and, basically, the software must be fast enough to
-process that amount of incoming data. However, the PSX hardware includes a
-buffer that can hold up to a handful (exact number is unknown?) of sectors, so,
-occasional delays of more than 1/75 seconds between processing two sectors
-aren't causing lost sectors, unless the delay(s) are summing up too much. The
-relevant steps for receiving data are:<br/>
+process that amount of incoming data. The drive does not queue finished
+sectors for the host: only one data ready interrupt can be pending, and when it
+is acknowledged, the next one delivers the newest decoded sector, skipping any
+sectors decoded in between. Leaving a data ready interrupt unacknowledged
+for up to one sector period (1/75 second at single speed) loses nothing; every
+further period skips one sector (after k periods, the next sector delivered is
+the previous one plus k).<br/>
+The decoded sectors themselves sit in a ring in the drive's buffer RAM, and a
+pending sector is only readable until that ring comes back around to it. On
+SCPH-9002 consoles the ring holds 8 sectors: the pending sector's data starts
+being overwritten by the sector 8 positions later about 6 sector periods after
+its data ready interrupt, the end of the sector about one period later. Other board revisions
+(with a separate 32Kx8 sector SRAM) have not been measured.<br/>
+The relevant steps for receiving data are:<br/>
 <div class="highlight"><pre><span></span><code>  Wait for Interrupt Request (data ready)    ;indicates that data is available
   Send Data Request (BFRD=1)                 ;accept data
   Acknowledge data ready                     ;
@@ -8803,17 +8812,20 @@ relevant steps for receiving data are:<br/>
 </code></pre></div>
 The Data Request accepts the data for the currently pending interrupt, it
 should be usually issued between receiving/acknowledging data ready (however, it can
-be also issued shortly after the acknowledge; even if there are further sectors
-in the buffer, there seems to be a small delay between the acknowledge and the
-next interrupt, and Data Requests during that period are still treated to
-belong to the old interrupt).<br/>
+be also issued shortly after the acknowledge; even if a newer sector is already
+waiting, the next interrupt follows the acknowledge only after a short delay
+(0.4 to 1.4 ms), and Data Requests during that period seem to be still treated
+as belonging to the old interrupt). A Data Request issued after that next
+interrupt has arrived reads the newer sector.<br/>
 If a buffer overrun has occurred \&lt;before&gt; issuing the Data Request, then
 wrong data will be received, ie. some sectors will be skipped (the hardware
 doesn't seem to support a buffer-overrun error flag? Anyways, see GetlocL
 description for a possible way to detect buffer-overruns).<br/>
-If a buffer overrun occurs \&lt;after&gt; issuing the Data Request, then the
-requested data can be still read intact via I/O or DMA, ie. the requested
-data is "locked", and the overrun will affect only the following sectors.<br/></p>
+Issuing the Data Request does not lock the sector's data in the buffer RAM. On
+SCPH-9002, when the transfer is done more than about 6 sector periods after the
+data ready interrupt, only the first few bytes (presumably those the Data
+Request already moved into the data FIFO) belong to the requested sector; the rest comes from the
+sector 8 positions later. Read the data promptly after the Data Request.<br/></p>
 <h4 id="readtoc-command-1eh-acknowledgestat-completestat">ReadTOC - Command 1Eh --&gt; acknowledge(stat) --&gt; complete(stat)</h4>
 <p><div class="highlight"><pre><span></span><code>  Caution: Supported only in BIOS version vC1 and up. Not supported in vC0.
 </code></pre></div>
@@ -8929,11 +8941,11 @@ and file/channel filter values (see Setfilter).<br/></p>
 GetlocL can be send during active Read commands (but, mind that the
 GetlocL-acknowledge-response can't be received until any pending Read-data-ready causes are
 acknowledged).<br/>
-The PSX hardware can buffer a handful of sectors, the data ready handler receives the
-\&lt;oldest&gt; buffered sector, the GetlocL command returns the header and
-subheader of the \&lt;newest&gt; buffered sector. Note: If the returned
-\&lt;newest&gt; sector number is much bigger than the expected \&lt;oldest&gt;
-sector number, then it's likely that a buffer overrun has occurred.<br/>
+The data ready handler receives the sector that was the newest one when its
+interrupt was raised, while the GetlocL command returns the header and
+subheader of the newest sector decoded so far. Note: If the returned sector
+number is bigger than the one the handler expected next, sectors have been
+skipped (see "CDROM Incoming Data / Buffer Overrun Timings").<br/>
 GetlocL fails (with error code 80h) when playing Audio CDs (or Audio Tracks on
 Data CDs). These errors occur because Audio sectors don't have any
 header/subheader (instead, equivalent data is stored in Subchannel Q, which can
