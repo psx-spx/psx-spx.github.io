@@ -32,6 +32,25 @@ for randomly dithered textures like sand, water, fire, grass, and not for
 untextured polygons, and of course not for 2D graphics, so you may exclude
 those from size reduction).<br/>
 
+#### Gaps between subdivided Polygons
+Subdividing a polygon leaves gaps (cracks), up to one pixel wide, along the
+edges it shares with its neighbours. The new vertex in the middle of a divided
+edge is projected and rounded to integer screen coordinates on its own, so it
+does not land exactly on the straight edge the neighbour draws. This happens
+even when both polygons are divided the same number of times, and it is worst
+where a divided polygon meets an undivided one (a vertex in the middle of the
+neighbour's edge). Aligning the geometry to a coarse grid reportedly does not
+avoid it.<br/>
+The fix given in Sony's developer seminar material ("Speeding up Polygon
+Division", Summer 1997) is to draw a "fill"
+triangle for every outer edge that was divided: for an edge from vertex A to
+vertex B with new midpoint M, draw the triangle A,M,B. Draw it whether or not
+the neighbour was divided; the same material notes that back face culling is
+needed for these.<br/>
+It also lists back face culling, lighting and Z sorting as steps done once per
+original polygon, before dividing it, and uses the polygon's furthest vertex as
+the Z sort point.<br/>
+
 #### 24bit RGB to 15bit RGB Dithering (enabled in texture page attribute)
 For dithering, VRAM is broken to 4x4 pixel blocks, depending on the location in
 that 4x4 pixel region, the corresponding dither offset is added to the 8bit
