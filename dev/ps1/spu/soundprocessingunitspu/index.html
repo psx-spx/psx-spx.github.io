@@ -7096,6 +7096,16 @@ mode (and, again, wait until Stop is applied in STATX).<br/></p>
 When switching ATTR to DMA-read mode, status bit9 and bit7 aren't set
 immediately (apparently the SPU is first internally collecting the data in the
 Fifo, before transferring it).<br/>
+In DMA-write mode the opposite happens at the end of a transfer: when the DMA
+channel reports completion (CHCR bit24 clear), the last 50-60 bytes of the
+block have not been written to Sound RAM yet. STATX reads back with only the mode bits
+set at that point, and bit7 and bit9 rise together roughly 1400-1700 CPU cycles
+later, once the last write to Sound RAM is done. Leaving transfer mode (writing ATTR bits 5-4)
+before that loses the tail of the block: those bytes are never written, and the
+old contents remain. Bit10 does not change at any point of a DMA write, so it
+cannot be used to wait for the end of one. Polling bit7 after CHCR goes idle
+and before changing ATTR keeps every byte; a loop doing that should have an
+upper bound, as emulators may never set the bit.<br/>
 Bit11 indicates if data is currently written to the first or second half of the
 four 1K-byte capture buffers (for CD Audio left/right, and voice 1/3). Note:
 Bit11 works only if Bit2 and/or Bit3 of Port 1F801DACh are set.<br/>
