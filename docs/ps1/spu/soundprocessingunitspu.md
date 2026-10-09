@@ -719,6 +719,13 @@ This register is uninitialized on power-on and must be explicitly set to 0004h
 arcade hardware) prior to accessing SPU RAM.<br/>
 When using values other than 0004h, the addressing unit used by address/pointer
 registers is adjusted accordingly (16 bytes for 1MB, 32 for 2MB, 64 for 4MB).<br/>
+An invalid chip size (bits 2-3 = 0 or 3) stops the capture buffer pointers from
+advancing (see STATX bit 11). Bits 2-3 = 3 freezes them on SCPH-1000, SCPH-5501
+and SCPH-7001; bits 2-3 = 0 freezes them on SCPH-5501 and SCPH-7001 but not on
+SCPH-1000.<br/>
+Sony ZN-1 and ZN-2 arcade boards have an unpopulated footprint for a second
+bank, selected by a solder jumper readable at 1FA10200h bit 2; the Capcom ZN
+titles examined (tgmj, sfex2p) write 0004h regardless of that jumper.<br/>
 The following is preliminary, from tests on modified consoles.
 SPU RAM may be upgraded on motherboard revisions that use the standalone 100-pin
 SPU, but having multiple banks is electrically unsafe as the SPU selects *both*
@@ -808,8 +815,8 @@ since there is no known way to activate the stable "mode" via I/O ports, the
 stable/unstable behaviour does eventually depend on internal clock
 dividers/multipliers, and whether they are starting in sync with the CPU or
 not.<br/>
-Caution: The "rep2" trick cannot be used in combination with reverb (reverb
-seems to be using the Port 1F801DACh Sound RAM Data Transfer Control, too).<br/>
+Caution: The "rep2" trick cannot be used in combination with reverb, because
+the reverb work area address scales with the RAM\_CTRL size setting too.<br/>
 
 #### Alternate RAM\_CTRL setting behavior on 512KB RAM
 When setting RAM\_CTRL to values other than 0004h on a stock console fitted with
@@ -825,8 +832,13 @@ observed:<br/>
 ```
 1MB skips the 2nd halfword, 2MB skips 2nd..4th, 4MB skips 1st..7th.<br/>
 Invalid settings only use the LAST halfword.<br/>
-Note: The above rather bizarre results apply to WRITE mode. In READ mode, the
-register causes the same halfword to be read 2/4/8 times (for 1/2/4MB).<br/>
+Note: The above results apply to WRITE mode. In READ mode, the register causes
+the same halfword to be read 2/4/8 times (for 1/2/4MB).<br/>
+Both patterns are aliasing: the SPU keeps generating addresses for the configured
+size, and the 512KB chip ignores the address lines it does not have, so
+consecutive halfwords land on the same location. Reads from the absent second
+bank return FFFFh on SCPH-1000 (separate SPU) and 0000h on SCPH-7001 (combined
+SPU/CD-ROM chip).<br/>
 
 ##   SPU Interrupt
 #### `0x1f801da4`: `IRQA` (IRQ address)
