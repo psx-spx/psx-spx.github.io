@@ -181,7 +181,9 @@ With bit 29 set, DMA transfers use bits 24-27 instead of the normal timings:
 cycles with 1 cycle between pulses, whatever the Write or Read Delay and the
 COM bits say. With bit 29 cleared, DMA uses the normal timings and bits 24-27
 are ignored. A DMA block is one /CS assertion for the
-whole block. The BIOS value for DEV4, 200931E1h, has bit 29 set and bits 24-27
+whole block. On the SPU, DACK4 is active high: it goes high in the same cycle
+/CS goes low and drops one cycle after /CS rises, for DMA in either direction,
+and CPU accesses to the SPU leave it low. The BIOS value for DEV4, 200931E1h, has bit 29 set and bits 24-27
 at zero, so SPU DMA writes run at 1 cycle per strobe with 1 cycle between.
 
 ![SPU DMA, normal timings (000931E1h)](waveforms/spu-dma-normal.svg)
