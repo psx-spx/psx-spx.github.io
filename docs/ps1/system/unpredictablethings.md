@@ -65,7 +65,10 @@ exception!) (except, probably 16bit reads are allowed when the region is
 configured to 16bit databus width).<br/>
 There are at least some special cases:<br/>
 ```
-  FFFE0130h-FFFE0133h  8bit (+16bit?) read works ONLY from word-aligned address
+  FFFE0130h-FFFE0133h  8bit and 16bit reads work ONLY from the word-aligned
+                       address (returning the low byte/halfword of BCC); at
+                       the other offsets they complete without exception but
+                       return unrelated data
 ```
 
 #### I/O Write Datasize
