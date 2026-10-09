@@ -197,7 +197,7 @@ On v2 (and v1?) GPUs, the following indices are supported:<br/>
   05h     = Read Draw offset             ;GP0(E5h) ;22bit
   06h     = Returns Nothing (old value in GP0.read remains unchanged)
   07h     = Read GPU version (1 or 2)
-  08h     = Unknown (Returns 00000000h) (lightgun? VRAM size set via GP1(09h)?)
+  08h     = Unknown (Returns 00000000h, also with GP1(09h).0=1) (lightgun?)
   09h-0Fh = Returns Nothing (old value in GP0.read remains unchanged)
   10h-FFFFFFh = Mirrors of 00h..0Fh
 ```
