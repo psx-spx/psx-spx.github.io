@@ -4512,7 +4512,10 @@ data reads via GPUREAD probably won't work? DEV8 Region can be accessed only via
 exception!) (except, probably 16bit reads are allowed when the region is
 configured to 16bit databus width).<br/>
 There are at least some special cases:<br/>
-<div class="highlight"><pre><span></span><code>  FFFE0130h-FFFE0133h  8bit (+16bit?) read works ONLY from word-aligned address
+<div class="highlight"><pre><span></span><code>  FFFE0130h-FFFE0133h  8bit and 16bit reads work ONLY from the word-aligned
+                       address (returning the low byte/halfword of BCC); at
+                       the other offsets they complete without exception but
+                       return unrelated data
 </code></pre></div></p>
 <h4 id="io-write-datasize_1">I/O Write Datasize</h4>
 <p>Performing a 8-bit or 16-bit write (<code>sb</code>/<code>sh</code>) will place the entirety of the GPR
