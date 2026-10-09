@@ -652,8 +652,12 @@ same channel and file numbers in their subheader. This is the mechanism used to
 select which of multiple songs in a single .XA file to play.<br/>
 Setfilter does not affect actual reading (sector reads still occur for all
 sectors).<br/>
-XXX err... that is... does not affect reading of non-ADPCM sectors (normal
-"data" sectors are kept received regardless of Setfilter).<br/>
+More precisely, the filter only applies to real-time ADPCM sectors (Real-Time
+bit set in the subheader submode). All other sectors (Form 1 and Form 2 data,
+and audio sectors without the Real-Time bit) are delivered to the host whatever
+their file and channel numbers, with the filter (Setmode bit 3) on or off.
+Real-time ADPCM sectors themselves are never delivered to the host while
+Setmode bit 3 or bit 6 is set, whether their file and channel match or not.<br/>
 
 #### Setmode - Command 0Eh,mode --\> acknowledge(stat)
 ```
