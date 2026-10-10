@@ -35,7 +35,11 @@ For DEV1, the address seems to be fixed (1FA00000h).<br/>
 #### 1F801010h - DEV2 (BIOS ROM) Delay/Size (usually 0013243Fh) (512Kbytes, 8bit bus)
 #### 1F801014h - DEV4 (SPU) Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)
 #### 1F801018h - DEV5 (CD-ROM) Delay/Size (00020843h or 00020943h)
-#### 1F80101Ch - DEV8 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)
+#### 1F80101Ch - DEV8 Delay/Size (00080777h) (256 bytes, 8bit bus)
+The BIOS reset code writes 00070777h (128 bytes), but programs find 00080777h
+(256 bytes) here at entry, also after a boot from disc with no cartridge. The
+register reads back what is written to it (tested with size fields 0, 1, 7 and
+8).
 ```
   0-3   Write Delay        (00h..0Fh=01h..10h Cycles)
   4-7   Read Delay         (00h..0Fh=01h..10h Cycles)
