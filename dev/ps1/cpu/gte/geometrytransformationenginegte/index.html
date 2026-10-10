@@ -1079,9 +1079,9 @@ For the human-written reference, see the <a href="/">stable version</a>.
 </li>
         
           <li class="md-nav__item">
-  <a href="#lzcslzcr-registers-cycles-count-leading-zeroesleading-ones" class="md-nav__link">
+  <a href="#lzcslzcr-registers-no-execution-time-count-leading-zeroesleading-ones" class="md-nav__link">
     <span class="md-ellipsis">
-      LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones
+      LZCS/LZCR registers - no execution time - Count-Leading-Zeroes/Leading-Ones
     </span>
   </a>
   
@@ -5188,9 +5188,9 @@ For the human-written reference, see the <a href="/">stable version</a>.
 </li>
         
           <li class="md-nav__item">
-  <a href="#lzcslzcr-registers-cycles-count-leading-zeroesleading-ones" class="md-nav__link">
+  <a href="#lzcslzcr-registers-no-execution-time-count-leading-zeroesleading-ones" class="md-nav__link">
     <span class="md-ellipsis">
-      LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones
+      LZCS/LZCR registers - no execution time - Count-Leading-Zeroes/Leading-Ones
     </span>
   </a>
   
@@ -5983,11 +5983,14 @@ lm should be usually zero.<br/>
 The official Sony documentation refers to this opcode as the Outer Product,
 but this is likely the result of a bad translation from Japanese: "外積 - gaiseki"
 can be translated to "cross product", "vector product", or "outer product".<br/></p>
-<h4 id="lzcslzcr-registers-cycles-count-leading-zeroesleading-ones">LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones</h4>
+<h4 id="lzcslzcr-registers-no-execution-time-count-leading-zeroesleading-ones">LZCS/LZCR registers - no execution time - Count-Leading-Zeroes/Leading-Ones</h4>
 <p>The LZCS/LZCR registers offer a Count-Leading-Zeroes/Leading-Ones function.<br/>
-The execution time above is unknown. Separately from it, the write to LZCS is
-subject to the cop2 store delay: 2 cached opcodes before reading LZCR. See
-"Additional Functions" above and "Caution - Store Delay" in the CPU chapter.<br/></p>
+Writing LZCS keeps nothing busy: a GTE command issued right after it takes as
+long as after a write to any other data register, and an MFC2 from LZCR right
+after it does not stall, for any input value. The only cost is the cop2 store
+delay: with fewer than 2 cached opcodes between the MTC2 and the MFC2, the read
+returns the result of the previous write. See "Additional Functions" above and
+"Caution - Store Delay" in the CPU chapter.<br/></p>
 <h2 id="gte-color-calculation-commands">GTE Color Calculation Commands</h2>
 <h4 id="cop2-0c8041eh-14-cycles-ncs-normal-color-single">COP2 0C8041Eh - 14 Cycles - NCS - Normal color (single)</h4>
 <h4 id="cop2-0d80420h-30-cycles-nct-normal-color-triple">COP2 0D80420h - 30 Cycles - NCT - Normal color (triple)</h4>
