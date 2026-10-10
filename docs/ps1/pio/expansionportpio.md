@@ -495,7 +495,7 @@ acknowledging the previous interrupt.<br/>
 ##   DEV8 PCSX-Redux Emulation Expansion
 PCSX-Redux contains some specific hardware registers for the purpose of testing and debugging.
 They are located past the 1F802080h address, which means that accessing them on the real
-hardware will cause an exception, unless the [1F80101Ch register](../system/memorycontrol.md#1f80101ch-dev8-delaysize-00080777h-256-bytes-8bit-bus) maps
+hardware will cause an exception, unless the [1F80101Ch register](../system/memorycontrol.md#1f80101ch-dev8-delaysize-usually-00070777h-128-bytes-8bit-bus) maps
 at least 256 bytes (size field 8 or more).
 
 #### 1F802080h 4 Redux-Expansion ID "PCSX" (R)
