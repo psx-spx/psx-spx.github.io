@@ -4497,6 +4497,8 @@ For DEV1, the address seems to be fixed (1FA00000h).<br/></p>
 <h4 id="1f801014h-dev4-spu-delaysize-200931e1h-use-220931e1h-for-spu-ram-reads">1F801014h - DEV4 (SPU) Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)</h4>
 <h4 id="1f801018h-dev5-cd-rom-delaysize-00020843h-or-00020943h">1F801018h - DEV5 (CD-ROM) Delay/Size (00020843h or 00020943h)</h4>
 <h4 id="1f80101ch-dev8-delaysize-usually-00070777h-128-bytes-8bit-bus">1F80101Ch - DEV8 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)</h4>
+<p>The register reads back what is written to it (tested with size fields 0, 1, 7
+and 8).</p>
 <div class="psx-figure">
 <svg xmlns="http://www.w3.org/2000/svg" width="769" height="299" viewBox="0 0 769 299" role="img" aria-label="register bit layout">
 <rect x="677" y="15" width="91" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
