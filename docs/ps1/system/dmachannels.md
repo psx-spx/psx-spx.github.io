@@ -224,8 +224,14 @@ MDEC decompression time is still unknown (may vary on RLE and color/mono).<br/>
 GPU polygon rendering time is unknown (may be quite slow for large polys).<br/>
 GPU vram read/write time is unknown (may vary on horizontal screen resolution).<br/>
 CDROM BIOS default is 24 clks, for some reason most games change it to 40 clks.<br/>
-SPU transfer is unknown (may have some extra delays).<br/>
-XXX is SPU really only 4 clks (theoretically SPU access should be slower)?<br/>
+SPU DMA bus time depends on the [DMA timing override](memorycontrol.md) in
+DEV4's Delay/Size register. With the BIOS value 200931E1h a 16-word block holds
+/CS for 67 clks writing to the SPU and 64 reading from it (4 clks/word); with
+override value N (bits 24-27) it is 2*(N+2) clks/word; with bit 29 cleared
+(000931E1h) the normal write and read delays apply: 227 clks per 16 words
+writing, 639 reading. That is the bus side only: after a
+16-word block the SPU raises its DMA request again only 940 to 1165 clks
+later, in both directions and whatever the bus timing.<br/>
 PIO is only used on some arcade systems (and configured with different timings).<br/>
 OTC is just writing to RAM without extra overload.<br/>
 CDROM/SPU/PIO timings can be configured via Memory Control registers.<br/>
