@@ -6832,12 +6832,11 @@ Bit15=1 works only if there's a suitable delay between the two operations).
 Once when sweep is started, the current volume level increases to +7FFFh, or
 decreases to 0000h.<br/>
 The current level can be read back from VOLXL/VOLXR (1F801E00h+N*4). Sweep
-runs at twice the rate of an ADSR envelope with the same Shift value: with
-Shift=12 the step is applied every sample, with Shift=16 every 16th sample
-(i.e. CounterIncrement = 8000h SHR Max(0,ShiftValue-10), tested for shift
-values 12, 13 and 16). Step sizes, the linear saturation points and the
-Exponential Increase slowdown above 6000h are as in the envelope pseudo code
-below.<br/>
+steps at the same rate as an ADSR envelope with the same Shift value: with
+Shift=12 the step is applied every other sample, with Shift=16 every 32nd
+sample (tested for shift values 12, 13 and 16). Step sizes, the linear
+saturation points and the Exponential Increase slowdown above 6000h are as in
+the envelope pseudo code below.<br/>
 Negative Phase with Increase moves the volume towards -8000h using the
 decrease step sizes (-8..-5), from either a positive or a negative start
 (a positive volume goes down through zero), and saturates at -8000h.
