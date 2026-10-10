@@ -535,11 +535,14 @@ The official Sony documentation refers to this opcode as the Outer Product,
 but this is likely the result of a bad translation from Japanese: "外積 - gaiseki"
 can be translated to "cross product", "vector product", or "outer product".<br/>
 
-#### LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones
+#### LZCS/LZCR registers - no execution time - Count-Leading-Zeroes/Leading-Ones
 The LZCS/LZCR registers offer a Count-Leading-Zeroes/Leading-Ones function.<br/>
-The execution time above is unknown. Separately from it, the write to LZCS is
-subject to the cop2 store delay: 2 cached opcodes before reading LZCR. See
-"Additional Functions" above and "Caution - Store Delay" in the CPU chapter.<br/>
+Writing LZCS keeps nothing busy: a GTE command issued right after it takes as
+long as after a write to any other data register, and an MFC2 from LZCR right
+after it does not stall, for any input value. The only cost is the cop2 store
+delay: with fewer than 2 cached opcodes between the MTC2 and the MFC2, the read
+returns the result of the previous write. See "Additional Functions" above and
+"Caution - Store Delay" in the CPU chapter.<br/>
 
 
 
