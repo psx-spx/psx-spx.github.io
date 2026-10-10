@@ -20,7 +20,7 @@ names are suffixed with a question mark.
   1F801010h  4  DEV2_DELAY / DV2_DELAY     DEV2 (BIOS ROM) Delay/Size   (usually 0013243Fh; 512Kbytes 8bit-bus)
   1F801014h  4  DEV4_DELAY / DV4_DELAY     DEV4 (SPU)      Delay/Size   (usually 200931E1h)
   1F801018h  4  DEV5_DELAY / DV5_DELAY     DEV5 (CD-ROM)   Delay/Size   (usually 00020843h or 00020943h)
-  1F80101Ch  4  DEV8_DELAY / DV8_DELAY     DEV8 (debug)    Delay/Size   (00080777h at entry; 256-bytes 8bit-bus)
+  1F80101Ch  4  DEV8_DELAY / DV8_DELAY     DEV8 (debug)    Delay/Size   (usually 00070777h; 128-bytes 8bit-bus)
   1F801020h  4  COM_DELAY  / COMMON_DELAY  (00031125h or 0000132Ch or 00001325h)
 ```
 #### Peripheral I/O Ports
