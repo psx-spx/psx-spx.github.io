@@ -6831,9 +6831,21 @@ setting the initial level with Bit15=0, followed by the sweep parameter with
 Bit15=1 works only if there's a suitable delay between the two operations).
 Once when sweep is started, the current volume level increases to +7FFFh, or
 decreases to 0000h.<br/>
-Sweep Phase should be equal to the sign of the current volume (not yet tested,
-in the negative mode it does probably "increase" to -7FFFh?). The Phase bit
-seems to have no effect in Exponential Decrease mode.<br/></p>
+The current level can be read back from VOLXL/VOLXR (1F801E00h+N*4). Sweep
+runs at twice the rate of an ADSR envelope with the same Shift value: with
+Shift=12 the step is applied every sample, with Shift=16 every 16th sample
+(i.e. CounterIncrement = 8000h SHR Max(0,ShiftValue-10), tested for shift
+values 12, 13 and 16). Step sizes, the linear saturation points and the
+Exponential Increase slowdown above 6000h are as in the envelope pseudo code
+below.<br/>
+Negative Phase with Increase moves the volume towards -8000h using the
+decrease step sizes (-8..-5), from either a positive or a negative start
+(a positive volume goes down through zero), and saturates at -8000h.
+Negative Phase with Decrease, from a negative volume, moves towards zero and
+stops at 0000h. Exponential Decrease from a negative volume stops at -0FFFh
+(F001h): the scaled step rounds to zero below 1000h in magnitude, whereas a
+positive volume keeps decreasing past 0FFFh. The Phase bit seems to have no
+effect in Exponential Decrease mode.<br/></p>
 <h4 id="0x1f801db0-avoll-i2sacd-rom-volume-left"><code>0x1f801db0</code>: <code>AVOLL</code> (I2SA/CD-ROM volume left)</h4>
 <h4 id="0x1f801db2-avolr-i2sacd-rom-volume-right"><code>0x1f801db2</code>: <code>AVOLR</code> (I2SA/CD-ROM volume right)</h4>
 <h4 id="0x1f801db4-bvoll-i2sbpio-volume-left"><code>0x1f801db4</code>: <code>BVOLL</code> (I2SB/PIO volume left)</h4>
