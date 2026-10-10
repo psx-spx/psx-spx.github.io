@@ -4,12 +4,16 @@ sends the Display Buffer to the Television Set. Polygons are useful for 3D
 graphics (or rotated/scaled 2D graphics), Rectangles are useful for 2D graphics
 and Text output.<br/>
 
-![v2 GPU block diagram](diagrams/gpu-v2.svg)
+=== "v2 GPU"
 
-The v0 GPU has the same pipeline, but drives dual-ported VRAM and an external
-RAMDAC instead of SGRAM:<br/>
+    ![v2 GPU block diagram](diagrams/gpu-v2.svg)
 
-![v0 GPU block diagram](diagrams/gpu-v0.svg)
+=== "v0 GPU"
+
+    The v0 GPU has the same pipeline, but drives dual-ported VRAM and an external
+    RAMDAC instead of SGRAM:<br/>
+
+    ![v0 GPU block diagram](diagrams/gpu-v0.svg)
 
 [I/O Ports, DMA Channels, Commands, VRAM](i-o-ports-dma-channels-commands-vram.md#io-ports-dma-channels-commands-vram)<br/>
 [Render Polygon Commands](render-polygon-commands.md#render-polygon-commands)<br/>
