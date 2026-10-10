@@ -12,6 +12,16 @@
   article section + section {
     min-height: auto !important;
   }
+  /* with-pdf wraps tab panels in an unbreakable inline-block; one taller
+     than a page makes WeasyPrint drop the rest of the PDF. Print the panels
+     stacked, without the label row. */
+  .md-typeset .tabbed-set .tabbed-content--wrap {
+    display: block !important;
+    page-break-inside: auto !important;
+  }
+  .md-typeset .tabbed-set .tabbed-labels {
+    display: none !important;
+  }
   /* It also shifts headings down one level per nav section, past h6. */
   article h7, article h8, article h9 {
     display: block;
