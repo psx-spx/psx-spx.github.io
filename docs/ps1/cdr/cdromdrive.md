@@ -969,8 +969,9 @@ If Read is issued with an unprocessed Setloc, then the drive is automatically
 seeking the Setloc location (and marks Setloc as processed).<br/>
 If Read is issued without an unprocessed Setloc, the following happens: If
 reading is already in progress then it just continues reading. If Reading was
-Paused, then reading resumes at the most recently received sector (ie.
-returning that sector once another time).<br/>
+Paused, then reading resumes one sector before the most recently received
+sector (eg. Pause after receiving 00:02:21, and the next Read returns 00:02:20
+first, then 00:02:21 again).<br/>
 
 
 
