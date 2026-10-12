@@ -238,7 +238,7 @@ final fraction passed on to the y\_to\_mono stage.<br/>
   for y=0 to 7
     for x=0 to 7
       R=[Crblk+((x+xx)/2)+((y+yy)/2)*8], B=[Cbblk+((x+xx)/2)+((y+yy)/2)*8]
-      G=(-0.3437*B)+(-0.7143*R), R=(1.402*R), B=(1.772*B)
+      G=(-0.3437*B)+(-0.7143*R), R=(1.402*R), B=(1.7754*B)
       Y=[Yblk+(x)+(y)*8]
       R=(Y+R) AND 1FFh, G=(Y+G) AND 1FFh, B=(Y+B) AND 1FFh ;clip to signed 9bit
       R=MinMax(-128,127,R)                   ;saturate from 9bit to signed 8bit
@@ -249,7 +249,12 @@ final fraction passed on to the y\_to\_mono stage.<br/>
     next x
   next y
 ```
-Note: The exact fixed point resolution for "yuv\_to\_rgb" is unknown.<br/>
+Note: The exact fixed point resolution for "yuv\_to\_rgb" is unknown. With a single
+round-half-down after the multiply-add, flat-colour test blocks constrain the factors to at
+least 9 fractional bits: R=1.401..1.404, G/Cr=0.712..0.716, G/Cb=0.342..0.351, and B=1.774..1.776
+(909/512 is the only /512 value that fits). The JPEG value 1.772 for B is off by one at
+Cb=+64. A slightly scaled set of the JPEG constants (gain around 1.001..1.003) fits the same
+data, so the tests do not tell the two apart.<br/>
 
 #### y\_to\_mono
 ```
