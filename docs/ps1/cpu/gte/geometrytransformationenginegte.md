@@ -38,7 +38,10 @@ A GTE command reads its input registers one after another while it runs, so
 how many instructions it needs after a write depends on the command and on
 the register: 2, 1 or none. Every input not listed below sees a write placed
 directly before the command. Measured with cached NOPs (uncached ones count
-for more):
+for more), on six consoles and at every position in the cache line; a few
+registers get by with one instruction less at some positions, and DPCT
+needs the extra instruction on RGB0 on most consoles and on RGB1 on an
+SCPH-9002:
 ```
   Command                2 instructions           1 instruction
   RTPS                   R31R32,TRZ               -
@@ -55,12 +58,12 @@ for more):
   GPF                    IR0,IR1                  IR2
   GPL                    IR0,IR1,MAC1             IR2,MAC2
   NCS                    VXY0,L11L12              L13L21
-  NCCS                   VXY0                     L11L12,L13L21
+  NCCS                   VXY0,L11L12              L13L21
   NCDS                   VXY0,L11L12              L13L21
   NCT, NCCT, NCDT        VXY0                     -
   CC, CDP                IR1,LR1LR2,RBK           LR3LG1,GBK
   DPCS                   RGBC,RFC                 GFC
-  DPCT                   RGB0,RFC                 GFC
+  DPCT                   RGB0,RGB1,RFC            GFC
   DCPL                   RGBC,IR1,RFC             IR2,GFC
   INTPL                  IR1,RFC                  IR2,GFC
 ```
