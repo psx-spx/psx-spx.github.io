@@ -4570,7 +4570,7 @@ Resets the command buffer and CLUT cache.<br/></p>
 <h4 id="gp102h-acknowledge-gpu-interrupt-irq1">GP1(02h) - Acknowledge GPU Interrupt (IRQ1)</h4>
 <p><div class="highlight"><pre><span></span><code>  0-23  Not used (zero)                                        ;GP1.R.24
 </code></pre></div>
-Resets the IRQ flag in GP1.R.24. The flag can be set via GP0(1Fh).<br/></p>
+Resets the IRQ flag in GP1.R.IRQ. The flag can be set via GP0(1Fh).<br/></p>
 <h4 id="gp103h-display-enable">GP1(03h) - Display Enable</h4>
 <p><div class="highlight"><pre><span></span><code>  0    DMSK  Display On/Off   (0=On, 1=Off)                         ;GP1.R.23
   1-23       Not used (zero)
@@ -4589,7 +4589,7 @@ the television set). (Unknown if it still generates vblank IRQs though?)<br/></p
 </code></pre></div>
 Notes: Manually sending/reading data by software (non-DMA) is ALWAYS possible,
 regardless of the GP1(04h) setting. The GP1(04h) setting does affect the
-meaning of GP1.R.25.<br/></p>
+meaning of GP1.R.DREQ.<br/></p>
 <h4 id="display-startend">Display start/end</h4>
 <p>Specifies where the display area is positioned on the screen, and how much data
 gets sent to the screen. The screen sizes of the display area are valid only if
@@ -4782,7 +4782,7 @@ output instead (possibly on a different sub-revision of the v2 GPU).<br/></p>
 <h4 id="gp110h-read-gpu-internal-register">GP1(10h) - Read GPU internal register</h4>
 <h4 id="gp111h1fh-mirrors-of-gp110h-read-gpu-internal-register">GP1(11h..1Fh) - Mirrors of GP1(10h), Read GPU internal register</h4>
 <p>After sending the command, the result can be read (immediately) from GP0
-register (there's no NOP or other delay required) (namely GP1.R.Bit27 is used
+register (there's no NOP or other delay required) (namely GP1.R.RFFL is used
 only for VRAM reads, but NOT for register reads, so do not try to wait for that
 flag).<br/>
 <div class="highlight"><pre><span></span><code>  0-23  Register index (via following GP0 read)

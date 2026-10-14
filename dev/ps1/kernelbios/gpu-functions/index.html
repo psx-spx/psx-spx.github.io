@@ -4402,7 +4402,7 @@ Returns 1F801814h, ie. the I/O address.<br/></p>
 <h4 id="a4dh-getgpustatus">A(4Dh) - GetGPUStatus()</h4>
 <p>Reads [1F801814h] and returns that value.<br/></p>
 <h4 id="a46h-gpu_dwxdstydstxsizysizsrc">A(46h) - GPU_dw(Xdst,Ydst,Xsiz,Ysiz,src)</h4>
-<p>Waits until GP1.R.Bit26 is set (unlike gpu_sync, which waits for Bit28), and
+<p>Waits until GP1.R.IDLE is set (unlike gpu_sync, which waits for WFEP), and
 does then [1F801810h]=A0000000h, [1F801810h]=YdstXdst, [1F801810h]=YsizXsiz,
 and finally transfers "N" words from [src and up] to [1F801810h], where "N" is
 "Xsiz*Ysiz/2". The data is transferred by software (without DMA) (by code
@@ -4420,10 +4420,10 @@ Caution: If "Xsiz*Ysiz" is not a multiple of 32, then the last halfword(s) are
 NOT transferred, so the GPU stays waiting for that values.<br/>
 Returns R2=1F801810h, and [SP+04h]=Ydst, [SP+08h]=Xsiz, [SP+0Ch]=Ysiz.<br/></p>
 <h4 id="a4eh-gpu_sync">A(4Eh) - gpu_sync()</h4>
-<p>If DMA is off (when GP1.R.Bit29-30 are zero): Waits until GP1.R.Bit28=1 (or
+<p>If DMA is off (when GP1.R.DMD is zero): Waits until GP1.R.WFEP=1 (or
 until timeout).<br/>
 If DMA is on: Waits until D2_CHCR.Bit24=0 (or until timeout), and does then
-wait until GP1.R.Bit28=1 (without timeout, ie. may hang forever), and does
+wait until GP1.R.WFEP=1 (without timeout, ie. may hang forever), and does
 then turn off DMA via GP1(04h).<br/>
 Returns 0 (or -1 in case of timeout, however, the timeout values are very big,
 so it may take a LOT of seconds before it returns).<br/></p>
