@@ -34,7 +34,7 @@ Resets the command buffer and CLUT cache.<br/>
 ```
   0-23  Not used (zero)                                        ;GP1.R.24
 ```
-Resets the IRQ flag in GP1.R.24. The flag can be set via GP0(1Fh).<br/>
+Resets the IRQ flag in GP1.R.IRQ. The flag can be set via GP0(1Fh).<br/>
 
 #### GP1(03h) - Display Enable
 ```
@@ -57,7 +57,7 @@ the television set). (Unknown if it still generates vblank IRQs though?)<br/>
 ```
 Notes: Manually sending/reading data by software (non-DMA) is ALWAYS possible,
 regardless of the GP1(04h) setting. The GP1(04h) setting does affect the
-meaning of GP1.R.25.<br/>
+meaning of GP1.R.DREQ.<br/>
 
 #### Display start/end
 Specifies where the display area is positioned on the screen, and how much data
@@ -172,7 +172,7 @@ output instead (possibly on a different sub-revision of the v2 GPU).<br/>
 #### GP1(10h) - Read GPU internal register
 #### GP1(11h..1Fh) - Mirrors of GP1(10h), Read GPU internal register
 After sending the command, the result can be read (immediately) from GP0
-register (there's no NOP or other delay required) (namely GP1.R.Bit27 is used
+register (there's no NOP or other delay required) (namely GP1.R.RFFL is used
 only for VRAM reads, but NOT for register reads, so do not try to wait for that
 flag).<br/>
 ```

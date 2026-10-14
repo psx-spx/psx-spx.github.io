@@ -46,16 +46,16 @@ PS1 GPU emulation; some of them appear in PS1 libraries as well.<br/>
 Further GPU status information can be retrieved via GP1(10h) and GP0(C0h).<br/>
 
 #### Ready Bits
-Bit28: Normally, this bit gets cleared when the command execution is busy (ie.
+WFEP (bit 28): Normally, this bit gets cleared when the command execution is busy (ie.
 once when the command and all of its parameters are received), however, for
 Polygon and Line Rendering commands, the bit gets cleared immediately after
 receiving the command word (ie. before receiving the vertex parameters). The
 bit is used as DMA request in DMA Mode 2, accordingly, the DMA would probably
 hang if the Polygon/Line parameters are transferred in a separate DMA block
 (ie. the DMA probably starts ONLY on command words).<br/>
-Bit27: Gets set after sending GP0(C0h) and its parameters, and stays set until
+RFFL (bit 27): Gets set after sending GP0(C0h) and its parameters, and stays set until
 all data words are received; used as DMA request in DMA Mode 3.<br/>
-Bit26: Gets set when the GPU wants to receive a command. If the bit is cleared,
+IDLE (bit 26): Gets set when the GPU wants to receive a command. If the bit is cleared,
 then the GPU wants to either receive additional parameters/data or it is busy with command
 execution (and doesn't want to receive anything). Note that this bit can NOT be used
 to determine when the GPU is finished drawing a DMA chain of primitives, as it will briefly
