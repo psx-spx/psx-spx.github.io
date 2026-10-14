@@ -30,13 +30,46 @@ instead, it's solely accessed via coprocessor opcodes:<br/>
 Using CFC2/MFC2 has a delay of 1 instruction until the GPR is loaded with its new value.
 Certain games are sensitive to this, with the notable example of Tekken 2
 which will be filled with broken geometry on emulators which don't emulate this properly.<br/>
-Writes to GTE registers (MTC2, CTC2 and LWC2) have a delay of 2 instructions:
-a GTE command, MFC2, CFC2 or SWC2 that uses the register sees the new value
-only if at least 2 instructions sit between the write and the use (measured
-with NOPs running from the instruction cache), and the old
-value otherwise. With no instruction in between, a command that writes the
-same register can also end up with the written value in it instead of its own
-result (seen with SQR on IR1).<br/>
+Writes to GTE registers (MTC2, CTC2 and LWC2) take 2 cycles to land. MFC2,
+CFC2 or SWC2 of the register sees the new value only if at least 2
+instructions sit between the write and the read (measured with NOPs running
+from the instruction cache), and the old value otherwise.<br/>
+A GTE command reads its input registers one after another while it runs, so
+how many instructions it needs after a write depends on the command and on
+the register: 2, 1 or none. Every input not listed below sees a write placed
+directly before the command. Measured with cached NOPs (uncached ones count
+for more):
+```
+  Command                2 instructions           1 instruction
+  RTPS                   R31R32,TRZ               -
+  RTPT                   R31R32,TRZ               VXY0,R11R12,TRX
+  NCLIP                  SXY0,SXY2                SXY1
+  AVSZ3                  SZ1,ZSF3                 SZ2
+  AVSZ4                  SZ1,ZSF4                 SZ2
+  MVMVA(RT,V0,TR)        VXY0,R11R12,TRX          R13R21,TRY
+  MVMVA(RT,V0,NONE)      VXY0,R11R12              R13R21
+  MVMVA(LL,V0,BK)        VXY0,L11L12,RBK          L13L21,GBK
+  MVMVA(LC,IR,BK)        IR1,LR1LR2,RBK           LR3LG1,GBK
+  SQR                    IR1                      IR2
+  OP                     IR3,R22R23               IR2,R11R12,R33
+  GPF                    IR0,IR1                  IR2
+  GPL                    IR0,IR1,MAC1             IR2,MAC2
+  NCS                    VXY0,L11L12              L13L21
+  NCCS                   VXY0                     L11L12,L13L21
+  NCDS                   VXY0,L11L12              L13L21
+  NCT, NCCT, NCDT        VXY0                     -
+  CC, CDP                IR1,LR1LR2,RBK           LR3LG1,GBK
+  DPCS                   RGBC,RFC                 GFC
+  DPCT                   RGB0,RFC                 GFC
+  DCPL                   RGBC,IR1,RFC             IR2,GFC
+  INTPL                  IR1,RFC                  IR2,GFC
+```
+So `mtc2 VXY0; mtc2 VZ0; nop; MVMVA` is exactly enough, and a write to VZ0
+directly before RTPS or MVMVA is fine. With fewer instructions than listed,
+some commands mix old and new values in one result (MVMVA with VXY0 written
+one instruction before it, for example). With no instruction in between, a command that
+writes the same register can also end up with the written value in it
+instead of its own result (seen with SQR on IR1).<br/>
 GTE instructions and functions should not be used in<br/>
 ```
   - Delay slots of jumps and branches
