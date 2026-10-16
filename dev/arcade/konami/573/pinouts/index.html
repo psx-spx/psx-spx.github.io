@@ -8152,7 +8152,7 @@ to a separate set of RCA jacks on the front I/O panel instead.</p>
 <td style="text-align: left;"></td>
 <td style="text-align: left;">Slow</td>
 <td style="text-align: left;">ARCnet transceiver</td>
-<td style="text-align: left;">Network TX enable?</td>
+<td style="text-align: left;">Network TX enable (same as TX)</td>
 </tr>
 <tr>
 <td style="text-align: right;">99</td>
@@ -8162,7 +8162,7 @@ to a separate set of RCA jacks on the front I/O panel instead.</p>
 <td style="text-align: left;"></td>
 <td style="text-align: left;">Slow</td>
 <td style="text-align: left;">ARCnet transceiver</td>
-<td style="text-align: left;">Network TX?</td>
+<td style="text-align: left;">Network TX</td>
 </tr>
 <tr>
 <td style="text-align: right;">100</td>
@@ -9092,8 +9092,9 @@ to a separate set of RCA jacks on the front I/O panel instead.</p>
   broken out to the I/O board connector. Konami's bitstreams use the 29.45 MHz
   oscillator as the main clock, additionally dividing it down to 14.725 MHz and
   feeding it to the MAS3507D's clock input.</li>
-<li>The 19.6608 MHz clock is left unused by most (all?) bitstream variants, but
-  was likely meant to be used for RS-232. Dividing it by 512, 1024, 2048 or 4096
+<li>In the Solo Bass Mix and 3rdMIX bitstreams, the 19.6608 MHz clock only drives
+  a single flip-flop that copies the RS-232 CTS input to RTS. It was likely
+  meant to be used for RS-232. Dividing it by 512, 1024, 2048 or 4096
   will give the standard baud rates of 38400, 19200, 9600 and 4800 respectively.
   The UART driving the RS-232 port may have been removed from the bitstream at
   some point to make room for the other circuitry.</li>
