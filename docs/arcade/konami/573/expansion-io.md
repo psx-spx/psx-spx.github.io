@@ -272,10 +272,10 @@ independent of this register.
 The 3rdMIX bitstream descrambles MP3 data using `key1`, `key2` and `key3`,
 while the Solo Bass Mix bitstream only uses `key1`. Writing a key
 register reloads only that key. The descrambler's key state advances once for
-every 16-bit word sent to the MAS3507D and does not advance while playback is
-paused. It persists when playback is stopped and restarted and when the start or
-end address registers are written. Bit 15 of `0x1f6400e8` clears the entire key
-state.
+every 16-bit word sent to the MAS3507D and does not advance while bit 14 of
+`0x1f6400ae` is cleared. It persists when playback is stopped and restarted
+and when the start or end address registers are written. Bit 15 of
+`0x1f6400e8` clears the entire key state.
 
 #### `0x1f6400aa` (FPGA, all bitstreams): **MP3 playback status**
 
@@ -330,9 +330,11 @@ read-only copy of bit 14 and remains set if playback is stopped by clearing bit
 13 only.
 
 Each 16-bit word is sent to the MAS3507D high byte first, MSB first. The first
-word sent after playback starts is whatever the MP3 data latch holds: 0 after a
-reset through bit 14 of `0x1f6400e8`, otherwise the last word fetched during the
-previous playback, already descrambled.
+word sent after playback starts comes from the MP3 data latch rather than from
+DRAM. The latch holds 0 after a reset through bit 14 of `0x1f6400e8`, otherwise
+the last word fetched during the previous playback (the one at its end address
+plus 4). This word goes through the descrambler like any other, so after a
+reset the MAS3507D receives 0 descrambled with the current keys.
 
 Bit 15 controls whether to increment register `0x1f6400a8` each time a rising
 edge is detected on the MAS3507D's `PI4` (frame sync) pin. The counter is
