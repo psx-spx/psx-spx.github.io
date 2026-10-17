@@ -2037,12 +2037,13 @@ SetSession=02h on non-multisession-disk).<br/>
 
 
 ##   CDROM - Response Timings
-Here are some response timings, measured in 33MHz units on a PAL PSone. The
-CDROM BIOSes mainloop is doing some maintenance stuff once and when, meaning
-that the response time will be higher in such mainloop cycles (max values), and
-less in normal cycles (min values). The maintenance timings do also depend on
-whether the motor is on or off (and probably on various other factors like
-seeking).<br/>
+The hex tables below were measured on a PAL PSone and count CPU clock cycles
+(33.8688 MHz, so 10000h cycles is about 1.94 ms). The command pickup tables are
+in microseconds.<br/>
+The HC05 main loop does extra work on some passes, so a command that arrives
+during such a pass is answered later (the max values) than one that arrives
+during a normal pass (the min values). How much later also depends on whether
+the motor is on or off, and probably on other things like seeking.<br/>
 
 #### First Response
 The First Response interrupt is sent almost immediately after processing the
@@ -2053,6 +2054,9 @@ interrupt pending). For Nop, timings are as so:<br/>
   Nop (normal)       000c4e1h  0004a73h..003115bh
   Nop (when stopped) 0005cf4h  000483bh..00093f2h
 ```
+In microseconds that is 1488 (563..5936) for Nop (normal) and 703 (546..1118)
+for Nop (when stopped).<br/>
+
 Timings for most other commands should be similar as above. One exception is
 the Init command, which is doing some initialization before sending the 1st
 response:<br/>
@@ -2062,6 +2066,34 @@ response:<br/>
 The ReadTOC command is doing similar initialization, and should have similar
 timing as Init command. Some (rarely used) Test commands include things like
 serial data transfers, which may be also quite slow.<br/>
+
+#### Command Pickup
+The first response arrives in two steps: the HC05 picks up the command and
+clears BUSYSTS, then it posts the acknowledge (or error) cause. Both steps were
+timed from the COMMAND write on SCPH-1000, SCPH-1001, two SCPH-5501, SCPH-7001
+and SCPH-9002 consoles, polling HSTS and HINTSTS about every 1.9 us, 128
+commands per case. Ranges are across consoles. Nop is command 01h, Test 20h is
+command 19h with parameter 20h.<br/>
+COMMAND write to BUSYSTS cleared, in us, motor off (lid open, no disc, or after Stop):<br/>
+```
+  Command      Min        Median     Max
+  Nop          481..527   624..687   979..1199
+  Test 20h     694..757   835..929   1186..1474
+```
+Older and newer boards behave the same here.<br/>
+Motor on (disc spinning, SCPH-7001 and SCPH-9002), Nop has a median of
+772..859, 90% of commands under 1700..2100, and a max of 3800..5600. Test 20h
+peaks at 5000..6200.<br/>
+BUSYSTS cleared to acknowledge cause, a constant per model that does not depend
+on the command, the motor or the number of parameters:<br/>
+```
+  Model                  Min    Median
+  SCPH-1000, SCPH-1001   62.6   62.8..64.0
+  SCPH-5501, SCPH-7001   58.8   60.7..60.9
+  SCPH-9002              57.9   60.2
+```
+A smaller group of responses comes about 15 us later (max 73.7..82.4). The
+PSone Nop (when stopped) figures above fit the sum of the two steps.<br/>
 
 #### Second Response
 ```
