@@ -100,6 +100,7 @@ SPU is DMA4.
 
 The drive is DMA3.
 
+[CDROM Drive Overview](ps1/cdr/cdromdrive-overview.md)<br/>
 [CDROM Drive](ps1/cdr/cdromdrive.md)<br/>
 [CDROM Format](ps1/cdr/cdromformat.md)<br/>
 [CDROM File Formats](ps1/cdr/cdromfileformats/index.md)<br/>
