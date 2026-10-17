@@ -95,6 +95,7 @@ nav:
     - ps1/gpu/misc.md
   - ps1/spu/soundprocessingunitspu.md
   - CD-ROM:
+    - ps1/cdr/cdromdrive-overview.md
     - ps1/cdr/cdromdrive.md
     - ps1/cdr/cdromformat.md
     - CDROM File Formats:
