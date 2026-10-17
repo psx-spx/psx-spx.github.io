@@ -8734,6 +8734,24 @@ When issued during play-spin-up, play is aborted.<br/>
 after seek error --&gt; disk stops spinning at 2nd response, then restarts
 spinning for 1 second or so, then stops spinning forever... and following
 gettn/gettd/getid/getlocl/getlocp fail with error 80h...<br/>
+On a SCPH-9002 with a two-session CD-R (session 2 holding a single Mode 2 track),
+the outcomes are less tidy than the table above:
+<div class="highlight"><pre><span></span><code>  session = 01h  acknowledge, complete after about 1.9 seconds
+  session = 02h  acknowledge, then one of (14 attempts on the same disc):
+                   complete after 3.7..6.7 s, TOC switched to session 2   (5x)
+                   complete after 2.4 s, TOC still the session 1 one      (1x)
+                   error(06h,20h) after 3.6..5.4 s                        (8x)
+  session = 03h  acknowledge, then error(06h,20h) after 6.8..7.7 s (every attempt while spinning)
+  session = 09h  acknowledge, then error(06h,40h) after ~9.9 s, or (06h,20h) after ~4 s
+</code></pre></div>
+So on this drive N+1 did not pass, and the error code for a session past the last
+one varies between 20h and 40h; only "acknowledge(stat), then an error with stat
+06h" was consistent. After a switch to session 2, GetTN returns 02h,02h, GetTD(0)
+returns the lead-out of session 2, GetTD(1) fails with error 10h, and GetTD(2)
+returns the start of the session 2 track. After a seek error, the drive did not
+always stop: GetTN/GetTD kept failing with error 80h, but a Setloc/ReadN into
+session 2 still returned the correct sectors in 5 of 7 cases, while in the other 2
+the motor was off (stat 01h) and every later command failed with error 80h.<br/>
 The command does automatically read the TOC of the new session. BUG: Older CD
 Firmwares (16 May 1995 and older) don't clear the old TOC when loading Session
 1, in that case SetSession(1) may update some (not all) TOC entries; ending up
