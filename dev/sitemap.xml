@@ -81,6 +81,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://psx-spx.consoledev.net/ps1/cdr/cdromdrive-overview/</loc>
+         <lastmod>2026-10-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://psx-spx.consoledev.net/ps1/cdr/cdromdrive/</loc>
          <lastmod>2026-10-17</lastmod>
          <changefreq>daily</changefreq>
