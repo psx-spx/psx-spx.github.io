@@ -9056,7 +9056,11 @@ CDROM controller BIOS. Known/existing values are:<br/>
   Bit1   = DoorIsOpen   (0=No, 1=Open)
   Bit2   = EjectButtonOrOutSwOrSo? (DTL-H2000 only) (always 0 on retail)
   Bit3-7 = AlwaysZero
-</code></pre></div></p>
+</code></pre></div>
+Bit0 follows the motor: it reads 0 while the disc spins and when Stop
+completes, then 1 within about 200ms after that (the head returns to POS0) and
+stays set while the drive is stopped. Init spins the drive back up and clears
+it, and it stays clear during Pause, where the motor keeps running.<br/></p>
 <h4 id="19h22h-acknowledgefor-europe">19h,22h --&gt; acknowledge("for Europe")</h4>
 <p><div class="highlight"><pre><span></span><code>  Caution: Supported only in BIOS version vC1 and up. Not supported in vC0.
 </code></pre></div>
