@@ -11,6 +11,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://psx-spx.consoledev.net/whatschanged/</loc>
+         <lastmod>2026-10-18</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://psx-spx.consoledev.net/arcade/arcadecabinets/</loc>
          <lastmod>2026-10-18</lastmod>
          <changefreq>daily</changefreq>
