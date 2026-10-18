@@ -1266,6 +1266,10 @@ Returns the current status of the POS0 and DOOR switches.<br/>
   Bit2   = EjectButtonOrOutSwOrSo? (DTL-H2000 only) (always 0 on retail)
   Bit3-7 = AlwaysZero
 ```
+Bit0 follows the motor: it reads 0 while the disc spins and when Stop
+completes, then 1 within about 200ms after that (the head returns to POS0) and
+stays set while the drive is stopped. Init spins the drive back up and clears
+it, and it stays clear during Pause, where the motor keeps running.<br/>
 
 #### 19h,22h --\> acknowledge("for Europe")
 ```
