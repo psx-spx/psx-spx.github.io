@@ -6,13 +6,16 @@ Dualshock2 is a PS2 controller. However, it can be also used with PSX games
 on a PS2 console).<br/>
 The analog button feature is reportedly rarely used by PS2 games (and there
 aren't any PSX games known to use it).<br/>
+Commands 40h and 41h only answer in analog mode (LED on, after Command 44h with
+Led=01h). In digital mode both reply with 00h bytes only.<br/>
 
 #### Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?
 ```
   Send  01h 40h 00h Idx Val 00h 00h 00h 00h  ;<-- Set NEW Val, array[Idx]=Val
-  Reply HiZ F3h 5Ah 00h 00h Val 00h 00h 00h  ;<-- Old Val (or FFh when Idx>0Bh)
+  Reply HiZ F3h 5Ah 00h 00h Val 00h 00h 5Ah  ;<-- Old Val (or FFh when Idx>0Bh)
 ```
 Allows to change twelve 3bit values (with Idx=00h..0Bh, and Val=00h..03h).
+When Idx>0Bh, both Val and the last reply byte are FFh.
 Default is Val=02h. Purpose is unknown, the 12 values might be related to the
 12 analog buttons, but there is no noticable difference between Val=0,1,2,3.
 Maybe it does have some subtle effects on things like...<br/>
@@ -24,15 +27,16 @@ Maybe it does have some subtle effects on things like...<br/>
 #### Config Mode - Command 41h "A" Dualshock2: Get Reply Capabilities
 ```
   Send  01h 41h 00h 00h 00h 00h 00h 00h 00h
-  Reply HiZ F3h 5Ah FFh FFh 03h 00h 00h 00h
+  Reply HiZ F3h 5Ah FFh FFh 03h 00h 00h 5Ah
 ```
-This seems to return a constant bitmask indicating which reply bytes can be
-enabled/disabled via Command 4Fh (ie. 3FFFFh = 18 bits).<br/>
+This returns a constant bitmask indicating which reply bytes can be
+enabled/disabled via Command 4Fh (ie. 3FFFFh = 18 bits). The reply stays the
+same after Command 4Fh has changed the current setting.<br/>
 
 #### Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol
 ```
   Send  01h 4Fh 00h aa  bb  cc  dd  ee  ff
-  Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 00h
+  Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 5Ah
 ```
 This can output some 48bit value (bit0=aa.bit0, bit47=ff.bit7), used to
 enable/disable Reply bytes in the controller read command (Command 42h).<br/>
@@ -77,9 +81,8 @@ CAUTION: Sending Command 44h does RESET the Command 4Fh setting (either to
 DigitalMode=000003h or AnalogMode=00003Fh; same happens when toggling mode via
 Analog button).<br/>
 
-Note: Some Dualshock2 Config Mode commands do occassionally send 00h, 5Ah, or
-FFh as last (9th) reply byte (unknown if that is some error/status thing, or
-garbage).<br/>
+Note: The last (9th) reply byte of Commands 40h, 41h and 4Fh is 5Ah (or FFh
+for Command 40h with Idx>0Bh). The other Config Mode commands return 00h there.<br/>
 
 #### Analog Button Sensitivity
 The pressure sensors are rather imprecise and results may vary on various
