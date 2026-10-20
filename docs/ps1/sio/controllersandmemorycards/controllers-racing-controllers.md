@@ -16,16 +16,16 @@
   13    A Button       (0=Pressed, 1=Released) (would be () on other pads)
   14-15 Not used       (always 1)              (would be ><, [] on other pads)
   __Halfword 2 (Right joystick) (analog pad/stick in analog mode only)_________
-  0-7   Steering Axis    (00h=Left, 80h=Center, FFh=Right) (or vice-versa?)
-  8-15  Analog I button  (00h=Out ... FFh=In)  (Out=released, in=pressed?)
+  0-7   Steering Axis    (00h=Left, 7Fh/80h=Center, FFh=Right)
+  8-15  Analog I button  (00h=Released ... FFh=Fully pressed)
   __Halfword 3 (Left joystick) (analog pad/stick in analog mode only)__________
-  0-7   Analog II button (00h=Out ... FFh=In)  (Out=released, in=pressed?)
-  8-15  Analog L button  (00h=Out ... FFh=In)  (Out=released, in=pressed?)
+  0-7   Analog II button (00h=Released ... FFh=Fully pressed)
+  8-15  Analog L button  (00h=Released ... FFh=Fully pressed)
 ```
 The Twist controller works like a paddle or steering wheel, but doesn't have a
-wheel or knob, instead, it can be twisted: To move into one direction (=maybe
-right?), turn its right end away from you (or its left end towards you). For
-the opposite direction (=maybe left?), do it vice-versa.<br/>
+wheel or knob, instead, it can be twisted: turning its right end away from you
+moves the Steering Axis towards FFh, turning its left end away from you moves it
+towards 00h. At rest it sits at 7Fh or 80h.<br/>
 ```
      _____         _  _         _____                              ____
     |__L__\_______/ || \_______/__R__|                            /    \
