@@ -92,6 +92,7 @@ scanline.<br/>
   0-11   X1 (260h+0)       ;12bit       ;\counted in video clock units,
   12-23  X2 (260h+320*8)   ;12bit       ;/relative to HSYNC
 ```
+The figures shown (260h+0 and 260h+320\*8) are typical values programmed by games, not the reset value: 260h is the first visible pixel on normal TV sets, and 320\*8 is a 320-pixel line at 8 video clocks per pixel. After GP1(00h) the registers instead hold X1=200h and X2=200h+256\*10 (a 256-pixel line at 10 clocks per pixel); see the Dotclocks list in [horizontal timings](timings.md#horizontal-timings) for the clocks-per-pixel values.<br/>
 Specifies the horizontal range within which the display area is displayed. For
 resolutions other than 320 pixels it may be necessary to fine adjust the value
 to obtain an exact match (eg. X2=X1+pixels\*cycles\_per\_pix).<br/>
