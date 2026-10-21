@@ -55,6 +55,13 @@ Top 3 bits of a GP0 command:
   6 (110)      VRAM-to-CPU blit
   7 (111)      Environment commands
 ```
+Where each group is documented:
+
+- Misc commands: [Clear Cache](#clear-cache) and [Quick Rectangle Fill](#quick-rectangle-fill) below, the rest (NOP, mirrors, IRQ) in [Other Commands](other-commands.md)
+- [Polygon](render-polygon-commands.md), [Line](render-line-commands.md) and [Rectangle](render-rectangle-commands.md) primitives
+- VRAM-to-VRAM, CPU-to-VRAM and VRAM-to-CPU blits: [Memory Transfer Commands](memory-transfer-commands.md)
+- Environment commands, GP0(E1h) to GP0(E6h): [Rendering Attributes](rendering-attributes.md#gp0e1h-draw-mode-setting-aka-tpage)
+
 Some GP0 commands require additional parameters, which are written (following
 the initial command) as further 32bit values to GP0. The execution of the command
 starts when all parameters have been received (or, in case of Polygon/Line
