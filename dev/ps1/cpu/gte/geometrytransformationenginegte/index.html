@@ -5966,6 +5966,10 @@ For LZCS/LZCR the required gap was measured on hardware as 2 cached opcodes (or 
 uncached opcode) between the MTC2 and the MFC2. With fewer, the MFC2 returns the
 result of the PREVIOUS LZCS write, and does so silently - the stale value is always
 a well-formed count in range 1..32, never a partial result.<br/>
+The gap is two clock cycles, however they are spent: a single LW from an I/O
+port (eg. I_STAT) between the MTC2 and the MFC2 is enough on its own, and so is
+an MFLO that has to wait for a pending MULT or DIV. A lone MULT issues in one
+cycle and runs in the background, so it counts like one cached NOP.<br/>
 The count does not depend on the input value: leading-zero and leading-one runs of
 1..32 were swept, with popcount varied at fixed run length, and none of them move
 it. Verified on SCPH-1000, SCPH-1001, SCPH-5501 and SCPH-7001; not verified on PAL
