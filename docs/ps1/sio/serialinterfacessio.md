@@ -118,10 +118,20 @@ controller driver only ever uses the DSR (/ACK) interrupt.
 
 #### `0x1f80105c`: SIO1 unknown
 This is an internal register, which usually shouldn't be accessed by software.
-Messing with it has rather strange effects: After writing a value "X" to this
-register, reading returns "X ROR 8" eventually "ANDed with 1F1Fh and ORed with
-C0C0h or 8080h" (depending on the character length in MR). SIO0 does not have
-this register.
+Writing a value to it and reading it back returns the two bytes swapped, with
+each byte trimmed to the character length set in MR at the time of the write:
+```
+  Character length   Each byte becomes
+  5 bits             (byte AND 1Fh) OR C0h
+  6 bits             (byte AND 3Fh) OR 80h
+  7 bits              byte AND 7Fh
+  8 bits              byte unchanged
+```
+For example, writing 1234h reads back as D4D2h, B492h, 3412h or 3412h for 5, 6,
+7 and 8 bits. The value reads back the same immediately and later, the MR baud
+rate factor makes no difference, and writing it does not affect SR, MR or BR. A
+port reset (CR bit 6) does not change it, even though it clears MR. SIO0 does
+not have this register.
 
 #### `0x1f80104e + 0x10*N`: `BR` (baud rate register)
 ```
