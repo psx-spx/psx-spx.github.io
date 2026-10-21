@@ -4600,7 +4600,7 @@ Resets the GPU to the following values:<br/>
   GP1(05h)      ;display address (0)
   GP1(06h)      ;display x1,x2 (x1=200h, x2=200h+256*10)
   GP1(07h)      ;display y1,y2 (y1=010h, y2=010h+240)
-  GP1(08h)      ;display mode 320x200 NTSC (0)
+  GP1(08h)      ;display mode 256x240 NTSC (0)
   GP0(E1h..E6h) ;rendering attributes (0)
 </code></pre></div>
 Accordingly, GP1.read becomes 14802000h. The x1,y1 values are too small, ie. the
