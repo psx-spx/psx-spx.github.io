@@ -85,7 +85,7 @@ should be disabled, as all controllers and memory cards expect these settings.
   3     BRK     (SIO1) TX Output Level   (0=Normal, 1=Inverted, during Inactivity & Stop bits)
   4     ERRRST  Acknowledge              (0=No change, 1=Reset SR.Bits 3,4,5,9)      (W)
   5     RTS     (SIO1) RTS Output Level  (0=Off, 1=On)
-  6     INTRST  Reset                    (0=No change, 1=Reset most registers to zero) (W)
+  6     INTRST  Reset                    (0=No change, 1=Reset the whole port, see below) (W)
   7     ?       (SIO1) unknown?          (read/write-able when FACTOR non-zero) (otherwise always zero)
   8-9   BUFSZ   RX Interrupt Mode        (0..3 = IRQ when RX FIFO contains 1,2,4,8 bytes)
   10    TXIEN   TX Interrupt Enable      (0=Disable, 1=Enable) ;when SR.0-or-2 ;Ready
@@ -102,6 +102,16 @@ Bit 2 behaves differently on SIO0: when not set, incoming data will be ignored
 unless bit 1 is also set. When set, data will be received regardless of whether
 /CS is asserted, however bit 2 will be automatically cleared after a byte is
 received.
+
+Bit 6 resets the whole port. Right after it is written, CR, MR and BR all read
+back as zero, including bit 6 itself and any other bits written together with
+it, so MR, BR and CR must be programmed again before the port is used. SR reads
+as TX ready and TX finished (bits 0 and 2) plus the live DSR/CTS input levels;
+the parity, overrun, framing and IRQ flags are cleared. A byte being sent is
+aborted, and the RX FIFO is emptied: RX ready clears and only bytes received
+after the reset are counted, although reading DR while it is empty can still
+return bytes from before the reset. The baud rate timer reads zero on SIO0,
+while on SIO1 it keeps counting down from where it was and wraps around.
 
 Note that some emulators do not implement all SIO0 interrupts, as the kernel's
 controller driver only ever uses the DSR (/ACK) interrupt.
