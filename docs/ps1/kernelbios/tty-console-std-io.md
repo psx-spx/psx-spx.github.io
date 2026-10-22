@@ -99,18 +99,18 @@ BIOS is unable to detect the presence of the TTY hardware, by default the BIOS
 bootcode disables std\_io by setting the initial KernelRedirect value at
 [A000B9B0h] to zero, this is hardcoded shortly after the POST(E) output:<br/>
 ```
-  call    output_post_r4        ;\output POST(E)
-  +mov    r4,0Eh                ;/
-  mov     r1,0A0010000h         ;\set [0A000B9B0h]=0 ;TTY=dummy/off
-  call    reset_cont_d_3        ; and call reset_cont_d_3
-  +mov    [r1-4650h],0          ;/
+  jal     output_post_r4        ;\output POST(E)
+   li     $a0, 0xe              ;/
+  lui     $at, 0xa001           ;\set [0A000B9B0h]=0 ;TTY=dummy/off
+  jal     reset_cont_d_3        ; and call reset_cont_d_3
+   sw     $zero, -0x4650($at)   ;/
 ```
-assuming that R28=A0010FF0h, the last 3 opcodes of above code can be replaced
+assuming that $gp=A0010FF0h, the last 3 opcodes of above code can be replaced
 by:<br/>
 ```
-  mov     r1,1h                 ;\set [0A000B9B0h]=1 ;TTY=duart/on
-  call    reset_cont_d_3        ; and call reset_cont_d_3
-  +mov    [r28-4650h-0ff0h],r1  ;/
+  li      $at, 1                ;\set [0A000B9B0h]=1 ;TTY=duart/on
+  jal     reset_cont_d_3        ; and call reset_cont_d_3
+   sw     $at, -0x5640($gp)     ;/
 ```
 with that patch, the BIOS bootcode (and many games) are sending debug messages
 to the debug terminal, via expansion port, see:<br/>

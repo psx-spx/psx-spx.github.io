@@ -15,15 +15,15 @@
 #### GTE Operation
 The GTE doesn't have any memory or I/O ports mapped to the CPU memory bus,
 instead, it's solely accessed via coprocessor opcodes:<br/>
-```x86asm
-  mov  cop0r12,rt          ;-enable/disable COP2 (GTE) via COP0 status register
-  mov  cop2r0-63,rt        ;\write parameters to GTE registers
-  mov  cop2r0-31,[rs+imm]  ;/
-  mov  cop2cmd,imm25       ;-issue GTE command
-  mov  rt,cop2r0-63        ;\read results from GTE registers
-  mov  [rs+imm],cop2r0-31  ;/
-  jt   cop2flg,dest        ;-jump never  ;\implemented (no exception), but,
-  jf   cop2flg,dest        ;-jump always ;/flag seems to be always "false"
+```
+  mtc0 rt,$12              ;-enable/disable COP2 (GTE) via COP0 status register
+  mtc2 rt,rd / ctc2 rt,rd  ;\write parameters to GTE data/control registers
+  lwc2 rt,imm(rs)          ;/(data registers only)
+  cop2 imm25               ;-issue GTE command
+  mfc2 rt,rd / cfc2 rt,rd  ;\read results from GTE data/control registers
+  swc2 rt,imm(rs)          ;/(data registers only)
+  bc2t dest                ;-jump never  ;\implemented (no exception), but,
+  bc2f dest                ;-jump always ;/flag seems to be always "false"
 ```
 
 #### GTE Load Delay Slots

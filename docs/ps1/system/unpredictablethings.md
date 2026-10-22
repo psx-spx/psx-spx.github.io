@@ -118,7 +118,7 @@ K0), so be careful not to use that register, unless you are 100% sure that no
 interrupts and no other exceptions can occur. Some exception handlers might
 also destroy R27 aka K1 (though exception handler in the PSX Kernel leaves that
 register unchanged).<br/>
-Some assemblers (not a22i in nocash syntax mode) are internally using R1 aka AT
+Some assemblers are internally using R1 aka AT
 as scratch register for some pseudo opcodes, including for a "sw rx,imm32"
 pseudo opcode (which is nearly impossible to separate from the normal "sw
 rx,imm16" opcode), be careful not to use R1, unless you can trust your

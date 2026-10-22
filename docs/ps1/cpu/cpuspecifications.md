@@ -520,55 +520,6 @@ one uncached opcode).<br/>
   bal dest             ;alias for bgezal r0, r0, dest
 ```
 
-#### Pseudo instructions (nocash/a22i, not present on most other assemblers)
-```
-  mov  rx,NNNN0000h    ;alias for lui  rx,NNNNh
-  mov  rx,0000NNNNh    ;alias for or   rx,r0,NNNNh  ;max +FFFFh
-  mov  rx,-imm15       ;alias for add  rx,r0,-NNNNh ;min -8000h
-  mov  rx,ry           ;alias for or   rx,ry,0  (or "addiu")
-  jrel dest            ;alias for blez R0,dest   ;relative jump
-  crel dest            ;alias for callns R0,dest ;relative call
-  jz   rx,dest         ;alias for je   rx,R0,dest
-  jnz  rx,dest         ;alias for jne  rx,R0,dest
-  call rx              ;alias for call rx,ret=RA
-  ret                  ;alias for jmp  ra
-  subt rt,rs,imm       ;alias for addt rt,rs,-imm
-  sub  rt,rs,imm       ;alias for add  rt,rs,-imm
-  alu  rx,op           ;alias for alu  rx,rx,op
-  neg(t) rx,ry         ;alias for sub(t) rx,R0,ry
-  not    rx,ry         ;alias for nor    rx,R0,ry
-  neg(t)/not rx        ;alias for neg(t)/not rx,rx
-  setz rx,ry           ;alias for setb rx,ry,1   (set if zero)
-  setnz rx,ry          ;alias for setb rx,R0,ry  (set if nonzero)
-  syscall/break        ;alias for syscall/break 000000h
-```
-Below are pseudo instructions combined of two 32bit opcodes...<br/>
-```
-  movp rx,imm32        ;alias for lui  rx,imm16 -plus- or rx,rx,imm16)
-  mov(bhs)p rx,[imm32] ;load from address (lui rx,imm16 / mov rx,[rx+imm16])
-  movu [rs+imm]        ;alias for lwr/swr [rs+imm] plus lwl/swl [rs+imm+3]
-  reti                 ;alias for jmp k0 plus rfe
-```
-Below are pseudo instructions combined of two or more 32bit opcodes...<br/>
-```
-  push rlist           ;alias for sub sp,n*4 -- mov [sp+(1..n)*4],r1..rn
-  pop  rlist           ;alias for mov r1..rn,[sp+(1..n)*4] -- add sp,n*4
-  pop  pc,rlist        ;alias for pop ra,rlist -- jmp ra
-```
-
-#### Directives (nocash)
-```
-  .mips          ;select MIPS instruction set (alternately .hc05 for MC68HC05)
-  .bios          ;create a .ROM file (instead of .EXE)
-  .auto_nop      ;append NOPs to jumps ;unless next opcode starts with a +
-  org imm        ;assume following code to be originated at address "imm"
-  db n(,n(..)))  ;define 8bit data values(s) or quoted ASCII strings
-  dw n(,n(..)))  ;define 16bit data values(s) (not 32bit data!)
-  dd n(,n(..)))  ;define 32bit data values(s)
-  .align imm
-  0              ;alias for immediate 0 and register R0 (whichever fits)
-```
-
 #### Directives (native)
 ```
   org imm        ;self-explaining (but, default=$80010000 for spasm!)
@@ -793,13 +744,14 @@ unchanged.<br/>
 The RFE opcode does NOT automatically jump to EPC. Instead, the exception
 handler must copy EPC into a register (usually R26 aka K0), and then jump to
 that address. Because of branch delays, that would look like so:<br/>
-```x86asm
-  mov  k0,epc  ;get return address
-  push k0      ;save epc in memory (if you expect nested exceptions)
-  ...          ;whatever (ie. process CAUSE)
-  pop  k0      ;restore from memory (if you expect nested exceptions)
-  jmp  k0      ;jump to K0 (after executing the next opcode)
-  +rfe         ;move SR bit4/5 --> bit2/3 --> bit0/1
+```
+  mfc0 $k0, $14      ;get return address from EPC
+  sw   $k0, ...      ;save it in memory (if you expect nested exceptions)
+  ...                ;whatever (ie. process CAUSE)
+  lw   $k0, ...      ;restore from memory (if you expect nested exceptions)
+  nop                ;load delay
+  jr   $k0           ;jump to $k0 (after executing the next opcode)
+   rfe               ;move SR bit4/5 --> bit2/3 --> bit0/1
 ```
 If you expect exceptions to be nested deeply, also push/pop SR. Note that
 there's no way to leave all registers intact (ie. above code destroys K0).<br/>
@@ -874,12 +826,12 @@ causes a Reserved Instruction Exception (excode=0Ah).<br/>
 The PSX supports only one cop0cmd (cop0cmd=10h aka RFE). Trying to execute the
 TLBxx opcodes causes a Reserved Instruction Exception (excode=0Ah).<br/>
 
-#### jf/jt cop0flg,dest - conditional cop0 jumps
+#### bc0f/bc0t dest - conditional cop0 jumps
 With SR.Bit28=0, these cause a Coprocessor Unusable Exception (excode=0Bh),
 even in kernel mode. With SR.Bit28=1, bc0f always jumps and bc0t never does,
 see [Coprocessor Branches](#coprocessor-branches).<br/>
 
-#### mov [mem],cop0reg / mov cop0reg,[mem] - coprocessor cop0 load/store
+#### lwc0/swc0 - coprocessor cop0 load/store
 Not supported by the CPU. Trying to execute these opcodes causes a Coprocessor
 Unusable Exception (excode=0Bh, ie. unlike above, not 0Ah).<br/>
 
@@ -936,9 +888,9 @@ disabled BEFORE jumping from 80000040h to the actual exception handler).
 If one or both of these bits are nonzero, then the PSX seems to check for the
 following opcode sequence,<br/>
 ```
-  mov rx,[mem]   ;load rx from memory
-  ...            ;one or more opcodes that do not change rx
-  jmp/call rx    ;jump or call to rx
+  lw   rx,imm(rs) ;load rx from memory
+  ...              ;one or more opcodes that do not change rx
+  jr/jalr rx       ;jump or call to rx
 ```
 if it does sense that sequence, then it sets PC=[00000000h], but does not store
 any useful information in any cop0 registers, namely it does not store the
