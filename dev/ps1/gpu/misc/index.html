@@ -4512,12 +4512,20 @@ operation that merges the backbuffer colour with the incoming pixel and draws
 the resulting colour to the backbuffer. The PS1 has this capability to an extent,
 using semi-transparency.<br/></p>
 <h4 id="draw-to-display-enable">Draw to display enable</h4>
-<p>This will enable/disable any drawing to the area that is currently displayed.
-Not sure yet WHY one should want to disable that?<br/>
-Also not sure HOW and IF it works... the SIZE of the display area is implied by
-the screen size - which is horizontally counted in CLOCK CYCLES, so, to obtain
-the size in PIXELS, the hardware would require to divide that value by the
-number of cycles per pixel, depending on the current resolution...?<br/></p>
+<p>In 480-line interlaced mode, GP0(E1h).10=0 stops the GPU from drawing the lines
+of the field that is currently being displayed: a row whose Y parity equals
+GPUSTAT.31 at the moment it is drawn is skipped, so while GPUSTAT.31=1 only even
+rows are written and while it is 0 only odd rows are. This applies to polygons,
+lines and rectangles as well as to GP0(02h) fills; a fill takes about half as long
+with the rows skipped. With GP0(E1h).10=1 every row is drawn. See the
+<a href="../status-register/#bits-13-and-31-in-480-line-interlaced-mode">status register</a>
+for when GPUSTAT.31 changes.<br/>
+A consequence is that a frame drawn in less than one field with the bit cleared
+comes out with half of its lines missing; drawing to the display area in 480i
+either needs the bit set, or the frame redrawn on every field.<br/>
+The behaviour above was observed with the drawing confined to the display area,
+in NTSC. What happens to rows outside the display area, in PAL, and in 240-line
+modes is not known.<br/></p>
 
 
 
