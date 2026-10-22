@@ -35,12 +35,33 @@ for other renamed registers.<br/>
   29-30 DMD   DMA Direction               (0=Off, 1=WFNF, 2=WFEP, 3=RFFL)    ;GP1(04h).0-1
   31    ODE   Drawing even/odd lines in interlace mode (0=Even or Vblank, 1=Odd)
 ```
-In 480-lines mode, bit31 changes per frame. And in 240-lines mode, the bit
-changes per scanline. The bit is always zero during Vblank (vertical retrace
-and upper/lower screen border).<br/>
+In 480-lines mode, bit31 changes per field (see below). And in 240-lines mode,
+the bit changes per scanline. The bit is always zero during Vblank (vertical
+retrace and upper/lower screen border).<br/>
 The bit names listed here are from version 2.8 of the PS2 SDK, which includes
 unstripped debug symbols that reference the PGIF's `PG_STAT` register used for
 PS1 GPU emulation; some of them appear in PS1 libraries as well.<br/>
+
+#### Bits 13 and 31 in 480-line interlaced mode
+In NTSC 480i the fields alternate between 263 and 262 lines. Counting lines as
+hblanks since the vblank that opens each field:
+```
+  Bit  GPU    263-line field                 262-line field
+  31   v0/v2  0 for lines 0-22, 1 from 23    always 0
+              until the vblank
+  13   v2     1 for lines 0-5, 0 from 6      0 for lines 0-4, 1 from 5
+  13   v0     always 0                       always 0
+```
+So on a v2 GPU, bit 13 is set during the 262-line field, lagging the vblank by
+five or six lines. On a v0 GPU bit 13 never sets in this mode, which makes it
+useless for telling the fields apart; bit 31 behaves the same on both and is the
+one to use, keeping in mind that it only reads 1 during the displayed lines of
+the 263-line field. The timeline is the same at 320 and 640 pixels wide and does
+not depend on GP0(E1h).10. PAL, and the 256, 368 and 512 pixel widths, are not
+covered here.<br/>
+With GP0(E1h).10=0, the rows of the parity bit 31 indicates (odd rows while it
+reads 1, even rows while it reads 0) are the ones the GPU does not draw; see
+[Draw to display enable](misc.md#draw-to-display-enable).<br/>
 
 #### Note
 Further GPU status information can be retrieved via GP1(10h) and GP0(C0h).<br/>
