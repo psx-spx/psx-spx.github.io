@@ -79,13 +79,16 @@ M51957B).<br/>
   2 Red     GND  Ground
   3 Orange  3.5V (actually 3.48V)
   4 Yellow  GND  Ground
-  5 White   STAND-BY (3.54V, always ON, even if power switch is off)
+  5 White   3.5V EVER (3.54V, always ON, even if power switch is off)
   6 Blue    GND  Ground
   7 Magenta /RES Reset input (from power-on logic and reset button)
 ```
-Purpose of the standy-by voltage is unknown... maybe to expansion port?<br/>
+The SCPH-1002 power supply schematic names pin 5 "3.5V EVER" and takes it from
+the 3.5V line ahead of the power switch; the two-pole power switch only cuts
+pin 1 (8V) and pin 3 (3.5V). What pin 5 feeds on the mainboard is unknown...
+maybe the expansion port?<br/>
 
-#### CN602 - PU-18, PU-23 board Power Socket (to internal power supply board)
+#### CN602 - PU-18, PU-20, PU-23 board Power Socket (to internal power supply board)
 ```
   1 Brown   7.5V (actually 7.92V or so) (ie. higher than in PSone)
   2 Red     GND  Ground
