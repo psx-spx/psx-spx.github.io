@@ -4860,22 +4860,30 @@ times, but, the latch isn't automatically updated when changing GP0 registers.<b
 </code></pre></div>
 Gates whether the upper Y address bit reaches the VRAM address decoder. With
 bit 0 = 0 (the default after a GP1(00h) reset) all Y addressing is masked to
-9 bits and the upper half of VRAM appears as a mirror of the lower half on
-2 MB systems, or as open bus on retail systems where the second half is not
-populated. With bit 0 = 1 the full 10-bit Y range is honored: GP0(E1h).bit11
+9 bits, so Y=512..1023 aliases Y=0..511 and the upper half of VRAM reads back
+as a mirror of the lower half. This is also the case on 1 MB retail consoles.
+With bit 0 = 1 the full 10-bit Y range is honored: GP0(E1h).bit11
 can reference textures in the second half of VRAM, drawing area / drawing
 offset / display area registers all accept Y values in 0..1023, and the
 Copy / Fill commands address Y across the full bank. The GPU has two
 separate chip select outputs for the first and second half; on a retail
 console only the first output is used, so enabling this feature on a 1 MB
-system will result in textures disappearing if GP0(E1h).bit11 is also set.<br/>
+system will result in textures disappearing if GP0(E1h).bit11 is also set.
+On a 1 MB v2 console with bit 0 = 1, VRAM transfers to Y=512..1023 are
+dropped and reads from there return FFFFh, while the lower half keeps its
+contents.<br/>
+On a DTL-H2700 the upper half mirrored the lower half with either value of
+bit 0, and also after GP1(20h) with 501h or 504h. That board's GPU does not
+answer GP1(10h) index 7, so it is not a v2 GPU; whether its second VRAM half
+is populated is unknown.<br/>
 GP1(09h) is supported only on v2 GPUs; v0 GPUs don't support 2 MB VRAM at all
 and v1 seems to use command GP1(20h) instead.<br/></p>
 <h4 id="gp120h-set-vram-size-v1">GP1(20h) - Set VRAM size (v1)</h4>
 <p><div class="highlight"><pre><span></span><code>  0-23  Unknown (501h=1 MB, 504h=2 MB, or so?)
 </code></pre></div>
 Seems to be used only on v1 arcade/prototype GPUs. Regular v2 GPUs use GP1(09h)
-instead of GP1(20h).<br/></p>
+instead of GP1(20h); on a v2 GPU, GP1(20h) with 501h or 504h has no visible
+effect on VRAM transfer addressing.<br/></p>
 <h4 id="gp10bh-unknowninternal">GP1(0Bh) - Unknown/Internal?</h4>
 <p><div class="highlight"><pre><span></span><code>  0-10  Unknown (GPU crashes after a while when set to 274h..7FFh)
   11-23 Unknown (seems to have no effect)
