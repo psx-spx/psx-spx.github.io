@@ -4480,27 +4480,31 @@ than 4 halfwords); for empty slots it's padding all 4 halfwords with FFFFh.<br/>
 Sending the request is possible ONLY if there is a controller in Slot A (if
 controller Slot A is empty then the Slot A access aborts after the FIRST byte,
 and it's thus impossible to send the request in the THIRD byte).<br/>
-Sending the request works on access to Slot A, trying to send another request
-during the LONG response is glitchy (for whatever strange reason); one must
-thus REPEATEDLY do TWO accesses: one dummy Slot A access (with the request),
-followed by the long Slot A+B+C+D access.<br/>
-<div class="highlight"><pre><span></span><code>  Previous access had REQ=0 and returned Slot A data ---&gt; returns Slot A data
-  Previous access had REQ=0 and returned Slot A-D data -&gt; returns Slot A data
-  Previous access had REQ=1 and returned Slot A data ---&gt; returns Slot A-D data
-  Previous access had REQ=1 and returned Slot A-D data -&gt; returns garbage
-  Previous access had REQ=1 and returned garbage -------&gt; returns Slot A-D data
+The request can also be sent in the THIRD byte of a LONG access, and again
+takes effect on the next access. Whether a LONG response that follows another
+LONG response is valid depends on the byte sent at the start of each slot's
+4-halfword block in that previous access (the position of the controller
+command byte in a normal read):<br/>
+<div class="highlight"><pre><span></span><code>  Previous access had REQ=0 and returned Slot A data ------------&gt; returns Slot A data
+  Previous access had REQ=0 and returned Slot A-D data/garbage --&gt; returns Slot A data
+  Previous access had REQ=1 and returned Slot A data ------------&gt; returns Slot A-D data
+  Previous access had REQ=1, returned Slot A-D data, 42h sent ---&gt; returns Slot A-D data
+  Previous access had REQ=1, returned Slot A-D data, 00h sent ---&gt; returns garbage
+  Previous access had REQ=1 and returned garbage ----------------&gt; returns garbage
 </code></pre></div>
 In practice:<br/>
 Toggling REQ on/off after each command: Returns responses toggling between
 normal Slot A data and long Slot A+B+C+D data.<br/>
-Sending REQ=1 in ALL commands: Returns responses toggling between Garbage and
-long Slot A+B+C+D data.<br/>
-Both of the above is working (one needs only the Slot A+B+C+D part, and it
-doesn't matter if the other part is Slot A, or Garbage; as long as the software
-is able/aware of ignoring the Garbage). Garbage response means that the
-multitap returns ONLY four bytes, like so: Hiz,80h,5Ah,LSB (ie. the leading
-HighZ byte, the 5A80h Multitap ID, and the LSB of the Slot A controller ID),
-and aborts transfer after that four bytes.<br/></p>
+Sending REQ=1 in ALL commands, with 42h at the start of each slot block: Returns
+long Slot A+B+C+D data every time (after the first access).<br/>
+Sending REQ=1 in ALL commands, with 00h at the start of each slot block: Returns
+long Slot A+B+C+D data once, then garbage on every access; an access with
+REQ=0 still returns garbage, and the one after it returns Slot A data.<br/>
+Garbage response means that the multitap returns ONLY four bytes, like so:
+Hiz,80h,5Ah,LSB (ie. the leading HighZ byte, the 5A80h Multitap ID, and the LSB
+of the Slot A controller ID), and stops acknowledging after that four bytes.
+These rules were checked with a controller in Slot A only; the effect of the
+bytes sent at the start of the Slot B-D blocks is unknown.<br/></p>
 <h4 id="multitap-memory-card-access">Multitap Memory Card Access</h4>
 <p>Normally memory card access is done by sending this bytes to the card:<br/>
 <div class="highlight"><pre><span></span><code>  80 xx .. ..      ;normal access
