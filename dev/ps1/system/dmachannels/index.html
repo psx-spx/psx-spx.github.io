@@ -4624,7 +4624,15 @@ Bit 24 is automatically cleared upon COMPLETION of the transfer, this bit must
 be always set for all SyncModes when starting a transfer.<br/>
 For DMA6/OTC there are some restrictions, D6_CHCR has only three
 read/write-able bits: 24,28,30. All other bits are read-only: bit 1 is always
-1 (increment=-4), and the other bits are always 0.<br/></p>
+1 (increment=-4), and the other bits are always 0.<br/>
+The OTC never asserts DREQ, so the transfer needs bits 24 and 28 both set;
+the read-only bits are ignored on write, so 11000000h starts it like
+11000002h. With bit 24 alone the channel stays busy and nothing is written.
+With bit 28 alone nothing happens and bit 28 stays set. On completion bits 24
+and 28 clear, while D6_MADR and D6_BCR keep the values written before the
+transfer.<br/>
+If bits 24 and 28 are written while DMA6 is disabled in DPCR, the transfer
+starts as soon as DPCR enables the channel.<br/></p>
 <h4 id="1f8010f0h-dpcr-dma-control-register-rw">1F8010F0h - DPCR - DMA Control Register (R/W)</h4>
 <div class="psx-figure">
 <svg xmlns="http://www.w3.org/2000/svg" width="769" height="312" viewBox="0 0 769 312" role="img" aria-label="register bit layout">
