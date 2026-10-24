@@ -6575,7 +6575,20 @@ software doesn't need to deal with the Repeat Address Register. However,
 reading from it may be useful to sense if the hardware has reached a start bit,
 and writing may be also useful in some cases, eg. to redirect a one-shot sample
 (with stop-bit, but without any start-bits) to a silent-loop located elsewhere
-in memory.<br/></p>
+in memory.<br/>
+Writing to LSAX sets an internal per-voice flag that stops Loop-Start-Bits from
+overwriting the register until the next Key On. This happens on any write, even
+one that writes back the value already in the register, and also while the voice
+is keyed off. Key On clears the flag, but does not change LSAX itself, so the
+previous value remains until the voice reaches a block with the Loop-Start-Bit.<br/>
+The exception is a write shortly after Key On. On each of the first three
+samples after Key On is serviced, the voice fetches the header of the first
+block (see Key On latency), and if that block has the Loop-Start-Bit, each fetch
+copies its address to LSAX. A write made before the last of these three fetches
+does not set the flag, so it is overwritten by the first block's Loop-Start-Bit,
+or by the next Loop-Start-Bit found later in the sample. A write made after it
+sets the flag as usual. The cutoff depends only on the time since Key On, not on
+the pitch or on whether the first block has a Loop-Start-Bit.<br/></p>
 <h4 id="sample-data-brrspu-adpcm">Sample Data (BRR/SPU-ADPCM)</h4>
 <p>Samples consist of one or more 16-byte blocks:<br/>
 <div class="highlight"><pre><span></span><code>  00h       Shift/Filter (reportedly same as for CD-XA) (see there)
@@ -6999,7 +7012,12 @@ next. Code that times a Key On from a Bit11 edge therefore sees the sound start
 at capture buffer index 8 on some boots and index 9 on others (same console,
 same code), and an ADSR curve sampled on Bit11 edges sits up to two samples of
 envelope progress apart between such boots. Tests comparing capture buffer
-contents against a reference should allow for a one-sample offset.<br/></p>
+contents against a reference should allow for a one-sample offset.<br/>
+Once Key On is serviced, the voice stays silent for four samples. On each of the
+first three, it fetches the header of the first block and applies its
+Loop-Start-Bit; ENDX is cleared on the first of them. The Attack phase starts
+on the fifth sample, so ENVX becomes nonzero four samples after ENDX is
+cleared.<br/></p>
 <h4 id="0x1f801d8c-kof0-voice-015-key-off-write-only"><code>0x1f801d8c</code>: <code>KOF0</code> (voice 0..15 key off, write-only)</h4>
 <div class="highlight"><pre><span></span><code>  0-15  Voice 0..15 Off (0=No change, 1=Start Release)
 </code></pre></div>
@@ -7009,7 +7027,9 @@ contents against a reference should allow for a one-sample offset.<br/></p>
 </code></pre></div>
 For a full ADSR pattern, OFF would be usually issued in the Sustain period,
 however, it can be issued at any time (eg. to abort Attack, skip the Decay and
-Sustain periods, and switch immediately to Release).<br/></p>
+Sustain periods, and switch immediately to Release).<br/>
+A keyed-off voice keeps advancing through the sample data and applying
+Loop-Start-Bits to LSAX, whether or not the SPU IRQ is enabled.<br/></p>
 <h4 id="0x1f801d9c-endx0-voice-015-end-reached-read-only"><code>0x1f801d9c</code>: <code>ENDX0</code> (voice 0..15 end reached, read-only)</h4>
 <div class="highlight"><pre><span></span><code>  0-15  Voice 0..15 Status (0=Newly Keyed On, 1=Reached LOOP-END)
 </code></pre></div>
@@ -7017,7 +7037,8 @@ Sustain periods, and switch immediately to Release).<br/></p>
 <p><div class="highlight"><pre><span></span><code>  0-7   Voice 16..23 Status (0=Newly Keyed On, 1=Reached LOOP-END)
   8-15  Not used
 </code></pre></div>
-The bits get CLEARED when setting the corresponding KEY ON bits.<br/>
+The bits get CLEARED when the voice is keyed on, on the first sample after Key
+On is serviced (see Key On latency).<br/>
 The bits get SET when reaching an LOOP-END flag in ADPCM header.bit0.<br/>
 Some emulators do not implement this register.<br/></p>
 <h4 id="rw">R/W</h4>
