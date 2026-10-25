@@ -635,15 +635,19 @@ When read:
 
 | Bits | RW | Description                      |
 | ---: | :- | :------------------------------- |
-| 0-11 |    | _Unused_                         |
+| 0-11 |    | _Unused_ (read as 1)             |
 |   12 | R  | Possibly `/INIT` from FPGA       |
-|   13 | R  | Possibly `DONE` from FPGA        |
-|   14 | R  | Board identification? (always 1) |
-|   15 | R  | Board identification? (always 0) |
+|   13 | R  | `DONE` from FPGA                 |
+|   14 | R  | Board identification? (always 0) |
+|   15 | R  | Board identification? (always 1) |
 
-**NOTE**: all registers in the `0x1f6400f0-0x1f6400ff` region seem to return the
-same value as this register when read, possibly due to incomplete address
-decoding in the CPLD. Konami's driver only ever reads from this register and
+Bit 13 reads 0 after `/PROGRAM` is pulsed and 1 once a bitstream has been
+loaded, so the register reads `0x9fff` with the FPGA cleared and `0xbfff` with
+it configured.
+
+**NOTE**: all registers in the `0x1f6400f0-0x1f6400ff` region return the same
+value as this register when read, probably due to incomplete address decoding
+in the CPLD. Konami's driver only ever reads from this register and
 treats all other CPLD registers as write-only.
 
 When written:
