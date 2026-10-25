@@ -52,6 +52,9 @@ security dongles. Returns the following JVS identifier string:
 KONAMI CO.,LTD.;White I/O;Ver1.0;White I/O PCB
 ```
 
+GuitarFreaks 2ndMIX ships the XCS10XL bitstream for this board (SHA-1
+`5d27c84e812f71401f940621f79c5c6114192895`); it is not a digital I/O bitstream.
+
 Memory card support became common in later Bemani games, allowing players to
 save their scores and play custom charts. GuitarFreaks is the only game known
 to support external controllers through this board.

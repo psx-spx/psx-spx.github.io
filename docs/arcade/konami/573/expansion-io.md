@@ -105,7 +105,6 @@ no bitstream is loaded. There are several known versions of Konami's bitstream:
 | :----------------------------------------- | :------------------------------------- |
 | `32d455a25eb26fe4e4b577cb0f0e3bebd0f82959` | Dance Dance Revolution Solo Bass Mix   |
 | `a53b8906de95c34b6e3f053bd7488c888bc904b6` | Dance Dance Revolution 3rdMIX          |
-| `5d27c84e812f71401f940621f79c5c6114192895` | GuitarFreaks 2ndMIX                    |
 | `450b12627b7eacd3ea3f8b0b7a16589a13010c41` | Mambo a Go-Go                          |
 | `53d0c1e3f6ae042d7d45ce889b79a12f1be5eabd` | Martial Beat e-Amusement               |
 | `d1d0f123bbb9d5abfefbd556c366f9ded0779e41` | Martial Beat (leftover file 1, unused) |
