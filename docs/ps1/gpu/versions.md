@@ -49,8 +49,8 @@ using 8 different dither patterns).<br/>
 The v0 GPU uses two Dual-ported VRAM chips (each with two 16bit databusses,
 one for CPU/DMA/rendering access, and one for output to the video DAC). The New
 GPU uses s normal DRAM chip (with single 32bit databus).<br/>
-The exact timing differences are unknown, but the different memory types should
-result in quite different timings:<br/>
+Measured drawing and transfer times for both are in
+[Drawing Timings](drawing-timings.md).<br/>
 The v0 GPU might perform better on non-32bit aligned accesses, and on memory
 accesses performed simultaneously with DAC output.<br/>
 On the other hand, the v2 GPU's DRAM seems to be faster in some cases (for
