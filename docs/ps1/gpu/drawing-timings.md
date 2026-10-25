@@ -27,21 +27,21 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   Triangle, tex 15bpp, uncached, semi     130        6       6.36
   Quad, flat                               50       12       0.51
   Quad, flat, semi                         50       13       1.53
-  Quad, gouraud                           335       11       1.03
-  Quad, gouraud, semi                     335       11       3.06
-  Quad, textured, cached                  215       11       1.02
-  Quad, textured, cached, semi            215       11       3.06
-  Quad, textured gouraud, cached          465       10       1.03
-  Quad, textured 4bpp, uncached           220        7       1.87
-  Quad, textured 8bpp, uncached           460       11       2.69
-  Quad, textured 15bpp, uncached          215       10       4.34
-  Quad, tex 15bpp, uncached, semi         215       10       6.37
+  Quad, gouraud                           335       12       1.02
+  Quad, gouraud, semi                     335       12       3.06
+  Quad, textured, cached                  215       12       1.02
+  Quad, textured, cached, semi            215       12       3.06
+  Quad, textured gouraud, cached          465       12       1.02
+  Quad, textured 4bpp, uncached           220       13       1.86
+  Quad, textured 8bpp, uncached           460       13       2.68
+  Quad, textured 15bpp, uncached          215       11       4.33
+  Quad, tex 15bpp, uncached, semi         215       11       6.37
   Rectangle, flat                          50        6       0.51
   Rectangle, flat, semi                    50        6       1.53
   Rectangle, textured, cached              50        6       0.51
-  Rectangle, textured 4bpp, uncached       50        1       1.34
-  Rectangle, textured 8bpp, uncached      300        0       2.17
-  Rectangle, textured 15bpp, uncached      50        2       3.81
+  Rectangle, textured 4bpp, uncached       50        0       1.36
+  Rectangle, textured 8bpp, uncached      300        1       2.16
+  Rectangle, textured 15bpp, uncached      50        1       3.81
   Rectangle, tex 15bpp, uncached, semi     50        1       4.84
 ```
 ```
@@ -55,35 +55,35 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
 #### v2 GPU (SCPH-1001, SCPH-7001)
 ```
   Primitive                             Setup  Per row  Per pixel
-  Triangle, flat                           50        2       0.53
-  Triangle, flat, semi                     50        8       0.74
+  Triangle, flat                           50        2       0.52
+  Triangle, flat, semi                     50        5       0.78
   Triangle, gouraud                       200        2       1.01
-  Triangle, gouraud, semi                 200        2       1.06
+  Triangle, gouraud, semi                 200        3       1.04
   Triangle, textured, cached              130        2       1.01
-  Triangle, textured, cached, semi        130        2       1.06
-  Triangle, textured gouraud, cached      295        2       1.01
-  Triangle, textured 4bpp, uncached       170        6       1.61
-  Triangle, textured 8bpp, uncached       420        4       2.27
-  Triangle, textured 15bpp, uncached      130        5       3.48
+  Triangle, textured, cached, semi        130        3       1.04
+  Triangle, textured gouraud, cached      295        2       1.00
+  Triangle, textured 4bpp, uncached       170        6       1.62
+  Triangle, textured 8bpp, uncached       420        5       2.25
+  Triangle, textured 15bpp, uncached      130        4       3.48
   Triangle, tex 15bpp, uncached, semi     165        6       3.88
-  Quad, flat                               50        6       0.52
-  Quad, flat, semi                         50       12       0.78
-  Quad, gouraud                           335        4       1.01
-  Quad, gouraud, semi                     335        4       1.06
-  Quad, textured, cached                  215        4       1.01
-  Quad, textured, cached, semi            215        5       1.06
-  Quad, textured gouraud, cached          495        2       1.02
-  Quad, textured 4bpp, uncached           220        2       1.70
+  Quad, flat                               50        5       0.53
+  Quad, flat, semi                         50       11       0.79
+  Quad, gouraud                           335        3       1.02
+  Quad, gouraud, semi                     335        6       1.04
+  Quad, textured, cached                  215        3       1.02
+  Quad, textured, cached, semi            215        6       1.04
+  Quad, textured gouraud, cached          495        4       1.01
+  Quad, textured 4bpp, uncached           220        9       1.69
   Quad, textured 8bpp, uncached           470        9       2.31
-  Quad, textured 15bpp, uncached          215        5       3.50
-  Quad, tex 15bpp, uncached, semi         215       16       3.87
-  Rectangle, flat                          50        4       0.51
-  Rectangle, flat, semi                    50        8       0.77
+  Quad, textured 15bpp, uncached          215        9       3.49
+  Quad, tex 15bpp, uncached, semi         215       14       3.90
+  Rectangle, flat                          50        2       0.53
+  Rectangle, flat, semi                    50        8       0.78
   Rectangle, textured, cached              50        2       0.53
-  Rectangle, textured 4bpp, uncached       50        0       1.19
-  Rectangle, textured 8bpp, uncached      300        0       1.88
-  Rectangle, textured 15bpp, uncached      50        2       3.01
-  Rectangle, tex 15bpp, uncached, semi     50        7       3.47
+  Rectangle, textured 4bpp, uncached       50        1       1.21
+  Rectangle, textured 8bpp, uncached      300        1       1.88
+  Rectangle, textured 15bpp, uncached      50        3       3.03
+  Rectangle, tex 15bpp, uncached, semi     50        7       3.49
 ```
 ```
   Transfer                              Setup  Per row  Per pixel
@@ -105,10 +105,9 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
 - A quad is drawn as two triangles, so its per-row cost is about twice a
   triangle's and its setup is higher.
 - The setup of untextured and cached primitives is the same on both GPUs. Setup
-  figures are accurate to about 30 cycles. Per-row figures are accurate to about
-  5 cycles on the v0 GPU and to about 10 on the v2 GPU. The per-row figures of
-  the semi-transparent and uncached rectangles were measured directly, at a
-  fixed pixel count (240x16 against 16x240).
+  figures are accurate to about 30 cycles. Per-row and per-pixel figures come
+  from the same primitive drawn in eight shapes from 240x16 to 16x240, at two
+  pixel counts. Two v2 consoles agree on them within 0.3 cycles per row.
 - A primitive entirely outside the drawing area still costs its setup plus
   0.7 to 1.3 cycles for each row it would have covered. A rectangle of width 0 costs
   the same; one of height 0 costs only its setup.
