@@ -39,10 +39,10 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   Rectangle, flat                          50        6       0.51
   Rectangle, flat, semi                    50        6       1.53
   Rectangle, textured, cached              50        6       0.51
-  Rectangle, textured 4bpp, uncached       50      100       1.06
-  Rectangle, textured 8bpp, uncached       50        0       2.17
+  Rectangle, textured 4bpp, uncached       50        1       1.34
+  Rectangle, textured 8bpp, uncached      300        0       2.17
   Rectangle, textured 15bpp, uncached      50        2       3.81
-  Rectangle, tex 15bpp, uncached, semi     50        3       4.83
+  Rectangle, tex 15bpp, uncached, semi     50        1       4.84
 ```
 ```
   Transfer                              Setup  Per row  Per pixel
@@ -80,10 +80,10 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   Rectangle, flat                          50        4       0.51
   Rectangle, flat, semi                    50        0       0.83
   Rectangle, textured, cached              50        2       0.53
-  Rectangle, textured 4bpp, uncached       50       90       0.95
-  Rectangle, textured 8bpp, uncached       50        0       1.89
-  Rectangle, textured 15bpp, uncached      50        6       3.01
-  Rectangle, tex 15bpp, uncached, semi     50        7       3.50
+  Rectangle, textured 4bpp, uncached       50        0       1.19
+  Rectangle, textured 8bpp, uncached      300        0       1.88
+  Rectangle, textured 15bpp, uncached      50        0       3.04
+  Rectangle, tex 15bpp, uncached, semi     50       12       3.45
 ```
 ```
   Transfer                              Setup  Per row  Per pixel
