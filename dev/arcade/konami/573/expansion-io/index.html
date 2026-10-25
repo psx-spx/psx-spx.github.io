@@ -4213,9 +4213,9 @@ For the human-written reference, see the <a href="/">stable version</a>.
 </li>
         
           <li class="md-nav__item">
-  <a href="#0x1f6400c6-fpga-all-bitstreams-unknown" class="md-nav__link">
+  <a href="#0x1f6400c6-fpga-all-bitstreams-unimplemented" class="md-nav__link">
     <span class="md-ellipsis">
-      0x1f6400c6 (FPGA, all bitstreams): Unknown
+      0x1f6400c6 (FPGA, all bitstreams): Unimplemented
     </span>
   </a>
   
@@ -5061,9 +5061,9 @@ For the human-written reference, see the <a href="/">stable version</a>.
 </li>
         
           <li class="md-nav__item">
-  <a href="#0x1f6400c6-fpga-all-bitstreams-unknown" class="md-nav__link">
+  <a href="#0x1f6400c6-fpga-all-bitstreams-unimplemented" class="md-nav__link">
     <span class="md-ellipsis">
-      0x1f6400c6 (FPGA, all bitstreams): Unknown
+      0x1f6400c6 (FPGA, all bitstreams): Unimplemented
     </span>
   </a>
   
@@ -5674,7 +5674,62 @@ no bitstream is loaded. There are several known versions of Konami's bitstream:<
 </table>
 <p>The DDR and Mambo bitstreams all implement the same registers (listed below) and
 seem to only differ in the MP3 decryption algorithm, while the unused Martial
-Beat bitstreams seem to behave in a completely different way.</p>
+Beat bitstreams seem to behave in a completely different way. With any of the
+three Martial Beat bitstreams loaded, every register in the
+<code>0x1f640080-0x1f6400ef</code> range reads <code>0xffff</code>, the same as with no bitstream.</p>
+<p>Right after configuration, before any register is written, the DDR and Mambo
+bitstreams read back as follows:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Address</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>0x1f640080-0x1f64009e</code>, <code>0x1f6400d0-0x1f6400de</code></td>
+<td style="text-align: left;"><code>0x1234</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400a0-0x1f6400a8</code></td>
+<td style="text-align: left;"><code>0x0000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400aa</code></td>
+<td style="text-align: left;"><code>0x9000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400ac</code></td>
+<td style="text-align: left;"><code>0x3000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400ae-0x1f6400b2</code>, <code>0x1f6400b6-0x1f6400be</code></td>
+<td style="text-align: left;"><code>0x0000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400c2-0x1f6400c4</code></td>
+<td style="text-align: left;"><code>0x0000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400c6-0x1f6400c8</code></td>
+<td style="text-align: left;"><code>0x7654</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400ca</code></td>
+<td style="text-align: left;"><code>0x7654</code> (Solo), <code>0x0000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400cc</code></td>
+<td style="text-align: left;"><code>0x0000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>0x1f6400e0-0x1f6400ee</code></td>
+<td style="text-align: left;"><code>0x1100</code></td>
+</tr>
+</tbody>
+</table>
+<p>Konami's bitstreams return <code>0x7654</code> from registers that are not implemented.</p>
 <p>In the Solo Bass Mix and 3rdMIX bitstreams, nearly all of the logic runs from
 the 29.45 MHz clock input. The MAS3507D's <code>CLKI</code> input is fed that clock divided by 2. The audio
 DAC's <code>MCLK</code> output is the MAS3507D's <code>CLKO</code> output divided by 2, and the DAC's
@@ -5720,7 +5775,9 @@ custom bitstreams are known to exist so far:</p>
 </tbody>
 </table>
 <p>This register is checked by some versions of Konami's digital I/O board driver
-to make sure the bitstream was properly loaded.</p>
+to make sure the bitstream was properly loaded. Konami's bitstreams only decode
+part of the address, so the same value also reads back throughout
+<code>0x1f640080-0x1f64009f</code> and <code>0x1f6400d0-0x1f6400df</code>.</p>
 <h4 id="0x1f640082-fpga-573in1-bitstream-configuration"><code>0x1f640082</code> (FPGA, 573in1 bitstream): <strong>Configuration</strong></h4>
 <table>
 <thead>
@@ -6428,7 +6485,7 @@ up to 1023 before wrapping around.</p>
 received bytes overwrite the oldest unread ones while this counter keeps
 incrementing up to 4095 before wrapping around. There is no interrupt for
 received data, so this register must be polled.</p>
-<h4 id="0x1f6400c6-fpga-all-bitstreams-unknown"><code>0x1f6400c6</code> (FPGA, all bitstreams): <strong>Unknown</strong></h4>
+<h4 id="0x1f6400c6-fpga-all-bitstreams-unimplemented"><code>0x1f6400c6</code> (FPGA, all bitstreams): <strong>Unimplemented</strong></h4>
 <p>Always reads <code>0x7654</code>. Writes have no effect.</p>
 <h4 id="0x1f6400c8-fpga-all-bitstreams-network-fifo-reset"><code>0x1f6400c8</code> (FPGA, all bitstreams): <strong>Network FIFO reset</strong></h4>
 <p>Writing any value to this register empties both the TX FIFO (including the byte
@@ -6539,7 +6596,8 @@ counter always runs.</p>
 </tr>
 </tbody>
 </table>
-<p>All registers in the <code>0x1f6400e0-0x1f6400ec</code> range read 0.</p>
+<p>All registers in the <code>0x1f6400e0-0x1f6400ec</code> range read <code>0x1100</code> after
+configuration, the same value <code>0x1f6400ee</code> returns with both 1-wire buses idle.</p>
 <h4 id="0x1f6400e2-fpga-all-bitstreams-bank-a"><code>0x1f6400e2</code> (FPGA, all bitstreams): <strong>Bank A</strong></h4>
 <table>
 <thead>
