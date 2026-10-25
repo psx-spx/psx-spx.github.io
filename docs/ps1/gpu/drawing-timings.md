@@ -78,12 +78,12 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   Quad, textured 15bpp, uncached          215        5       3.50
   Quad, tex 15bpp, uncached, semi         215       16       3.87
   Rectangle, flat                          50        4       0.51
-  Rectangle, flat, semi                    50        0       0.83
+  Rectangle, flat, semi                    50        8       0.77
   Rectangle, textured, cached              50        2       0.53
   Rectangle, textured 4bpp, uncached       50        0       1.19
   Rectangle, textured 8bpp, uncached      300        0       1.88
-  Rectangle, textured 15bpp, uncached      50        0       3.04
-  Rectangle, tex 15bpp, uncached, semi     50       12       3.45
+  Rectangle, textured 15bpp, uncached      50        2       3.01
+  Rectangle, tex 15bpp, uncached, semi     50        7       3.47
 ```
 ```
   Transfer                              Setup  Per row  Per pixel
@@ -105,7 +105,10 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
 - A quad is drawn as two triangles, so its per-row cost is about twice a
   triangle's and its setup is higher.
 - The setup of untextured and cached primitives is the same on both GPUs. Setup
-  figures are accurate to about 30 cycles and per-row figures to about 5.
+  figures are accurate to about 30 cycles. Per-row figures are accurate to about
+  5 cycles on the v0 GPU and to about 10 on the v2 GPU. The per-row figures of
+  the semi-transparent and uncached rectangles were measured directly, at a
+  fixed pixel count (240x16 against 16x240).
 - A primitive entirely outside the drawing area still costs its setup plus
   0.7 to 1.3 cycles for each row it would have covered. A rectangle of width 0 costs
   the same; one of height 0 costs only its setup.
