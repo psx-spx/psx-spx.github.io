@@ -6,8 +6,10 @@ Dualshock2 is a PS2 controller. However, it can be also used with PSX games
 on a PS2 console).<br/>
 The analog button feature is reportedly rarely used by PS2 games (and there
 aren't any PSX games known to use it).<br/>
-Commands 40h and 41h only answer in analog mode (LED on, after Command 44h with
-Led=01h). In digital mode both reply with 00h bytes only.<br/>
+Commands 40h, 41h and 4Fh only work in analog mode (LED on, after Command 44h
+with Led=01h). In digital mode all three reply with 00h bytes only (the last
+byte included), and a Command 4Fh sent in digital mode does not change the
+reply protocol.<br/>
 
 #### Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?
 ```
@@ -81,7 +83,7 @@ CAUTION: Sending Command 44h does RESET the Command 4Fh setting (either to
 DigitalMode=000003h or AnalogMode=00003Fh; same happens when toggling mode via
 Analog button).<br/>
 
-Note: The last (9th) reply byte of Commands 40h, 41h and 4Fh is 5Ah (or FFh
+Note: In analog mode, the last (9th) reply byte of Commands 40h, 41h and 4Fh is 5Ah (or FFh
 for Command 40h with Idx>0Bh). The other Config Mode commands return 00h there.<br/>
 
 #### Analog Button Sensitivity
