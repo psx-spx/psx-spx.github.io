@@ -112,7 +112,27 @@ no bitstream is loaded. There are several known versions of Konami's bitstream:
 
 The DDR and Mambo bitstreams all implement the same registers (listed below) and
 seem to only differ in the MP3 decryption algorithm, while the unused Martial
-Beat bitstreams seem to behave in a completely different way.
+Beat bitstreams seem to behave in a completely different way. With any of the
+three Martial Beat bitstreams loaded, every register in the
+`0x1f640080-0x1f6400ef` range reads `0xffff`, the same as with no bitstream.
+
+Right after configuration, before any register is written, the DDR and Mambo
+bitstreams read back as follows:
+
+| Address                                           | Value                       |
+| :------------------------------------------------ | :-------------------------- |
+| `0x1f640080-0x1f64009e`, `0x1f6400d0-0x1f6400de`  | `0x1234`                    |
+| `0x1f6400a0-0x1f6400a8`                           | `0x0000`                    |
+| `0x1f6400aa`                                      | `0x9000`                    |
+| `0x1f6400ac`                                      | `0x3000`                    |
+| `0x1f6400ae-0x1f6400b2`, `0x1f6400b6-0x1f6400be`  | `0x0000`                    |
+| `0x1f6400c2-0x1f6400c4`                           | `0x0000`                    |
+| `0x1f6400c6-0x1f6400c8`                           | `0x7654`                    |
+| `0x1f6400ca`                                      | `0x7654` (Solo), `0x0000`   |
+| `0x1f6400cc`                                      | `0x0000`                    |
+| `0x1f6400e0-0x1f6400ee`                           | `0x1100`                    |
+
+Konami's bitstreams return `0x7654` from registers that are not implemented.
 
 In the Solo Bass Mix and 3rdMIX bitstreams, nearly all of the logic runs from
 the 29.45 MHz clock input. The MAS3507D's `CLKI` input is fed that clock divided by 2. The audio
@@ -137,7 +157,9 @@ custom bitstreams are known to exist so far:
 | 0-15 | R  | Magic number (`0x1234` for Konami bitstreams, `0x573f` for 573in1 bitstreams) |
 
 This register is checked by some versions of Konami's digital I/O board driver
-to make sure the bitstream was properly loaded.
+to make sure the bitstream was properly loaded. Konami's bitstreams only decode
+part of the address, so the same value also reads back throughout
+`0x1f640080-0x1f64009f` and `0x1f6400d0-0x1f6400df`.
 
 #### `0x1f640082` (FPGA, 573in1 bitstream): **Configuration**
 
@@ -451,7 +473,7 @@ received bytes overwrite the oldest unread ones while this counter keeps
 incrementing up to 4095 before wrapping around. There is no interrupt for
 received data, so this register must be polled.
 
-#### `0x1f6400c6` (FPGA, all bitstreams): **Unknown**
+#### `0x1f6400c6` (FPGA, all bitstreams): **Unimplemented**
 
 Always reads `0x7654`. Writes have no effect.
 
@@ -505,7 +527,8 @@ On the 3rdMIX bitstream, reading this register returns the same value as
 |   14 | W  | Output A6 (0 = grounded, 1 = high-z) |
 |   15 | W  | Output A7 (0 = grounded, 1 = high-z) |
 
-All registers in the `0x1f6400e0-0x1f6400ec` range read 0.
+All registers in the `0x1f6400e0-0x1f6400ec` range read `0x1100` after
+configuration, the same value `0x1f6400ee` returns with both 1-wire buses idle.
 
 #### `0x1f6400e2` (FPGA, all bitstreams): **Bank A**
 
