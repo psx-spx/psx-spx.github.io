@@ -6865,7 +6865,7 @@ initialization.</p>
 <tr>
 <td style="text-align: right;">0-11</td>
 <td style="text-align: left;"></td>
-<td style="text-align: left;"><em>Unused</em></td>
+<td style="text-align: left;"><em>Unused</em> (read as 1)</td>
 </tr>
 <tr>
 <td style="text-align: right;">12</td>
@@ -6875,23 +6875,26 @@ initialization.</p>
 <tr>
 <td style="text-align: right;">13</td>
 <td style="text-align: left;">R</td>
-<td style="text-align: left;">Possibly <code>DONE</code> from FPGA</td>
+<td style="text-align: left;"><code>DONE</code> from FPGA</td>
 </tr>
 <tr>
 <td style="text-align: right;">14</td>
 <td style="text-align: left;">R</td>
-<td style="text-align: left;">Board identification? (always 1)</td>
+<td style="text-align: left;">Board identification? (always 0)</td>
 </tr>
 <tr>
 <td style="text-align: right;">15</td>
 <td style="text-align: left;">R</td>
-<td style="text-align: left;">Board identification? (always 0)</td>
+<td style="text-align: left;">Board identification? (always 1)</td>
 </tr>
 </tbody>
 </table>
-<p><strong>NOTE</strong>: all registers in the <code>0x1f6400f0-0x1f6400ff</code> region seem to return the
-same value as this register when read, possibly due to incomplete address
-decoding in the CPLD. Konami's driver only ever reads from this register and
+<p>Bit 13 reads 0 after <code>/PROGRAM</code> is pulsed and 1 once a bitstream has been
+loaded, so the register reads <code>0x9fff</code> with the FPGA cleared and <code>0xbfff</code> with
+it configured.</p>
+<p><strong>NOTE</strong>: all registers in the <code>0x1f6400f0-0x1f6400ff</code> region return the same
+value as this register when read, probably due to incomplete address decoding
+in the CPLD. Konami's driver only ever reads from this register and
 treats all other CPLD registers as write-only.</p>
 <p>When written:</p>
 <table>
