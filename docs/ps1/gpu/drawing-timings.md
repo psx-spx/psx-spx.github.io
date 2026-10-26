@@ -118,7 +118,10 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
 - On the v2 GPU, scanning out the display slows drawing: with the display area
   cut to one line (GP1(07h) Y2=Y1+1) a large flat quad draws about 5% faster,
   and the v2 figures here include that cost. Disabling the display with GP1(03h)
-  does not remove it. The v0 GPU draws at the same speed either way.
+  does not remove it. A 640x480i 24bpp display costs another 5 to 10%. The v0
+  GPU draws, fills and copies at the same speed in every display mode.
+- The v0 per-row cost of GP0(80h) applies to copies 64 pixels wide or less; a
+  256x16 copy takes the same time as a 128x32 one.
 - Large untextured primitives on the v2 GPU vary by up to about 5% between
   identical draws, the v0 GPU by well under 1% (?).
 - Opaque rectangles are drawn in pixel pairs: an odd width costs the same as the
