@@ -47,7 +47,7 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
 ```
   Transfer                              Setup  Per row  Per pixel
   GP0(02h) fill                            30        7       0.06
-  GP0(80h) VRAM to VRAM                    50        -       1.63
+  GP0(80h) VRAM to VRAM                    50       11       1.54
   GP0(A0h) by DMA, 16-word blocks          30        2       0.88
   GP0(C0h) by DMA, 16-word blocks         170        3       1.50
 ```
@@ -87,8 +87,8 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
 ```
 ```
   Transfer                              Setup  Per row  Per pixel
-  GP0(02h) fill                            10        8       0.05
-  GP0(80h) VRAM to VRAM                    50        -       1.38
+  GP0(02h) fill                            10        5       0.08
+  GP0(80h) VRAM to VRAM                    50       21       1.26
   GP0(A0h) by DMA, 16-word blocks          80        1       0.87
   GP0(C0h) by DMA, 16-word blocks          40        2       1.09
 ```
@@ -115,8 +115,18 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   is not skipped: flat untextured ones cost their setup, gouraud and textured ones
   cost more than a 1-pixel primitive of the same kind (for example about 460
   cycles for a gouraud quad).
+- On the v2 GPU, scanning out the display slows drawing: with the display area
+  cut to one line (GP1(07h) Y2=Y1+1) a large flat quad draws about 5% faster,
+  and the v2 figures here include that cost. Disabling the display with GP1(03h)
+  does not remove it. The v0 GPU draws at the same speed either way.
 - Large untextured primitives on the v2 GPU vary by up to about 5% between
   identical draws, the v0 GPU by well under 1% (?).
+- Opaque rectangles are drawn in pixel pairs: an odd width costs the same as the
+  even width below it, at even and odd X alike.
+- On the v2 GPU, rectangles narrower than 8 pixels cost more per row: about 4.5
+  cycles per row in total at widths 1 to 3 and 5 at widths 4 and 5. A
+  semi-transparent rectangle costs 5 to 6 more cycles per row at widths 16 and
+  32 than at 15 and 31.
 - DMA transfers in 16-word blocks take about the same time on both GPUs. Larger
   blocks are faster, so the block size sets the rate.
 - The figures were taken with the display enabled (320x240, 15bpp, NTSC)
