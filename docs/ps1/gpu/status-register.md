@@ -71,9 +71,10 @@ WFEP (bit 28): Normally, this bit gets cleared when the command execution is bus
 once when the command and all of its parameters are received), however, for
 Polygon and Line Rendering commands, the bit gets cleared immediately after
 receiving the command word (ie. before receiving the vertex parameters). The
-bit is used as DMA request in DMA Mode 2, accordingly, the DMA would probably
-hang if the Polygon/Line parameters are transferred in a separate DMA block
-(ie. the DMA probably starts ONLY on command words).<br/>
+bit is used as DMA request in DMA Mode 2, accordingly, the DMA hangs if the
+Polygon/Line parameters are transferred in a separate DMA block (ie. the DMA
+probably starts ONLY on command words), see
+[GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>
 RFFL (bit 27): Gets set after sending GP0(C0h) and its parameters, and stays set until
 all data words are received; used as DMA request in DMA Mode 3.<br/>
 IDLE (bit 26): Gets set when the GPU wants to receive a command. If the bit is cleared,

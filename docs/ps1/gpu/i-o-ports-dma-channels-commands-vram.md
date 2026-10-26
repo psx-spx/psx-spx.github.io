@@ -11,6 +11,7 @@ GP0 has a 64-byte (16-word) command FIFO buffer, in addition to the command the
 GPU is currently executing. Writing to a full FIFO does not stall the CPU and
 does not drop the new word: the newest words overwrite the oldest queued ones.
 Software must check GPUSTAT (or use DMA) before writing.<br/>
+See [GP0 write FIFO](#gp0-write-fifo) below for the flags that report it.<br/>
 Optionally, Port 1F801810h (Read/Write) can be also accessed via DMA2.<br/>
 The communication between the CPU and the GPU is a 32-bits data-only bus called
 the VBUS. Aside from address line 2 being connected, in order to make the difference
@@ -32,6 +33,41 @@ Most of the Timers are bound to GPU timings, see<br/>
 Note: Before using DMA2, set up the DMA Direction in GP1(04h).<br/>
 DMA2 is equivalent to accessing Port 1F801810h (GP0) by software.<br/>
 DMA6 just initializes data in Main RAM (not physically connected to the GPU).<br/>
+
+#### GP0 write FIFO
+Words written to GP0, by the CPU or by DMA2, wait in the FIFO until the GPU
+takes them. Which GPUSTAT bit reports its state depends on the DMA Direction
+set with GP1(04h).<br/>
+With GP1(04h)=1, bit 25 reads 0 once about 11 words are queued behind a busy
+GPU, before the 16 words are used up, and goes back to 1 as the GPU takes
+words. Waiting for bit 25 before each write is enough to stream any amount of
+data. That includes a poly-line much longer than the FIFO: the GPU consumes it
+one segment at a time, and a 60-vertex poly-line written this way draws
+completely. Without the wait the CPU is not slowed down, and words are lost as
+described above.<br/>
+Bit 26 is not a FIFO flag: it reads 0 while a command is still waiting for its
+parameters, and it is 0 after each word of a poly-line, so it cannot pace
+a stream. Bit 28 also reads 0 throughout such a stream.<br/>
+DMA2 transfers:
+```
+  DMA2 mode  GP1(04h)  Result
+  1 (block)  1         completes, but 16-word blocks lose words (lines,
+                       polygons and rectangles); 1-word blocks are exact
+  1 (block)  2         hangs if a block ends inside a polygon or line command
+                       (poly-lines included); blocks of whole commands are fine,
+                       rectangles do not hang
+  2 (list)   2         a 12-word node is transferred intact, a 240-word node loses words
+```
+The hang comes from bit 28 being the DMA request in that mode. For polygon and
+line commands it drops right after the command word and stays 0 until the
+command is done, so the block after the one with the command word does not
+start. The transfer stops for good: CHCR stays busy, BCR shows exactly one block
+gone, and GPUSTAT bits 25, 26 and 28 all read 0.<br/>
+Not every GP0 command waits in the FIFO. GP0(00h), GP0(04h..1Eh), GP0(E0h),
+GP0(E3h..E5h) and GP0(E7h..EFh) do not take up space in it, even while the GPU
+is busy. GP0(01h), GP0(1Fh), GP0(E1h), GP0(E2h), GP0(E6h) and all drawing and
+transfer commands are queued. GP0(03h) is queued on v2 GPUs only. See
+[Other Commands](other-commands.md).<br/>
 
 #### GPU Command Summary
 While it is probably more simple for the MIPS software to see GPU commands
