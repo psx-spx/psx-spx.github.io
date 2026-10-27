@@ -94,6 +94,7 @@ nav:
     - ps1/gpu/video-memory-vram.md
     - ps1/gpu/texture-caching.md
     - ps1/gpu/timings.md
+    - ps1/gpu/drawing-timings.md
     - ps1/gpu/misc.md
   - ps1/spu/soundprocessingunitspu.md
   - CD-ROM:
