@@ -45,6 +45,15 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   Rectangle, tex 15bpp, uncached, semi     50        1       4.84
 ```
 ```
+  Line (single segment)                 Setup            Per pixel
+  Line, horizontal                         60                 1.02
+  Line, horizontal, semi                   60                 3.00
+  Line, slope 1:2 (x-major)                60                 3.92
+  Line, slope 1:2, semi                    60                 6.17
+  Line, vertical or slope 2:1 (y-major)    60                 7.18
+  Line, vertical or slope 2:1, semi        60                 9.21
+```
+```
   Transfer                              Setup  Per row  Per pixel
   GP0(02h) fill                            30        7       0.06
   GP0(80h) VRAM to VRAM                    50       11       1.54
@@ -84,6 +93,17 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   Rectangle, textured 8bpp, uncached      300        1       1.88
   Rectangle, textured 15bpp, uncached      50        3       3.03
   Rectangle, tex 15bpp, uncached, semi     50        7       3.49
+```
+```
+  Line (single segment)                 Setup            Per pixel
+  Line, horizontal                         60                 1.02
+  Line, horizontal, semi                   60                 0.95 (?)
+  Line, slope 1:2 (x-major)                60                 3.09
+  Line, slope 1:2, semi                    60                 4.35
+  Line, vertical                           60                 4.86
+  Line, vertical, semi                     60                 7.62
+  Line, slope 2:1 (y-major)                60                 5.01
+  Line, slope 2:1, semi                    60                 8.19
 ```
 ```
   Transfer                              Setup  Per row  Per pixel
@@ -130,6 +150,19 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   cycles per row in total at widths 1 to 3 and 5 at widths 4 and 5. A
   semi-transparent rectangle costs 5 to 6 more cycles per row at widths 16 and
   32 than at 15 and 31.
+- Line pixels are the pixels drawn along the line (its length along the major
+  axis). Gouraud shading adds about 40 to 90 cycles of setup to a
+  line and leaves its per-pixel cost unchanged. A line's per-pixel cost depends on how many
+  rows it crosses: on the v0 GPU each pixel of a vertical line opens a new VRAM
+  row, while a horizontal line keeps one row open, so the per-pixel figures
+  above include the per-scanline cost of the slope they were measured at. Read
+  as 2 cycles per pixel plus a per-scanline cost, the v0 x-major 1:2 slope gives
+  about 3.8 cycles per scanline (4.3 when semi-transparent), and the v2 x-major
+  1:2 slope about 2.2 (4.7 when semi-transparent). Other slopes were not measured.
+  Poly-lines were not fitted.
+- On the v2 GPU the horizontal semi-transparent line fits between 0.89 and 1.09
+  cycles per pixel depending on the blend mode, which is within the scatter of
+  that GPU's 16-pixel chunks.
 - DMA transfers in 16-word blocks take about the same time on both GPUs. Larger
   blocks are faster, so the block size sets the rate.
 - The figures were taken with the display enabled (320x240, 15bpp, NTSC)
