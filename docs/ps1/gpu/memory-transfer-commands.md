@@ -29,10 +29,12 @@ transfer is affected by Mask setting.<br/>
   1st  Command                       ;\
   2nd  Source Coord      (YyyyXxxxh) ; write to GP0 port (as usually)
   3rd  Width+Height      (YsizXsizh) ;/
-  ...  Data              (...)       ;<--- read from GP0 port (or via DMA)
+  ...  Data              (...)       ;<--- read from GPUREAD (or via DMA)
 ```
-Transfers data from frame buffer to CPU. Wait for bit27 of the status register
-to be set before reading the image data. When the number of halfwords is odd,
+Transfers data from frame buffer to CPU. The parameters go through GP0 like any
+other command, but the image data comes back on GPUREAD (1F801810h when read),
+not through the GP0 command FIFO. Wait for bit27 of the status register to be
+set before reading the image data. When the number of halfwords is odd,
 an extra halfword is added at the end, as packets consist of 32bits words.<br/>
 
 #### Masking and Rounding for FILL Command parameters
