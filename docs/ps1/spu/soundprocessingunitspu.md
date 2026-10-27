@@ -1144,6 +1144,16 @@ ATTR, and to zerofill the Reverb Buffer (so that no garbage values are output
 when activating reverb). For whatever reason, one MUST also initialize Port
 1F801DACh (otherwise reverb stays off).<br/>
 
+The sizes below are the amount of memory the official library allocates for
+each preset. The reverb unit itself needs only the largest address register
+(mLSAME..mRAPF2, dLSAME..dRDIFF, in 8-byte units) plus one unit: that is within
+a few bytes of the listed size for most presets, but Half Echo needs only
+1B90h bytes, and Chaos Echo and Delay only 10000h. The write pointer sweeps the
+whole area from 1F801DA2h*8 to 7FFFFh and wraps back to the start, nothing below
+1F801DA2h*8 is ever written, so a smaller area computed this way is safe; with
+the listed sizes the extra space is written but never read back by these
+settings.<br/>
+
 #### Room (size=26C0h bytes)
 ```
   007Dh,005Bh,6D80h,54B8h,BED0h,0000h,0000h,BA80h
@@ -1184,7 +1194,7 @@ when activating reverb). For whatever reason, one MUST also initialize Port
   09C2h,05C1h,05C0h,041Ah,0274h,013Ah,8000h,8000h
 ```
 
-#### Half Echo (size=3C00h bytes)
+#### Half Echo (size=3C00h bytes, minimum 1B90h)
 ```
   0017h,0013h,70F0h,4FA8h,BCE0h,4510h,BEF0h,8500h
   5F80h,54C0h,0371h,02AFh,02E5h,01DFh,02B0h,01D7h
@@ -1200,7 +1210,7 @@ when activating reverb). For whatever reason, one MUST also initialize Port
   1056h,0AE1h,0AE0h,07A2h,0464h,0232h,8000h,8000h
 ```
 
-#### Chaos Echo (almost infinite) (size=18040h bytes)
+#### Chaos Echo (almost infinite) (size=18040h bytes, minimum 10000h)
 ```
   0001h,0001h,7FFFh,7FFFh,0000h,0000h,0000h,8100h
   0000h,0000h,1FFFh,0FFFh,1005h,0005h,0000h,0000h
@@ -1208,7 +1218,7 @@ when activating reverb). For whatever reason, one MUST also initialize Port
   0000h,0000h,1004h,1002h,0004h,0002h,8000h,8000h
 ```
 
-#### Delay (one-shot echo) (size=18040h bytes)
+#### Delay (one-shot echo) (size=18040h bytes, minimum 10000h)
 ```
   0001h,0001h,7FFFh,7FFFh,0000h,0000h,0000h,0000h
   0000h,0000h,1FFFh,0FFFh,1005h,0005h,0000h,0000h
