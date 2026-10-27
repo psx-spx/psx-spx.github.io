@@ -186,6 +186,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://psx-spx.consoledev.net/ps1/gpu/drawing-timings/</loc>
+         <lastmod>2026-10-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://psx-spx.consoledev.net/ps1/gpu/i-o-ports-dma-channels-commands-vram/</loc>
          <lastmod>2026-10-27</lastmod>
          <changefreq>daily</changefreq>
