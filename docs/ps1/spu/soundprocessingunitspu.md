@@ -985,6 +985,10 @@ src/dst are relative to the current buffer address, the disp registers are
 relative to src registers, the base register defines the start address of the
 reverb buffer (the end address is fixed, at 7FFFEh). Writing a value to ESA
 does additionally set the current buffer address to that value.<br/>
+ESA is the register other documents call mBASE. The work area is ESA\*8 to
+7FFFFh, whatever the other reverb registers need: the buffer address steps
+through all of it and wraps back to ESA\*8, so every cell in the area gets
+written, and nothing below ESA\*8 is touched.<br/>
 
 #### `0x1f801d98`: `EON0` (voice 0..15 echo/reverb enable)
 ```
