@@ -4830,13 +4830,13 @@ be, if it'd be in the array). Both functions return the address of the element
 (or 0 if it wasn't found).<br/></p>
 <h4 id="c19h-_ioaborttxt1txt2">C(19h) - _ioabort(txt1,txt2)</h4>
 <p><code>void _ioabort(const char *txt1, const char *txt2);</code><br/>
-Disputed: OpenBIOS takes two strings (as above); nugget's <code>syscall_ioabort</code> declares <code>int _ioabort(const char *msg);</code>, one string and an int return. Unverified on hardware.<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): two arguments, no return value. nugget's <code>syscall_ioabort</code> declares a single string and an int return, which the retail code does not match.<br/>
 Displays the two strings on the TTY (in some cases the BIOS does accidently
 pass garbage instead of the 2nd string though). And does then execute
 _ioabort_raw(1), see there for more details.<br/></p>
 <h4 id="ab2h-_ioabort_rawparam-not-supported-by-old-cex-1000-version">A(B2h) - _ioabort_raw(param)  ;not supported by old CEX-1000 version</h4>
 <p><code>void _ioabort_raw(int param);</code><br/>
-Disputed: OpenBIOS returns void (as above); nugget declares <code>int _ioabort_raw(int code);</code>. Unverified on hardware.<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, and the function never returns (it ends in longjmp). nugget declares an int return, which the retail code never produces.<br/>
 Executes "longjmp(ioabortbuffer,param)". Internally used to recover from
 failed I/O operations, param should be nonzero to notify the setjmp caller
 that the abort has occurred.<br/></p>
@@ -4870,6 +4870,7 @@ care that "param" is non-zero, so the callsite of setjmp can make the difference
 call and a rollback. See setjmp for further details.<br/></p>
 <h4 id="a53h-set_ioabort_handlersrc-ps2-only-psx-systemerror">A(53h) - set_ioabort_handler(src)  ;PS2 only  ;PSX: SystemError</h4>
 <p><code>/* ? */ void set_ioabort_handler(/* ? */ void *src);</code><br/>
+The retail BIOS (SCPH-7001 v4.1) has no handler for this entry, only a stub that re-enters the A0 vector with t1=53h, so the prototype above is the PS2 form and is unchecked.<br/>
 Normally the _ioabort handler is changed only internally during booting, with
 this new function, games can install their own _ioabort handler. src is pointer
 to a 30h-byte "savestate" structure, which will be copied to the actual _ioabort

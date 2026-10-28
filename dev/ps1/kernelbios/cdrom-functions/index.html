@@ -4683,7 +4683,8 @@ However, one can read files in asynchrouneous fashion via CdGetLbn,
 CdAsyncSeekL, and CdAsyncReadSector. CDROM files are non-fragmented, so they
 can be read simply from incrementing sector numbers.<br/></p>
 <h4 id="aa4h-cdgetlbnfilename">A(A4h) - CdGetLbn(filename)</h4>
-<p><code>/* ? */ int CdGetLbn(/* ? */ const char *filename);</code><br/>
+<p><code>int CdGetLbn(/* ? */ const char *filename);</code><br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, int return.<br/>
 Returns the first sector number used by the file, or -1 in case of error.<br/>
 BUG: The function accidently returns -1 for the first file in the directory
 (the first file should be a dummy entry for the current or parent directory or

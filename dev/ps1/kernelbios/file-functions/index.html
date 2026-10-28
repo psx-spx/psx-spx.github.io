@@ -4702,7 +4702,8 @@ Observe that "fd" is the 2nd paramter (not the 1st paramter as usually).<br/>
 </code></pre></div>
 Internally redirects to "write(fd,tempbuf,1)".<br/></p>
 <h4 id="b40h-cdname-change-the-current-directory-on-target-device">B(40h) - cd(name) - Change the current directory on target device</h4>
-<p><code>/* ? */ int cd(/* ? */ const char *name);</code><br/>
+<p><code>int cd(const char *name);</code><br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, int return.<br/>
 Changes the current directory on the specified device, which should be "cdrom:"
 (memory cards don't support directories). The PSX supports only a current
 directory, but NOT a current device (ie. after cd, the directory name may be
@@ -4761,14 +4762,16 @@ Returns 1=okay, or 0=failed.<br/></p>
 <p><code>int erase(const char *filename);</code><br/>
 Returns 1=okay, or 0=failed.<br/></p>
 <h4 id="b46h-undeletefilename">B(46h) - undelete(filename)</h4>
-<p><code>/* ? */ int undelete(/* ? */ const char *filename);</code><br/>
+<p><code>int undelete(const char *filename);</code><br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, int return.<br/>
 Returns 1=okay, or 0=failed.<br/></p>
 <h4 id="b41h-formatdevicename">B(41h) - format(devicename)</h4>
 <p><code>int format(const char *devicename);</code><br/>
 Erases all files on the device (ie. for formatting memory cards).<br/>
 Returns 1=okay, or 0=failed.<br/></p>
 <h4 id="b54h-_get_errno">B(54h) - _get_errno()</h4>
-<p><code>/* ? */ int _get_errno(void);</code><br/>
+<p><code>int _get_errno(void);</code><br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): takes no argument and returns the error word.<br/>
 Indicates the reason of the most recent file function error (open,
 lseek, read, write, close, _get_error, ioctl, cd,
 testdevice, erase, undelete, format, rename). Use
@@ -4776,7 +4779,8 @@ _get_errno() ONLY if an error has occured (the error code isn't reset to zero
 by functions that are passing okay). firstfile2/nextfile do NOT affect
 _get_errno(). See below list of File Error Numbers for more info.<br/></p>
 <h4 id="b55h-_get_errorfd">B(55h) - _get_error(fd)</h4>
-<p><code>/* ? */ int _get_error(/* ? */ int fd);</code><br/>
+<p><code>int _get_error(/* ? */ int fd);</code><br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument (passed straight to the handle lookup), int return.<br/>
 Basically same as B(54h), but allowing to specify a file handle for which error
 information is to be received; accordingly it doesn't work for functions that
 do use 'hidden' internal file handles (eg. erase, or unsuccessful
@@ -4789,7 +4793,8 @@ Used only for TTY.<br/></p>
 Returns bit1 of the file's DCB flags. That bit is set only for Duart/TTY, and
 is cleared for Dummy/TTY, Memory Card, and CDROM.<br/></p>
 <h4 id="b59h-testdevicedevicename">B(59h) - testdevice(devicename)</h4>
-<p><code>/* ? */ int testdevice(/* ? */ const char *devicename);</code><br/>
+<p><code>int testdevice(const char *devicename);</code><br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, int return.<br/>
 Whatever. Checks the devicename, and if it's accepted, calls a device specific
 function. For the existing devices (cdrom,bu,tty) that specific function simply
 returns without doing anything. Maybe other devices (like printers or modems)
