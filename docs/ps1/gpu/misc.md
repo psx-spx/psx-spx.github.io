@@ -127,6 +127,13 @@ for when GPUSTAT.31 changes.<br/>
 A consequence is that a frame drawn in less than one field with the bit cleared
 comes out with half of its lines missing; drawing to the display area in 480i
 either needs the bit set, or the frame redrawn on every field.<br/>
+The v0 GPU (SCPH-1000) gets the first row of a GP0(02h) fill wrong: when that
+row has the skipped parity it is drawn anyway and the row after it is skipped
+instead, so a fill starting at y=0 with parity 0 skipped writes rows 0, 3, 5 and
+so on. From the third row on the skipping is normal, and a fill whose first row
+has the kept parity is unaffected. This was seen on an SCPH-1000 at widths 16 and
+640, starting at lines 0 and 40, in either field; the v2 GPU (SCPH-1001) does not
+do it. Whether rectangles and polygons do the same on v0 is not known.<br/>
 The behaviour above was observed with the drawing confined to the display area,
 in NTSC. What happens to rows outside the display area, in PAL, and in 240-line
 modes is not known.<br/>
