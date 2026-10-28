@@ -23,7 +23,7 @@ CdAsyncSeekL, and CdAsyncReadSector. CDROM files are non-fragmented, so they
 can be read simply from incrementing sector numbers.<br/>
 
 #### A(A4h) - CdGetLbn(filename)
-`int CdGetLbn(const char *filename);`<br/>
+`/* ? */ int CdGetLbn(/* ? */ const char *filename);`<br/>
 Returns the first sector number used by the file, or -1 in case of error.<br/>
 BUG: The function accidently returns -1 for the first file in the directory
 (the first file should be a dummy entry for the current or parent directory or
