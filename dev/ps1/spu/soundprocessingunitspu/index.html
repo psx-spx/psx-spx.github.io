@@ -7465,7 +7465,11 @@ All src/dst/disp/base registers are addresses in SPU memory (divided by 8),
 src/dst are relative to the current buffer address, the disp registers are
 relative to src registers, the base register defines the start address of the
 reverb buffer (the end address is fixed, at 7FFFEh). Writing a value to ESA
-does additionally set the current buffer address to that value.<br/></p>
+does additionally set the current buffer address to that value.<br/>
+ESA is the register other documents call mBASE. The work area is ESA*8 to
+7FFFFh, whatever the other reverb registers need: the buffer address steps
+through all of it and wraps back to ESA*8, so every cell in the area gets
+written, and nothing below ESA*8 is touched.<br/></p>
 <h4 id="0x1f801d98-eon0-voice-015-echoreverb-enable"><code>0x1f801d98</code>: <code>EON0</code> (voice 0..15 echo/reverb enable)</h4>
 <div class="highlight"><pre><span></span><code>  0-15  Voice 0..15 Destination (0=To Mixer, 1=To Mixer and to Reverb)
 </code></pre></div>
