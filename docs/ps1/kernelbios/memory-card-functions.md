@@ -101,7 +101,7 @@ okay. Issues an incomplete dummy read command (similar to B(4Fh) -
 byte from the memory card (the actual data transfer is skipped).<br/>
 
 #### A(AFh) - card\_write\_test(port)  ;not supported by old CEX-1000 version
-`int card_write_test(int port);`<br/>
+`/* ? */ int card_write_test(/* ? */ int port);`<br/>
 Resets the card changed flag. For some strange reason, this flag isn't
 automatically reset after reading the flag, instead, the flag is reset upon
 sector writes. To do that, this function issues a dummy write to sector 3Fh.<br/>

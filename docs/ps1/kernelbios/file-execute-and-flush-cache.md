@@ -1,11 +1,11 @@
 #   File Execute and Flush Cache
 #### A(41h) - LoadTest(filename, headerbuf)
-`int LoadTest(const char *filename, void *headerbuf);`<br/>
+`int LoadTest(const char *filename, /* ? */ void *headerbuf);`<br/>
 Loads the 800h-byte exe file header to an internal sector buffer, and does then
 copy bytes [10h..4Bh] of that header to headerbuf[00h..3Bh].<br/>
 
 #### A(42h) - Load(filename, headerbuf)
-`int Load(const char *filename, void *headerbuf);`<br/>
+`int Load(const char *filename, /* ? */ void *headerbuf);`<br/>
 Same as LoadTest (see there for details), but additionally loads the body
 of the executable (using the size and destination address in the file header),
 and does call FlushCache. The exe can be then started via Exec (this isn't
@@ -15,7 +15,7 @@ to the old exe file (instead of restarting the boot executable).<br/>
 BUG: Uses the unstable FlushCache function (see there for details).<br/>
 
 #### A(43h) - Exec(headerbuf, param1, param2)
-`int Exec(void *headerbuf, int param1, char **param2);`<br/>
+`int Exec(/* ? */ void *headerbuf, /* ? */ int param1, /* ? */ char **param2);`<br/>
 Can be used to start a previously loaded executable. The function saves
 R16,R28,R30,SP,RA in the reserved region of headerbuf (rather than on stack),
 more or less slowly zerofills the memfill region specified in headerbuf, reads
