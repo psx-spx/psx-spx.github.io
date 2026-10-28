@@ -71,7 +71,8 @@ Observe that "fd" is the 2nd paramter (not the 1st paramter as usually).<br/>
 Internally redirects to "write(fd,tempbuf,1)".<br/>
 
 #### B(40h) - cd(name) - Change the current directory on target device
-`/* ? */ int cd(/* ? */ const char *name);`<br/>
+`int cd(const char *name);`<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, int return.<br/>
 Changes the current directory on the specified device, which should be "cdrom:"
 (memory cards don't support directories). The PSX supports only a current
 directory, but NOT a current device (ie. after cd, the directory name may be
@@ -137,7 +138,8 @@ Returns 1=okay, or 0=failed.<br/>
 Returns 1=okay, or 0=failed.<br/>
 
 #### B(46h) - undelete(filename)
-`/* ? */ int undelete(/* ? */ const char *filename);`<br/>
+`int undelete(const char *filename);`<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, int return.<br/>
 Returns 1=okay, or 0=failed.<br/>
 
 #### B(41h) - format(devicename)
@@ -146,7 +148,8 @@ Erases all files on the device (ie. for formatting memory cards).<br/>
 Returns 1=okay, or 0=failed.<br/>
 
 #### B(54h) - \_get\_errno()
-`/* ? */ int _get_errno(void);`<br/>
+`int _get_errno(void);`<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): takes no argument and returns the error word.<br/>
 Indicates the reason of the most recent file function error (open,
 lseek, read, write, close, _get_error, ioctl, cd,
 testdevice, erase, undelete, format, rename). Use
@@ -155,7 +158,8 @@ by functions that are passing okay). firstfile2/nextfile do NOT affect
 _get_errno(). See below list of File Error Numbers for more info.<br/>
 
 #### B(55h) - \_get\_error(fd)
-`/* ? */ int _get_error(/* ? */ int fd);`<br/>
+`int _get_error(/* ? */ int fd);`<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument (passed straight to the handle lookup), int return.<br/>
 Basically same as B(54h), but allowing to specify a file handle for which error
 information is to be received; accordingly it doesn't work for functions that
 do use 'hidden' internal file handles (eg. erase, or unsuccessful
@@ -171,7 +175,8 @@ Returns bit1 of the file's DCB flags. That bit is set only for Duart/TTY, and
 is cleared for Dummy/TTY, Memory Card, and CDROM.<br/>
 
 #### B(59h) - testdevice(devicename)
-`/* ? */ int testdevice(/* ? */ const char *devicename);`<br/>
+`int testdevice(const char *devicename);`<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, int return.<br/>
 Whatever. Checks the devicename, and if it's accepted, calls a device specific
 function. For the existing devices (cdrom,bu,tty) that specific function simply
 returns without doing anything. Maybe other devices (like printers or modems)
