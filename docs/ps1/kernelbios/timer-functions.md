@@ -18,6 +18,7 @@ InitPAD2(buf1,22h,buf2,22h) buffers). Eg. a wait\_for\_vblank function could loo
 like so: set buf1[0]=55h, then wait until buf1[0]=00h or buf1[0]=FFh.<br/>
 
 #### B(02h) - init\_timer(t,reload,flags)
+`int init_timer(uint32_t t, uint16_t reload, uint16_t flags);`<br/>
 When t=0..2, resets the old timer mode by setting [1F801104h+t\*16]=0000h,
 applies the reload value by [1F801108h+t\*16]=reload, computes the new mode:<br/>
 ```
@@ -29,21 +30,26 @@ and applies it by setting [1F801104h+t\*16]=mode, and returns 1. Does nothing
 and returns zero for t\>2.<br/>
 
 #### B(03h) - get\_timer(t)
+`int get_timer(uint32_t t);`<br/>
 Reads the current timer value: Returns halfword[1F801100h+t\*16] for t=0..2.
 Does nothing and returns zero for t\>2.<br/>
 
 #### B(04h) - enable\_timer\_irq(t)
+`int enable_timer_irq(uint32_t t);`<br/>
 #### B(05h) - disable\_timer\_irq(t)
+`int disable_timer_irq(uint32_t t);`<br/>
 Enables/disables timer or vblank interrupt enable bits in [1F801074h], bit4,5,6
 for t=0,1,2, or bit0 for t=3, or random/garbage bits for t\>3. The enable
 function returns 1 for t=0..2, and 0 for t=3. The disable function returns
 always 1.<br/>
 
 #### B(06h) - restart\_timer(t)
+`int restart_timer(uint32_t t);`<br/>
 Sets the current timer value to zero: Sets [1F801100h+t\*16]=0000h and returns 1
 for t=0..2. Does nothing and returns zero for t\>2.<br/>
 
 #### C(0Ah) - ChangeClearRCnt(t,flag) ;root counter (aka timer)
+`int ChangeClearRCnt(uint32_t t, int flag);`<br/>
 Selects what the kernel's timer/vblank IRQ handlers shall do after they have
 processed an IRQ (t=0..2: timer 0..2, or t=3: vblank) (flag=0: do nothing; or
 flag=1: automatically acknowledge the IRQ and immediately return from

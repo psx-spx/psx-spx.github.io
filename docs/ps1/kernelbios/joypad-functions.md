@@ -9,6 +9,7 @@ Note: The BIOS doesn't include any functions for sending custom data to the
 pads (such like for controlling rumble motors).<br/>
 
 #### B(12h) - InitPAD2(buf1, siz1, buf2, siz2)
+`void InitPAD2(void *buf1, size_t siz1, void *buf2, size_t siz2);`<br/>
 Memorizes the desired buf1/buf2 addresses, zerofills the buffers by using the
 siz1/siz2 buffer size values (which should be 22h bytes each). And does some
 initialization on the PadCardIrq element (but doesn't enqueue it, that must be
@@ -32,14 +33,17 @@ stored in the buffers, the IRQ handler stores up to 22h bytes in the buffer
 bytes).<br/>
 
 #### B(13h) - StartPAD2()
+`void StartPAD2(void);`<br/>
 Should be used after InitPAD2. Enqueues the PadCardIrq handler, and does
 additionally initialize some flags.<br/>
 
 #### B(14h) - StopPAD2()
+`void StopPAD2(void);`<br/>
 Dequeues the PadCardIrq handler. Note that this handler is also used for memory
 cards, so it'll "stop" cards, too.<br/>
 
 #### B(15h) - PAD\_init2(type, button\_dest, unused, unused)
+`int PAD_init2(uint32_t type, uint32_t *button_dest, int unused1, int unused2);`<br/>
 This is an extremely bizarre and restrictive function - don't use! The function
 fails unless type is 20000000h or 20000001h (the type value has no other
 function). The function uses "buf1/buf2" addresses that are located somewhere
@@ -56,6 +60,7 @@ caller's stack, so the function MUST be called with all four parameters
 allocated on stack. Return value is 2 (or 0 if type was disliked).<br/>
 
 #### B(16h) - PAD\_dr()
+`uint32_t PAD_dr(void);`<br/>
 This is a very ugly function, using the internal "buf1/buf2" values from
 "PAD_init2" and the "button\_dest" value that was passed to that
 function.<br/>

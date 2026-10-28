@@ -1,5 +1,6 @@
 #   Thread Functions
 #### B(0Eh) - OpenTh(reg\_PC,reg\_SP\_FP,reg\_GP)
+`int OpenTh(uint32_t reg_PC, uint32_t reg_SP_FP, uint32_t reg_GP);`<br/>
 Searches a free TCB, marks it as used, and stores the inital program counter
 (PC), global pointer (GP aka R28), stack pointer (SP aka R29), and frame
 pointer (FP aka R30) (using the same value for SP and FP). All other registers
@@ -24,6 +25,7 @@ to KSEG0, KSEG1 memory).<br/>
 Or, ACTUALLY, the memory is NOT zerofilled on powerup... so SR is total random?<br/>
 
 #### B(0Fh) - CloseTh(handle)
+`int CloseTh(int handle);`<br/>
 Marks the TCB for the specified thread as unused. The function can be used for
 any threads, including for the current thread.<br/>
 Closing the current thread doesn't terminate the current thread, so it may
@@ -33,6 +35,7 @@ ChangeOtherThread".<br/>
 The return value is always 1 (even if the handle was already closed).<br/>
 
 #### B(10h) - ChangeTh(handle)
+`int ChangeTh(int handle);`<br/>
 Pauses the current thread, and activates the selected new thread (or crashes if
 the specified handle was unused or invalid).<br/>
 The return value is always 1 (stored in the R2 entry of the TCB of the old
@@ -48,6 +51,7 @@ aren't stored automatically, so, when needed, they need to be pushed/popped by
 software before/after ChangeTh).<br/>
 
 #### C(05h) - get\_free\_TCB\_slot()
+`int get_free_TCB_slot(void);`<br/>
 Subfunction for OpenTh, returns the number of the first free TCB (usually
 in range 0..3) or FFFFFFFFh if there's no free TCB.<br/>
 

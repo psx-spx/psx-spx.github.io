@@ -37,6 +37,38 @@ Below are mainly internally used device related subfunctions.<br/>
   C(18h) _circputc(char,circ)
 ```
 
+C prototypes for the entries above that have a known signature:<br/>
+```
+  void dev_tty_init(void);                                                   ;A(5Bh)
+  int dev_tty_open(struct File *fcb, const char *path, int accessmode);      ;A(5Ch)
+  int dev_tty_in_out(struct File *fcb, int cmd);                             ;A(5Dh)
+  int dev_tty_ioctl(struct File *fcb, int cmd, int arg);                     ;A(5Eh)
+  int dev_cd_open(struct File *fcb, const char *path, int accessmode);       ;A(5Fh)
+  int dev_cd_read(struct File *fcb, void *dst, int len);                     ;A(60h)
+  struct DirEntry *dev_cd_firstfile(struct File *fcb, const char *path, struct DirEntry *direntry);  ;A(62h)
+  struct DirEntry *dev_cd_nextfile(struct File *fcb, struct DirEntry *direntry);  ;A(63h)
+  int dev_cd_chdir(struct File *fcb, char *path);                            ;A(64h)
+  int dev_card_open(struct File *fcb, const char *path, int accessmode);     ;A(65h)
+  int dev_card_read(struct File *fcb, void *dst, int len);                   ;A(66h)
+  int dev_card_write(struct File *fcb, void *src, int len);                  ;A(67h)
+  int dev_card_close(struct File *fcb);                                      ;A(68h)
+  struct DirEntry *dev_card_firstfile(struct File *fcb, const char *path, struct DirEntry *direntry);  ;A(69h)
+  struct DirEntry *dev_card_nextfile(struct File *fcb, struct DirEntry *direntry);  ;A(6Ah)
+  int dev_card_erase(struct File *fcb, const char *path);                    ;A(6Bh)
+  int dev_card_format(struct File *fcb);                                     ;A(6Dh)
+  int dev_card_rename(struct File *fcb1, const char *path1, struct File *fcb2, const char *path2);  ;A(6Eh)
+  int AddCDROMDevice(void);                                                  ;A(96h)
+  int AddMemCardDevice(void);                                                ;A(97h)
+  int AddDuartTtyDevice(void);                                               ;A(98h)
+  int add_nullcon_driver(void);                                              ;A(99h)
+  int AddDrv(const struct Device *device_info);                              ;B(47h)
+  int DelDrv(const char *device_name_lowercase);                             ;B(48h)
+  int ChangeClearPAD(int value);                                             ;B(5Bh)
+  void _cdevinput(struct CircularBuffer *circ, int c);                       ;C(15h)
+  void _cdevscan(void);                                                      ;C(16h)
+  int _circgetc(struct CircularBuffer *circ);                                ;C(17h)
+```
+
 #### Device Names
 Device Names are case-sensitive (usually lowercase, eg. "bu" for memory cards).
 In filenames, the device name may be followed by a hexadecimal 32bit

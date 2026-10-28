@@ -1,9 +1,11 @@
 #   File Execute and Flush Cache
 #### A(41h) - LoadTest(filename, headerbuf)
+`int LoadTest(const char *filename, void *headerbuf);`<br/>
 Loads the 800h-byte exe file header to an internal sector buffer, and does then
 copy bytes [10h..4Bh] of that header to headerbuf[00h..3Bh].<br/>
 
 #### A(42h) - Load(filename, headerbuf)
+`int Load(const char *filename, void *headerbuf);`<br/>
 Same as LoadTest (see there for details), but additionally loads the body
 of the executable (using the size and destination address in the file header),
 and does call FlushCache. The exe can be then started via Exec (this isn't
@@ -13,6 +15,7 @@ to the old exe file (instead of restarting the boot executable).<br/>
 BUG: Uses the unstable FlushCache function (see there for details).<br/>
 
 #### A(43h) - Exec(headerbuf, param1, param2)
+`int Exec(void *headerbuf, int param1, char **param2);`<br/>
 Can be used to start a previously loaded executable. The function saves
 R16,R28,R30,SP,RA in the reserved region of headerbuf (rather than on stack),
 more or less slowly zerofills the memfill region specified in headerbuf, reads
@@ -24,6 +27,7 @@ If the executable (should) return, then R16,R28,R30,SP,RA are restored from
 headerbuf, and the function returns with r2=1.<br/>
 
 #### A(51h) - LoadExec(filename, stackbase, stackoffset)
+`void LoadExec(const char *filename, uint32_t stackbase, uint32_t stackoffset);`<br/>
 This is a rather bizarre function. In short, it does load and execute the
 specified file, and thereafter, it (tries to) reload and restart to boot
 executable.<br/>
@@ -60,6 +64,7 @@ address (causing an invalid memory address exception on address 6F726463h, for
 "cdrom:filename.exe").<br/>
 
 #### A(9Ch) - SetConf(num\_EvCB, num\_TCB, stacktop)
+`void SetConf(int num_EvCB, int num_TCB, void *stacktop);`<br/>
 Changes the number of EvCBs and TCBs, and the stacktop. These values are usually
 initialized from the settings in the SYSTEM.CNF file, so using this function
 usually shouldn't ever be required.<br/>
@@ -71,11 +76,13 @@ Despite of the changed stacktop, the current stack pointer is kept intact, and
 the function returns to the caller.<br/>
 
 #### A(9Dh) - GetConf(num\_EvCB\_dst, num\_TCB\_dst, stacktop\_dst)
+`void GetConf(int *num_EvCB_dst, int *num_TCB_dst, void **stacktop_dst);`<br/>
 Returns the number of EvCBs, TCBs, and the initial stacktop. There's no return
 value in the R2 register, instead, the three 32bit return values are stored at
 the specified "dst" addresses.<br/>
 
 #### A(44h) - FlushCache()
+`void FlushCache(void);`<br/>
 Flushes the Code Cache, so opcodes are ensured to be loaded from RAM. This is
 required when loading program code via DMA (ie. from CDROM) (the cache
 controller apparently doesn't realize changes to RAM that are caused by DMA).

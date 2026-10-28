@@ -1,5 +1,6 @@
 #   File Functions
 #### A(00h) or B(32h) - open(filename, accessmode) - Opens a file for IO
+`int open(const char *filename, int accessmode);`<br/>
 ```
   out: V0  File handle (00h..0Fh), or -1 if error.
 ```
@@ -21,6 +22,7 @@ handle, too). So, for example, erase would fail if more than 13 file
 handles are opened by the game.<br/>
 
 #### A(01h) or B(33h) - lseek(fd, offset, seektype) - Move the file pointer
+`int lseek(int fd, int offset, int seektype);`<br/>
 ```
    seektype 0 = from start of file        (with positive offset)
             1 = from current file pointer (with positive/negative offset)
@@ -31,6 +33,7 @@ specified by A2. Movement from the eof is incorrect. Also, movement beyond the
 end of the file is not checked.<br/>
 
 #### A(02h) or B(34h) - read(fd, dst, length) - Read data from an open file
+`int read(int fd, void *dst, int length);`<br/>
 ```
   out: V0  Number of bytes actually read, -1 if failed.
 ```
@@ -39,6 +42,7 @@ specified an error is returned. Read per $0080 bytes from memory card (bu:) and
 per $0800 from cdrom (cdrom:).<br/>
 
 #### A(03h) or B(35h) - write(fd, src, length) - Write data to an open file
+`int write(int fd, const void *src, int length);`<br/>
 ```
   out: V0  Number of bytes written.
 ```
@@ -46,9 +50,11 @@ Writes the number of bytes to the specified open file. Write to the memory card
 per $0080 bytes. Writing to the cdrom returns 0.<br/>
 
 #### A(04h) or B(36h) - close(fd) - Close an open file
+`int close(int fd);`<br/>
 Returns r2=fd (or r2=-1 if failed).<br/>
 
 #### A(08h) or B(3Ah) - getc(fd) - read one byte from file
+`int getc(int fd);`<br/>
 ```
   out: R2=character (sign-expanded) or FFFFFFFFh=error
 ```
@@ -57,6 +63,7 @@ returned character is sign-expanded; so, a return value of FFFFFFFFh could mean
 either character FFh, or error.<br/>
 
 #### A(09h) or B(3Bh) - putc(char,fd) - write one byte to file
+`void putc(int c, int fd);`<br/>
 Observe that "fd" is the 2nd paramter (not the 1st paramter as usually).<br/>
 ```
   out:  R2=Number of bytes actually written, -1 if failed
@@ -64,6 +71,7 @@ Observe that "fd" is the 2nd paramter (not the 1st paramter as usually).<br/>
 Internally redirects to "write(fd,tempbuf,1)".<br/>
 
 #### B(40h) - cd(name) - Change the current directory on target device
+`int cd(const char *name);`<br/>
 Changes the current directory on the specified device, which should be "cdrom:"
 (memory cards don't support directories). The PSX supports only a current
 directory, but NOT a current device (ie. after cd, the directory name may be
@@ -78,6 +86,7 @@ function does always load the path table from the disk (even if it was already
 stored in RAM, so cd is causing useless SLOW read/seek delays).<br/>
 
 #### B(42h) - firstfile2(filename,direntry) - Find first file to match the name
+`struct DirEntry *firstfile2(const char *filename, struct DirEntry *direntry);`<br/>
 Returns r2=direntry (or r2=0 if no matching files).<br/>
 Searches for the first file to match the specified filename; the filename may
 contain "?" and "\*" wildcards. "\*" means to ignore ALL following characters;
@@ -115,23 +124,29 @@ possible workaround is not to have any files opened during firstfile2/nextfile
 operations.<br/>
 
 #### B(43h) - nextfile(direntry) - Searches for the next file to match the name
+`struct DirEntry *nextfile(struct DirEntry *direntry);`<br/>
 Returns r2=direntry (or r2=0 if no more matching files).<br/>
 Uses the settings of a previous firstfile2/nextfile command.<br/>
 
 #### B(44h) - rename(old\_filename, new\_filename)
+`int rename(const char *old_filename, const char *new_filename);`<br/>
 Returns 1=okay, or 0=failed.<br/>
 
 #### B(45h) - erase(filename) - Delete a file on target device
+`int erase(const char *filename);`<br/>
 Returns 1=okay, or 0=failed.<br/>
 
 #### B(46h) - undelete(filename)
+`int undelete(const char *filename);`<br/>
 Returns 1=okay, or 0=failed.<br/>
 
 #### B(41h) - format(devicename)
+`int format(const char *devicename);`<br/>
 Erases all files on the device (ie. for formatting memory cards).<br/>
 Returns 1=okay, or 0=failed.<br/>
 
 #### B(54h) - \_get\_errno()
+`int _get_errno(void);`<br/>
 Indicates the reason of the most recent file function error (open,
 lseek, read, write, close, _get_error, ioctl, cd,
 testdevice, erase, undelete, format, rename). Use
@@ -140,19 +155,23 @@ by functions that are passing okay). firstfile2/nextfile do NOT affect
 _get_errno(). See below list of File Error Numbers for more info.<br/>
 
 #### B(55h) - \_get\_error(fd)
+`int _get_error(int fd);`<br/>
 Basically same as B(54h), but allowing to specify a file handle for which error
 information is to be received; accordingly it doesn't work for functions that
 do use 'hidden' internal file handles (eg. erase, or unsuccessful
 open). Returns FCB[18h], or FFFFFFFFh if the handle is invalid/unused.<br/>
 
 #### A(05h) or B(37h) - ioctl(fd,cmd,arg)
+`int ioctl(int fd, int cmd, int arg);`<br/>
 Used only for TTY.<br/>
 
 #### A(07h) or B(39h) - isatty(fd)
+`int isatty(int fd);`<br/>
 Returns bit1 of the file's DCB flags. That bit is set only for Duart/TTY, and
 is cleared for Dummy/TTY, Memory Card, and CDROM.<br/>
 
 #### B(59h) - testdevice(devicename)
+`int testdevice(const char *devicename);`<br/>
 Whatever. Checks the devicename, and if it's accepted, calls a device specific
 function. For the existing devices (cdrom,bu,tty) that specific function simply
 returns without doing anything. Maybe other devices (like printers or modems)
