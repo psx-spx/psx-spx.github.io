@@ -1,5 +1,6 @@
 #   TTY Console (std\_io)
 #### A(3Fh) - Printf(txt,param1,param2,etc.) - Print string to console
+`int Printf(const char *txt, ...);`<br/>
 ```
   in:  A0                     Pointer to 0 terminated string
        A1,A2,A3,[SP+10h..]    Argument(s)
@@ -39,6 +40,7 @@ that signed 32bit value as giant unsigned value). Printf supports only octal,
 decimal, and hex (but not binary).<br/>
 
 #### A(3Eh) or B(3Fh) - puts(src) - Write string to TTY
+`void puts(const char *src);`<br/>
 ```
   in: R4=address of string (terminated by 00h)
 ```
@@ -48,6 +50,7 @@ one would expect it), but, if R4 is 00000000h then "\<NULL\>" is output
 (only that six letters; without appending any CR or LF).<br/>
 
 #### A(3Dh) or B(3Eh) - gets(dst) - Read string from TTY (keyboard input)
+`char *gets(char *dst);`<br/>
 ```
   in: r4=dst (pointer to a 128-byte buffer) - out: r2=dst (same is incoming r4)
 ```
@@ -67,12 +70,14 @@ in range of 00h..1Fh is received without the 16h prefix, then 07h (BELL) is
 sent to the TTY.<br/>
 
 #### A(3Bh) or B(3Ch) - getchar() - Read character from TTY
+`int getchar(void);`<br/>
 Reads one character from the TTY console, by internally redirecting to
 "read(0,tempbuf,1)". The returned character is ANDed by 7Fh (so, to read a
 fully intact 8bit character, "read(0,tempbuf,1)" must be used instead of
 this function).<br/>
 
 #### A(3Ch) or B(3Dh) - putchar(char) - Write character to TTY
+`void putchar(int c);`<br/>
 Writes the character to the TTY console, by internally redirecting to
 "write(1,tempbuf,1)". Char 09h (TAB) is expanded to one or more SPC
 characters, until reaching the next tabulation boundary (every 8 characters).
@@ -81,9 +86,11 @@ should be handled at the remote terminal side) are 08h (BS, backspace, move
 cursor one position to the left), and 07h (BELL, produce a short beep sound).<br/>
 
 #### C(13h) - FlushStdInOutPut()
+`void FlushStdInOutPut(void);`<br/>
 Closes and re-opens the std\_in (fd=0) and std\_out (fd=1) file handles.<br/>
 
 #### C(1Bh) - KernelRedirect(ttyflag)  ;PS2: ttyflag=1 causes SystemError
+`void KernelRedirect(int ttyflag);`<br/>
 Removes, re-mounts, and flushes the TTY device, the parameter selects whether
 to mount the real DUART-TTY device (r4=1), or a Dummy-TTY device (r4=0), the
 latter one sends any std\_out to nowhere. Values other than r4=0 or r4=1 do
@@ -119,6 +126,7 @@ Note: The nocash BIOS automatically detects the DUART hardware, and activates
 TTY if it is present.<br/>
 
 #### B(49h) - PrintInstalledDevices()
+`void PrintInstalledDevices(void);`<br/>
 Uses printf to display the long and short names from the DCB of the currently
 installed devices. Doesn't do anything else. There's no return value.<br/>
 

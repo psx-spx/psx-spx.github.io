@@ -1,12 +1,15 @@
 #   Misc Functions
 #### A(2Fh) - rand()
+`int rand(void);`<br/>
 Advances the random generator as "x=x\*41C64E6Dh+3039h" (aka plus 12345
 decimal), and returns a 15bit random value "R2=(x/10000h) AND 7FFFh".<br/>
 
 #### A(30h) - srand(seed)
+`void srand(uint32_t seed);`<br/>
 Changes the current 32bit value of the random generator.<br/>
 
 #### A(B4h) - GetSystemInfo(index)  ;not supported by old CEX-1000 version
+`uint32_t GetSystemInfo(int index);`<br/>
 Returns a word, halfword, or string, depending on the selected index value:<br/>
 ```
   00h      Get Kernel BCD Date       (eg. 19951204h) (YYYYMMDDh)
@@ -41,7 +44,9 @@ index 2 as the pointer BFC00129h, index 3 as cop0r15 AND FFh, index 5 as
 usual values above. Any other sum returns -1.<br/>
 
 #### B(56h) - GetC0Table()
+`void *GetC0Table(void);`<br/>
 #### B(57h) - GetB0Table()
+`void *GetB0Table(void);`<br/>
 Retrieves the address of the jump lists for B(NNh) and C(NNh) functions,
 allowing to patch entries in that lists (however, the BIOS does often jump
 directly to the function addresses, rather than indirectly via the list, so
@@ -50,6 +55,7 @@ retrieve the address of the A(NNh) jump list, however, that list is
 usually/always at 00000200h.<br/>
 
 #### A(31h) - qsort(base, nel, width, callback)
+`void qsort(void *base, size_t nel, size_t width, int (*callback)(const void *, const void *));`<br/>
 Sorts an array, using a super-slow implementation of the "quick sort"
 algorithm. base is the address of the array, nel is the number of elements in
 the array, width is the size in bytes of each element, callback is a function
@@ -64,7 +70,9 @@ initialized with InitHeap, and only if "width" bytes are free). There's no
 return value.<br/>
 
 #### A(35h) - lsearch(key, base, nel, width, callback)
+`void *lsearch(const void *key, void *base, int nel, size_t width, int (*callback)(const void *, const void *));`<br/>
 #### A(36h) - bsearch(key, base, nel, width, callback)
+`void *bsearch(const void *key, void *base, int nel, size_t width, int (*callback)(const void *, const void *));`<br/>
 Searches an element in an array (key is the pointer to the searched element,
 the other parameters are same as for "qsort"). "lsearch" performs a slow linear
 search in an unsorted array, by simply comparing one array element after each
@@ -75,16 +83,19 @@ be, if it'd be in the array). Both functions return the address of the element
 (or 0 if it wasn't found).<br/>
 
 #### C(19h) - \_ioabort(txt1,txt2)
+`void _ioabort(const char *txt1, const char *txt2);`<br/>
 Displays the two strings on the TTY (in some cases the BIOS does accidently
 pass garbage instead of the 2nd string though). And does then execute
 _ioabort\_raw(1), see there for more details.<br/>
 
 #### A(B2h) - _ioabort\_raw(param)  ;not supported by old CEX-1000 version
+`void _ioabort_raw(int param);`<br/>
 Executes "longjmp(ioabortbuffer,param)". Internally used to recover from
 failed I/O operations, param should be nonzero to notify the setjmp caller
 that the abort has occurred.<br/>
 
 #### A(13h) - setjmp(buf)
+`int setjmp(struct JmpBuf *buf);`<br/>
 This is a somewhat incomplete implementation of posix's setjmp, by storing the ABI-saved CPU registers in the specified buffer (30h bytes):<br/>
 ```
   00h 4    r31 (ra) (aka caller's pc)
@@ -104,6 +115,7 @@ is the absence of saving the state of cop0 and cop2, thus making this slightly
 unsuitable for a typical coroutine system implementation.<br/>
 
 #### A(14h) - longjmp(buf, param)
+`void longjmp(struct JmpBuf *buf, int param);`<br/>
 Restores the R16-R23,GP,SP,FP,RA registers from a previously recorded
 jmp_buf buffer, and "returns" to that new RA address (rather than to the caller of the
 longjmp function). The "param" value is passed as "return value" to the
@@ -114,16 +126,19 @@ care that "param" is non-zero, so the callsite of setjmp can make the difference
 call and a rollback. See setjmp for further details.<br/>
 
 #### A(53h) - set\_ioabort\_handler(src)  ;PS2 only  ;PSX: SystemError
+`void set_ioabort_handler(void *src);`<br/>
 Normally the _ioabort handler is changed only internally during booting, with
 this new function, games can install their own \_ioabort handler. src is pointer
 to a 30h-byte "savestate" structure, which will be copied to the actual \_ioabort
 structure.<br/>
 
 #### A(06h) or B(38h) - exit(exitcode)
+`void exit(int exitcode);`<br/>
 Terminates the program and returns control to the BIOS; which does then lockup
 itself via A(3Ah) _exit.<br/>
 
 #### A(A0h) - \_boot()
+`void _boot(void);`<br/>
 Performs a warmboot (resets the kernel and reboots from CDROM). Unlike the
 normal coldboot procedure, it doesn't display the "\<S\>" and "PS" intro
 screens (and doesn't verify the "PS" logo in the ISO System Area), and, doesn't
@@ -153,8 +168,11 @@ is handled by issuing DeliverEvent(F0000010h,4000h). Thereafter, the syscall
 returns to the main program (ie. it doesn't cause a SystemError).<br/>
 
 #### A(3Ah) - \_exit(exitcode)
+`void _exit(int exitcode);`<br/>
 #### A(40h) - SystemErrorUnresolvedException()
+`int SystemErrorUnresolvedException(void);`<br/>
 #### A(A1h) - SystemError(type,errorcode) ;type "B"=Boot,"D"=Disk
+`void SystemError(int type, int errorcode);`<br/>
 These are used "SystemError" functions. The functions are repeatedly jumping to
 themselves, causing the system to hang. Possibly useful for debugging software
 which may hook that functions.<br/>

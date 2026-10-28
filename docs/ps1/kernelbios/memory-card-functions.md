@@ -79,27 +79,35 @@ memory cards would be very-extremly-very slow, which would be more annoying
 than useful.<br/>
 
 #### B(4Ah) - InitCARD2(pad\_enable)  ;uses/destroys k0/k1 !!!
+`int InitCARD2(int pad_enable);`<br/>
 #### B(4Bh) - StartCARD2()
+`int StartCARD2(void);`<br/>
 #### B(4Ch) - StopCARD2()
+`int StopCARD2(void);`<br/>
 #### A(55h) or A(70h) - \_bu\_init()
+`int _bu_init(void);`<br/>
 
 ```
   --- Below are some lower level memory card functions ---
 ```
 
 #### A(ABh) - \_card\_info(port)
+`int _card_info(int port);`<br/>
 #### B(4Dh) - \_card\_info\_subfunc(port)  ;subfunction for "\_card\_info"
+`int _card_info_subfunc(int port);`<br/>
 Can be used to check if the most recent call to \_card\_write has completed
 okay. Issues an incomplete dummy read command (similar to B(4Fh) -
 \_card\_read). The read command is aborted once when receiving the status
 byte from the memory card (the actual data transfer is skipped).<br/>
 
 #### A(AFh) - card\_write\_test(port)  ;not supported by old CEX-1000 version
+`int card_write_test(int port);`<br/>
 Resets the card changed flag. For some strange reason, this flag isn't
 automatically reset after reading the flag, instead, the flag is reset upon
 sector writes. To do that, this function issues a dummy write to sector 3Fh.<br/>
 
 #### B(50h) - \_new\_card()
+`void _new_card(void);`<br/>
 Normally any memory card read/write functions fail if the BIOS senses the card
 change flag to be set. Calling this function tells the BIOS to ignore the card
 change flag on the next read/write operation (the function is internally used
@@ -107,7 +115,9 @@ when loading the "MC" ID from sector 0, and when calling the card\_write\_test
 function to acknowledge the card change flag).<br/>
 
 #### B(4Eh) - \_card\_write(port,sector,src)
+`int _card_write(int port, int sector, const uint8_t *src);`<br/>
 #### B(4Fh) - \_card\_read(port,sector,dst)
+`int _card_read(int port, int sector, uint8_t *dst);`<br/>
 Invokes asynchronous reading/writing of a single sector. The function returns
 1=okay, or 0=failed (on invalid sector numbers). The actual I/O is done on IRQ
 level, completion of the I/O command transmission can be checked, among others,
@@ -123,7 +133,9 @@ number is directly accessed (it is NOT parsed through the broken sector
 replacement list).<br/>
 
 #### B(5Ch) - \_card\_status(slot)
+`uint8_t _card_status(int slot);`<br/>
 #### B(5Dh) - \_card\_wait(slot)
+`uint8_t _card_wait(int slot);`<br/>
 Returns the status of the most recent I/O command, possible values are:<br/>
 ```
   01h=ready
@@ -137,24 +149,32 @@ Returns the status of the most recent I/O command, possible values are:<br/>
 state occurs.<br/>
 
 #### A(A7h) - bufs\_cb\_0()
+`void bufs_cb_0(void);`<br/>
 #### A(A8h) - bufs\_cb\_1()
+`void bufs_cb_1(void);`<br/>
 #### A(A9h) - bufs\_cb\_2()
+`void bufs_cb_2(void);`<br/>
 #### A(AAh) - bufs\_cb\_3()
+`void bufs_cb_3(void);`<br/>
 #### A(AEh) - bufs\_cb\_4()
+`void bufs_cb_4(void);`<br/>
 These five callback functions are internally used by the BIOS, notifying other
 BIOS functions about (un-)successful completion of memory card I/O commands.<br/>
 
 #### B(58h) - \_card\_chan()
+`int _card_chan(void);`<br/>
 This is a subfunction for the five bufs\_cb_\_xxx functions (indicating
 whether the callback occured for a slot1 or slot2 access).<br/>
 
 #### A(ACh) - \_card\_load(port)
+`int _card_load(int port);`<br/>
 Invokes asynchronous reading of the memory card directory. The function isn't
 too useful because the BIOS tends to read the directory automatically in
 various places in synchronous mode, so there isn't too much chance to replace
 the automatic synchronous reading by asynchronous reading.<br/>
 
 #### A(ADh) - \_card\_auto(flag)
+`int _card_auto(int flag);`<br/>
 Can be used to enable/disable auto format (0=off, 1=on). The \_bu\_init function
 initializes auto format as disabled. If auto format is enabled, then the BIOS
 does automatically format memory cards if it has failed to read the "MC" ID
@@ -165,7 +185,9 @@ prompt the user whether or not to format the card, rather than doing that
 automatically).<br/>
 
 #### C(1Ah) - set\_card\_find\_mode(mode)
+`void set_card_find_mode(int mode);`<br/>
 #### C(1Dh) - get\_card\_find\_mode()
+`int get_card_find_mode(void);`<br/>
 Allows to get/set the card find mode (0=normal, 1=find deleted files), the mode
 setting affects only the firstfile2/nextfile functions. All other file functions
 are used fixed mode settings (always mode=0 for open, rename,

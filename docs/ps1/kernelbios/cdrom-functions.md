@@ -23,6 +23,7 @@ CdAsyncSeekL, and CdAsyncReadSector. CDROM files are non-fragmented, so they
 can be read simply from incrementing sector numbers.<br/>
 
 #### A(A4h) - CdGetLbn(filename)
+`int CdGetLbn(const char *filename);`<br/>
 Returns the first sector number used by the file, or -1 in case of error.<br/>
 BUG: The function accidently returns -1 for the first file in the directory
 (the first file should be a dummy entry for the current or parent directory or
@@ -30,24 +31,28 @@ so, so that bug isn't much of a problem), if the file is not found, then the
 function accidently returns garbage (rather than -1).<br/>
 
 #### A(A5h) - CdReadSector(count,sector,buffer)
+`int CdReadSector(int count, int sector, void *buffer);`<br/>
 Reads \<count\> sectors, starting at \<sector\>, and writes data to
 \<buffer\>. The read is done in mode=80h (double speed, 800h-bytes per
 sector). The function waits until all sectors are transferred, and does then
 return the number of sectors (ie. count), or -1 in case of error.<br/>
 
 #### A(A6h) - CdGetStatus()
+`int CdGetStatus(void);`<br/>
 Retrieves the cdrom status via CdAsyncGetStatus(dst) (see there for details;
 especially for cautions on door-open flag). The function waits until the event
 indicates completion, and does then return the status byte (or -1 in case of
 error).<br/>
 
 #### A(78h) - CdAsyncSeekL(src)
+`int CdAsyncSeekL(uint8_t *src);`<br/>
 Issues Setloc and SeekL commands. The parameter (src) is a pointer to a 3-byte
 sector number (MM,SS,FF) (in BCD format).<br/>
 The function returns 0=failed, or 1=okay. Completion is indicated by events
 (class=F0000003h, and spec=20h, or 8000h).<br/>
 
 #### A(7Ch) - CdAsyncGetStatus(dst)
+`int CdAsyncGetStatus(uint8_t *dst);`<br/>
 Issues a GetStat command. The parameter (dst) is a pointer to a 1-byte location
 that receives the status response byte.<br/>
 The function returns 0=failed, or 1=okay. Completion is indicated by events
@@ -58,6 +63,7 @@ door-open flag was set, one should call a function that does forcefully load
 the path table (like cd).<br/>
 
 #### A(7Eh) - CdAsyncReadSector(count,dst,mode)
+`int CdAsyncReadSector(int count, void *dst, uint32_t mode);`<br/>
 Issues SetMode and ReadN (when mode.bit8=0), or ReadS (when mode.bit8=1)
 commands. count is the number of sectors to be read, dst is the destination
 address in RAM, mode.bit0-7 are passed as parameter to the SetMode command,
@@ -70,22 +76,34 @@ The function returns 0=failed, or 1=okay. Completion is indicated by events
 (class=F0000003h, and spec=20h, 80h, or 8000h).<br/>
 
 #### A(81h) - CdAsyncSetMode(mode)
+`int CdAsyncSetMode(uint32_t mode);`<br/>
 Similar to CdAsyncReadSector (see there for details), but issues only the
 SetMode command, without any following ReadN/ReadS command.<br/>
 
 #### A(94h) - CdromGetInt5errCode(dst1,dst2)
+`void CdromGetInt5errCode(uint8_t *dst1, uint8_t *dst2);`<br/>
 Returns the first two response bytes from the most recent INT5 error:
 [dst1]=status, [dst2]=errorcode. The BIOS doesn't reset these values in case of
 successful completion, so the values are quite useless.<br/>
 
 #### A(54h) or A(71h) - \_96\_init()
+`void _96_init(void);`<br/>
 #### A(56h) or A(72h) - \_96\_remove()  ;does NOT work due to SysDeqIntRP bug
+`void _96_remove(void);`<br/>
 #### A(90h) - CdromIoIrqFunc1()
+`int CdromIoIrqFunc1(void);`<br/>
 #### A(91h) - CdromDmaIrqFunc1()
+`int CdromDmaIrqFunc1(void);`<br/>
 #### A(92h) - CdromIoIrqFunc2()
+`void CdromIoIrqFunc2(int v);`<br/>
 #### A(93h) - CdromDmaIrqFunc2()
+`int CdromDmaIrqFunc2(void);`<br/>
 #### A(95h) - CdInitSubFunc()  ;subfunction for _96_init()
+`int CdInitSubFunc(void);`<br/>
 #### A(9Eh) - SetCdromIrqAutoAbort(type,flag)
+`int SetCdromIrqAutoAbort(int type, int flag);`<br/>
 #### A(A2h) - EnqueueCdIntr()  ;with prio=0 (fixed)
+`void EnqueueCdIntr(void);`<br/>
 #### A(A3h) - DequeueCdIntr()  ;does NOT work due to SysDeqIntRP bug
+`void DequeueCdIntr(void);`<br/>
 Internally used CDROM functions for initialization and IRQ handling.<br/>

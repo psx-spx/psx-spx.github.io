@@ -1,21 +1,27 @@
 #   Number/String/Character Conversion
 #### A(0Eh) - abs(val)
+`int abs(int val);`<br/>
 #### A(0Fh) - labs(val)  ;exactly same as "abs"
+`long labs(long val);`<br/>
 Returns the absolute value (if val\<0 then R2=-val, else R2=val).<br/>
 
 #### A(0Ah) - todigit(char)
+`int todigit(int c);`<br/>
 Takes the incoming character, ANDed with FFh, and returns 0..9 for characters
 "0..9" and 10..35 for "A..Z" or "a..z", or 0098967Fh (9,999,999 decimal) for
 any other 7bit characters, or garbage for characters 80h..FFh.<br/>
 
 #### A(25h) - toupper(char)
+`int toupper(int c);`<br/>
 #### A(26h) - tolower(char)
+`int tolower(int c);`<br/>
 Returns the incoming character, ANDed with FFh, with letters "A..Z" converted
 to uppercase/lowercase format accordingly. Works only for char 00h..7Fh (some
 characters in range 80h..FFh are left unchanged, others are randomly "adjusted"
 by adding/subtracting 20h, and by sign-expanding the result to 32bits).<br/>
 
 #### A(0Dh) - strtol(src, src\_end, base)
+`long strtol(const char *src, char **src_end, int base);`<br/>
 Converts a string to a number. The function skips any leading "blank"
 characters (that are, 09h..0Dh, and 20h) (ie. TAB, CR, LF, SPC, and some
 others) (some characters in range 80h..FFh are accidently treated as "blank",
@@ -45,11 +51,14 @@ any other unexpected end-byte). If src points to 00000000h, then the function
 returns r2=0, and leaves [src\_end] unchanged.<br/>
 
 #### A(0Ch) - strtoul(src, src\_end, base)
+`unsigned long strtoul(const char *src, char **src_end, int base);`<br/>
 Same as "strtol" except that it doesn't recognize the "-" sign prefix (ie.
 works only for unsigned numbers).<br/>
 
 #### A(10h) - atoi(src)
+`int atoi(const char *src);`<br/>
 #### A(11h) - atol(src)  ;exactly same as "atoi" (but slightly slower)
+`long atol(const char *src);`<br/>
 Same as "strtol", except that it doesn't return the string end address in
 [src\_end], and except that it defaults to base=10, but still supports prefixes,
 allowing to use base2,8,16. CAUTION: For some super bizarre reason, this
@@ -58,11 +67,14 @@ which uses the "o" letter as octal prefix) (the "0x" and "0b" prefixes are
 working as usually).<br/>
 
 #### A(12h) - atob(src, num\_dst)
+`char *atob(const char *src, int *num_dst);`<br/>
 Calls "strtol(str,src\_end,10)", and does then exchange the two return values
 (ie. sets R2=[src\_end], and [num\_dst]=value\_32bit).<br/>
 
 #### A(0Bh) - atof(src) ;USES (ABSENT) COP1 FPU !!!
+`double atof(const char *src);`<br/>
 #### A(32h) - strtod(src, src\_end) ;USES (ABSENT) COP1 FPU !!!
+`double strtod(const char *src, char **src_end);`<br/>
 These functions are intended to convert strings to floating point numbers,
 however, the functions are accidently compiled for MIPS processors with COP1
 floating point unit (which is not installed in the PSX, nor does the BIOS
