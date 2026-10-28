@@ -4591,57 +4591,71 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="string-functions">String Functions</h1>
 <h4 id="a15h-strcatdst-src">A(15h) - strcat(dst, src)</h4>
-<p>Appends src to the end of dst. Searches the ending 00h byte in dst, and copies
+<p><code>char *strcat(char *dst, const char *src);</code><br/>
+Appends src to the end of dst. Searches the ending 00h byte in dst, and copies
 src to that address, up to including the ending 00h byte in src. Returns the
 incoming dst value. Refuses to do anything if src or dst is 00000000h (and
 returns 0 in that case).<br/></p>
 <h4 id="a16h-strncatdst-src-maxlen">A(16h) - strncat(dst, src, maxlen)</h4>
-<p>Same as "strcat", but clipped to "MaxSrc=(min(0,maxlen)+1)" characters, ie. the
+<p><code>char *strncat(char *dst, const char *src, size_t maxlen);</code><br/>
+Same as "strcat", but clipped to "MaxSrc=(min(0,maxlen)+1)" characters, ie. the
 total length is max "length(dst)+min(0,maxlen)+1". If src is longer or equal to
 "MaxSrc", then only the first "MaxSrc" chars are copied (with the last byte
 being replaced by 00h). If src is shorter, then everything up to the ending 00h
 byte gets copied, but without additional padding (unlike as in "strncpy").<br/></p>
 <h4 id="a17h-strcmpstr1-str2">A(17h) - strcmp(str1, str2)</h4>
-<p>Compares the strings up to including ending 00h byte. Returns 0 if they are
+<p><code>int strcmp(const char *str1, const char *str2);</code><br/>
+Compares the strings up to including ending 00h byte. Returns 0 if they are
 identical, or otherwise [str1+N]-[str2+N], where N is the location of the first
 mismatch, the two bytes are sign-expanded to 32bits before doing the
 subtraction. The function rejects str1/str2 values of 00000000h (and returns
 0=both are zero, -1=only str1 is zero, and +1=only str2 is zero).<br/></p>
 <h4 id="a18h-strncmpstr1-str2-maxlen">A(18h) - strncmp(str1, str2, maxlen)</h4>
-<p>Same as "strcmp" but stops after comparing "maxlen" characters (and returns 0
+<p><code>int strncmp(const char *str1, const char *str2, size_t maxlen);</code><br/>
+Same as "strcmp" but stops after comparing "maxlen" characters (and returns 0
 if they did match). If the strings are shorter, then comparision stops at the
 ending 00h byte (exactly as for strcmp).<br/></p>
 <h4 id="a19h-strcpydst-src">A(19h) - strcpy(dst, src)</h4>
-<p>Copies data from src to dst, up to including the ending 00h byte. Refuses to
+<p><code>char *strcpy(char *dst, const char *src);</code><br/>
+Copies data from src to dst, up to including the ending 00h byte. Refuses to
 copy anything if src or dst is 00000000h. Returns the incoming dst address (or
 0 if copy was refused).<br/></p>
 <h4 id="a1ah-strncpydst-src-maxlen">A(1Ah) - strncpy(dst, src, maxlen)</h4>
-<p>Same as "strcpy", but clipped to "maxlen" characters. If src is longer or equal
+<p><code>char *strncpy(char *dst, const char *src, size_t maxlen);</code><br/>
+Same as "strcpy", but clipped to "maxlen" characters. If src is longer or equal
 to maxlen, then only the first "maxlen" chars are copied (but without appending
 an ending 00h byte to dst). If src is shorter, then the remaining bytes in dst
 are padded with 00h bytes.<br/></p>
 <h4 id="a1bh-strlensrc">A(1Bh) - strlen(src)</h4>
-<p>Returns the length of the string up to excluding the ending 00h byte (or 0 when
+<p><code>size_t strlen(const char *src);</code><br/>
+Returns the length of the string up to excluding the ending 00h byte (or 0 when
 src is 00000000h).<br/></p>
 <h4 id="a1ch-indexsrc-char">A(1Ch) - index(src, char)</h4>
+<p><code>char *index(const char *src, int c);</code><br/></p>
 <h4 id="a1dh-rindexsrc-char">A(1Dh) - rindex(src, char)</h4>
+<p><code>char *rindex(const char *src, int c);</code><br/></p>
 <h4 id="a1eh-strchrsrc-char-exactly-the-same-as-index">A(1Eh) - strchr(src, char)  ;exactly the same as "index"</h4>
+<p><code>char *strchr(const char *src, int c);</code><br/></p>
 <h4 id="a1fh-strrchrsrc-char-exactly-the-same-as-rindex">A(1Fh) - strrchr(src, char) ;exactly the same as "rindex"</h4>
-<p>Scans for the first (index) or last (rindex) occurence of char in the string.
+<p><code>char *strrchr(const char *src, int c);</code><br/>
+Scans for the first (index) or last (rindex) occurence of char in the string.
 Returns the memory address of that occurence (or 0 if there's no occurence, or
 if src is 00000000h). Char may be 00h (returns the end address of the string).
 Note that, despite of the function names, the return value is always a memory
 address, NOT an index value relative to src.<br/></p>
 <h4 id="a20h-strpbrksrc-list">A(20h) - strpbrk(src, list)</h4>
-<p>Scans for the first occurence of a character that is contained in the list. The
+<p><code>char *strpbrk(const char *src, const char *list);</code><br/>
+Scans for the first occurence of a character that is contained in the list. The
 list contains whatever desired characters, terminated by 00h.<br/>
 Returns the address of that occurence, or 0 if there was none. BUG: If there
 was no occurence, it returns 0 only if src[0]=00h, and otherwise returns the
 incoming "src" value (which is the SAME return value as when a occurence did
 occur on 1st character).<br/></p>
 <h4 id="a21h-strspnsrc-list">A(21h) - strspn(src, list)</h4>
+<p><code>size_t strspn(const char *src, const char *list);</code><br/></p>
 <h4 id="a22h-strcspnsrc-list">A(22h) - strcspn(src, list)</h4>
-<p>Scans for the first occurence of a character that is (strspn), or that isn't
+<p><code>size_t strcspn(const char *src, const char *list);</code><br/>
+Scans for the first occurence of a character that is (strspn), or that isn't
 (strcspn) contained in the list. The list contains whatever desired characters,
 terminated by 00h.<br/>
 Returns the index (relative to src) of that occurence. If there was no
@@ -4658,8 +4672,10 @@ from the string pointed to by s2."<br/>
 ***<br/>
 Hmmmm, that'd be vice-versa?<br/></p>
 <h4 id="a23h-strtoksrc-list-first-call">A(23h) - strtok(src, list) ;first call</h4>
+<p><code>char *strtok(char *src, const char *list);</code><br/></p>
 <h4 id="a23h-strtok0-list-further-calls">A(23h) - strtok(0, list) ;further call(s)</h4>
-<p>Used to split a string into fragments, list contains a list of characters that
+<p><code>char *strtok(char *src, const char *list);</code><br/>
+Used to split a string into fragments, list contains a list of characters that
 are to be treated as separators, terminated by 00h.<br/>
 The first call copies the incoming string to a buffer in the BIOS variables
 area (the buffer size is 100h bytes, so the string should be max 255 bytes
@@ -4682,7 +4698,8 @@ different characters, then additional separators aren't skipped.<br/>
 </code></pre></div>
 Once when there are no more fragments, then 00000000h is returned.<br/></p>
 <h4 id="a24h-strstrstr-substr-buggy">A(24h) - strstr(str, substr) - buggy</h4>
-<p>Scans for the first occurence of substr in the string. Returns the memory
+<p><code>char *strstr(const char *str, const char *substr);</code><br/>
+Scans for the first occurence of substr in the string. Returns the memory
 address of that occurence (or 0 if it was unable to find an occurence).<br/>
 BUG: After rejecting incomplete matches, the function doesn't fallback to the
 old str address plus 1, but does rather continue at the current str address.

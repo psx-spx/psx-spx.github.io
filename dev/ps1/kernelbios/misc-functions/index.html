@@ -4753,12 +4753,15 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="misc-functions">Misc Functions</h1>
 <h4 id="a2fh-rand">A(2Fh) - rand()</h4>
-<p>Advances the random generator as "x=x*41C64E6Dh+3039h" (aka plus 12345
+<p><code>int rand(void);</code><br/>
+Advances the random generator as "x=x*41C64E6Dh+3039h" (aka plus 12345
 decimal), and returns a 15bit random value "R2=(x/10000h) AND 7FFFh".<br/></p>
 <h4 id="a30h-srandseed">A(30h) - srand(seed)</h4>
-<p>Changes the current 32bit value of the random generator.<br/></p>
+<p><code>void srand(uint32_t seed);</code><br/>
+Changes the current 32bit value of the random generator.<br/></p>
 <h4 id="ab4h-getsysteminfoindex-not-supported-by-old-cex-1000-version">A(B4h) - GetSystemInfo(index)  ;not supported by old CEX-1000 version</h4>
-<p>Returns a word, halfword, or string, depending on the selected index value:<br/>
+<p><code>uint32_t GetSystemInfo(int index);</code><br/>
+Returns a word, halfword, or string, depending on the selected index value:<br/>
 <div class="highlight"><pre><span></span><code>  00h      Get Kernel BCD Date       (eg. 19951204h) (YYYYMMDDh)
   01h      Get Kernel Flags or so    (usually/always 000000003h)
   02h      Get Kernel Version String (eg. &quot;CEX-3000/1001/1002 by K.S.&quot;,0)
@@ -4790,15 +4793,18 @@ index 2 as the pointer BFC00129h, index 3 as cop0r15 AND FFh, index 5 as
 [00000060h] SHL 10, and index 4 and 06h..0Eh from a hardcoded table of the
 usual values above. Any other sum returns -1.<br/></p>
 <h4 id="b56h-getc0table">B(56h) - GetC0Table()</h4>
+<p><code>void *GetC0Table(void);</code><br/></p>
 <h4 id="b57h-getb0table">B(57h) - GetB0Table()</h4>
-<p>Retrieves the address of the jump lists for B(NNh) and C(NNh) functions,
+<p><code>void *GetB0Table(void);</code><br/>
+Retrieves the address of the jump lists for B(NNh) and C(NNh) functions,
 allowing to patch entries in that lists (however, the BIOS does often jump
 directly to the function addresses, rather than indirectly via the list, so
 patching may have little effect in such cases). Note: There's no function to
 retrieve the address of the A(NNh) jump list, however, that list is
 usually/always at 00000200h.<br/></p>
 <h4 id="a31h-qsortbase-nel-width-callback">A(31h) - qsort(base, nel, width, callback)</h4>
-<p>Sorts an array, using a super-slow implementation of the "quick sort"
+<p><code>void qsort(void *base, size_t nel, size_t width, int (*callback)(const void *, const void *));</code><br/>
+Sorts an array, using a super-slow implementation of the "quick sort"
 algorithm. base is the address of the array, nel is the number of elements in
 the array, width is the size in bytes of each element, callback is a function
 that receives pointers to two elements which need to be compared; callback
@@ -4811,8 +4817,10 @@ temporarily on the heap (that means, qsort works only if the heap was
 initialized with InitHeap, and only if "width" bytes are free). There's no
 return value.<br/></p>
 <h4 id="a35h-lsearchkey-base-nel-width-callback">A(35h) - lsearch(key, base, nel, width, callback)</h4>
+<p><code>void *lsearch(const void *key, void *base, int nel, size_t width, int (*callback)(const void *, const void *));</code><br/></p>
 <h4 id="a36h-bsearchkey-base-nel-width-callback">A(36h) - bsearch(key, base, nel, width, callback)</h4>
-<p>Searches an element in an array (key is the pointer to the searched element,
+<p><code>void *bsearch(const void *key, void *base, int nel, size_t width, int (*callback)(const void *, const void *));</code><br/>
+Searches an element in an array (key is the pointer to the searched element,
 the other parameters are same as for "qsort"). "lsearch" performs a slow linear
 search in an unsorted array, by simply comparing one array element after each
 other. "bsearch" assumes that the array contains sorted elements (eg. via
@@ -4821,15 +4829,20 @@ the array, until it has found the desired element (or the location where it'd
 be, if it'd be in the array). Both functions return the address of the element
 (or 0 if it wasn't found).<br/></p>
 <h4 id="c19h-_ioaborttxt1txt2">C(19h) - _ioabort(txt1,txt2)</h4>
-<p>Displays the two strings on the TTY (in some cases the BIOS does accidently
+<p><code>void _ioabort(const char *txt1, const char *txt2);</code><br/>
+Disputed: OpenBIOS takes two strings (as above); nugget's <code>syscall_ioabort</code> declares <code>int _ioabort(const char *msg);</code>, one string and an int return. Unverified on hardware.<br/>
+Displays the two strings on the TTY (in some cases the BIOS does accidently
 pass garbage instead of the 2nd string though). And does then execute
 _ioabort_raw(1), see there for more details.<br/></p>
 <h4 id="ab2h-_ioabort_rawparam-not-supported-by-old-cex-1000-version">A(B2h) - _ioabort_raw(param)  ;not supported by old CEX-1000 version</h4>
-<p>Executes "longjmp(ioabortbuffer,param)". Internally used to recover from
+<p><code>void _ioabort_raw(int param);</code><br/>
+Disputed: OpenBIOS returns void (as above); nugget declares <code>int _ioabort_raw(int code);</code>. Unverified on hardware.<br/>
+Executes "longjmp(ioabortbuffer,param)". Internally used to recover from
 failed I/O operations, param should be nonzero to notify the setjmp caller
 that the abort has occurred.<br/></p>
 <h4 id="a13h-setjmpbuf">A(13h) - setjmp(buf)</h4>
-<p>This is a somewhat incomplete implementation of posix's setjmp, by storing the ABI-saved CPU registers in the specified buffer (30h bytes):<br/>
+<p><code>int setjmp(struct JmpBuf *buf);</code><br/>
+This is a somewhat incomplete implementation of posix's setjmp, by storing the ABI-saved CPU registers in the specified buffer (30h bytes):<br/>
 <div class="highlight"><pre><span></span><code>  00h 4    r31 (ra) (aka caller&#39;s pc)
   04h 4    r29 (sp)
   08h 4    r30 (fp)
@@ -4846,7 +4859,8 @@ Also noteworthy from what a compliant setjmp implementation should be doing
 is the absence of saving the state of cop0 and cop2, thus making this slightly
 unsuitable for a typical coroutine system implementation.<br/></p>
 <h4 id="a14h-longjmpbuf-param">A(14h) - longjmp(buf, param)</h4>
-<p>Restores the R16-R23,GP,SP,FP,RA registers from a previously recorded
+<p><code>void longjmp(struct JmpBuf *buf, int param);</code><br/>
+Restores the R16-R23,GP,SP,FP,RA registers from a previously recorded
 jmp_buf buffer, and "returns" to that new RA address (rather than to the caller of the
 longjmp function). The "param" value is passed as "return value" to the
 code at RA, ie. usually to the caller of the original setjmp call. Noteworthy difference
@@ -4855,15 +4869,18 @@ you pass 0 to it. So since setjmp returns 0 on the first call, the caller of lon
 care that "param" is non-zero, so the callsite of setjmp can make the difference between the first
 call and a rollback. See setjmp for further details.<br/></p>
 <h4 id="a53h-set_ioabort_handlersrc-ps2-only-psx-systemerror">A(53h) - set_ioabort_handler(src)  ;PS2 only  ;PSX: SystemError</h4>
-<p>Normally the _ioabort handler is changed only internally during booting, with
+<p><code>/* ? */ void set_ioabort_handler(/* ? */ void *src);</code><br/>
+Normally the _ioabort handler is changed only internally during booting, with
 this new function, games can install their own _ioabort handler. src is pointer
 to a 30h-byte "savestate" structure, which will be copied to the actual _ioabort
 structure.<br/></p>
 <h4 id="a06h-or-b38h-exitexitcode">A(06h) or B(38h) - exit(exitcode)</h4>
-<p>Terminates the program and returns control to the BIOS; which does then lockup
+<p><code>void exit(int exitcode);</code><br/>
+Terminates the program and returns control to the BIOS; which does then lockup
 itself via A(3Ah) _exit.<br/></p>
 <h4 id="aa0h-_boot">A(A0h) - _boot()</h4>
-<p>Performs a warmboot (resets the kernel and reboots from CDROM). Unlike the
+<p><code>void _boot(void);</code><br/>
+Performs a warmboot (resets the kernel and reboots from CDROM). Unlike the
 normal coldboot procedure, it doesn't display the "\&lt;S&gt;" and "PS" intro
 screens (and doesn't verify the "PS" logo in the ISO System Area), and, doesn't
 enter the bootmenu (even if the disk drive is empty, or if it contains an Audio
@@ -4887,9 +4904,12 @@ Reportedly, A(85h) is CdStop, but that seems to be nonsense?<br/></p>
 is handled by issuing DeliverEvent(F0000010h,4000h). Thereafter, the syscall
 returns to the main program (ie. it doesn't cause a SystemError).<br/></p>
 <h4 id="a3ah-_exitexitcode">A(3Ah) - _exit(exitcode)</h4>
+<p><code>void _exit(int exitcode);</code><br/></p>
 <h4 id="a40h-systemerrorunresolvedexception">A(40h) - SystemErrorUnresolvedException()</h4>
+<p><code>int SystemErrorUnresolvedException(void);</code><br/></p>
 <h4 id="aa1h-systemerrortypeerrorcode-type-bbootddisk">A(A1h) - SystemError(type,errorcode) ;type "B"=Boot,"D"=Disk</h4>
-<p>These are used "SystemError" functions. The functions are repeatedly jumping to
+<p><code>void SystemError(int type, int errorcode);</code><br/>
+These are used "SystemError" functions. The functions are repeatedly jumping to
 themselves, causing the system to hang. Possibly useful for debugging software
 which may hook that functions.<br/></p>
 <h4 id="a4fh50h52h53h9ah9bh-b1ah1fh21h23h2ah2bh52h5ah-c0bh-na">A(4Fh,50h,52h,53h,9Ah,9Bh) B(1Ah..1Fh,21h..23h,2Ah,2Bh,52h,5Ah) C(0Bh) - N/A</h4>

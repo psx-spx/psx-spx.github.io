@@ -4519,20 +4519,26 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="numberstringcharacter-conversion">Number/String/Character Conversion</h1>
 <h4 id="a0eh-absval">A(0Eh) - abs(val)</h4>
+<p><code>int abs(int val);</code><br/></p>
 <h4 id="a0fh-labsval-exactly-same-as-abs">A(0Fh) - labs(val)  ;exactly same as "abs"</h4>
-<p>Returns the absolute value (if val\&lt;0 then R2=-val, else R2=val).<br/></p>
+<p><code>long labs(long val);</code><br/>
+Returns the absolute value (if val\&lt;0 then R2=-val, else R2=val).<br/></p>
 <h4 id="a0ah-todigitchar">A(0Ah) - todigit(char)</h4>
-<p>Takes the incoming character, ANDed with FFh, and returns 0..9 for characters
+<p><code>int todigit(int c);</code><br/>
+Takes the incoming character, ANDed with FFh, and returns 0..9 for characters
 "0..9" and 10..35 for "A..Z" or "a..z", or 0098967Fh (9,999,999 decimal) for
 any other 7bit characters, or garbage for characters 80h..FFh.<br/></p>
 <h4 id="a25h-toupperchar">A(25h) - toupper(char)</h4>
+<p><code>int toupper(int c);</code><br/></p>
 <h4 id="a26h-tolowerchar">A(26h) - tolower(char)</h4>
-<p>Returns the incoming character, ANDed with FFh, with letters "A..Z" converted
+<p><code>int tolower(int c);</code><br/>
+Returns the incoming character, ANDed with FFh, with letters "A..Z" converted
 to uppercase/lowercase format accordingly. Works only for char 00h..7Fh (some
 characters in range 80h..FFh are left unchanged, others are randomly "adjusted"
 by adding/subtracting 20h, and by sign-expanding the result to 32bits).<br/></p>
 <h4 id="a0dh-strtolsrc-src_end-base">A(0Dh) - strtol(src, src_end, base)</h4>
-<p>Converts a string to a number. The function skips any leading "blank"
+<p><code>long strtol(const char *src, char **src_end, int base);</code><br/>
+Converts a string to a number. The function skips any leading "blank"
 characters (that are, 09h..0Dh, and 20h) (ie. TAB, CR, LF, SPC, and some
 others) (some characters in range 80h..FFh are accidently treated as "blank",
 too).<br/>
@@ -4560,22 +4566,28 @@ and as numeric digits). The function returns R2=result, and
 any other unexpected end-byte). If src points to 00000000h, then the function
 returns r2=0, and leaves [src_end] unchanged.<br/></p>
 <h4 id="a0ch-strtoulsrc-src_end-base">A(0Ch) - strtoul(src, src_end, base)</h4>
-<p>Same as "strtol" except that it doesn't recognize the "-" sign prefix (ie.
+<p><code>unsigned long strtoul(const char *src, char **src_end, int base);</code><br/>
+Same as "strtol" except that it doesn't recognize the "-" sign prefix (ie.
 works only for unsigned numbers).<br/></p>
 <h4 id="a10h-atoisrc">A(10h) - atoi(src)</h4>
+<p><code>int atoi(const char *src);</code><br/></p>
 <h4 id="a11h-atolsrc-exactly-same-as-atoi-but-slightly-slower">A(11h) - atol(src)  ;exactly same as "atoi" (but slightly slower)</h4>
-<p>Same as "strtol", except that it doesn't return the string end address in
+<p><code>long atol(const char *src);</code><br/>
+Same as "strtol", except that it doesn't return the string end address in
 [src_end], and except that it defaults to base=10, but still supports prefixes,
 allowing to use base2,8,16. CAUTION: For some super bizarre reason, this
 function treats "0" (a leading ZERO digit) as OCTAL prefix (unlike strtol,
 which uses the "o" letter as octal prefix) (the "0x" and "0b" prefixes are
 working as usually).<br/></p>
 <h4 id="a12h-atobsrc-num_dst">A(12h) - atob(src, num_dst)</h4>
-<p>Calls "strtol(str,src_end,10)", and does then exchange the two return values
+<p><code>char *atob(const char *src, int *num_dst);</code><br/>
+Calls "strtol(str,src_end,10)", and does then exchange the two return values
 (ie. sets R2=[src_end], and [num_dst]=value_32bit).<br/></p>
 <h4 id="a0bh-atofsrc-uses-absent-cop1-fpu">A(0Bh) - atof(src) ;USES (ABSENT) COP1 FPU !!!</h4>
+<p><code>double atof(const char *src);</code><br/></p>
 <h4 id="a32h-strtodsrc-src_end-uses-absent-cop1-fpu">A(32h) - strtod(src, src_end) ;USES (ABSENT) COP1 FPU !!!</h4>
-<p>These functions are intended to convert strings to floating point numbers,
+<p><code>double strtod(const char *src, char **src_end);</code><br/>
+These functions are intended to convert strings to floating point numbers,
 however, the functions are accidently compiled for MIPS processors with COP1
 floating point unit (which is not installed in the PSX, nor does the BIOS
 support a COP1 software emulation), so calling these functions will produce a

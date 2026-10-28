@@ -4339,12 +4339,14 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="character-sets">Character Sets</h1>
 <h4 id="b51h-krom2rawaddshiftjis_code">B(51h) - Krom2RawAdd(shiftjis_code)</h4>
-<p><div class="highlight"><pre><span></span><code>  In: r4  = 16bit Shift-JIS character code
+<p><code>const uint8_t *Krom2RawAdd(uint32_t shiftjis_code);</code><br/>
+<div class="highlight"><pre><span></span><code>  In: r4  = 16bit Shift-JIS character code
   Out: r2 = address in BIOS ROM of the desired character (or -1 = error)
 </code></pre></div>
 r4 should be 8140h..84BEh (charset 2), or 889Fh..9872h (charset 3).<br/></p>
 <h4 id="b53h-krom2offsetshiftjis_code">B(53h) - Krom2Offset(shiftjis_code)</h4>
-<p><div class="highlight"><pre><span></span><code>  In: r4  = 16bit Shift-JIS character code
+<p><code>uint16_t Krom2Offset(uint32_t shiftjis_code);</code><br/>
+<div class="highlight"><pre><span></span><code>  In: r4  = 16bit Shift-JIS character code
   Out: r2 = offset within charset (without charset base address)
 </code></pre></div>
 This is a subfunction for B(51h) Krom2RawAdd(shiftjis_code).<br/></p>

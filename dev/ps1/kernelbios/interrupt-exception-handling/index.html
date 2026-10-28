@@ -4595,13 +4595,15 @@ DefaultInterruptHandlers is always installed (and cannot be removed), so it
 does randomly trigger Events. Fortunately, it does not acknowledge the IRQs
 (unless SetIrqAutoAck was used to enable that fatal behaviour).<br/></p>
 <h4 id="b18h-resetentryint">B(18h) - ResetEntryInt()</h4>
-<p>Applies the default "Exit" structure (which consists of a pointer to
+<p><code>void ResetEntryInt(void);</code><br/>
+Applies the default "Exit" structure (which consists of a pointer to
 ReturnFromException, and the Kernel's exception stacktop (minus 4, for whatever
 reason), and zeroes for the R16..R23,R28,R30 registers. Returns the address of
 that structure.<br/>
 See HookEntryInt for details.<br/></p>
 <h4 id="b19h-hookentryintaddr">B(19h) - HookEntryInt(addr)</h4>
-<p>addr points to a structure (with same format as for the setjmp function):<br/>
+<p><code>void HookEntryInt(struct JmpBuf *addr);</code><br/>
+addr points to a structure (with same format as for the setjmp function):<br/>
 <div class="highlight"><pre><span></span><code>  00h 4    r31/ra,pc ;usually ptr to ReturnFromException function
   04h 4    r28/sp    ;usually exception stacktop, minus 4, for whatever reason
   08h 4    r30/fp    ;usually 0
@@ -4653,7 +4655,8 @@ unacknowledge IRQs pending, then the hardware will re-enter the exception
 handler as soon as the RFE opcode in ReturnFromException does re-enable
 interrupts).<br/></p>
 <h4 id="c02h-sysenqintrpprioritystruc-bugged-use-with-care">C(02h) - SysEnqIntRP(priority,struc)  ;bugged, use with care</h4>
-<p>Inserts a new element in the specified priority chain. The new element is
+<p><code>int SysEnqIntRP(int priority, struct HandlerInfo *struc);</code><br/>
+Inserts a new element in the specified priority chain. The new element is
 inserted at the begin of the chain, so (within that priority chain) the new
 element has highest priority.<br/>
 <div class="highlight"><pre><span></span><code>  00h 4  pointer to next element    (0=none)  ;this pointer is inserted by BIOS
@@ -4672,7 +4675,8 @@ the BIOS which does never remove priority 0 and 3 elements) (leaving apart that
 DequeueCdIntr and _96_remove try to remove priority 0 elements, but that
 functions won't work anyways; due to the same bug).<br/></p>
 <h4 id="c03h-sysdeqintrpprioritystruc-bugged-use-with-care">C(03h) - SysDeqIntRP(priority,struc)  ;bugged, use with care</h4>
-<p>Removes the specified element from the specified priority chain.<br/>
+<p><code>int SysDeqIntRP(int priority, struct HandlerInfo *struc);</code><br/>
+Removes the specified element from the specified priority chain.<br/>
 BUG: The function tries to search the whole chain (and to remove the element if
 it finds it). However, it does only check the first element properly, and,
 thereafter it reads a garbage value from an uninitialized stack location, and
@@ -4689,7 +4693,8 @@ both bits were set, returns 0 if one or both of the bits were already zero.<br/>
 to Bit0 once when returning from the syscall exception). There's no return
 value (all registers except SR and K0 are unchanged).<br/></p>
 <h4 id="c0dh-setirqautoackirqflag">C(0Dh) - SetIrqAutoAck(irq,flag)</h4>
-<p>Specifies if the DefaultInterruptHandler shall automatically acknowledge IRQs.
+<p><code>void SetIrqAutoAck(uint32_t irq, int flag);</code><br/>
+Specifies if the DefaultInterruptHandler shall automatically acknowledge IRQs.
 The "irq" paramter is the number of the interrupt, ie. 00h..0Ah = IRQ0..IRQ10.
 The "flag" value should be 0 to disable AutoAck, or non-zero to enable AutoAck.
 By default, AutoAck is disabled for all IRQs.<br/>
@@ -4698,7 +4703,8 @@ feature doesn't work very well: It may cause higher priority handlers to miss
 their IRQ, and it may even cause the DefaultInterruptHandler to miss its own
 IRQs.<br/></p>
 <h4 id="c06h-exceptionhandler">C(06h) - ExceptionHandler()</h4>
-<p>The C(06h) vector points to the exception handler, ie. to the function that is
+<p><code>void ExceptionHandler(void);</code><br/>
+The C(06h) vector points to the exception handler, ie. to the function that is
 invoked from the 4 opcodes at address 80000080h, that opcodes jump directly to
 the exception handler, so patching the C(06h) vector has no effect.<br/>
 Reading the C(06h) entry can be used to let a custom 80000080h handler pass
@@ -4714,15 +4720,19 @@ but did forgot cop0r13 to r2 (so they examined garbage), this was fixed in
 newer BIOS versions, additionally, most commercial games still include patches
 for compatibility with the old BIOS.<br/></p>
 <h4 id="b17h-returnfromexception">B(17h) - ReturnFromException()</h4>
-<p>Restores the CPU registers (R1-R31,HI,LO,SR,PC) (except R26/K0) from the
+<p><code>void ReturnFromException(void);</code><br/>
+Restores the CPU registers (R1-R31,HI,LO,SR,PC) (except R26/K0) from the
 current TCB. This function is usually executed automatically at the end of the
 ExceptionHandler, however, functions in the exception chain may call
 ReturnFromException to return immediately, without processing chain elements of
 lower priority.<br/></p>
 <h4 id="c00h-enqueuetimerandvblankirqspriority-used-with-prio1">C(00h) - EnqueueTimerAndVblankIrqs(priority) ;used with prio=1</h4>
+<p><code>int EnqueueTimerAndVblankIrqs(int priority);</code><br/></p>
 <h4 id="c01h-enqueuesyscallhandlerpriority-used-with-prio0">C(01h) - EnqueueSyscallHandler(priority) ;used with prio=0</h4>
+<p><code>int EnqueueSyscallHandler(int priority);</code><br/></p>
 <h4 id="c0ch-initdefintpriority-used-with-prio3">C(0Ch) - InitDefInt(priority) ;used with prio=3</h4>
-<p>Internally used to add some default IRQ and Exception handlers.<br/></p>
+<p><code>int InitDefInt(int priority);</code><br/>
+Internally used to add some default IRQ and Exception handlers.<br/></p>
 <h4 id="no-nested-exceptions">No Nested Exceptions</h4>
 <p>The Kernel doesn't support nested exceptions, that would require a decreasing
 exception stack, however, the kernel saves the incoming CPU registers in the

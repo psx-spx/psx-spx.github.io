@@ -4447,10 +4447,12 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="file-execute-and-flush-cache">File Execute and Flush Cache</h1>
 <h4 id="a41h-loadtestfilename-headerbuf">A(41h) - LoadTest(filename, headerbuf)</h4>
-<p>Loads the 800h-byte exe file header to an internal sector buffer, and does then
+<p><code>int LoadTest(const char *filename, /* ? */ void *headerbuf);</code><br/>
+Loads the 800h-byte exe file header to an internal sector buffer, and does then
 copy bytes [10h..4Bh] of that header to headerbuf[00h..3Bh].<br/></p>
 <h4 id="a42h-loadfilename-headerbuf">A(42h) - Load(filename, headerbuf)</h4>
-<p>Same as LoadTest (see there for details), but additionally loads the body
+<p><code>int Load(const char *filename, /* ? */ void *headerbuf);</code><br/>
+Same as LoadTest (see there for details), but additionally loads the body
 of the executable (using the size and destination address in the file header),
 and does call FlushCache. The exe can be then started via Exec (this isn't
 done automatically by LoadTest). Unlike "LoadExec", the
@@ -4458,7 +4460,8 @@ done automatically by LoadTest). Unlike "LoadExec", the
 to the old exe file (instead of restarting the boot executable).<br/>
 BUG: Uses the unstable FlushCache function (see there for details).<br/></p>
 <h4 id="a43h-execheaderbuf-param1-param2">A(43h) - Exec(headerbuf, param1, param2)</h4>
-<p>Can be used to start a previously loaded executable. The function saves
+<p><code>int Exec(/* ? */ void *headerbuf, /* ? */ int param1, /* ? */ char **param2);</code><br/>
+Can be used to start a previously loaded executable. The function saves
 R16,R28,R30,SP,RA in the reserved region of headerbuf (rather than on stack),
 more or less slowly zerofills the memfill region specified in headerbuf, reads
 the stack base and offset values and sets SP and FP to base+offset (or leaves
@@ -4468,7 +4471,8 @@ passed in r4,r5.<br/>
 If the executable (should) return, then R16,R28,R30,SP,RA are restored from
 headerbuf, and the function returns with r2=1.<br/></p>
 <h4 id="a51h-loadexecfilename-stackbase-stackoffset">A(51h) - LoadExec(filename, stackbase, stackoffset)</h4>
-<p>This is a rather bizarre function. In short, it does load and execute the
+<p><code>void LoadExec(const char *filename, uint32_t stackbase, uint32_t stackoffset);</code><br/>
+This is a rather bizarre function. In short, it does load and execute the
 specified file, and thereafter, it (tries to) reload and restart to boot
 executable.<br/>
 Part1: Takes a copy of the filename, with some adjustments: Everything up to
@@ -4503,7 +4507,8 @@ BUG: Part3 accidently treats the first 4 characters of the exename as memory
 address (causing an invalid memory address exception on address 6F726463h, for
 "cdrom:filename.exe").<br/></p>
 <h4 id="a9ch-setconfnum_evcb-num_tcb-stacktop">A(9Ch) - SetConf(num_EvCB, num_TCB, stacktop)</h4>
-<p>Changes the number of EvCBs and TCBs, and the stacktop. These values are usually
+<p><code>void SetConf(int num_EvCB, int num_TCB, void *stacktop);</code><br/>
+Changes the number of EvCBs and TCBs, and the stacktop. These values are usually
 initialized from the settings in the SYSTEM.CNF file, so using this function
 usually shouldn't ever be required.<br/>
 The function deallocates all old ExCBs, EvCBs, TCBs (so all Exception handlers,
@@ -4513,11 +4518,13 @@ It does then allocate the new control blocks, and enqueue the default handlers.
 Despite of the changed stacktop, the current stack pointer is kept intact, and
 the function returns to the caller.<br/></p>
 <h4 id="a9dh-getconfnum_evcb_dst-num_tcb_dst-stacktop_dst">A(9Dh) - GetConf(num_EvCB_dst, num_TCB_dst, stacktop_dst)</h4>
-<p>Returns the number of EvCBs, TCBs, and the initial stacktop. There's no return
+<p><code>void GetConf(int *num_EvCB_dst, int *num_TCB_dst, void **stacktop_dst);</code><br/>
+Returns the number of EvCBs, TCBs, and the initial stacktop. There's no return
 value in the R2 register, instead, the three 32bit return values are stored at
 the specified "dst" addresses.<br/></p>
 <h4 id="a44h-flushcache">A(44h) - FlushCache()</h4>
-<p>Flushes the Code Cache, so opcodes are ensured to be loaded from RAM. This is
+<p><code>void FlushCache(void);</code><br/>
+Flushes the Code Cache, so opcodes are ensured to be loaded from RAM. This is
 required when loading program code via DMA (ie. from CDROM) (the cache
 controller apparently doesn't realize changes to RAM that are caused by DMA).
 The LoadTest and LoadExec functions are automatically calling

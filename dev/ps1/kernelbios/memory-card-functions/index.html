@@ -4845,30 +4845,40 @@ accessing only two memory cards. Trying to use the BIOS to access up to eight
 memory cards would be very-extremly-very slow, which would be more annoying
 than useful.<br/></p>
 <h4 id="b4ah-initcard2pad_enable-usesdestroys-k0k1">B(4Ah) - InitCARD2(pad_enable)  ;uses/destroys k0/k1 !!!</h4>
+<p><code>int InitCARD2(int pad_enable);</code><br/></p>
 <h4 id="b4bh-startcard2">B(4Bh) - StartCARD2()</h4>
+<p><code>int StartCARD2(void);</code><br/></p>
 <h4 id="b4ch-stopcard2">B(4Ch) - StopCARD2()</h4>
+<p><code>int StopCARD2(void);</code><br/></p>
 <h4 id="a55h-or-a70h-_bu_init">A(55h) or A(70h) - _bu_init()</h4>
+<p><code>int _bu_init(void);</code><br/></p>
 <div class="highlight"><pre><span></span><code>  --- Below are some lower level memory card functions ---
 </code></pre></div>
 <h4 id="aabh-_card_infoport">A(ABh) - _card_info(port)</h4>
+<p><code>int _card_info(int port);</code><br/></p>
 <h4 id="b4dh-_card_info_subfuncport-subfunction-for-_card_info">B(4Dh) - _card_info_subfunc(port)  ;subfunction for "_card_info"</h4>
-<p>Can be used to check if the most recent call to _card_write has completed
+<p><code>int _card_info_subfunc(int port);</code><br/>
+Can be used to check if the most recent call to _card_write has completed
 okay. Issues an incomplete dummy read command (similar to B(4Fh) -
 _card_read). The read command is aborted once when receiving the status
 byte from the memory card (the actual data transfer is skipped).<br/></p>
 <h4 id="aafh-card_write_testport-not-supported-by-old-cex-1000-version">A(AFh) - card_write_test(port)  ;not supported by old CEX-1000 version</h4>
-<p>Resets the card changed flag. For some strange reason, this flag isn't
+<p><code>/* ? */ int card_write_test(/* ? */ int port);</code><br/>
+Resets the card changed flag. For some strange reason, this flag isn't
 automatically reset after reading the flag, instead, the flag is reset upon
 sector writes. To do that, this function issues a dummy write to sector 3Fh.<br/></p>
 <h4 id="b50h-_new_card">B(50h) - _new_card()</h4>
-<p>Normally any memory card read/write functions fail if the BIOS senses the card
+<p><code>void _new_card(void);</code><br/>
+Normally any memory card read/write functions fail if the BIOS senses the card
 change flag to be set. Calling this function tells the BIOS to ignore the card
 change flag on the next read/write operation (the function is internally used
 when loading the "MC" ID from sector 0, and when calling the card_write_test
 function to acknowledge the card change flag).<br/></p>
 <h4 id="b4eh-_card_writeportsectorsrc">B(4Eh) - _card_write(port,sector,src)</h4>
+<p><code>int _card_write(int port, int sector, const uint8_t *src);</code><br/></p>
 <h4 id="b4fh-_card_readportsectordst">B(4Fh) - _card_read(port,sector,dst)</h4>
-<p>Invokes asynchronous reading/writing of a single sector. The function returns
+<p><code>int _card_read(int port, int sector, uint8_t *dst);</code><br/>
+Invokes asynchronous reading/writing of a single sector. The function returns
 1=okay, or 0=failed (on invalid sector numbers). The actual I/O is done on IRQ
 level, completion of the I/O command transmission can be checked, among others,
 via get/wait_card_status(slot) functions (with slot=port/10h).<br/>
@@ -4882,8 +4892,10 @@ probably a BUG, the function also accepts sector 400h. The specified sector
 number is directly accessed (it is NOT parsed through the broken sector
 replacement list).<br/></p>
 <h4 id="b5ch-_card_statusslot">B(5Ch) - _card_status(slot)</h4>
+<p><code>uint8_t _card_status(int slot);</code><br/></p>
 <h4 id="b5dh-_card_waitslot">B(5Dh) - _card_wait(slot)</h4>
-<p>Returns the status of the most recent I/O command, possible values are:<br/>
+<p><code>uint8_t _card_wait(int slot);</code><br/>
+Returns the status of the most recent I/O command, possible values are:<br/>
 <div class="highlight"><pre><span></span><code>  01h=ready
   02h=busy/read
   04h=busy/write
@@ -4894,22 +4906,30 @@ replacement list).<br/></p>
 _card_status returns immediately, _card_wait waits until a non-busy
 state occurs.<br/></p>
 <h4 id="aa7h-bufs_cb_0">A(A7h) - bufs_cb_0()</h4>
+<p><code>void bufs_cb_0(void);</code><br/></p>
 <h4 id="aa8h-bufs_cb_1">A(A8h) - bufs_cb_1()</h4>
+<p><code>void bufs_cb_1(void);</code><br/></p>
 <h4 id="aa9h-bufs_cb_2">A(A9h) - bufs_cb_2()</h4>
+<p><code>void bufs_cb_2(void);</code><br/></p>
 <h4 id="aaah-bufs_cb_3">A(AAh) - bufs_cb_3()</h4>
+<p><code>void bufs_cb_3(void);</code><br/></p>
 <h4 id="aaeh-bufs_cb_4">A(AEh) - bufs_cb_4()</h4>
-<p>These five callback functions are internally used by the BIOS, notifying other
+<p><code>void bufs_cb_4(void);</code><br/>
+These five callback functions are internally used by the BIOS, notifying other
 BIOS functions about (un-)successful completion of memory card I/O commands.<br/></p>
 <h4 id="b58h-_card_chan">B(58h) - _card_chan()</h4>
-<p>This is a subfunction for the five bufs_cb__xxx functions (indicating
+<p><code>int _card_chan(void);</code><br/>
+This is a subfunction for the five bufs_cb__xxx functions (indicating
 whether the callback occured for a slot1 or slot2 access).<br/></p>
 <h4 id="aach-_card_loadport">A(ACh) - _card_load(port)</h4>
-<p>Invokes asynchronous reading of the memory card directory. The function isn't
+<p><code>int _card_load(int port);</code><br/>
+Invokes asynchronous reading of the memory card directory. The function isn't
 too useful because the BIOS tends to read the directory automatically in
 various places in synchronous mode, so there isn't too much chance to replace
 the automatic synchronous reading by asynchronous reading.<br/></p>
 <h4 id="aadh-_card_autoflag">A(ADh) - _card_auto(flag)</h4>
-<p>Can be used to enable/disable auto format (0=off, 1=on). The _bu_init function
+<p><code>int _card_auto(int flag);</code><br/>
+Can be used to enable/disable auto format (0=off, 1=on). The _bu_init function
 initializes auto format as disabled. If auto format is enabled, then the BIOS
 does automatically format memory cards if it has failed to read the "MC" ID
 bytes on sector 0. Although potentially useful, activating this feature is
@@ -4918,8 +4938,10 @@ due to improperly inserted cards with dirty contacts, so it'd be better to
 prompt the user whether or not to format the card, rather than doing that
 automatically).<br/></p>
 <h4 id="c1ah-set_card_find_modemode">C(1Ah) - set_card_find_mode(mode)</h4>
+<p><code>void set_card_find_mode(int mode);</code><br/></p>
 <h4 id="c1dh-get_card_find_mode">C(1Dh) - get_card_find_mode()</h4>
-<p>Allows to get/set the card find mode (0=normal, 1=find deleted files), the mode
+<p><code>int get_card_find_mode(void);</code><br/>
+Allows to get/set the card find mode (0=normal, 1=find deleted files), the mode
 setting affects only the firstfile2/nextfile functions. All other file functions
 are used fixed mode settings (always mode=0 for open, rename,
 erase, and mode=1 for undelete).<br/></p>

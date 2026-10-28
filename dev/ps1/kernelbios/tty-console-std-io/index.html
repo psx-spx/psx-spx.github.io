@@ -4465,7 +4465,8 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="tty-console-std_io">TTY Console (std_io)</h1>
 <h4 id="a3fh-printftxtparam1param2etc-print-string-to-console">A(3Fh) - Printf(txt,param1,param2,etc.) - Print string to console</h4>
-<p><div class="highlight"><pre><span></span><code>  in:  A0                     Pointer to 0 terminated string
+<p><code>int Printf(const char *txt, ...);</code><br/>
+<div class="highlight"><pre><span></span><code>  in:  A0                     Pointer to 0 terminated string
        A1,A2,A3,[SP+10h..]    Argument(s)
 </code></pre></div>
 Prints the specified string to the TTY console. Printf does internally use
@@ -4500,14 +4501,16 @@ doesn't work at all (accidently sign-expands 16bit to 32bit, and then displays
 that signed 32bit value as giant unsigned value). Printf supports only octal,
 decimal, and hex (but not binary).<br/></p>
 <h4 id="a3eh-or-b3fh-putssrc-write-string-to-tty">A(3Eh) or B(3Fh) - puts(src) - Write string to TTY</h4>
-<p><div class="highlight"><pre><span></span><code>  in: R4=address of string (terminated by 00h)
+<p><code>void puts(const char *src);</code><br/>
+<div class="highlight"><pre><span></span><code>  in: R4=address of string (terminated by 00h)
 </code></pre></div>
 Like "printf", but doesn't resolve any "%" operands. Empty strings are handled
 in a special way: If R4 points to a 00h character then nothing is output (as
 one would expect it), but, if R4 is 00000000h then "\&lt;NULL&gt;" is output
 (only that six letters; without appending any CR or LF).<br/></p>
 <h4 id="a3dh-or-b3eh-getsdst-read-string-from-tty-keyboard-input">A(3Dh) or B(3Eh) - gets(dst) - Read string from TTY (keyboard input)</h4>
-<p><div class="highlight"><pre><span></span><code>  in: r4=dst (pointer to a 128-byte buffer) - out: r2=dst (same is incoming r4)
+<p><code>char *gets(char *dst);</code><br/>
+<div class="highlight"><pre><span></span><code>  in: r4=dst (pointer to a 128-byte buffer) - out: r2=dst (same is incoming r4)
 </code></pre></div>
 Internally uses "getchar" to receive the separate characters (which are
 thus masked by 7Fh). The received characters are stored in the buffer, and are
@@ -4524,21 +4527,25 @@ chars, plus one extra byte for the ending 00h), or if an unknown control code
 in range of 00h..1Fh is received without the 16h prefix, then 07h (BELL) is
 sent to the TTY.<br/></p>
 <h4 id="a3bh-or-b3ch-getchar-read-character-from-tty">A(3Bh) or B(3Ch) - getchar() - Read character from TTY</h4>
-<p>Reads one character from the TTY console, by internally redirecting to
+<p><code>int getchar(void);</code><br/>
+Reads one character from the TTY console, by internally redirecting to
 "read(0,tempbuf,1)". The returned character is ANDed by 7Fh (so, to read a
 fully intact 8bit character, "read(0,tempbuf,1)" must be used instead of
 this function).<br/></p>
 <h4 id="a3ch-or-b3dh-putcharchar-write-character-to-tty">A(3Ch) or B(3Dh) - putchar(char) - Write character to TTY</h4>
-<p>Writes the character to the TTY console, by internally redirecting to
+<p><code>void putchar(int c);</code><br/>
+Writes the character to the TTY console, by internally redirecting to
 "write(1,tempbuf,1)". Char 09h (TAB) is expanded to one or more SPC
 characters, until reaching the next tabulation boundary (every 8 characters).
 Char 0Ah (LF) is expanded to 0Dh,0Ah (CR,LF). Other special characters (which
 should be handled at the remote terminal side) are 08h (BS, backspace, move
 cursor one position to the left), and 07h (BELL, produce a short beep sound).<br/></p>
 <h4 id="c13h-flushstdinoutput">C(13h) - FlushStdInOutPut()</h4>
-<p>Closes and re-opens the std_in (fd=0) and std_out (fd=1) file handles.<br/></p>
+<p><code>void FlushStdInOutPut(void);</code><br/>
+Closes and re-opens the std_in (fd=0) and std_out (fd=1) file handles.<br/></p>
 <h4 id="c1bh-kernelredirectttyflag-ps2-ttyflag1-causes-systemerror">C(1Bh) - KernelRedirect(ttyflag)  ;PS2: ttyflag=1 causes SystemError</h4>
-<p>Removes, re-mounts, and flushes the TTY device, the parameter selects whether
+<p><code>void KernelRedirect(int ttyflag);</code><br/>
+Removes, re-mounts, and flushes the TTY device, the parameter selects whether
 to mount the real DUART-TTY device (r4=1), or a Dummy-TTY device (r4=0), the
 latter one sends any std_out to nowhere. Values other than r4=0 or r4=1 do
 remove the device, but do not re-mount it (which might result in problems).<br/>
@@ -4569,7 +4576,8 @@ to the debug terminal, via expansion port, see:<br/>
 Note: The nocash BIOS automatically detects the DUART hardware, and activates
 TTY if it is present.<br/></p>
 <h4 id="b49h-printinstalleddevices">B(49h) - PrintInstalledDevices()</h4>
-<p>Uses printf to display the long and short names from the DCB of the currently
+<p><code>void PrintInstalledDevices(void);</code><br/>
+Uses printf to display the long and short names from the DCB of the currently
 installed devices. Doesn't do anything else. There's no return value.<br/></p>
 <h4 id="note">Note</h4>
 <p>Several BIOS functions are internally using printf to output status

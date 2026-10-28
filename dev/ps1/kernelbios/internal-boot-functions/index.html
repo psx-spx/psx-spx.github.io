@@ -4393,28 +4393,34 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="internal-boot-functions">Internal Boot Functions</h1>
 <h4 id="a45h-init_a0_b0_c0_vectors">A(45h) - init_a0_b0_c0_vectors</h4>
-<p>Copies the three default four-opcode handlers for the A(NNh),B(NNh),C(NNh)
+<p><code>void init_a0_b0_c0_vectors(void);</code><br/>
+Copies the three default four-opcode handlers for the A(NNh),B(NNh),C(NNh)
 functions to A00000A0h..A00000CFh.<br/></p>
 <h4 id="c07h-installexceptionhandlers-destroysuses-k0k1">C(07h) - InstallExceptionHandlers()  ;destroys/uses k0/k1</h4>
-<p>Copies the default four-opcode exception handler to the exception vector at
+<p><code>void InstallExceptionHandlers(void);</code><br/>
+Copies the default four-opcode exception handler to the exception vector at
 80000080h..8000008Fh, and, for whatever reason, also copies the same opcodes to
 80000000h..8000000Fh.<br/></p>
 <h4 id="c08h-sysinitmemoryaddrsize">C(08h) - SysInitMemory(addr,size)</h4>
-<p>Initializes the address (A000E000h) and size (2000h) of the allocate-able
+<p><code>void SysInitMemory(void *addr, size_t size);</code><br/>
+Initializes the address (A000E000h) and size (2000h) of the allocate-able
 Kernel Memory region, and, seems to deallocate any memory handles which may
 have been allocated via B(00h).<br/></p>
 <h4 id="c09h-sysinitkernelvariables">C(09h) - SysInitKernelVariables()</h4>
-<p>Zerofills all Kernel variables; which are usually at [00007460h..0000891Fh].<br/>
+<p><code>void SysInitKernelVariables(void);</code><br/>
+Zerofills all Kernel variables; which are usually at [00007460h..0000891Fh].<br/>
 Note: During the boot process, the BIOS accidently overwrites the first opcode
 of this function (by the last word of the A0h table), so, thereafter, this
 function won't work anymore (nor would it be of any use).<br/></p>
 <h4 id="c12h-installdevicesttyflag">C(12h) - InstallDevices(ttyflag)</h4>
-<p>Initializes the size and address of the File and Device Control Blocks (FCBs
+<p><code>void InstallDevices(int ttyflag);</code><br/>
+Initializes the size and address of the File and Device Control Blocks (FCBs
 and DCBs). Adds the TTY device by calling "KernelRedirect(ttyflag)", and the
 CDROM and Memory Card devices by calling "AddCDROMDevice()" and
 "AddMemCardDevice()".<br/></p>
 <h4 id="c1ch-adjusta0table">C(1Ch) - AdjustA0Table()</h4>
-<p>Copies the B(32h..3Bh) and B(3Ch..3Fh) function addresses to A(00h..09h) and
+<p><code>void AdjustA0Table(void);</code><br/>
+Copies the B(32h..3Bh) and B(3Ch..3Fh) function addresses to A(00h..09h) and
 A(3Bh..3Eh). Apparently Sony's compiler/linker can't insert the addresses in
 the A0h table directly at compilation time, so this function is used to insert
 them during execution of the boot code.<br/></p>

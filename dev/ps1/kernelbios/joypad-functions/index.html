@@ -4401,7 +4401,8 @@ ID1, Buttons and analogue inputs, see<br/>
 Note: The BIOS doesn't include any functions for sending custom data to the
 pads (such like for controlling rumble motors).<br/></p>
 <h4 id="b12h-initpad2buf1-siz1-buf2-siz2">B(12h) - InitPAD2(buf1, siz1, buf2, siz2)</h4>
-<p>Memorizes the desired buf1/buf2 addresses, zerofills the buffers by using the
+<p><code>void InitPAD2(void *buf1, size_t siz1, void *buf2, size_t siz2);</code><br/>
+Memorizes the desired buf1/buf2 addresses, zerofills the buffers by using the
 siz1/siz2 buffer size values (which should be 22h bytes each). And does some
 initialization on the PadCardIrq element (but doesn't enqueue it, that must be
 done by a following call to StartPAD2), and does set the "pad_enable_flag", that
@@ -4422,13 +4423,16 @@ stored in the buffers, the IRQ handler stores up to 22h bytes in the buffer
 (regardless of the siz1/siz2 values) (eg. a Multitap adaptor uses all 22h
 bytes).<br/></p>
 <h4 id="b13h-startpad2">B(13h) - StartPAD2()</h4>
-<p>Should be used after InitPAD2. Enqueues the PadCardIrq handler, and does
+<p><code>void StartPAD2(void);</code><br/>
+Should be used after InitPAD2. Enqueues the PadCardIrq handler, and does
 additionally initialize some flags.<br/></p>
 <h4 id="b14h-stoppad2">B(14h) - StopPAD2()</h4>
-<p>Dequeues the PadCardIrq handler. Note that this handler is also used for memory
+<p><code>void StopPAD2(void);</code><br/>
+Dequeues the PadCardIrq handler. Note that this handler is also used for memory
 cards, so it'll "stop" cards, too.<br/></p>
 <h4 id="b15h-pad_init2type-button_dest-unused-unused">B(15h) - PAD_init2(type, button_dest, unused, unused)</h4>
-<p>This is an extremely bizarre and restrictive function - don't use! The function
+<p><code>int PAD_init2(uint32_t type, uint32_t *button_dest, int unused1, int unused2);</code><br/>
+This is an extremely bizarre and restrictive function - don't use! The function
 fails unless type is 20000000h or 20000001h (the type value has no other
 function). The function uses "buf1/buf2" addresses that are located somewhere
 "hidden" within the BIOS variables region, the only way to read from that
@@ -4443,7 +4447,8 @@ locations reserved for parameter 2 and 3, ie. at [SP+08h] and [SP+0Ch] on the
 caller's stack, so the function MUST be called with all four parameters
 allocated on stack. Return value is 2 (or 0 if type was disliked).<br/></p>
 <h4 id="b16h-pad_dr">B(16h) - PAD_dr()</h4>
-<p>This is a very ugly function, using the internal "buf1/buf2" values from
+<p><code>uint32_t PAD_dr(void);</code><br/>
+This is a very ugly function, using the internal "buf1/buf2" values from
 "PAD_init2" and the "button_dest" value that was passed to that
 function.<br/>
 If "button_dest" is non-zero, then this function is automatically called by the

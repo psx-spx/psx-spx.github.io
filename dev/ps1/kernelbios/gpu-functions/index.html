@@ -4447,28 +4447,35 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="gpu-functions">GPU Functions</h1>
 <h4 id="a48h-sendgp1commandgp1cmd">A(48h) - SendGP1Command(gp1cmd)</h4>
-<p>Writes [1F801814h]=gp1cmd. There's no return value (r2 is left unchanged).<br/></p>
+<p><code>void SendGP1Command(uint32_t gp1cmd);</code><br/>
+Writes [1F801814h]=gp1cmd. There's no return value (r2 is left unchanged).<br/></p>
 <h4 id="a49h-gpu_cwgp0cmd-send-gp0-command-word">A(49h) - GPU_cw(gp0cmd)      ;send GP0 command word</h4>
-<p>Calls gpu_sync(), and does then write [1F801810h]=gp0cmd. Returns the return
+<p><code>int GPU_cw(uint32_t gp0cmd);</code><br/>
+Calls gpu_sync(), and does then write [1F801810h]=gp0cmd. Returns the return
 value from the gpu_sync() call.<br/></p>
 <h4 id="a4ah-gpu_cwpsrcnum-send-gp0-command-word-and-parameter-words">A(4Ah) - GPU_cwp(src,num) ;send GP0 command word and parameter words</h4>
-<p>Calls gpu_sync(), and does then copy "num" words from [src and up] to
+<p><code>void GPU_cwp(const uint32_t *src, int num);</code><br/>
+Calls gpu_sync(), and does then copy "num" words from [src and up] to
 [1F801810h], src should usually point to a command word, followed by num-1
 parameter words. Transfer is done by software (without DMA). Always returns 0.<br/></p>
 <h4 id="a4bh-send_gpu_linked_listsrc">A(4Bh) - send_gpu_linked_list(src)</h4>
-<p>Transfer an OT via DMA. Calls gpu_sync(), and does then write
+<p><code>void send_gpu_linked_list(const uint32_t *src);</code><br/>
+Transfer an OT via DMA. Calls gpu_sync(), and does then write
 [1F801814h]=4000002h, [1F8010F4h]=0, [1F8010F0h]=[1F8010F0h] OR 800h,
 [1F8010A0h]=src, [1F8010A4h]=0, [1F8010A8h]=1000401h. The function does
 additionally output a bunch of TTY status messages via printf. The function
 doesn't wait until the DMA is completed. There's no return value.<br/></p>
 <h4 id="a4ch-gpu_abort_dma">A(4Ch) - gpu_abort_dma()</h4>
-<p>Writes [1F8010A8h]=401h, [1F801814h]=4000000h, [1F801814h]=2000000h,
+<p><code>void gpu_abort_dma(void);</code><br/>
+Writes [1F8010A8h]=401h, [1F801814h]=4000000h, [1F801814h]=2000000h,
 [1F801814h]=1000000h. Ie. stops GPU DMA, and issues GP1(4), GP1(2), GP1(1).
 Returns 1F801814h, ie. the I/O address.<br/></p>
 <h4 id="a4dh-getgpustatus">A(4Dh) - GetGPUStatus()</h4>
-<p>Reads [1F801814h] and returns that value.<br/></p>
+<p><code>uint32_t GetGPUStatus(void);</code><br/>
+Reads [1F801814h] and returns that value.<br/></p>
 <h4 id="a46h-gpu_dwxdstydstxsizysizsrc">A(46h) - GPU_dw(Xdst,Ydst,Xsiz,Ysiz,src)</h4>
-<p>Waits until GP1.R.IDLE is set (unlike gpu_sync, which waits for WFEP), and
+<p><code>void GPU_dw(unsigned Xdst, unsigned Ydst, unsigned Xsiz, unsigned Ysiz, const void *src);</code><br/>
+Waits until GP1.R.IDLE is set (unlike gpu_sync, which waits for WFEP), and
 does then [1F801810h]=A0000000h, [1F801810h]=YdstXdst, [1F801810h]=YsizXsiz,
 and finally transfers "N" words from [src and up] to [1F801810h], where "N" is
 "Xsiz*Ysiz/2". The data is transferred by software (without DMA) (by code
@@ -4479,14 +4486,16 @@ the GPU stays waiting for the last data value.<br/>
 Returns [SP+04h]=Ydst, [SP+08h]=Xsiz, [SP+0Ch]=Ysiz, [SP+10h]=src+N*4, and
 R2=src=N*4.<br/></p>
 <h4 id="a47h-gpu_send_dmaxdstydstxsizysizsrc">A(47h) - gpu_send_dma(Xdst,Ydst,Xsiz,Ysiz,src)</h4>
-<p>Calls gpu_sync(), writes [1F801810h]=A0000000h, [1F801814h]=4000002h,
+<p><code>void gpu_send_dma(unsigned Xdst, unsigned Ydst, unsigned Xsiz, unsigned Ysiz, const void *src);</code><br/>
+Calls gpu_sync(), writes [1F801810h]=A0000000h, [1F801814h]=4000002h,
 [1F8010F0h]=[1F8010F0h] OR 800h, [1F8010A0h]=src, [1F8010A4h]=N*10000h+10h
 (where N="Xsiz*Ysiz/32"), [1F8010A8h]=1000201h.<br/>
 Caution: If "Xsiz*Ysiz" is not a multiple of 32, then the last halfword(s) are
 NOT transferred, so the GPU stays waiting for that values.<br/>
 Returns R2=1F801810h, and [SP+04h]=Ydst, [SP+08h]=Xsiz, [SP+0Ch]=Ysiz.<br/></p>
 <h4 id="a4eh-gpu_sync">A(4Eh) - gpu_sync()</h4>
-<p>If DMA is off (when GP1.R.DMD is zero): Waits until GP1.R.WFEP=1 (or
+<p><code>int gpu_sync(void);</code><br/>
+If DMA is off (when GP1.R.DMD is zero): Waits until GP1.R.WFEP=1 (or
 until timeout).<br/>
 If DMA is on: Waits until D2_CHCR.Bit24=0 (or until timeout), and does then
 wait until GP1.R.WFEP=1 (without timeout, ie. may hang forever), and does

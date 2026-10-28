@@ -4645,7 +4645,8 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="file-functions">File Functions</h1>
 <h4 id="a00h-or-b32h-openfilename-accessmode-opens-a-file-for-io">A(00h) or B(32h) - open(filename, accessmode) - Opens a file for IO</h4>
-<p><div class="highlight"><pre><span></span><code>  out: V0  File handle (00h..0Fh), or -1 if error.
+<p><code>int open(const char *filename, int accessmode);</code><br/>
+<div class="highlight"><pre><span></span><code>  out: V0  File handle (00h..0Fh), or -1 if error.
 </code></pre></div>
 Opens a file on the target device for io. Accessmode is set like this:<br/>
 <div class="highlight"><pre><span></span><code>  bit0     1=Read  ;\These bits aren&#39;t actually used by the BIOS, however, at
@@ -4663,7 +4664,8 @@ format, firstfile2, rename) are temporarily allocating 1 filehandle
 handle, too). So, for example, erase would fail if more than 13 file
 handles are opened by the game.<br/></p>
 <h4 id="a01h-or-b33h-lseekfd-offset-seektype-move-the-file-pointer">A(01h) or B(33h) - lseek(fd, offset, seektype) - Move the file pointer</h4>
-<p><div class="highlight"><pre><span></span><code>   seektype 0 = from start of file        (with positive offset)
+<p><code>int lseek(int fd, int offset, int seektype);</code><br/>
+<div class="highlight"><pre><span></span><code>   seektype 0 = from start of file        (with positive offset)
             1 = from current file pointer (with positive/negative offset)
             2 = Bugs. Should be from end of file.
 </code></pre></div>
@@ -4671,31 +4673,37 @@ Moves the file pointer the number of bytes in A1, relative to the location
 specified by A2. Movement from the eof is incorrect. Also, movement beyond the
 end of the file is not checked.<br/></p>
 <h4 id="a02h-or-b34h-readfd-dst-length-read-data-from-an-open-file">A(02h) or B(34h) - read(fd, dst, length) - Read data from an open file</h4>
-<p><div class="highlight"><pre><span></span><code>  out: V0  Number of bytes actually read, -1 if failed.
+<p><code>int read(int fd, void *dst, int length);</code><br/>
+<div class="highlight"><pre><span></span><code>  out: V0  Number of bytes actually read, -1 if failed.
 </code></pre></div>
 Reads the number of bytes from the specified open file. If length is not
 specified an error is returned. Read per $0080 bytes from memory card (bu:) and
 per $0800 from cdrom (cdrom:).<br/></p>
 <h4 id="a03h-or-b35h-writefd-src-length-write-data-to-an-open-file">A(03h) or B(35h) - write(fd, src, length) - Write data to an open file</h4>
-<p><div class="highlight"><pre><span></span><code>  out: V0  Number of bytes written.
+<p><code>int write(int fd, const void *src, int length);</code><br/>
+<div class="highlight"><pre><span></span><code>  out: V0  Number of bytes written.
 </code></pre></div>
 Writes the number of bytes to the specified open file. Write to the memory card
 per $0080 bytes. Writing to the cdrom returns 0.<br/></p>
 <h4 id="a04h-or-b36h-closefd-close-an-open-file">A(04h) or B(36h) - close(fd) - Close an open file</h4>
-<p>Returns r2=fd (or r2=-1 if failed).<br/></p>
+<p><code>int close(int fd);</code><br/>
+Returns r2=fd (or r2=-1 if failed).<br/></p>
 <h4 id="a08h-or-b3ah-getcfd-read-one-byte-from-file">A(08h) or B(3Ah) - getc(fd) - read one byte from file</h4>
-<p><div class="highlight"><pre><span></span><code>  out: R2=character (sign-expanded) or FFFFFFFFh=error
+<p><code>int getc(int fd);</code><br/>
+<div class="highlight"><pre><span></span><code>  out: R2=character (sign-expanded) or FFFFFFFFh=error
 </code></pre></div>
 Internally redirects to "read(fd,tempbuf,1)". For some strange reason, the
 returned character is sign-expanded; so, a return value of FFFFFFFFh could mean
 either character FFh, or error.<br/></p>
 <h4 id="a09h-or-b3bh-putccharfd-write-one-byte-to-file">A(09h) or B(3Bh) - putc(char,fd) - write one byte to file</h4>
-<p>Observe that "fd" is the 2nd paramter (not the 1st paramter as usually).<br/>
+<p><code>void putc(int c, int fd);</code><br/>
+Observe that "fd" is the 2nd paramter (not the 1st paramter as usually).<br/>
 <div class="highlight"><pre><span></span><code>  out:  R2=Number of bytes actually written, -1 if failed
 </code></pre></div>
 Internally redirects to "write(fd,tempbuf,1)".<br/></p>
 <h4 id="b40h-cdname-change-the-current-directory-on-target-device">B(40h) - cd(name) - Change the current directory on target device</h4>
-<p>Changes the current directory on the specified device, which should be "cdrom:"
+<p><code>/* ? */ int cd(/* ? */ const char *name);</code><br/>
+Changes the current directory on the specified device, which should be "cdrom:"
 (memory cards don't support directories). The PSX supports only a current
 directory, but NOT a current device (ie. after cd, the directory name may be
 ommited from filenames, but the device name must be still included in all
@@ -4707,7 +4715,8 @@ The function doesn't verify if the directory exists. Caution: For cdrom, the
 function does always load the path table from the disk (even if it was already
 stored in RAM, so cd is causing useless SLOW read/seek delays).<br/></p>
 <h4 id="b42h-firstfile2filenamedirentry-find-first-file-to-match-the-name">B(42h) - firstfile2(filename,direntry) - Find first file to match the name</h4>
-<p>Returns r2=direntry (or r2=0 if no matching files).<br/>
+<p><code>struct DirEntry *firstfile2(const char *filename, struct DirEntry *direntry);</code><br/>
+Returns r2=direntry (or r2=0 if no matching files).<br/>
 Searches for the first file to match the specified filename; the filename may
 contain "?" and "*" wildcards. "*" means to ignore ALL following characters;
 accordingly one cannot specify any further characters after the "*" (eg.
@@ -4742,36 +4751,46 @@ keeps using that FCB for search (without checking if the FCB is still free). A
 possible workaround is not to have any files opened during firstfile2/nextfile
 operations.<br/></p>
 <h4 id="b43h-nextfiledirentry-searches-for-the-next-file-to-match-the-name">B(43h) - nextfile(direntry) - Searches for the next file to match the name</h4>
-<p>Returns r2=direntry (or r2=0 if no more matching files).<br/>
+<p><code>struct DirEntry *nextfile(struct DirEntry *direntry);</code><br/>
+Returns r2=direntry (or r2=0 if no more matching files).<br/>
 Uses the settings of a previous firstfile2/nextfile command.<br/></p>
 <h4 id="b44h-renameold_filename-new_filename">B(44h) - rename(old_filename, new_filename)</h4>
-<p>Returns 1=okay, or 0=failed.<br/></p>
+<p><code>int rename(const char *old_filename, const char *new_filename);</code><br/>
+Returns 1=okay, or 0=failed.<br/></p>
 <h4 id="b45h-erasefilename-delete-a-file-on-target-device">B(45h) - erase(filename) - Delete a file on target device</h4>
-<p>Returns 1=okay, or 0=failed.<br/></p>
+<p><code>int erase(const char *filename);</code><br/>
+Returns 1=okay, or 0=failed.<br/></p>
 <h4 id="b46h-undeletefilename">B(46h) - undelete(filename)</h4>
-<p>Returns 1=okay, or 0=failed.<br/></p>
+<p><code>/* ? */ int undelete(/* ? */ const char *filename);</code><br/>
+Returns 1=okay, or 0=failed.<br/></p>
 <h4 id="b41h-formatdevicename">B(41h) - format(devicename)</h4>
-<p>Erases all files on the device (ie. for formatting memory cards).<br/>
+<p><code>int format(const char *devicename);</code><br/>
+Erases all files on the device (ie. for formatting memory cards).<br/>
 Returns 1=okay, or 0=failed.<br/></p>
 <h4 id="b54h-_get_errno">B(54h) - _get_errno()</h4>
-<p>Indicates the reason of the most recent file function error (open,
+<p><code>/* ? */ int _get_errno(void);</code><br/>
+Indicates the reason of the most recent file function error (open,
 lseek, read, write, close, _get_error, ioctl, cd,
 testdevice, erase, undelete, format, rename). Use
 _get_errno() ONLY if an error has occured (the error code isn't reset to zero
 by functions that are passing okay). firstfile2/nextfile do NOT affect
 _get_errno(). See below list of File Error Numbers for more info.<br/></p>
 <h4 id="b55h-_get_errorfd">B(55h) - _get_error(fd)</h4>
-<p>Basically same as B(54h), but allowing to specify a file handle for which error
+<p><code>/* ? */ int _get_error(/* ? */ int fd);</code><br/>
+Basically same as B(54h), but allowing to specify a file handle for which error
 information is to be received; accordingly it doesn't work for functions that
 do use 'hidden' internal file handles (eg. erase, or unsuccessful
 open). Returns FCB[18h], or FFFFFFFFh if the handle is invalid/unused.<br/></p>
 <h4 id="a05h-or-b37h-ioctlfdcmdarg">A(05h) or B(37h) - ioctl(fd,cmd,arg)</h4>
-<p>Used only for TTY.<br/></p>
+<p><code>int ioctl(int fd, int cmd, int arg);</code><br/>
+Used only for TTY.<br/></p>
 <h4 id="a07h-or-b39h-isattyfd">A(07h) or B(39h) - isatty(fd)</h4>
-<p>Returns bit1 of the file's DCB flags. That bit is set only for Duart/TTY, and
+<p><code>int isatty(int fd);</code><br/>
+Returns bit1 of the file's DCB flags. That bit is set only for Duart/TTY, and
 is cleared for Dummy/TTY, Memory Card, and CDROM.<br/></p>
 <h4 id="b59h-testdevicedevicename">B(59h) - testdevice(devicename)</h4>
-<p>Whatever. Checks the devicename, and if it's accepted, calls a device specific
+<p><code>/* ? */ int testdevice(/* ? */ const char *devicename);</code><br/>
+Whatever. Checks the devicename, and if it's accepted, calls a device specific
 function. For the existing devices (cdrom,bu,tty) that specific function simply
 returns without doing anything. Maybe other devices (like printers or modems)
 would do something more interesting.<br/></p>

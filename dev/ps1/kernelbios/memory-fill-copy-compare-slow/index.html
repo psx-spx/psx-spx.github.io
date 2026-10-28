@@ -4438,21 +4438,25 @@ most obvious for these small functions; memcpy takes circa 160 cycles per byte
 (reasonable would be less than 4 cycles), and bzero takes circa 105 cycles per
 byte (reasonable would be less than 1 cycles).<br/></p>
 <h4 id="a2ah-memcpydst-src-len">A(2Ah) - memcpy(dst, src, len)</h4>
-<p>Copies len bytes from [src..src+len-1] to [dst..dst+len-1]. Refuses to copy any
+<p><code>void *memcpy(void *dst, const void *src, size_t len);</code><br/>
+Copies len bytes from [src..src+len-1] to [dst..dst+len-1]. Refuses to copy any
 data when dst=00000000h or when len&gt;7FFFFFFFh. The return value is always
 the incoming "dst" value.<br/></p>
 <h4 id="a2bh-memsetdst-fillbyte-len">A(2Bh) - memset(dst, fillbyte, len)</h4>
-<p>Fills len bytes at [dst..dst+len-1] with the fillbyte value. Refuses to fill
+<p><code>void *memset(void *dst, int fillbyte, size_t len);</code><br/>
+Fills len bytes at [dst..dst+len-1] with the fillbyte value. Refuses to fill
 memory when dst=00000000h or when len&gt;7FFFFFFFh. The return value is the
 incoming "dst" value (or zero, when len=0 or len&gt;7FFFFFFFh).<br/></p>
 <h4 id="a2ch-memmovedst-src-len-bugged">A(2Ch) - memmove(dst, src, len) - bugged</h4>
-<p>Same as memcpy, but (attempts) to support overlapping src/dst regions, by using
+<p><code>void *memmove(void *dst, const void *src, size_t len);</code><br/>
+Same as memcpy, but (attempts) to support overlapping src/dst regions, by using
 a backwards transfer when src\&lt;dst (and, for some reason, only when
 dst&gt;=src+len).<br/>
 BUG: The backwards variant accidently transfers len+1 bytes from [src+len..src]
 down to [dst+len..dst].<br/></p>
 <h4 id="a2dh-memcmpsrc1-src2-len-bugged">A(2Dh) - memcmp(src1, src2, len) - bugged</h4>
-<p>Compares len bytes at [src1..src1+len-1] with [src2..src2+len-1], and
+<p><code>int memcmp(const void *src1, const void *src2, size_t len);</code><br/>
+Compares len bytes at [src1..src1+len-1] with [src2..src2+len-1], and
 (attempts) to return the difference between the first mismatching bytes, ie.
 [src1+N]-[src2+N], or 0 if there are no mismatches. Refuses to compare data
 when src1 or src2 is 00000000h, and returns 0 in that case.<br/>
@@ -4463,17 +4467,21 @@ memory blocks are identical, or that a mismatch has been found (but that the
 NEXT byte after the mismatch does match), or that the function has failed (due
 to src1 or src2 being 00000000h).<br/></p>
 <h4 id="a2eh-memchrsrc-scanbyte-len">A(2Eh) - memchr(src, scanbyte, len)</h4>
-<p>Scans [src..src+len-1] for the first occurence of scanbyte. Refuses to scan any
+<p><code>void *memchr(const void *src, int scanbyte, size_t len);</code><br/>
+Scans [src..src+len-1] for the first occurence of scanbyte. Refuses to scan any
 data when src=00000000h or when len&gt;7FFFFFFFh. Returns the address of that
 first occurence, or 0 if the scanbyte wasn't found.<br/></p>
 <h4 id="a27h-bcopysrc-dst-len">A(27h) - bcopy(src, dst, len)</h4>
-<p>Same as "memcpy", but with "src" and "dst" exchanged. That is, the first
+<p><code>void *bcopy(const void *src, void *dst, size_t len);</code><br/>
+Same as "memcpy", but with "src" and "dst" exchanged. That is, the first
 parameter is "src", the refuse occurs when "src" is 00000000h, and, returns the
 incoming "src" value (whilst "memcpy" uses "dst" in that places).<br/></p>
 <h4 id="a28h-bzerodst-len">A(28h) - bzero(dst, len)</h4>
-<p>Same as memset, but uses 00h as fixed fillbyte value.<br/></p>
+<p><code>void *bzero(void *dst, size_t len);</code><br/>
+Same as memset, but uses 00h as fixed fillbyte value.<br/></p>
 <h4 id="a29h-bcmpptr1-ptr2-len-bugged">A(29h) - bcmp(ptr1, ptr2, len) - bugged</h4>
-<p>Same as "memcmp", with exactly the same bugs.<br/></p>
+<p><code>int bcmp(const void *ptr1, const void *ptr2, size_t len);</code><br/>
+Same as "memcmp", with exactly the same bugs.<br/></p>
 
 
 

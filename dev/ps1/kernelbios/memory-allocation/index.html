@@ -4447,7 +4447,8 @@ For the human-written reference, see the <a href="/">stable version</a>.
 
 <h1 id="memory-allocation">Memory Allocation</h1>
 <h4 id="a33h-mallocsize">A(33h) - malloc(size)</h4>
-<p>Allocates size bytes on the heap, and returns the memory handle (aka the
+<p><code>void *malloc(size_t size);</code><br/>
+Allocates size bytes on the heap, and returns the memory handle (aka the
 address of the allocated memory block). The address of the block is guaranteed
 to by aligned to 4-byte memory boundaries. Size is rounded up to a multiple of
 4 bytes. The address may be in KUSEG, KSEG0, or KSEG1, depending on the address
@@ -4457,16 +4458,19 @@ accidently overwrites that initial setting by garbage during relocation), so
 any call to malloc will fail, unless InitHeap has been used to initialize the
 address/size of the heap.<br/></p>
 <h4 id="a34h-freebuf">A(34h) - free(buf)</h4>
-<p>Deallocates the memory block. There's no return value, and no error checking.
+<p><code>void free(void *buf);</code><br/>
+Deallocates the memory block. There's no return value, and no error checking.
 The function simply sets [buf-4]=[buf-4] OR 00000001h, so if buf is an invalid
 handle it may destroy memory at [buf-4], or trigger a memory exception (for
 example, when buf=0).<br/></p>
 <h4 id="a37h-callocsizx-sizy-slow">A(37h) - calloc(sizx, sizy)     ;SLOW!</h4>
-<p>Allocates xsiz*ysiz bytes by calling malloc(xsiz*ysiz), and, unlike malloc, it
+<p><code>void *calloc(size_t sizx, size_t sizy);</code><br/>
+Allocates xsiz*ysiz bytes by calling malloc(xsiz*ysiz), and, unlike malloc, it
 does additionally zerofill the memory via SLOW "bzero" function. Returns the
 address of the memory block (or zero if failed).<br/></p>
 <h4 id="a38h-reallocold_buf-new_size-slow">A(38h) - realloc(old_buf, new_size)   ;SLOW!</h4>
-<p>If "old_buf" is zero, executes malloc(new_size), and returns r2=new_buf (or
+<p><code>void *realloc(void *old_buf, size_t new_size);</code><br/>
+If "old_buf" is zero, executes malloc(new_size), and returns r2=new_buf (or
 0=failed). Else, if "new_size" is zero, executes free(old_buf), and returns
 r2=garbage. Else, executes malloc(new_size), bcopy(old_buf,new_buf,new_size),
 and free(old_buf), and returns r2=new_buf (or 0=failed).<br/>
@@ -4476,7 +4480,8 @@ then it'll copy whatever garbage data - in worst case, if it exceeds the top of
 the 2MB RAM region, it may crash with a locked memory exception, although
 that'd happen only if SetMem(2) was used to restrict RAM to 2MBs.<br/></p>
 <h4 id="a39h-initheapaddr-size">A(39h) - InitHeap(addr, size)</h4>
-<p>Initializes the address and size of the heap - the BIOS does not automatically
+<p><code>void InitHeap(void *addr, size_t size);</code><br/>
+Initializes the address and size of the heap - the BIOS does not automatically
 do this, so, before using the heap, InitHeap must be called by software.
 Usually, the heap would be memory region between the end of the boot
 executable, and the bottom of the executable's stack. InitHeap can be also used
@@ -4485,8 +4490,10 @@ may use it to deallocate all old memory).<br/>
 The heap is used only by malloc/realloc/calloc/free, and by the "qsort"
 function.<br/></p>
 <h4 id="b00h-alloc_kernel_memorysize">B(00h) - alloc_kernel_memory(size)</h4>
+<p><code>void *alloc_kernel_memory(unsigned size);</code><br/></p>
 <h4 id="b01h-free_kernel_memorybuf">B(01h) - free_kernel_memory(buf)</h4>
-<p>Same as malloc/free, but, instead of the heap, manages the 8kbyte control block
+<p><code>void free_kernel_memory(void *buf);</code><br/>
+Same as malloc/free, but, instead of the heap, manages the 8kbyte control block
 memory at A000E000h..A000FFFFh. This region is used by the kernel to allocate
 ExCBs (4x08h bytes), EvCBs (N*1Ch bytes), TCBs (N*0C0h bytes), and the process
 control block (1x04h bytes). Unlike the heap, the BIOS does automatically
@@ -4499,7 +4506,8 @@ at fixed locations in the kernel variables area.<br/></p>
 any kernel functions use that memory area), so the executable can freely use
 the "fast" memory at 1F800000h..1F8003FFh.<br/></p>
 <h4 id="a9fh-setmemmegabytes">A(9Fh) - SetMem(megabytes)</h4>
-<p>Changes the effective RAM size by manipulating bits 8-10 of DRAM_CTRL
+<p><code>void SetMem(int megabytes);</code><br/>
+Changes the effective RAM size by manipulating bits 8-10 of DRAM_CTRL
 (1F801060h), and additionally stores the size in megabytes in RAM at 00000060h.
 There are two known variants of this function:<br/>
 - the one found in retail and devkit kernels, which only supports setting the

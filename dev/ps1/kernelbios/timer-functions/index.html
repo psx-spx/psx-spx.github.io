@@ -4445,7 +4445,8 @@ workaround is to examine the status byte in one of the joypad buffers (ie. the
 InitPAD2(buf1,22h,buf2,22h) buffers). Eg. a wait_for_vblank function could look
 like so: set buf1[0]=55h, then wait until buf1[0]=00h or buf1[0]=FFh.<br/></p>
 <h4 id="b02h-init_timertreloadflags">B(02h) - init_timer(t,reload,flags)</h4>
-<p>When t=0..2, resets the old timer mode by setting [1F801104h+t*16]=0000h,
+<p><code>int init_timer(uint32_t t, uint16_t reload, uint16_t flags);</code><br/>
+When t=0..2, resets the old timer mode by setting [1F801104h+t*16]=0000h,
 applies the reload value by [1F801108h+t*16]=reload, computes the new mode:<br/>
 <div class="highlight"><pre><span></span><code>  if flags.bit4=0 then mode=0048h else mode=0049h
   if flags.bit0=0 then mode=mode OR 100h
@@ -4454,19 +4455,24 @@ applies the reload value by [1F801108h+t*16]=reload, computes the new mode:<br/>
 and applies it by setting [1F801104h+t*16]=mode, and returns 1. Does nothing
 and returns zero for t&gt;2.<br/></p>
 <h4 id="b03h-get_timert">B(03h) - get_timer(t)</h4>
-<p>Reads the current timer value: Returns halfword[1F801100h+t*16] for t=0..2.
+<p><code>int get_timer(uint32_t t);</code><br/>
+Reads the current timer value: Returns halfword[1F801100h+t*16] for t=0..2.
 Does nothing and returns zero for t&gt;2.<br/></p>
 <h4 id="b04h-enable_timer_irqt">B(04h) - enable_timer_irq(t)</h4>
+<p><code>int enable_timer_irq(uint32_t t);</code><br/></p>
 <h4 id="b05h-disable_timer_irqt">B(05h) - disable_timer_irq(t)</h4>
-<p>Enables/disables timer or vblank interrupt enable bits in [1F801074h], bit4,5,6
+<p><code>int disable_timer_irq(uint32_t t);</code><br/>
+Enables/disables timer or vblank interrupt enable bits in [1F801074h], bit4,5,6
 for t=0,1,2, or bit0 for t=3, or random/garbage bits for t&gt;3. The enable
 function returns 1 for t=0..2, and 0 for t=3. The disable function returns
 always 1.<br/></p>
 <h4 id="b06h-restart_timert">B(06h) - restart_timer(t)</h4>
-<p>Sets the current timer value to zero: Sets [1F801100h+t*16]=0000h and returns 1
+<p><code>int restart_timer(uint32_t t);</code><br/>
+Sets the current timer value to zero: Sets [1F801100h+t*16]=0000h and returns 1
 for t=0..2. Does nothing and returns zero for t&gt;2.<br/></p>
 <h4 id="c0ah-changeclearrcnttflag-root-counter-aka-timer">C(0Ah) - ChangeClearRCnt(t,flag) ;root counter (aka timer)</h4>
-<p>Selects what the kernel's timer/vblank IRQ handlers shall do after they have
+<p><code>int ChangeClearRCnt(uint32_t t, int flag);</code><br/>
+Selects what the kernel's timer/vblank IRQ handlers shall do after they have
 processed an IRQ (t=0..2: timer 0..2, or t=3: vblank) (flag=0: do nothing; or
 flag=1: automatically acknowledge the IRQ and immediately return from
 exception). The function returns the old (previous) flag value.<br/></p>
