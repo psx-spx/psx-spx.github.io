@@ -48,6 +48,7 @@ C prototypes for the entries above that have a known signature:<br/>
   struct DirEntry *dev_cd_firstfile(struct File *fcb, const char *path, struct DirEntry *direntry);  ;A(62h)
   struct DirEntry *dev_cd_nextfile(struct File *fcb, struct DirEntry *direntry);  ;A(63h)
   int dev_cd_chdir(struct File *fcb, char *path);                            ;A(64h)
+  int dev_cd_close(struct File *fcb);                                        ;A(61h)
   int dev_card_open(struct File *fcb, const char *path, int accessmode);     ;A(65h)
   int dev_card_read(struct File *fcb, void *dst, int len);                   ;A(66h)
   int dev_card_write(struct File *fcb, void *src, int len);                  ;A(67h)
@@ -55,6 +56,7 @@ C prototypes for the entries above that have a known signature:<br/>
   struct DirEntry *dev_card_firstfile(struct File *fcb, const char *path, struct DirEntry *direntry);  ;A(69h)
   struct DirEntry *dev_card_nextfile(struct File *fcb, struct DirEntry *direntry);  ;A(6Ah)
   int dev_card_erase(struct File *fcb, const char *path);                    ;A(6Bh)
+  int dev_card_undelete(struct File *fcb, const char *path);                 ;A(6Ch)
   int dev_card_format(struct File *fcb);                                     ;A(6Dh)
   int dev_card_rename(struct File *fcb1, const char *path1, struct File *fcb2, const char *path2);  ;A(6Eh)
   int AddCDROMDevice(void);                                                  ;A(96h)
@@ -68,6 +70,7 @@ C prototypes for the entries above that have a known signature:<br/>
   void _cdevscan(void);                                                      ;C(16h)
   int _circgetc(struct CircularBuffer *circ);                                ;C(17h)
 ```
+A(61h), A(6Ch), C(15h) and C(17h) were read from the retail BIOS (SCPH-7001 v4.1): argument count from the registers read, return from whether v0 is set before the return. A(61h) ignores its argument and returns 0, C(15h) returns nothing. The rest come from nugget and OpenBIOS.<br/>
 
 #### Device Names
 Device Names are case-sensitive (usually lowercase, eg. "bu" for memory cards).

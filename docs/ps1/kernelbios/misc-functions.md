@@ -84,14 +84,14 @@ be, if it'd be in the array). Both functions return the address of the element
 
 #### C(19h) - \_ioabort(txt1,txt2)
 `void _ioabort(const char *txt1, const char *txt2);`<br/>
-Disputed: OpenBIOS takes two strings (as above); nugget's `syscall_ioabort` declares `int _ioabort(const char *msg);`, one string and an int return. Unverified on hardware.<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): two arguments, no return value. nugget's `syscall_ioabort` declares a single string and an int return, which the retail code does not match.<br/>
 Displays the two strings on the TTY (in some cases the BIOS does accidently
 pass garbage instead of the 2nd string though). And does then execute
 _ioabort\_raw(1), see there for more details.<br/>
 
 #### A(B2h) - _ioabort\_raw(param)  ;not supported by old CEX-1000 version
 `void _ioabort_raw(int param);`<br/>
-Disputed: OpenBIOS returns void (as above); nugget declares `int _ioabort_raw(int code);`. Unverified on hardware.<br/>
+Prototype read from the retail BIOS (SCPH-7001 v4.1): one argument, and the function never returns (it ends in longjmp). nugget declares an int return, which the retail code never produces.<br/>
 Executes "longjmp(ioabortbuffer,param)". Internally used to recover from
 failed I/O operations, param should be nonzero to notify the setjmp caller
 that the abort has occurred.<br/>
@@ -129,6 +129,7 @@ call and a rollback. See setjmp for further details.<br/>
 
 #### A(53h) - set\_ioabort\_handler(src)  ;PS2 only  ;PSX: SystemError
 `/* ? */ void set_ioabort_handler(/* ? */ void *src);`<br/>
+The retail BIOS (SCPH-7001 v4.1) has no handler for this entry, only a stub that re-enters the A0 vector with t1=53h, so the prototype above is the PS2 form and is unchecked.<br/>
 Normally the _ioabort handler is changed only internally during booting, with
 this new function, games can install their own \_ioabort handler. src is pointer
 to a 30h-byte "savestate" structure, which will be copied to the actual \_ioabort
