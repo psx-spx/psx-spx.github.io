@@ -123,6 +123,12 @@ upper 21 bits read as `0xBF800xxx`, the upper half of the
 IMASK address itself echoing on open-bus lanes during the
 read phase.
 
+The SIO1 halfword registers at `0x1F80105C` and `0x1F80105E` (BR)
+take the same shifted bus value, each latching its own 16 bits of it:
+`sb +1` writes `0x1F80105C` with `src << 8`, and `sw` at
+`0x1F80105C` leaves `0x1F80105E` untouched. See
+[the SIO page](../sio/serialinterfacessio.md).
+
 Misaligned `sh` (`+1` and `+3`) traps with `cause=0x10000014`
 (ExcCode 5, AdES). The exception fires before the bus
 transaction; the register is unchanged.
@@ -299,8 +305,9 @@ means the register is unchanged.
   the CPU die and should also be revision-stable, but the
   per-strobe SPU latch behavior may differ on SPU revisions
   shipped in other consoles.
-- Only IMASK, DPCR, and SPU registers (MAINVOL_L and voice 0
-  volumes) were tested directly. The on-die behavior is
+- Only IMASK, DPCR, SPU registers (MAINVOL_L and voice 0
+  volumes) and SIO1 `0x1F80105C`/`0x1F80105E` were tested
+  directly; the SIO1 pair on SCPH-1001, SCPH-5501 and SCPH-7001. The on-die behavior is
   expected to apply uniformly to all on-die MMIO; the SBUS
   behavior is expected to apply to other 16-bit-configured
   SBUS devices but has not been verified there. CD-ROM and

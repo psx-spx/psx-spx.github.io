@@ -133,6 +133,17 @@ rate factor makes no difference, and writing it does not affect SR, MR or BR. A
 port reset (CR bit 6) does not change it, even though it clears MR. SIO0 does
 not have this register.
 
+The access width of a store is ignored, only its address counts. The CPU puts
+the source register on the data bus shifted left by 8 times the low two address
+bits, and the halfword register at 1F80105Ch or at BR (1F80105Eh) latches its
+own 16 bits of the bus. So an 8-bit or 32-bit store to 1F80105Ch writes the
+source's low 16 bits, exactly like a 16-bit one, and a 32-bit store does not
+change BR. An 8-bit store to 1F80105Dh writes 1F80105Ch with the source's low
+byte as its high byte and 00h as its low byte (before the swap and trim above),
+and an 8-bit store to 1F80105Fh does the same to BR. A 32-bit read at 1F80105Ch
+returns BR in the upper half; 8-bit and 16-bit reads return the matching part of
+that word.
+
 #### `0x1f80104e + 0x10*N`: `BR` (baud rate register)
 ```
   0-15  Baudrate Reload value for decrementing Baudrate Timer
