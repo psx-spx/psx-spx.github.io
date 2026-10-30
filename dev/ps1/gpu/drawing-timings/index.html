@@ -4469,8 +4469,12 @@ where rows and pixels are the rows and pixels actually drawn.<br/></p>
   and the v2 figures here include that cost. Disabling the display with GP1(03h)
   does not remove it. A 640x480i 24bpp display costs another 5 to 10%. The v0
   GPU draws, fills and copies at the same speed in every display mode.</li>
-<li>The v0 per-row cost of GP0(80h) applies to copies 64 pixels wide or less; a
-  256x16 copy takes the same time as a 128x32 one.</li>
+<li>A GP0(80h) copy opens one VRAM page for every 128 pixels of width in each row it
+  writes. The per-row figure above is the cost of one such page open. A row wider
+  than 128 pixels opens a second page. A copy's total cost follows the page-open
+  count, which is the row count times the width rounded up to a multiple of 128. A
+  256x16 copy and a 128x32 one open 32 pages each and take the same time; a 16x256
+  copy of the same 4096 pixels opens 256 and is about 40% slower.</li>
 <li>Large untextured primitives on the v2 GPU vary by up to about 5% between
   identical draws, the v0 GPU by well under 1% (?).</li>
 <li>Fully transparent texels (0000h) are skipped but not free. A raw 15bpp
