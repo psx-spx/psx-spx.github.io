@@ -4656,6 +4656,11 @@ identical with baselines <code>0x00000000</code>, <code>0xFFFFFFFF</code>, and
 upper 21 bits read as <code>0xBF800xxx</code>, the upper half of the
 IMASK address itself echoing on open-bus lanes during the
 read phase.</p>
+<p>The SIO1 halfword registers at <code>0x1F80105C</code> and <code>0x1F80105E</code> (BR)
+take the same shifted bus value, each latching its own 16 bits of it:
+<code>sb +1</code> writes <code>0x1F80105C</code> with <code>src &lt;&lt; 8</code>, and <code>sw</code> at
+<code>0x1F80105C</code> leaves <code>0x1F80105E</code> untouched. See
+<a href="../../sio/serialinterfacessio/">the SIO page</a>.</p>
 <p>Misaligned <code>sh</code> (<code>+1</code> and <code>+3</code>) traps with <code>cause=0x10000014</code>
 (ExcCode 5, AdES). The exception fires before the bus
 transaction; the register is unchanged.</p>
@@ -5018,8 +5023,9 @@ means the register is unchanged.</p>
   the CPU die and should also be revision-stable, but the
   per-strobe SPU latch behavior may differ on SPU revisions
   shipped in other consoles.</li>
-<li>Only IMASK, DPCR, and SPU registers (MAINVOL_L and voice 0
-  volumes) were tested directly. The on-die behavior is
+<li>Only IMASK, DPCR, SPU registers (MAINVOL_L and voice 0
+  volumes) and SIO1 <code>0x1F80105C</code>/<code>0x1F80105E</code> were tested
+  directly; the SIO1 pair on SCPH-1001, SCPH-5501 and SCPH-7001. The on-die behavior is
   expected to apply uniformly to all on-die MMIO; the SBUS
   behavior is expected to apply to other 16-bit-configured
   SBUS devices but has not been verified there. CD-ROM and
