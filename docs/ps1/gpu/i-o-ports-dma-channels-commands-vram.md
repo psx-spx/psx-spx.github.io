@@ -56,13 +56,33 @@ DMA2 transfers:
   1 (block)  2         hangs if a block ends inside a polygon or line command
                        (poly-lines included); blocks of whole commands are fine,
                        rectangles do not hang
-  2 (list)   2         a 12-word node is transferred intact, a 240-word node loses words
+  2 (list)   2         a 12-word node is transferred intact, a 240-word node
+                       loses words; behind a busy GPU a node over 17 words
+                       loses words (see below)
 ```
 The hang comes from bit 28 being the DMA request in that mode. For polygon and
 line commands it drops right after the command word and stays 0 until the
 command is done, so the block after the one with the command word does not
 start. The transfer stops for good: CHCR stays busy, BCR shows exactly one block
 gone, and GPUSTAT bits 25, 26 and 28 all read 0.<br/>
+In linked-list mode the DMA request is only checked between nodes. The words
+of one node are sent back to back: a long node is transferred at once even
+while the GPU is still drawing, and is then corrupted. With a node made of
+GP0(E6h), a 256x200 semi-transparent quad (GP0(2Ah)), GP0(68h) dots and
+GP0(E6h):
+```
+  Node words  Result
+  up to 17    correct
+  19          the quad stops halfway (25376 of 51200 pixels drawn)
+  21          the quad is not drawn, the dots are
+  23 and up   the quad is cut short, the dots are lost or have wrong values
+```
+A small primitive does not make a long node safe: 16 dots after a 4x4
+semi-transparent quad, in one 39-word node, are all lost. The same 39 words
+behind a 256x200 quad, split into nodes of up to 8 words, are drawn correctly,
+because the DMA waits for the GPU between nodes. Linking each primitive as its
+own node avoids the problem; packing several primitives into one node does
+not, as soon as the GPU can be busy when the node starts.<br/>
 Not every GP0 command waits in the FIFO. GP0(00h), GP0(04h..1Eh), GP0(E0h),
 GP0(E3h..E5h) and GP0(E7h..EFh) do not take up space in it, even while the GPU
 is busy. GP0(01h), GP0(1Fh), GP0(E1h), GP0(E2h), GP0(E6h) and all drawing and
