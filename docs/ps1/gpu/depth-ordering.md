@@ -54,8 +54,9 @@ table means less depth resolution).<br/>
 ```
 If there's been already an entry (at the same OTZ index), then the new polygon
 will be processed first (ie. it will appear "behind" of the old entry).<br/>
-Not sure if the packet size must be limited to max N=16 words (ie. as for the
-DMA2-continous block size) (due to GP0 FIFO size limits)?<br/>
+Keep the packet size N small: a linked-list node is sent without waiting for
+the GPU, and a node longer than 17 words loses words when the GPU is still
+drawing, see [GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>
 
 #### Sending the OT to the GPU (via DMA2-linked-list mode)
 ```
