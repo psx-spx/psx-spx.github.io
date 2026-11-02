@@ -211,7 +211,7 @@ two sample rates, and, XA doesn't support looping.<br/>
 ##   SPU ADPCM Pitch
 ####  `0x1f801c04 + 0x10*N`: `PITCH`
 ```
-  0-15  Sample rate (0=stop, 4000h=fastest, 4001h..FFFFh=usually same as 4000h)
+  0-15  Sample rate (0=stop, 3FFFh=fastest, 4000h..FFFFh=same as 3FFFh)
 ```
 Defines the ADPCM sample rate (1000h = 44100Hz). This register (and PMON) does
 affect only the ADPCM sample frequency (but not on the Noise frequency, which
@@ -247,7 +247,7 @@ The pitch counter is adjusted at 44100Hz rate as follows:<br/>
     Step=SignExpand16to32(Step)   ;hardware glitch on VxPitch>7FFFh, make sign
     Step = (Step * Factor) SAR 15 ;range 0..1FFFFh (glitchy if VxPitch>7FFFh)
     Step=Step AND 0000FFFFh       ;hardware glitch on VxPitch>7FFFh, kill sign
-  IF Step>3FFFh then Step=4000h   ;range +0000h..+3FFFh (0.. 176.4kHz)
+  IF Step>3FFFh then Step=3FFFh   ;range +0000h..+3FFFh (0.. 176.4kHz)
   Counter = Counter + Step
 ```
 Counter.Bit12 and up indicates the current sample (within a ADPCM block).<br/>
@@ -260,7 +260,7 @@ The pitch counter supports sample rates up to 176.4kHz. However, exceeding the
 44.1kHz limit causes the hardware to skip samples (or actually: to apply
 incomplete interpolation on the 'skipped' samples).<br/>
 VxPitch can be theoretically 0..FFFFh (max 705.6kHz), normally 4000h..FFFFh are
-simply clipped to max=4000h (176.4kHz). Except, 4000h..FFFFh could be used with
+simply clipped to max=3FFFh (176.4kHz). Except, 4000h..FFFFh could be used with
 pitch modulation (as they are multiplied by 0.00..1.99 before clipping; in
 practice this works only for 4000h..7FFFh; as values 8000h..FFFFh are mistaken
 as signed values).<br/>
