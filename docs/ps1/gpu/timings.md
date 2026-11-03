@@ -19,6 +19,10 @@ playing content from a different video region. See vertical refresh rates below.
   314 scanlines per field for PAL non-interlaced
   312.5 scanlines per field for PAL interlaced
 ```
+In interlaced mode the fields alternate: 263 and 262 scanlines in NTSC, 313
+and 312 in PAL. GP1.R.31 reads 1 during the displayed lines of the long field
+(263 or 313) and 0 throughout the short one; see
+[Bits 13 and 31 in 480-line interlaced mode](status-register.md#bits-13-and-31-in-480-line-interlaced-mode).<br/>
 Horizontal blanking and vertical blanking signals occur on the video output side
 as expected for NTSC/PAL signals. These are not necessarily the same as the
 timer/interrupt HBLANK and VBLANK.
