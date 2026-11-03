@@ -5,8 +5,8 @@
   GPU Chip                      CXD8514Q                CXD8538Q                CXD8561Q/BQ/CQ/CXD9500Q
   Mainboard                     EARLY-PU-8 and below    Arcade boards only      LATE-PU-8 and up
   Memory Type                   Dual-ported VRAM        Dual-ported VRAM        Normal DRAM
-  GP1.R.13 when interlace=off   always 0                unknown                 always 1
-  GP1.R.13 in NTSC 480i         always 0                unknown                 set during the 262-line field
+  GP1.R.13 when interlace=off   always 0                unknown                 1 after GP1(00h), else held
+  GP1.R.13 in 480i              always 0                unknown                 set during the 262/312-line field
   GP1.R.14                      always 0                screen flip             nonfunctional screen flip
   GP1.R.15                      always 0                always 0?               bit1 of tpage Y base
   GP1(10h:index3..4)            19-bit (1 MB VRAM)      22-bit (2 MB VRAM)      20-bit (2 MB VRAM)
