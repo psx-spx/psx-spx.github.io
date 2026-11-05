@@ -76,6 +76,12 @@ Quads are internally processed as two triangles, the
 first consisting of vertices 1,2,3, and the second of vertices 2,3,4. This is an
 important detail, as splitting the quad into triangles affects the way colours
 are interpolated.<br/>
+The two triangles are also staged one after the other. Until the first
+triangle is drawn, the quad's packet keeps its slots in the GP0 FIFO and the
+DMA request (GPUSTAT bit 28) stays 0, so a DMA2 linked list does not advance,
+not even through empty nodes. Both come back while the second triangle is
+drawn. The first triangle takes as long as the same triangle drawn on its own.
+See [GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>
 Within the triangle, the ordering of the vertices doesn't matter on
 the GPU side (a front-back check, based on clockwise or anti-clockwise
 ordering, can be implemented at the GTE side).<br/>

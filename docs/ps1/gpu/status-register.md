@@ -109,14 +109,17 @@ SCPH-7001, a SCPH-9002 in NTSC mode and a SCPH-1000.<br/>
 Further GPU status information can be retrieved via GP1(10h) and GP0(C0h).<br/>
 
 #### Ready Bits
-WFEP (bit 28): Normally, this bit gets cleared when the command execution is busy (ie.
-once when the command and all of its parameters are received), however, for
-Polygon and Line Rendering commands, the bit gets cleared immediately after
-receiving the command word (ie. before receiving the vertex parameters). The
+WFEP (bit 28): For Polygon and Line Rendering commands, the bit gets cleared
+immediately after receiving the command word (ie. before receiving the vertex
+parameters). It does not stay cleared while the command draws: bit 28 reads 1
+while a triangle, rectangle, fill or copy is still being drawn, and only bit 26
+shows the drawing. A triangle sets it again after its setup (a few hundred
+cycles at most), a quad once its first triangle is drawn, and a poly-line when
+its last segment starts; see the table in
+[GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo). The
 bit is used as DMA request in DMA Mode 2, accordingly, the DMA hangs if the
 Polygon/Line parameters are transferred in a separate DMA block (ie. the DMA
-probably starts ONLY on command words), see
-[GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>
+probably starts ONLY on command words).<br/>
 RFFL (bit 27): Gets set after sending GP0(C0h) and its parameters, and stays set until
 all data words are received; used as DMA request in DMA Mode 3.<br/>
 IDLE (bit 26): Gets set when the GPU wants to receive a command. If the bit is cleared,
@@ -125,4 +128,6 @@ execution (and doesn't want to receive anything). Note that this bit can NOT be 
 to determine when the GPU is finished drawing a DMA chain of primitives, as it will briefly
 go high after processing each primitive.<br/>
 Bit25: This is the DMA Request bit, however, the bit is also useful for non-DMA
-transfers, especially in the FIFO State mode.<br/>
+transfers, especially in the FIFO State mode. With GP1(04h)=2 it rises together
+with bit 28 after a command in nearly every case; once, after a flat triangle,
+bit 28 read 1 at once and bit 25 only ~200 cycles later (?).<br/>
