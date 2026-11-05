@@ -4342,7 +4342,10 @@ For the human-written reference, see the <a href="/">stable version</a>.
 (160-pin CXD8514Q, dual-ported VRAM) and the v2 GPU (208-pin CXD8561Q and
 later, DRAM). See <a href="../versions/">GPU Versions</a> for which consoles carry which.<br/></p>
 <p>All figures are in CPU cycles (33.8688 MHz), counted from the last word of the
-command until GPUSTAT bits 26 and 28 both read 1. The cost of the CPU writing
+command until GPUSTAT bits 26 and 28 both read 1. Bit 28 alone rises much
+earlier (see <a href="../i-o-ports-dma-channels-commands-vram/#gp0-write-fifo">GP0 write FIFO</a>),
+so bit 26 is what marks the end. A quad's first triangle takes as long as the
+same triangle drawn on its own. The cost of the CPU writing
 the command words is not included. A primitive costs:<br/>
 <div class="highlight"><pre><span></span><code>  time = setup + rows * per_row + pixels * per_pixel
 </code></pre></div>

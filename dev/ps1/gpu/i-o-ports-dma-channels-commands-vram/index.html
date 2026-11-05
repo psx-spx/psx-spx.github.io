@@ -4469,6 +4469,19 @@ data. That includes a poly-line much longer than the FIFO: the GPU consumes it
 one segment at a time, and a 60-vertex poly-line written this way draws
 completely. Without the wait the CPU is not slowed down, and words are lost as
 described above.<br/>
+The 11 words hold behind a drawing triangle, rectangle, fill or copy, and
+during a quad's second triangle. During a quad's first triangle the quad's own
+packet keeps its FIFO slots, so fewer words fit behind it:
+<div class="highlight"><pre><span></span><code>  Quad kind                   Words that fit during the first triangle
+  flat (5 words)              6
+  gouraud (8 words)           4
+  textured (9 words)          3
+  textured gouraud (12 words) 1
+</code></pre></div>
+For the flat quad 11 - 6 is the packet length; for the other kinds it is not,
+and why is unknown (?). While a triangle is still in its setup (the first few
+hundred cycles) the counts are also lower and vary between runs. The same
+counts are seen on v0 and v2 GPUs.<br/>
 Bit 26 is not a FIFO flag: it reads 0 while a command is still waiting for its
 parameters, and it is 0 after each word of a poly-line, so it cannot pace
 a stream. Bit 28 also reads 0 throughout such a stream.<br/>
@@ -4484,13 +4497,42 @@ DMA2 transfers:
                        loses words (see below)
 </code></pre></div>
 The hang comes from bit 28 being the DMA request in that mode. For polygon and
-line commands it drops right after the command word and stays 0 until the
-command is done, so the block after the one with the command word does not
+line commands it drops right after the command word and stays 0 until all the
+parameters are in, so the block after the one with the command word does not
 start. The transfer stops for good: CHCR stays busy, BCR shows exactly one block
 gone, and GPUSTAT bits 25, 26 and 28 all read 0.<br/>
+Once the last word is taken, bit 28 comes back long before the command is
+drawn, at a point that depends on the command. Counted in CPU cycles from the
+last word, same pattern on v0 and v2 GPUs:
+<div class="highlight"><pre><span></span><code>  Command                         Bit 28 rises
+  triangle                        after its setup, independent of size: flat 0
+                                  or ~180 (?), gouraud and textured ~180-230,
+                                  textured gouraud ~220-340
+  quad                            when its first triangle is drawn, while the
+                                  second one is still drawing
+  poly-line                       when its last segment starts
+  rectangle, single line, GP0(02h) fill, GP0(80h) copy
+                                  at once
+</code></pre></div>
+Bit 26 is the one that rises when the drawing is finished. Bits 25 and 28 rise
+together here in nearly every case. There is no blip between a quad's two
+halves.<br/>
 In linked-list mode the DMA request is only checked between nodes. The words
 of one node are sent back to back: a long node is transferred at once even
-while the GPU is still drawing, and is then corrupted. With a node made of
+while the GPU is still drawing, and is then corrupted. D2_MADR holds the
+address of the next node to fetch. The DMA reads the next node header when the
+GPU is not holding the request (above) and at most one word is queued in the
+FIFO. So it neither waits for an empty FIFO nor streams until the FIFO is full:
+behind a drawing triangle a chain of 1-word nodes gets two nodes in (a 1-word
+node is always followed at once by the next one), a chain of 2-, 4- or 8-word
+nodes, triangles or rectangles gets one, and a GP0(E1h) node plus a 3-word
+sprite node go in as a pair. Then the list waits until the GPU takes those
+words, which is after the command is drawn. Header-only nodes (empty OT
+entries) add no words, so with the FIFO empty a chain of them is walked to the
+end within a few hundred cycles. During a quad's first triangle nothing is
+fetched, not even empty headers. The DMA acts up to ~200 cycles after GPUSTAT
+reports the request.<br/>
+With a node made of
 GP0(E6h), a 256x200 semi-transparent quad (GP0(2Ah)), GP0(68h) dots and
 GP0(E6h):
 <div class="highlight"><pre><span></span><code>  Node words  Result
@@ -4502,7 +4544,9 @@ GP0(E6h):
 A small primitive does not make a long node safe: 16 dots after a 4x4
 semi-transparent quad, in one 39-word node, are all lost. The same 39 words
 behind a 256x200 quad, split into nodes of up to 8 words, are drawn correctly,
-because the DMA waits for the GPU between nodes. Linking each primitive as its
+because the DMA waits for the GPU between nodes. The 17 words are 1 + 5 + 11:
+the GP0(E6h), the quad's packet, which keeps its slots during the first
+triangle, and the 11 words that fit behind it. Linking each primitive as its
 own node avoids the problem; packing several primitives into one node does
 not, as soon as the GPU can be busy when the node starts.<br/>
 Not every GP0 command waits in the FIFO. GP0(00h), GP0(04h..1Eh), GP0(E0h),
