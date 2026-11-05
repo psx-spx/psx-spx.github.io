@@ -67,3 +67,7 @@ drawing, see [GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-
   4 - Set D2_BCR to zero                    ;(length unused, end at END-CODE)
   5 - Set D2_CHCR to link mode, mem->GPU and dma enable   ;=01000401h
 ```
+Empty OT entries are walked without waiting while the GPU FIFO is empty, but
+not during a quad's first triangle, so DMA2's position in the OT lags behind
+large quads. Software that edits the OT or its packets while DMA2 runs depends
+on this; see [GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>

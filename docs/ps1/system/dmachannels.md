@@ -216,6 +216,17 @@ so it is possible to stop a transfer by toggling the high bit to 1. This will
 trigger a DMA error, reflected into the DICR register. Some games might use
 this to end a DMA chain instead of the normal FFFFFFh marker, which obviously
 can't work when the memory settings of the console is set to 16MB.<br/>
+While the list runs, D2_MADR holds the address of the next node to fetch. The
+DMA reads a node header only when the GPU is not holding its DMA request and at
+most one word is queued in the GP0 FIFO; see
+[GP0 write FIFO](../gpu/i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>
+Clearing D2_CHCR bit 24 stops the list at a node boundary, and D2_MADR is then
+the address to resume from (Chrono Cross stops and resumes its main list this
+way). While the GPU draws, a stop does not land between a 1-word node and the
+node after it: the DMA sends the two as one burst. Around the moment the GPU
+releases the request (a quad's first triangle finishing, or the GPU taking
+queued words after a command) a stop can land between them for some 20 to 200
+cycles. Whether a stop can cut a multi-word node short is unknown (?).<br/>
 
 #### DMA Transfer Rates
 ```

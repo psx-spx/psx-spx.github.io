@@ -4,7 +4,10 @@ The time the GPU takes to draw a primitive or run a transfer, for the v0 GPU
 later, DRAM). See [GPU Versions](versions.md) for which consoles carry which.<br/>
 
 All figures are in CPU cycles (33.8688 MHz), counted from the last word of the
-command until GPUSTAT bits 26 and 28 both read 1. The cost of the CPU writing
+command until GPUSTAT bits 26 and 28 both read 1. Bit 28 alone rises much
+earlier (see [GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo)),
+so bit 26 is what marks the end. A quad's first triangle takes as long as the
+same triangle drawn on its own. The cost of the CPU writing
 the command words is not included. A primitive costs:<br/>
 ```
   time = setup + rows * per_row + pixels * per_pixel
