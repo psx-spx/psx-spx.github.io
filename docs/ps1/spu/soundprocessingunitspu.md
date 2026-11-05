@@ -654,15 +654,29 @@ however, thereafter the hardware is overwriting that value).<br/>
 ```
 
 #### SPU Noise Generator
-The signed 16bit output Level is calculated as so (repeated at 44.1kHz clock):<br/>
+The signed 16bit output Level is a 16bit LFSR, updated on each noise clock:<br/>
 ```
-  Wait(1 cycle)          ;at 44.1kHz clock
-  Timer=Timer-NoiseStep  ;subtract Step (4..7)
   ParityBit = NoiseLevel.Bit15 xor Bit12 xor Bit11 xor Bit10 xor 1
-  IF Timer<0 then NoiseLevel = NoiseLevel*2 + ParityBit
-  IF Timer<0 then Timer=Timer+(20000h SHR NoiseShift)  ;reload timer once
-  IF Timer<0 then Timer=Timer+(20000h SHR NoiseShift)  ;reload again if needed
+  NoiseLevel = NoiseLevel*2 + ParityBit
 ```
+The noise clock runs on a period of (20000h SHR NoiseShift) samples at 44.1kHz.
+The period is split into four quarters; the LFSR is clocked at the start of
+each quarter, and clocked once more halfway into Step (0..3) of the quarters:<br/>
+```
+  Step=0  clocks at 0/8, 2/8, 4/8, 6/8 of the period        (4 per period)
+  Step=1  clocks at 0/8, 1/8, 2/8, 4/8, 6/8                 (5 per period)
+  Step=2  clocks at 0/8, 1/8, 2/8, 4/8, 5/8, 6/8            (6 per period)
+  Step=3  clocks at 0/8, 1/8, 2/8, 3/8, 4/8, 5/8, 6/8       (7 per period)
+```
+So the gap between clocks is always either 1/4 or 1/8 of the period, and the
+average rate is (4+Step)/(20000h SHR NoiseShift) clocks per
+sample. The LFSR is clocked at most once per sample, so at NoiseShift=0Fh every
+Step setting clocks it on every sample.<br/>
+The LFSR sequence has a period of 65535 clocks (FFFFh is the lock-up state that
+the sequence never enters). Clearing ATTR bit15 does not reset the noise
+generator.<br/>
+In Noise mode, the Voice 1/3 capture buffers receive the full 16bit noise
+level scaled by the envelope, (NoiseLevel*ENVX) SAR 15, not a 1bit signal.<br/>
 Note that the Noise frequency is solely controlled by the Shift/Step values in
 ATTR register (the ADPCM Sample Rate has absolutely no effect on noise), so
 when using noise for multiple voices, all of them are forcefully having the
