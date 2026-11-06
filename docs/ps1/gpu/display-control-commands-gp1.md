@@ -31,8 +31,7 @@ reset raises IRQ0 at once (latched within 50 CPU cycles of the write); written
 during VBlank, it raises none. GPUSTAT.31 reads 0 after the reset and starts
 toggling again 18 lines after the write. Measured in NTSC 240p with the display
 off, 5 reps at 27 phases across the frame, identical on a SCPH-1000 (v0 GPU), a DTL-H2700, and a
-SCPH-1001, two SCPH-5501, a SCPH-7001 and a SCPH-9002 (v2 GPU). Stenzek
-measured the same on a SCPH-3000 (v0) first.<br/>
+SCPH-1001, two SCPH-5501, a SCPH-7001 and a SCPH-9002 (v2 GPU).<br/>
 
 #### GP1(01h) - Reset Command Buffer
 ```
@@ -203,6 +202,8 @@ After sending the command, the result can be read (immediately) from GP0
 register (there's no NOP or other delay required) (namely GP1.R.RFFL is used
 only for VRAM reads, but NOT for register reads, so do not try to wait for that
 flag).<br/>
+GP1(50h), GP1(90h) and GP1(D0h) act as GP1(10h) as well, while GP1(30h) does
+nothing (see GP1(40h..FFh)).<br/>
 ```
   0-23  Register index (via following GP0 read)
 ```
@@ -216,6 +217,9 @@ On v0 GPUs, the following indices are supported:<br/>
   06h-07h = Returns Nothing (old value in GP0.read remains unchanged)
   08h-FFFFFFh = Mirrors of 00h..07h
 ```
+On v0, "MSBs=Nothing" means the upper bits keep the previous GP0.read value:
+reading index 03h (E3h=014A3h) right after index 02h returned ABCDEh gives
+814A3h. On v2 the same sequence gives 014A3h.<br/>
 On v2 (and v1?) GPUs, the following indices are supported:<br/>
 ```
   00h-01h = Returns Nothing (old value in GP0.read remains unchanged)
@@ -274,10 +278,18 @@ effect on VRAM transfer addressing.<br/>
 The register doesn't seem to be used by any games.<br/>
 
 #### GP1(0Ah,0Ch..0Fh,21h..3Fh) - N/A
-Not used?<br/>
+Not used? GP1(0Ah), GP1(0Ch), GP1(0Fh), GP1(21h) and GP1(3Fh) with parameter 0
+change nothing in GPUSTAT, GP0.read or the GP0(E2h..E5h) state.<br/>
 
-#### GP1(40h..FFh) - N/A (Mirrors)
-Mirrors of GP1(00h..3Fh).<br/>
+#### GP1(40h..FFh) - N/A
+These are not mirrors of GP1(00h..3Fh): bits 30-31 of the command are decoded.
+GP1(40h), GP1(80h) and GP1(C0h) with the parameters of GP1(00h), GP1(03h),
+GP1(04h) and GP1(08h) change nothing in GPUSTAT, GP0.read or the GP0(E2h..E5h)
+state. In particular GP1(80000000h) is not a reset: it raises no IRQ0 and
+leaves the display on. GP1(23h), GP1(24h) and GP1(28h) likewise do nothing.<br/>
+The exception is GP1(10h): GP1(50h), GP1(90h) and GP1(D0h) read the internal
+register like GP1(10h), so that command ignores bits 30-31, but not bit 29
+(GP1(30h) does nothing). The same on v0 and v2 GPUs.<br/>
 
 #### Mis-Centered PAL Games (wrong GP1(06h)/GP1(07h) settings)
 NTSC games are typically well centered (using X1=260h, and Y1/Y2=88h+/-N).<br/>
