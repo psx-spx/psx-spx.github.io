@@ -74,10 +74,17 @@ The IBLKSZ field in the [BIU/Cache Configuration Register](memorycontrol.md#fffe
 (bits 8-9 of FFFE0130h) limits the maximum burst length. With IBLKSZ=0 (2-word
 refill), entry at word 0 fills only words 0 and 1 (valid = 03h). Entry at words
 1, 2, or 3 is unaffected by IBLKSZ and always fills to end-of-line.<br/>
-When the tag matches but a specific word's valid bit is 0, the CPU treats it as
-a miss and performs a **full line refill** from RAM, replacing all 4 code words
-and setting valid to 0Fh. Consecutive fills to the same line (with matching
-tags) OR into the valid bits, progressively filling the line.<br/>
+When the tag matches but the accessed word's valid bit is 0, the CPU treats it as
+a miss too. The refill overwrites every word it covers, including words whose
+valid bits were already set: a miss at word 0 replaces all 4 code words and sets
+valid to 0Fh. Consecutive fills to the same line (with matching tags) OR into
+the valid bits, progressively filling the line. A tag-matching miss at word 1, 2
+or 3 has not been tested.<br/>
+On the bus a refill is a single DRAM page-mode burst: one /RAS cycle, with the
+column advancing by one word per clock, from the accessed word to the last word
+of the line. Since the valid bits are per word, code entered in the middle of a
+line leaves the words before it invalid, and a later jump back to them misses
+again.<br/>
 
 ##### Isolation and self-modifying code
 Store instructions (SW etc.) to RAM addresses do **not** affect the i-cache.
