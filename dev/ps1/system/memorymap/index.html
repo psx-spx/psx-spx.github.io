@@ -4581,8 +4581,11 @@ When the tag matches but the accessed word's valid bit is 0, the CPU treats it a
 a miss too. The refill overwrites every word it covers, including words whose
 valid bits were already set: a miss at word 0 replaces all 4 code words and sets
 valid to 0Fh. Consecutive fills to the same line (with matching tags) OR into
-the valid bits, progressively filling the line. A tag-matching miss at word 1, 2
-or 3 has not been tested.<br/>
+the valid bits, progressively filling the line. A tag-matching miss at word 1
+reads words 1 to 3 only, the same as a miss on another tag: measured with only
+word 3 valid, the bus shows a three-word burst and word 0 is not read. Misses at
+word 2 or 3 of a
+matching tag have not been tested.<br/>
 On the bus a refill is a single DRAM page-mode burst: one /RAS cycle, with the
 column advancing by one word per clock, from the accessed word to the last word
 of the line. Since the valid bits are per word, code entered in the middle of a
