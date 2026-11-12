@@ -30,7 +30,8 @@ hold the end-address in SyncMode=1, or the end marker in SyncMode=2)<br/>
 In SyncMode=1, D#\_MADR and D#\_BCR written while the channel waits for DREQ
 between blocks (bit 24 still set) are used from the next block on: it is read
 from the written address, and the written BA is the number of blocks still to
-go. Seen on DMA2, with the GPU holding DREQ off through GP1(04h)=0.<br/>
+go. Seen on DMA2, with the GPU holding DREQ off through GP1(04h)=0, and on DMA4,
+with SPUCNT transfer mode set to stop.<br/>
 Notes: Address bits 0-1 are writeable and the register keeps whatever was written
 to it. The hardware ignores the last two bits when issuing memory fetch commands,
 but the register itself still has the full value.<br/>
@@ -108,6 +109,11 @@ In SyncMode=2 with device to RAM direction, the channel follows the headers in
 RAM until the end marker and finishes, but moves no data either way.<br/>
 Bit 24 is automatically cleared upon COMPLETION of the transfer, this bit must
 be always set for all SyncModes when starting a transfer.<br/>
+In SyncMode=1, bits 0 and 1 written while the channel waits between blocks
+(with bit 24 kept set) apply from the next block on: setting bit 1 makes the
+remaining blocks step down from the current D#\_MADR, and clearing bit 0 on
+DMA2 makes the remaining blocks write RAM with whatever GPUREAD returns, even
+though the GPU is still set up for RAM to GPU transfers.<br/>
 For DMA6/OTC there are some restrictions, D6\_CHCR has only three
 read/write-able bits: 24,28,30. All other bits are read-only: bit 1 is always
 1 (increment=-4), and the other bits are always 0.<br/>
