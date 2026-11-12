@@ -48,7 +48,7 @@
 <text x="62.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,62.5,156.5)">DMA timing select</text>
 <text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">29</text>
 <rect x="29" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1"/>
-<text x="38.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,156.5)">Wide DMA</text>
+<text x="38.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,156.5)">Unused on the PS1</text>
 <text x="29" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">30</text>
 <rect x="5" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1"/>
 <text x="14.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,14.5,156.5)">Wait</text>

@@ -4564,7 +4564,7 @@ For DEV1, the address seems to be fixed (1FA00000h).<br/></p>
 <h4 id="1f801018h-dev5-cd-rom-delaysize-00020843h-or-00020943h">1F801018h - DEV5 (CD-ROM) Delay/Size (00020843h or 00020943h)</h4>
 <h4 id="1f80101ch-dev8-delaysize-usually-00070777h-128-bytes-8bit-bus">1F80101Ch - DEV8 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)</h4>
 <p>The register reads back what is written to it (tested with size fields 0, 1, 7
-and 8).</p>
+and 8), except bit 30, which always reads back as zero.</p>
 <div class="psx-figure">
 <svg xmlns="http://www.w3.org/2000/svg" width="769" height="299" viewBox="0 0 769 299" role="img" aria-label="register bit layout">
 <rect x="677" y="15" width="91" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
@@ -4616,7 +4616,7 @@ and 8).</p>
 <text x="62.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,62.5,156.5)" class="pf-fill-fg">DMA timing select</text>
 <text x="53" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">29</text>
 <rect x="29" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
-<text x="38.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,156.5)" class="pf-fill-fg">Wide DMA</text>
+<text x="38.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,38.5,156.5)" class="pf-fill-fg">Unused on the PS1</text>
 <text x="29" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start" class="pf-fill-fg">30</text>
 <rect x="5" y="15" width="19" height="283" fill="#efefef" stroke="black" stroke-width="1" class="pf-fill-bg pf-stroke-fg"/>
 <text x="14.5" y="156.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,14.5,156.5)" class="pf-fill-fg">Wait</text>
@@ -4637,7 +4637,7 @@ and 8).</p>
   24-27 DMA timing override
   28    Address error flag. Write 1 to it to clear it.
   29    DMA timing select  (0=use normal timings, 1=use bits 24-27)
-  30    Wide DMA           (0=use bit 12, 1=override to full 32 bits)
+  30    Unused on the PS1 (writes ignored; the PS2 IOP uses it for 32-bit SBUS)
   31    Wait               (1=wait on external device before being ready)
 </code></pre></div>
 An access wider than the Data Bus-width is a single bus transaction: /CS is
@@ -5176,10 +5176,6 @@ at zero, so SPU DMA writes run at 1 cycle per strobe with 1 cycle between.</p>
 <polyline fill="none" stroke="#1a7f37" stroke-width="2" points="70,62 84,62 98,62 112,62 126,62 126,82 140,82 140,62 154,62 154,82 168,82 168,62 182,62 182,82 196,82 196,62 210,62 210,82 224,82 224,62 238,62 238,82 252,82 252,62 266,62 266,82 280,82 280,62 294,62 294,82 308,82 308,62 322,62 322,82 336,82 336,62 350,62 350,82 364,82 364,62 378,62 378,82 392,82 392,62 406,62 406,82 420,82 420,62 434,62 434,82 448,82 448,62 462,62 462,82 476,82 476,62 490,62 490,82 504,82 504,62 518,62 518,82 532,82 532,62 546,62 546,82 560,82 560,62 574,62 574,82 588,82 588,62 602,62 602,82 616,82 616,62 630,62" class="pf-stroke-signal"/>
 </svg>
 </div>
-<p>The Wide DMA flag will enable full 32 bits DMA operations on the bus, by reusing
-the low 16-bits address signals as the high 16-bits data. This means that if
-the CPU is doing Wide DMA reads, the low 16-bits of the address bus will become
-inputs.</p>
 <p>Trying to access addresses that exceed the selected size causes a bus exception.
 Maximum size would be DEV0 = 17h (8MB), DEV2 = 16h (4MB), DEV8 = 0Dh (8KB),
 DEV1 = 15h (2MB). Trying to select larger sizes would overlap the internal I/O
