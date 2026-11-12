@@ -23,6 +23,11 @@ Copies data within framebuffer. The transfer is affected by Mask setting.<br/>
 Transfers data from CPU to frame buffer. If the number of halfwords to be sent
 is odd, an extra halfword should be sent, as packets consist of 32bits words. The
 transfer is affected by Mask setting.<br/>
+On v2 GPUs the data is written to VRAM one complete row of the rectangle at a time:
+the words of a row that is not finished yet stay inside the GPU until more GP0
+data completes it (waiting does not flush them), and GP1(00h) throws them away. So a
+transfer cut short loses its whole last partial row. The v0 GPU writes the words
+of a partial row to VRAM as they arrive.<br/>
 
 #### VRAM to CPU blitting - command 6 (110)
 ```
