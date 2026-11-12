@@ -33,11 +33,15 @@ for other renamed registers.<br/>
   27    RFFL  GP0 read data ready         (0=No, 1=Ready)  ;GP0(C0h) ;via GPUREAD
   28    WFEP  GP0 write FIFO empty        (0=No, 1=Empty)  ;GP0(...) ;via GP0 write
   29-30 DMD   DMA Direction               (0=Off, 1=WFNF, 2=WFEP, 3=RFFL)    ;GP1(04h).0-1
-  31    ODE   Drawing even/odd lines in interlace mode (0=Even or Vblank, 1=Odd)
+  31    ODE   LSB of the VRAM row being displayed (see below)
 ```
-In 480-lines mode, bit31 changes per field (see below). And in 240-lines mode,
-the bit changes per scanline. The bit is always zero during Vblank (vertical
-retrace and upper/lower screen border).<br/>
+Bit 31 is the lowest bit of the VRAM row being scanned out, counting the row
+of scanline Y1 as GP1(05h)'s Y. In 240-lines mode that is Y+(scanline-Y1), so
+the bit changes per scanline; in 480-lines mode it is Y plus the field, so it
+holds for a whole field (see below). Outside the display range (vertical
+retrace and upper/lower screen border) it reads Y AND 1: zero for an even Y,
+one for an odd Y, which also inverts the 480i pattern below. Y has no effect on
+the field lengths or the vblank IRQ.<br/>
 The bit names listed here are from version 2.8 of the PS2 SDK, which includes
 unstripped debug symbols that reference the PGIF's `PG_STAT` register used for
 PS1 GPU emulation; some of them appear in PS1 libraries as well.<br/>
@@ -46,7 +50,7 @@ PS1 GPU emulation; some of them appear in PS1 libraries as well.<br/>
 In 480i the fields alternate between a long and a short one: 263 and 262 lines
 in NTSC, 313 and 312 in PAL. Counting lines as hblanks since the vblank that
 opens each field, with the display range used here (Y1=10h, Y2=100h in NTSC,
-Y1=27h, Y2=125h in PAL):
+Y1=27h, Y2=125h in PAL) and an even GP1(05h) Y:
 ```
   Bit  GPU    NTSC 263-line field      NTSC 262-line field
   31   v0/v2  0 for lines 0-22,        always 0
@@ -71,7 +75,8 @@ with Y1=20h). A Y2 past the last scanline of the field (108h in NTSC) gives no
 vblank IRQ at all.<br/>
 So on a v2 GPU bit 13 tells the fields apart all the way through the vblank.
 On a v0 GPU bit 13 never sets in this mode, which leaves bit 31, which behaves
-the same on both and only reads 1 during the displayed lines of the long field.
+the same on both and, with an even Y, only reads 1 during the displayed lines
+of the long field.
 The timeline is the same at 256, 320 and 640 pixels wide and does not depend on
 GP0(E1h).10 or on the display being enabled. PAL was measured at 256 pixels
 wide only. The 368 and 512 pixel widths are not covered here.<br/>
@@ -80,30 +85,61 @@ reads 1, even rows while it reads 0) are the ones the GPU does not draw; see
 [Draw to display enable](misc.md#draw-to-display-enable).<br/>
 
 #### Switching interlace on and off
-After GP1(08h) turns interlace on (240p to 480i), the field the write falls in
-runs to the next vblank with bit 31 at 0, and the field after it is a long one
-(263 or 313 lines) with bit 31 rising at Y1, then the alternation continues. Bit
-13 follows the same fields from the switch on. A write in the first few lines
-of the vblank can instead fall in a long field, and then a short field comes
-first.<br/>
-After interlace is turned off (480i to 240p), every field is 263 lines (314 in
-PAL) and bit 31 toggles per scanline from the write on. Bit 13 then
-keeps the value it had at the write: it reads 0 or 1 in 240p depending on which
-field interlace was turned off in. It reads 1 after GP1(00h), which selects
-240p, so "always 1 when interlace is off" only holds when the GPU was reset
-since the last 480i field, or never left 240p.<br/>
+In this section a frame runs from scanline 0 to the next scanline 0, and a long
+frame is the 263-line (313 in PAL) one. Its extra line is at the bottom, after
+its vblank, so the long vblank-to-vblank field in the table above holds the
+display of a short frame: with an even Y, bit 31 reads 1 during a short frame's
+display and 0 during a long frame's.<br/>
+The GPU keeps a field flag while interlace is off: the type of the frame
+interlace was last turned off in, or long after GP1(00h). On a v2 GPU bit 13
+shows it (1=long); on v0 it exists but is not visible. When GP1(08h) turns
+interlace on (240p to 480i), the frame the write falls in becomes the held type,
+whatever line the write lands on and however many 240p frames came in between,
+and the frames alternate from there. The write frame does not toggle the flag
+first: after a held long frame, that frame keeps bit 31 at 0 and the first
+display with bit 31 at 1 is in the next frame. The exception is a write near the
+end of the frame, in the windows below.<br/>
+After interlace is turned off (480i to 240p), every frame is 263 lines (314 in
+PAL) from the frame in progress on, and bit 31 toggles per scanline from the
+write on. The held flag is the type of the frame interlace was turned off in,
+except from a point inside scanline 311 (261 in NTSC), where the next frame's
+type has already been chosen and is held instead. That point is the same line
+for both types: the last line of a short frame, in the first half of it, and
+the line before the last of a long one. Bit 13 keeps the held value in 240p, so it
+reads 0 or 1 depending on where interlace was turned off; in 480i it changes on
+each frame's last line (see above), which for a long frame is one line after the
+point that chooses the next frame. GP1(00h) sets the flag itself to long, not
+only bit 13: bit 13 reads 1 after it, and the next switch to 480i starts with a
+long frame on v0 as well.<br/>
 With GP1(08h).5 set but the vertical resolution bit (GP1(08h).2) clear, the
 fields keep alternating in length and bit 13 keeps changing per field, but bit
 31 toggles per scanline as in 240p.<br/>
-The vertical counter appears to be 10 bits wide. In PAL, interlace turned off at
-scanline 309 and back on at 312 makes the next vblank IRQ come 1008 lines after
-the first write, which is (1024-309)+293 with Y2=125h (293), and bit 31 rises
-754 lines after it, which is scanline 39 (Y1) after a wrap at 1024. That is what a counter
-that missed the end of a 312-line frame and ran on to 1023 would do.<br/>
+The vertical counter is 10 bits wide. Turning interlace on near the end of a
+frame can make the counter miss the end of the frame and run on to 1023, about
+700 lines with no vblank IRQ and no display, before the held type starts at line
+0. A write past that window lets the frame finish as a 240p one (314 or 263
+lines), again followed by the held type. Y2 does not move the window, which is
+given here to about half a line:
+```
+  Held type, mode    Overrun from                to
+  short, PAL         start of scanline 311       middle of scanline 312
+  long,  PAL         middle of scanline 311      start of scanline 313
+  short, NTSC        start of scanline 261       middle of scanline 261 (*)
+  long,  NTSC        middle of scanline 261      start of scanline 262
+```
+(\*) Late in scanline 261 when NTSC mode runs from a PAL video clock.<br/>
+For example, in PAL, interlace turned off at scanline 309 and back on at 312
+makes the next vblank IRQ come 1008 lines after the first write, which is
+(1024-309)+293 with Y2=125h (293), and bit 31 rises 754 lines after it, which is
+scanline 39 (Y1) after a wrap at 1024.<br/>
 Bit 31 behaves the same on v0 and v2 in all of these cases, display on and off.
 Measured in NTSC on a SCPH-1000 (v0), a SCPH-1001 and a SCPH-5501 (v2), PAL on a
 SCPH-1000, a SCPH-5501 and a SCPH-7001; the Y1/Y2 variations on a SCPH-5501, a
-SCPH-7001, a SCPH-9002 in NTSC mode and a SCPH-1000.<br/>
+SCPH-7001, a SCPH-9002 in NTSC mode and a SCPH-1000.
+The held field flag, the overrun window and bit 31 as the row parity were
+measured in both modes on a SCPH-1000, a SCPH-3000 and a DTL-H2700 (v0) and a
+SCPH-7001 and a SCPH-9002 (v2), the SCPH-9002 and the DTL-H2700 running from a
+PAL video clock and the others from an NTSC one.<br/>
 
 #### Note
 Further GPU status information can be retrieved via GP1(10h) and GP0(C0h).<br/>
