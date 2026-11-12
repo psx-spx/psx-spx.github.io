@@ -4579,6 +4579,10 @@ getting interrupted by a higher priority DMA channel).<br/>
 In SyncMode=1 and SyncMode=2, the hardware does update MADR (it will contain
 the start address of the currently transferred block; at transfer end, it'll
 hold the end-address in SyncMode=1, or the end marker in SyncMode=2)<br/>
+In SyncMode=1, D#_MADR and D#_BCR written while the channel waits for DREQ
+between blocks (bit 24 still set) are used from the next block on: it is read
+from the written address, and the written BA is the number of blocks still to
+go. Seen on DMA2, with the GPU holding DREQ off through GP1(04h)=0.<br/>
 Notes: Address bits 0-1 are writeable and the register keeps whatever was written
 to it. The hardware ignores the last two bits when issuing memory fetch commands,
 but the register itself still has the full value.<br/>
@@ -4641,6 +4645,11 @@ one block in SyncMode=1, one list node in SyncMode=2 (RAM to device). After
 that, the channel waits for DREQ as usual. The CDROM does not assert DREQ on
 DMA3, whatever BFRD says, so CDROM transfers only run in SyncMode=0 with bit 28
 set.<br/>
+A block forced into the GPU (DMA2) while GP1(04h)=0 still crosses the bus in
+full, one word per cycle, same as a DREQ-paced block, but the GPU keeps only the
+even-numbered words: words 0, 2, 4... of the block reach VRAM, packed, for every
+block size from 1 to 16 words, and MADR still advances by the whole block. With
+GP1(04h)=2 and DREQ-paced blocks, every word is written.<br/>
 In SyncMode=2 with device to RAM direction, the channel follows the headers in
 RAM until the end marker and finishes, but moves no data either way.<br/>
 Bit 24 is automatically cleared upon COMPLETION of the transfer, this bit must
