@@ -37,7 +37,7 @@ For DEV1, the address seems to be fixed (1FA00000h).<br/>
 #### 1F801018h - DEV5 (CD-ROM) Delay/Size (00020843h or 00020943h)
 #### 1F80101Ch - DEV8 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)
 The register reads back what is written to it (tested with size fields 0, 1, 7
-and 8).
+and 8), except bit 30, which always reads back as zero.
 ```
   0-3   Write Delay        (00h..0Fh=01h..10h Cycles)
   4-7   Read Delay         (00h..0Fh=01h..10h Cycles)
@@ -53,7 +53,7 @@ and 8).
   24-27 DMA timing override
   28    Address error flag. Write 1 to it to clear it.
   29    DMA timing select  (0=use normal timings, 1=use bits 24-27)
-  30    Wide DMA           (0=use bit 12, 1=override to full 32 bits)
+  30    Unused on the PS1 (writes ignored; the PS2 IOP uses it for 32-bit SBUS)
   31    Wait               (1=wait on external device before being ready)
 ```
 An access wider than the Data Bus-width is a single bus transaction: /CS is
@@ -193,11 +193,6 @@ at zero, so SPU DMA writes run at 1 cycle per strobe with 1 cycle between.
 ![SPU DMA, override (200931E1h)](waveforms/spu-dma-override.svg)
 
 ![SPU to RAM DMA, override (200931E1h)](waveforms/spu-dma-read-override.svg)
-
-The Wide DMA flag will enable full 32 bits DMA operations on the bus, by reusing
-the low 16-bits address signals as the high 16-bits data. This means that if
-the CPU is doing Wide DMA reads, the low 16-bits of the address bus will become
-inputs.
 
 Trying to access addresses that exceed the selected size causes a bus exception.
 Maximum size would be DEV0 = 17h (8MB), DEV2 = 16h (4MB), DEV8 = 0Dh (8KB),
