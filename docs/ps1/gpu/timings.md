@@ -20,8 +20,8 @@ playing content from a different video region. See vertical refresh rates below.
   312.5 scanlines per field for PAL interlaced
 ```
 In interlaced mode the fields alternate: 263 and 262 scanlines in NTSC, 313
-and 312 in PAL. GP1.R.31 reads 1 during the displayed lines of the long field
-(263 or 313) and 0 throughout the short one; see
+and 312 in PAL. With an even GP1(05h) Y, GP1.R.31 reads 1 during the displayed
+lines of the long field (263 or 313) and 0 throughout the short one; see
 [Bits 13 and 31 in 480-line interlaced mode](status-register.md#bits-13-and-31-in-480-line-interlaced-mode).<br/>
 Horizontal blanking and vertical blanking signals occur on the video output side
 as expected for NTSC/PAL signals. These are not necessarily the same as the
@@ -109,6 +109,15 @@ rounded up is 425.625 dots/line, which counts 426) (for example, due to the roun
 isn't running exactly twice as fast in 512pix/PAL mode than in 256pix/PAL
 mode). The dotclock signal is generated even during horizontal/vertical
 blanking/retrace.<br/>
+Counted with Timer0 on the dotclock and Timer1 on hblank over whole fields, the
+timer advances by the same whole number on every scanline:<br/>
+```
+  Width     256   320   368   512   640
+  NTSC      341   426   487   682   853
+  PAL       340   426   486   681   851
+```
+These counts are the same on NTSC and PAL video clocks, and 320 pixels in
+interlaced mode also counts 426 in both modes.<br/>
 
 #### Frame Rates
 ```

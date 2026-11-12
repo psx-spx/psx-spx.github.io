@@ -32,6 +32,12 @@ during VBlank, it raises none. GPUSTAT.31 reads 0 after the reset and starts
 toggling again 18 lines after the write. Measured in NTSC 240p with the display
 off, 5 reps at 27 phases across the frame, identical on a SCPH-1000 (v0 GPU), a DTL-H2700, and a
 SCPH-1001, two SCPH-5501, a SCPH-7001 and a SCPH-9002 (v2 GPU).<br/>
+The reset selects NTSC timing on a PAL console too: from the first VBlank IRQ0
+after it GP1.read.20 is 0 and the frames are 263 lines, run from the console's
+PAL video clock, until GP1(08h).3 selects PAL again. The first IRQ0 still comes
+257 lines after the write when the reset is written in PAL mode. The reset also
+sets the interlace field flag to the long frame, see
+[Switching interlace on and off](status-register.md#switching-interlace-on-and-off).<br/>
 
 #### GP1(01h) - Reset Command Buffer
 ```
