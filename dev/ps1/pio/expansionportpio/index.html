@@ -2899,6 +2899,15 @@ For the human-written reference, see the <a href="/">stable version</a>.
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#bios-duart-driver" class="md-nav__link">
+    <span class="md-ellipsis">
+      BIOS DUART driver
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5415,6 +5424,15 @@ For the human-written reference, see the <a href="/">stable version</a>.
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#bios-duart-driver" class="md-nav__link">
+    <span class="md-ellipsis">
+      BIOS DUART driver
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5766,9 +5784,13 @@ addressing, nor by internal I/O ports like Timer and IRQ registers).<br/></p>
 The entrypoints are called if their corresponding ID strings are present, return
 address to BIOS is passed in R31, so the expansion ROM may return control to
 BIOS, if that should be desired.<br/>
-Aside from verifying the IDs, the BIOS will also display the Post-Boot ID
-string (and the following message string) via TTY (done right before calling
-the Post-Boot Entrypoint).<br/></p>
+Aside from verifying the IDs, the BIOS will also display "PIO SHELL for
+PlayStation(tm)", then the Post-Boot ID string (and the following message
+string) via TTY (done right before calling the Post-Boot Entrypoint).<br/>
+In SCPH-1001 the checks are at BFC0703Ch (Pre-Boot, 1F000084h) and BFC070ACh
+(Post-Boot, 1F000004h), comparing against the string at BFC0E288h, and the
+entrypoints are called through [1F000080h] at BFC0711Ch and through [1F000000h]
+at BFC07148h.<br/></p>
 <h4 id="pre-boot-function">Pre-Boot Function</h4>
 <p>The Pre-Boot function is called almost immediately after Reset, with only some
 Memory Control registers initialized, the BIOS function vectors at A0h, B0h,
@@ -5793,9 +5815,11 @@ Replay v2.0 and up).<br/></p>
 <h4 id="scn2681-dual-asynchronous-receivertransmitter-duart">SCN2681 Dual Asynchronous Receiver/Transmitter (DUART)</h4>
 <p>The PSX/PSone retail BIOS contains some TTY Debug Terminal code; using an
 external SCN2681 chip which can be connected to the expansion port.<br/>
-Whilst supported by all PSX/PSone retail BIOSes on software side, there aren't
-any known PSX consoles/devboards/expansions actually containing DUARTs on
-hardware side.<br/></p>
+Whilst supported by all PSX/PSone retail BIOSes on software side, the only
+known PSX hardware with a DUART on the expansion port is Sony's
+<a href="../../../dtl/psxdevboardchipsets/#sony-debug-box2-expansion-port-debug-board">DEBUG BOX2</a>
+board. Its address decoders are undumped GALs, so it is unconfirmed whether its
+DUART sits at the 1F8020xxh addresses that the BIOS uses.<br/></p>
 <h4 id="1f802023hread-rhra-duart-rx-holding-register-a-fifo-r">1F802023h/Read - RHRA - DUART Rx Holding Register A (FIFO) (R)</h4>
 <h4 id="1f80202bhread-rhrb-duart-rx-holding-register-b-fifo-r">1F80202Bh/Read - RHRB - DUART Rx Holding Register B (FIFO) (R)</h4>
 <h4 id="1f802023hwrite-thra-duart-tx-holding-register-a-w">1F802023h/Write - THRA - DUART Tx Holding Register A (W)</h4>
@@ -6168,18 +6192,43 @@ the timer undeflows.<br/></p>
   40pin additional IP0-IP6,OP0-OP7,X2   ;full version
   44pin same as 40pin with four NC pins ;full version (SMD)
 </code></pre></div>
-Unknown which of them is supposed to be used with the PSX?<br/>
+The DEBUG BOX2 board uses the 40pin version (SCN2681AC1N40).<br/>
 Note: The Motorola 68681 should be the same as the Philips/Signetics 2681.<br/></p>
 <h4 id="notes">Notes</h4>
 <p>Unknown if the Interrupt signal is connected to the PSX... there seems to be no
 spare IRQ for it, though it \&lt;might&gt; share an IRQ with whatever other
 hardware...?<br/>
-The BIOS seems to use only one of the two channels; for the std_io functions:<br/>
+The BIOS driver supports both channels (device "tty", minor 0=Channel A,
+1=Channel B), std_io uses one of them:<br/>
 <a href="../../kernelbios/tty-console-std-io/#tty-console-std_io">BIOS TTY Console (std_io)</a><br/>
 Aside from the external DUART, the PSX additionally contains an internal UART,<br/>
 <a href="../../sio/serialinterfacessio/">Serial Interfaces (SIO)</a><br/>
 The DTL-H2000 devboard uses a non-serial "ATCONS" channel for TTY stuff,<br/>
 <a href="#dev8-dtl-h2000-io-ports">DEV8 DTL-H2000 I/O Ports</a><br/></p>
+<h4 id="bios-duart-driver">BIOS DUART driver</h4>
+<p>The retail BIOS driver ("tty(s2681)") is polled, and does no detection. Addresses
+are for SCPH-1001 (v2.2), the SCPH-7001 (v4.1) kernel has the same code at the
+same addresses:<br/>
+<div class="highlight"><pre><span></span><code>  BFC0E530h  DUART base address (1F802020h), Channel B at base+8
+  BFC0E59Ch  Device descriptor &quot;tty&quot;, flags 3 (&quot;CONSOLE&quot;)
+  BFC0D4CCh  A(98h) AddDuartTtyDevice
+  BFC0C890h  Init:  ACR=80h (baud set 2), OPCR=00h, IMR=00h (no IRQs),
+                    CRA/CRB=0Ah,20h,30h,40h,50h
+  BFC0C9CCh  Open:  POST=0Ch, CR=0Ah,20h,30h,40h,50h,05h, then 9600 baud
+  BFC0CD80h  Baud:  CSR=BBh (9600), CR=10h, MR1=93h, MR2=07h (0Fh at 110 baud),
+                    then writes 01h to 1F80202Eh (Set Output Port Bit OP0)
+  BFC0D11Ch  Read:  polls SR bit0, data from RHR; on SR bit6/7 (framing/break)
+                    it steps to the next rate of 110..19200 baud and prints
+                    &quot;%s baud rate set to %d&quot;
+  BFC0D34Ch  Write: polls SR bit2, then writes THR
+  BFC0CC68h  Ioctl: 6602h, 7401h, 7402h, 7403h (else error 22)
+</code></pre></div>
+The input port (IP, IPCR) is never read, and OP0 is the only output port bit
+the BIOS touches.<br/>
+The device is installed only when [A000B9B0h]=1 (see
+<a href="../../kernelbios/tty-console-std-io/#c1bh-kernelredirectttyflag-ps2-ttyflag1-causes-systemerror">KernelRedirect</a>),
+and the boot code clears that flag right after the Pre-Boot hook returns
+(BFC06F14h), so on an unpatched BIOS the DUART stays unused.<br/></p>
 <h2 id="dev8-dtl-h2000-io-ports">DEV8 DTL-H2000 I/O Ports</h2>
 <p>The DTL-H2000 contains extended 8Mbyte Main RAM (instead of normal 2Mbyte),
 plus additional 1MByte RAM in Expansion Area at 1FA00000h, plus some I/O ports
@@ -6340,7 +6389,11 @@ side). Possible values are:<br/>
 </code></pre></div>
 During boot, the BIOS writes incrementing values to this register, allowing to
 display the current boot status on an external 7 segment display (much the same
-as Port 80h used in PC BIOSes).<br/></p>
+as Port 80h used in PC BIOSes).<br/>
+In SCPH-1001 the writes go through BFC01A60h (boot code values 01h..09h, 0Eh,
+0Fh; the DUART driver also writes 0Ah+channel, 0Bh and 0Ch) and through the
+kernel copy at RAM 00004360h (ROM BFC13E60h, values 01h..06h around device
+installation).<br/></p>
 <h4 id="1f802070h-post2-unknown-w-ps2">1F802070h - POST2 - Unknown? (W) - PS2</h4>
 <p>Might be a configuration port, or it's another POST register (which is used
 prior to writing the normal POST bytes to 1FA00000h).<br/>
