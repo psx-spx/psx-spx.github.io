@@ -261,19 +261,74 @@ connectors can be possibly also used with Psy-Q Development Systems for SNES
 and Sega Saturn?<br/>
 
 #### PSY-Q Development System (Psygnosis 1994)
+Blue plastic box plugged into the 68pin "Parallel I/O" expansion port, linking
+the console over SCSI to the SN Systems ISA SCSI card in the PC. Box label "PSY-Q Development System,
+(C) Psygnosis 1994" with a serial number. Yellow PCB "PsyQ PlayStation, (C)
+Cirtech 1995 v2.1".
 ```
-  32pin GM76C8128ALLFW85 (SRAM 128Kx8)
-  44pin ALTERA EPM7032LC44-15T
-  34pin EMULEX FAS101 (SCSI Interface Processor)
-  28pin 27C64 (EPROM 8Kx8) (green sticker, without text)
-  20pin LCX245 (=74245?)
-   8pin 2112, CPA, H9527 (?)
+  32pin GoldStar GM76C8128ALLFW85 (SRAM 128Kx8)
+  44pin Altera EPM7032LC44-15T (CPLD)
+  68pin? Emulex FAS101 (SCSI Interface Processor) (PLCC)
+  28pin NS NMC27C64Q-150 (EPROM 8Kx8) (green sticker, without text)
+  20pin NS LCX245 (74LCX245, 8bit transceiver)
+   8pin Harris ICL8212CPA (programmable voltage detector)
    3pin transistor? voltage regulator?
   20pin DIP socket (containing two 10pin resistor networks)
   20pin DIP socket (containing two 10pin resistor networks)
    2pin CR2032 Battery 3V
   68pin Connector to PSX "Parallel I/O" expansion port
-  25pin Connector to SCSI hardware (to DTL-S510B or DTL-S2020 ISA cart or so?)
+  25pin DB25 connector to SCSI hardware (SN Systems ISA SCSI card)
+```
+The SRAM is battery backed (CR2032, with the ICL8212 probably switching
+between battery and console power). The EPROM is not dumped, and the CPLD
+equations are unknown, so the cart's memory map and its link protocol are
+undocumented.<br/>
+
+#### Sony DEBUG BOX2 (expansion port debug board)
+Sony board for the 68pin "Parallel I/O" expansion port, with "DEBUG BOX2" on
+the silkscreen and "PB001403-1" on the solder side. It carries an SCN2681
+DUART with an RS-232 driver and a DB9 connector, so it is the one known piece
+of PSX hardware with the DUART that the retail BIOS TTY code is written for
+(see [DEV8 Dual Serial Port](../ps1/pio/expansionportpio.md#dev8-dual-serial-port-for-tty-debug-terminal)).
+```
+  32pin ST M27C4001-12F1 (UV EPROM 512Kx8) (window uncovered)
+  32pin Dallas DS1646-120 (Timekeeping RAM: 128Kx8 NV SRAM + clock)
+  U3  40pin Philips SCN2681AC1N40 (DUART)
+  U9   4pin 3.6864MHz oscillator (footprint "TC0711S")
+  U4  24pin MAXIM MAX235CPG (RS-232 driver/receiver)
+  U?  24pin Lattice GAL22V10B-15LP, sticker "DB2IO"
+  U5  24pin Lattice GAL22V10B-15LP, sticker "DB2 DEC" (silkscreen)
+  U1  20pin TI LVT245 (74LVT245, 8bit transceiver)
+  U2  20pin TI LVT245 (74LVT245, 8bit transceiver)
+  U11 20pin 74ACT245 (8bit transceiver)
+  U12 20pin 74ACT245? (marking unreadable)
+  U13 20pin 74ACT24x (last digit unreadable)
+  U14  ?pin (unknown, narrow part near CN2)
+       3pin Motorola MC7805CT (5V regulator)
+  LED1-LED4  red LEDs
+  S1   8pin 4bit DIP switch
+  CN1  9pin DB9 (RS-232 serial)
+  CN2 10pin 2x5 box header (pins A1..A5, B1..B5)
+  P1  68pin Connector to PSX "Parallel I/O" expansion port (on solder side)
+```
+The 512Kbyte EPROM matches the 512Kbyte DEV0 window that the BIOS sets up for
+the expansion ROM, and the 3.6864MHz clock is the standard SCN2681 baud rate
+crystal frequency. Neither confirms the address decoding: the two GALs are the
+decoders, and their equations are not dumped.<br/>
+The retail BIOS reads no DIP switch register and drives no LED register; of
+the DUART's parallel pins it only sets output bit OP0 (see
+[BIOS DUART driver](../ps1/pio/expansionportpio.md#bios-duart-driver)). The
+DIP=00h..02h boot mode register at 1F802040h belongs to the DTL-H2000 BIOS.<br/>
+Unknown:<br/>
+```
+  EPROM contents (not dumped; an uncovered window, so possibly degraded)
+  DS1646 contents
+  GAL equations, so the address of the DUART, the EPROM, the NVRAM,
+    the DIP switch and the LEDs
+  Whether the DUART interrupt output is wired to the console
+  CN2 function, and where the 4 LEDs and the DIP switch are read/driven from
+    (DUART input/output port pins, or a separate register)
+  Model number and the console(s) it was meant for
 ```
 
 #### Sony DTL-H800 Sound Artist Board (with optical fibre audio out)
