@@ -488,6 +488,10 @@ side). Possible values are:<br/>
 During boot, the BIOS writes incrementing values to this register, allowing to
 display the current boot status on an external 7 segment display (much the same
 as Port 80h used in PC BIOSes).<br/>
+In SCPH-1001 the writes go through BFC01A60h (boot code values 01h..09h, 0Eh,
+0Fh; the DUART driver also writes 0Ah+channel, 0Bh and 0Ch) and through the
+kernel copy at RAM 00004360h (ROM BFC13E60h, values 01h..06h around device
+installation).<br/>
 
 #### 1F802070h - POST2 - Unknown? (W) - PS2
 Might be a configuration port, or it's another POST register (which is used

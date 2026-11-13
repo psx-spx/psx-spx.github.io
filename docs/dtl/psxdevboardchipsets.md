@@ -315,10 +315,12 @@ The 512Kbyte EPROM matches the 512Kbyte DEV0 window that the BIOS sets up for
 the expansion ROM, and the 3.6864MHz clock is the standard SCN2681 baud rate
 crystal frequency. Neither confirms the address decoding: the two GALs are the
 decoders, and their equations are not dumped.<br/>
-The retail BIOS reads no DIP switch register and drives no LED register; of
-the DUART's parallel pins it only sets output bit OP0 (see
-[BIOS DUART driver](../ps1/pio/expansionportpio.md#bios-duart-driver)). The
-DIP=00h..02h boot mode register at 1F802040h belongs to the DTL-H2000 BIOS.<br/>
+The retail BIOS reads no DIP switch register. On the expansion side it writes
+the boot status to the [POST register](../ps1/pio/expansionportpio.md#1f802041h-post-external-7-segment-display-w)
+at 1F802041h, and of the DUART's parallel pins it only sets output bit OP0 (see
+[BIOS DUART driver](../ps1/pio/expansionportpio.md#bios-duart-driver)). Whether
+either of these reaches LED1-LED4 is unknown, as it depends on the GAL decode.
+The DIP=00h..02h boot mode register at 1F802040h belongs to the DTL-H2000 BIOS.<br/>
 Unknown:<br/>
 ```
   EPROM contents (not dumped; an uncovered window, so possibly degraded)
