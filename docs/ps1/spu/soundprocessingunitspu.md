@@ -886,15 +886,17 @@ When setting RAM\_CTRL to values other than 0004h on a stock console fitted with
 a single 512KB bank, the following erratic SPU RAM writing behavior can be
 observed:<br/>
 ```
-  Bits 1-3_______Halfwords in Fifo________Halfwords written to SPU RAM__
-  010 (512KB)    A,B,C,D,E,F,G,H,...,X    A,B,C,D,E,F,G,H,...
-  011 (1MB)      A,B,C,D,E,F,G,H,...,X    A,A,C,C,E,E,G,G,...
-  100 (2MB)      A,B,C,D,E,F,G,H,...,X    A,A,A,A,E,E,E,E,...
-  101 (4MB)      A,B,C,D,E,F,G,H,...,X    H,H,H,H,H,H,H,H,...
-  others         A,B,C,D,E,F,G,H,...,X    X,X,X,X,X,X,X,X,...
+  Bits 1-3_______Halfwords in Fifo________Written to consecutive SPU RAM halfwords__
+  010 (512KB)    A,B,C,D,E,F,G,H          A,B,C,D,E,F,G,H
+  011 (1MB)      A,B,C,D,E,F,G,H          A,C,E,G (earlier boards) or B,D,F,H (later boards)
+  100 (2MB)      A,B,C,D,E,F,G,H          D,H
+  101 (4MB)      A,B,C,D,E,F,G,H          G (earlier boards) or H (later boards)
+  others         A,B,C,D,E,F,G,H          H
 ```
-1MB skips the 2nd halfword, 2MB skips 2nd..4th, 4MB skips 1st..7th.<br/>
-Invalid settings only use the LAST halfword.<br/>
+Each setting writes one halfword per group of 2, 4 or 8 halfwords.<br/>
+Invalid settings only use the last halfword, except on some early consoles,
+where bits 1-3 = 000 writes the 1st, 2nd and 3rd halfword and 001 writes the
+1st, 3rd and 5th, each at four-halfword spacing.<br/>
 Note: The above results apply to WRITE mode. In READ mode, the register causes
 the same halfword to be read 2/4/8 times (for 1/2/4MB).<br/>
 Both patterns are aliasing: the SPU keeps generating addresses for the configured
