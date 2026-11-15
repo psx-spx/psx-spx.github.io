@@ -351,8 +351,10 @@ CW33300 manual".<br/>
 With BGNT=0, a DMA transfer that has been started waits, and it completes once
 BGNT is set again. CPU access timing is not affected.<br/>
 With LDSCH=0, a load no longer overlaps the independent instructions that
-follow it: a RAM load followed by four NOPs costs about 2 more cycles. A load
-whose result is used by the very next instruction costs the same either way.<br/>
+follow it: a RAM load followed by four NOPs costs about 4 more cycles, and a
+cached RAM load whose value is not used costs about 6 cycles above a NOP instead
+of 2. A load whose result is used by the very next instruction costs the same
+either way.<br/>
 With NOSTR=1, instruction fetch from uncached memory is slower, by about one
 cycle per two instructions.<br/>
 Flipping INTP, RDPRI or NOPAD changes none of: RAM load, store and
