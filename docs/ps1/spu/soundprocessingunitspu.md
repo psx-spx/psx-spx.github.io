@@ -1274,7 +1274,9 @@ zero.<br/>
 #### `0x1f801dbc` - 4 bytes - unused?
 #### `0x1f801e60` - 32 bytes - unused?
 The registers are read/write-able, although writing any values to them doesn't
-seem to have any effect on sound output. Also, the SPU doesn't seem to modify
+seem to have any effect on sound output, except that on some consoles any write
+to 1F801DBCh, including of the value read from it, can stop the capture buffer
+of voice 1 from being written. Also, the SPU doesn't seem to modify
 the registers at any time during sound output, nor reverb calculations, nor
 activated external audio input... the registers seem to be just some kind of
 general-purpose RAM.<br/>
