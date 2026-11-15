@@ -221,6 +221,10 @@ values in Port 1F801008h..1Ch. Works (somehow) like so:<br/>
   IF 1ST<(MIN+6) THEN 1ST=(MIN+6)
   IF SEQ<(MIN+2) THEN SEQ=(MIN+2)
 ```
+The COM0 term of 1ST does not hold as written: with Use_COM0 set, an 8-bit
+CD-ROM or SPU register read costs the same with COM0=3 and COM0=5, and about 6
+cycles more with COM0=0Ch. Each further unit of a wide access changes by as
+much as COM0 does, as the SEQ term says.<br/>
 The total access time is the sum of First Access, plus any Sequential
 Access(es), eg. for a 32bit access with 8bit bus: Total=1ST+SEQ+SEQ+SEQ.<br/>
 If the access is done from code in (uncached) RAM, then 0..4 cycles are added
