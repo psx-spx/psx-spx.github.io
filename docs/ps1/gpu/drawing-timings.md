@@ -153,8 +153,8 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   identical draws, the v0 GPU by well under 1% (?).
 - Fully transparent texels (0000h) are skipped but not free. A raw 15bpp
   64x64 rectangle whose texels are all 0000h draws about 0.08 cycles per pixel
-  faster than one with visible texels on the v0 GPU and 0.04 faster on the v2
-  GPU when the texels are cached, and 0.26 (v0) and 0.38 (v2) faster when they
+  faster than one with visible texels on the v0 GPU and 0.02 faster on the v2
+  GPU when the texels are cached, and 0.26 (v0) and 0.35 (v2) faster when they
   are not.
 - Opaque rectangles are drawn in pixel pairs: an odd width costs the same as the
   even width below it, at even and odd X alike.
