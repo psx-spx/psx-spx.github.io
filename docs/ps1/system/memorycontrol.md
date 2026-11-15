@@ -221,6 +221,10 @@ values in Port 1F801008h..1Ch. Works (somehow) like so:<br/>
   IF 1ST<(MIN+6) THEN 1ST=(MIN+6)
   IF SEQ<(MIN+2) THEN SEQ=(MIN+2)
 ```
+The COM0 term of 1ST does not hold as written: with Use_COM0 set, an 8-bit
+CD-ROM or SPU register read costs the same with COM0=3 and COM0=5, and about 6
+cycles more with COM0=0Ch. Each further unit of a wide access changes by as
+much as COM0 does, as the SEQ term says.<br/>
 The total access time is the sum of First Access, plus any Sequential
 Access(es), eg. for a 32bit access with 8bit bus: Total=1ST+SEQ+SEQ+SEQ.<br/>
 If the access is done from code in (uncached) RAM, then 0..4 cycles are added
@@ -351,8 +355,10 @@ CW33300 manual".<br/>
 With BGNT=0, a DMA transfer that has been started waits, and it completes once
 BGNT is set again. CPU access timing is not affected.<br/>
 With LDSCH=0, a load no longer overlaps the independent instructions that
-follow it: a RAM load followed by four NOPs costs about 2 more cycles. A load
-whose result is used by the very next instruction costs the same either way.<br/>
+follow it: a RAM load followed by four NOPs costs about 4 more cycles, and a
+cached RAM load whose value is not used costs about 6 cycles above a NOP instead
+of 2. A load whose result is used by the very next instruction costs the same
+either way.<br/>
 With NOSTR=1, instruction fetch from uncached memory is slower, by about one
 cycle per two instructions.<br/>
 Flipping INTP, RDPRI or NOPAD changes none of: RAM load, store and

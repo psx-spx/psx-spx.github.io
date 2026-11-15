@@ -595,8 +595,9 @@ Describes the most recently recognised exception.
   corresponding bit is set in IM. On the PSX only bit 10 is connected, to the
   interrupt controller, see [Interrupt lines](#interrupt-lines).
 - CE: contains the coprocessor number if the exception occurred because of a
-  coprocessor instuction for a coprocessor which wasn't enabled in SR. Other
-  exceptions leave it unchanged.
+  coprocessor instuction for a coprocessor which wasn't enabled in SR. After a
+  bus error it is not left unchanged: it holds bits 27-26 of the opcode that
+  follows the one EPC points to (1 for ORI, 2 for XORI, 0 for NOP).
 - BT: when BD is set, BT determines whether the branch is taken. The Target
   Address Register holds the return address.
 - BD: is set when EPC points to the branch instuction instead of the

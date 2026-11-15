@@ -38,25 +38,29 @@ DMA6 just initializes data in Main RAM (not physically connected to the GPU).<br
 Words written to GP0, by the CPU or by DMA2, wait in the FIFO until the GPU
 takes them. Which GPUSTAT bit reports its state depends on the DMA Direction
 set with GP1(04h).<br/>
-With GP1(04h)=1, bit 25 reads 0 once about 11 words are queued behind a busy
-GPU, before the 16 words are used up, and goes back to 1 as the GPU takes
-words. Waiting for bit 25 before each write is enough to stream any amount of
-data. That includes a poly-line much longer than the FIFO: the GPU consumes it
+With GP1(04h)=1, bit 25 reads 0 once 9 words are counted in the FIFO behind a
+busy GPU (the 10th or 11th word written, as the GPU has already taken one or
+two), before the 16 words are used up, and goes back to 1 as the GPU takes
+words. The count is 5 bits wide: bit 25 reads 1 again at the 33rd word written
+and falls once 9 more are counted. GP0(00h) words never clear it. Waiting for
+bit 25 before each write is enough to stream any amount of data. That includes a poly-line much longer than the FIFO: the GPU consumes it
 one segment at a time, and a 60-vertex poly-line written this way draws
 completely. Without the wait the CPU is not slowed down, and words are lost as
 described above.<br/>
-The 11 words hold behind a drawing triangle, rectangle, fill or copy, and
+The 9 words hold behind a drawing triangle, rectangle, fill or copy, and
 during a quad's second triangle. During a quad's first triangle the quad's own
 packet keeps its FIFO slots, so fewer words fit behind it:
 ```
-  Quad kind                   Words that fit during the first triangle
-  flat (5 words)              6
-  gouraud (8 words)           4
-  textured (9 words)          3
+  Quad kind                   Word at which bit 25 falls, first triangle
+  flat (5 words)              5
+  gouraud (8 words)           3
+  textured (9 words)          2
   textured gouraud (12 words) 1
 ```
-For the flat quad 11 - 6 is the packet length; for the other kinds it is not,
-and why is unknown (?). While a triangle is still in its setup (the first few
+The quad keeps all of its words counted except those of one vertex: 4 of a flat
+quad's 5, 6 of a gouraud quad's 8, 7 of a textured quad's 9 and 9 of a textured
+gouraud quad's 12. A triangle, rectangle, fill or copy keeps none of its own
+words counted once it draws. While a triangle is still in its setup (the first few
 hundred cycles) the counts are also lower and vary between runs. The same
 counts are seen on v0 and v2 GPUs.<br/>
 Bit 26 is not a FIFO flag: it reads 0 while a command is still waiting for its

@@ -149,12 +149,16 @@ where rows and pixels are the rows and pixels actually drawn.<br/>
   count, which is the row count times the width rounded up to a multiple of 128. A
   256x16 copy and a 128x32 one open 32 pages each and take the same time; a 16x256
   copy of the same 4096 pixels opens 256 and is about 40% slower.
+- With GP0(E6h) bit 1 set (draw only to unmasked pixels), a GP0(80h) copy costs
+  extra: exactly 1 cycle per pixel on the v0 GPU, and on the v2 GPU about 0.25
+  cycles per pixel for rows of 64 pixels or more (5 to 7 cycles for a row of 8
+  to 32 pixels), paid for every row copied.
 - Large untextured primitives on the v2 GPU vary by up to about 5% between
   identical draws, the v0 GPU by well under 1% (?).
 - Fully transparent texels (0000h) are skipped but not free. A raw 15bpp
   64x64 rectangle whose texels are all 0000h draws about 0.08 cycles per pixel
-  faster than one with visible texels on the v0 GPU and 0.04 faster on the v2
-  GPU when the texels are cached, and 0.26 (v0) and 0.38 (v2) faster when they
+  faster than one with visible texels on the v0 GPU and 0.02 faster on the v2
+  GPU when the texels are cached, and 0.26 (v0) and 0.35 (v2) faster when they
   are not.
 - Opaque rectangles are drawn in pixel pairs: an odd width costs the same as the
   even width below it, at even and odd X alike.
