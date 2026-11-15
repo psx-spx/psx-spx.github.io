@@ -237,9 +237,9 @@ gets set (and the CPU is reading at the same time) then the CPU does
 occasionally see only one of the newly set bits:<br/>
 ```
   0 ----------> 3   ;99.9%  normal case acknowledge causes
-  0 ----------> 5   ;99%    normal case error causes
-  0 ---> 1 ---> 3   ;0.1%   glitch: occurs about once per thousands of acknowledge causes
-  0 ---> 4 ---> 5   ;1%     glitch: occurs about once per hundreds of error causes
+  0 ----------> 5   ;99.9%  normal case error causes
+  0 ---> 1 ---> 3   ;<0.1%  glitch: occurs about once per several thousand acknowledge causes
+  0 ---> 4 ---> 5   ;0.1%   glitch: occurs about once per one to several thousand error causes
 ```
 As workaround, do something like:<br/>
 ```
