@@ -4646,9 +4646,11 @@ The Scratchpad is mirrored only in KUSEG and KSEG0, but not in KSEG1.<br/></p>
 </code></pre></div>
 <h4 id="write-queue">Write queue</h4>
 <p>The MIPS CPU has a 4-words deep pass-through write queue, in order to relieve
-some bus contention when writing to memory. If reading the same memory location
-that just got written into the write queue, it will first be flushed before
-being read back from memory.<br/>
+some bus contention when writing to memory. A read does not wait for the whole
+queue: a read that is pending when the bus becomes free between two queued
+stores is performed first, whether it is of RAM or of an I/O register. A RAM
+read that falls within the same 64 bytes as a store still in the queue waits
+until that store has been written.<br/>
 It is important to realize that the write queue's mechanism is only viable for
 normal memory attached to the main CPU, and that any hardware register state machine
 will get messed up by it.<br/>

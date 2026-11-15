@@ -7749,9 +7749,9 @@ which is pulled low when setting CHPRST).<br/></p>
 gets set (and the CPU is reading at the same time) then the CPU does
 occasionally see only one of the newly set bits:<br/>
 <div class="highlight"><pre><span></span><code>  0 ----------&gt; 3   ;99.9%  normal case acknowledge causes
-  0 ----------&gt; 5   ;99%    normal case error causes
-  0 ---&gt; 1 ---&gt; 3   ;0.1%   glitch: occurs about once per thousands of acknowledge causes
-  0 ---&gt; 4 ---&gt; 5   ;1%     glitch: occurs about once per hundreds of error causes
+  0 ----------&gt; 5   ;99.9%  normal case error causes
+  0 ---&gt; 1 ---&gt; 3   ;&lt;0.1%  glitch: occurs about once per several thousand acknowledge causes
+  0 ---&gt; 4 ---&gt; 5   ;0.1%   glitch: occurs about once per one to several thousand error causes
 </code></pre></div>
 As workaround, do something like:<br/>
 <div class="highlight"><pre><span></span><code> @@polling_lop:
