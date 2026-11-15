@@ -455,10 +455,13 @@ Negative Phase with Increase moves the volume towards -8000h using the
 decrease step sizes (-8..-5), from either a positive or a negative start
 (a positive volume goes down through zero), and saturates at -8000h.
 Negative Phase with Decrease, from a negative volume, moves towards zero and
-stops at 0000h. Exponential Decrease from a negative volume stops at -0FFFh
-(F001h): the scaled step rounds to zero below 1000h in magnitude, whereas a
-positive volume keeps decreasing past 0FFFh. The Phase bit seems to have no
-effect in Exponential Decrease mode.<br/>
+stops at 0000h. In Exponential Decrease mode from a negative volume the Phase
+bit decides. With Phase=0 the volume goes to 0000h at the first step, at any
+Shift and Step. With Phase=1 it moves towards zero and stops at a level set by
+bits 0-6: FFFFh for 00h, FFE1h for 10h, FE01h for 20h, F801h for 28h, F001h for
+2Ch, EDB7h for 2Dh, EAABh for 2Eh, E667h for 2Fh, and F001h for 30h and 34h. A
+positive volume decreases to 0000h with either Phase. Voice and main volume
+sweeps behave alike.<br/>
 
 #### `0x1f801db0`: `AVOLL` (I2SA/CD-ROM volume left)
 #### `0x1f801db2`: `AVOLR` (I2SA/CD-ROM volume right)
