@@ -10,10 +10,10 @@
 <text x="362.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,362.5,166.5)">Data Transfer DMA Read/Write Request</text>
 <text x="341" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">7</text>
 <rect x="293" y="15" width="43" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
-<text x="314.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,314.5,166.5)">Data Transfer DMA Write Request</text>
+<text x="314.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,314.5,166.5)">Data Transfer DMA Read Request</text>
 <text x="293" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">8</text>
 <rect x="245" y="15" width="43" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
-<text x="266.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,266.5,166.5)">Data Transfer DMA Read Request</text>
+<text x="266.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,266.5,166.5)">Data Transfer DMA Write Request</text>
 <text x="245" y="12" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="10" fill="black" text-anchor="start">9</text>
 <rect x="197" y="15" width="43" height="303" fill="#efefef" stroke="black" stroke-width="1"/>
 <text x="218.5" y="166.5" font-family='"Trebuchet MS", Verdana, Arial, Helvetica, sans-serif' font-size="12" fill="black" text-anchor="middle" dominant-baseline="middle" transform="rotate(-90,218.5,166.5)">Data Transfer Busy Flag</text>
