@@ -21,7 +21,9 @@
   Shaded Textures               ((color/8)*texel)/2     unknown                 (color*texel)/16
   GP0(02h) FillVram             xpos.bit0-3=0Fh=bugged  unknown                 xpos.bit0-3=ignored
 
-  dma-to-vram: doesn't work with blksiz>10h (v2 gpu works with blksiz=8C0h!)
+  dma-to-vram: v0 loses halfwords in about half the uploads with blksiz=40h,
+               none with blksiz=10h or 20h; v2 occasionally loses some with 40h
+               too (v2 gpu works with blksiz=8C0h!)
   dma-to-vram: MAYBE also needs extra software-handshake to confirm DMA done?
    320*224 pix = 11800h pix = 8C00h words
 ```
@@ -55,7 +57,8 @@ The v0 GPU might perform better on non-32bit aligned accesses, and on memory
 accesses performed simultaneously with DAC output.<br/>
 On the other hand, the v2 GPU's DRAM seems to be faster in some cases (for
 example, during Vblank, it's fast enough to perform DMA's with blksiz\>10h,
-which exceeds the GPU's FIFO size, and causes lost data on v0 GPUs).<br/>
+which exceeds the GPU's FIFO size). On v0 GPUs, 20h-word blocks transfer every
+halfword, while 40h-word blocks lose some in about half of the uploads.<br/>
 
 #### X/Y-Flip and PSone 2 MB VRAM
 The X/Y-flipping feature may be used by arcade games (provided that the arcade
