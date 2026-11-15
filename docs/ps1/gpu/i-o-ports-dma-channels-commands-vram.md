@@ -51,14 +51,16 @@ The 9 words hold behind a drawing triangle, rectangle, fill or copy, and
 during a quad's second triangle. During a quad's first triangle the quad's own
 packet keeps its FIFO slots, so fewer words fit behind it:
 ```
-  Quad kind                   Words that fit during the first triangle
-  flat (5 words)              6
-  gouraud (8 words)           4
-  textured (9 words)          3
+  Quad kind                   Word at which bit 25 falls, first triangle
+  flat (5 words)              5
+  gouraud (8 words)           3
+  textured (9 words)          2
   textured gouraud (12 words) 1
 ```
-For the flat quad 11 - 6 is the packet length; for the other kinds it is not,
-and why is unknown (?). While a triangle is still in its setup (the first few
+The quad keeps all of its words counted except those of one vertex: 4 of a flat
+quad's 5, 6 of a gouraud quad's 8, 7 of a textured quad's 9 and 9 of a textured
+gouraud quad's 12. A triangle, rectangle, fill or copy keeps none of its own
+words counted once it draws. While a triangle is still in its setup (the first few
 hundred cycles) the counts are also lower and vary between runs. The same
 counts are seen on v0 and v2 GPUs.<br/>
 Bit 26 is not a FIFO flag: it reads 0 while a command is still waiting for its
