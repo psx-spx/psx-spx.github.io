@@ -16,6 +16,9 @@ LIBMIRAGE by Rok; info/source code for various cdrom-image formats
 psxdev.ru; cdrom sub-cpu decapping
 ```
 
+[ps1-console-tests](https://github.com/AngryEmpathPS1/ps1-console-tests) by AngryEmpathPS1:
+hardware test programs and console logs (CC BY 4.0) behind corrections on these pages.
+
 All the contributors to the [psx-spx.github.io](https://github.com/psx-spx/psx-spx.github.io)
 repo who've helped update, correct and expand this information.
 

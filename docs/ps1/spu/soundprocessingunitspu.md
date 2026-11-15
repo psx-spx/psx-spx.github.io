@@ -710,13 +710,13 @@ mode (and, again, wait until Stop is applied in STATX).<br/>
   15-12 Unknown/Unused (seems to be usually zero)
   11    Writing to First/Second half of Capture Buffers (0=First, 1=Second)
   10    Data Transfer Busy Flag          (0=Ready, 1=Busy)
-  9     Data Transfer DMA Read Request   (0=No, 1=Yes)
-  8     Data Transfer DMA Write Request  (0=No, 1=Yes)
+  9     Data Transfer DMA Write Request  (0=No, 1=Yes)
+  8     Data Transfer DMA Read Request   (0=No, 1=Yes)
   7     Data Transfer DMA Read/Write Request ;seems to be same as ATTR.Bit5
   6     IRQ9 Flag                        (0=No, 1=Interrupt Request)
   5-0   Current SPU Mode   (same as ATTR.Bit5-0, but, applied a bit delayed)
 ```
-When switching ATTR to DMA-read mode, status bit9 and bit7 aren't set
+When switching ATTR to DMA-read mode, status bit8 and bit7 aren't set
 immediately (apparently the SPU is first internally collecting the data in the
 Fifo, before transferring it).<br/>
 In DMA-write mode the opposite happens at the end of a transfer: when the DMA
