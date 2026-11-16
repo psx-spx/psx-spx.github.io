@@ -235,6 +235,11 @@ While the list runs, D2_MADR holds the address of the next node to fetch. The
 DMA reads a node header only when the GPU is not holding its DMA request and at
 most one word is queued in the GP0 FIFO; see
 [GP0 write FIFO](../gpu/i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>
+If a node ends inside a polygon or line command, the list stops there for good,
+with D2_MADR at the next node. GP1(01h) with CHCR still busy resumes it from
+D2_MADR; clearing CHCR first leaves it stopped. While a VRAM-to-CPU transfer is
+pending, the next node is fetched only while nothing is queued (GP1(04h)=2), or
+while the FIFO is not full (GP1(04h)=1).<br/>
 Clearing D2_CHCR bit 24 stops the list at a node boundary, and D2_MADR is then
 the address to resume from (Chrono Cross stops and resumes its main list this
 way). While the GPU draws, a stop does not land between a 1-word node and the

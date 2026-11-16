@@ -41,6 +41,10 @@ other command, but the image data comes back on GPUREAD (1F801810h when read),
 not through the GP0 command FIFO. Wait for bit27 of the status register to be
 set before reading the image data. When the number of halfwords is odd,
 an extra halfword is added at the end, as packets consist of 32bits words.<br/>
+GP0 commands written during the transfer, settings and GP0(1Fh) included, wait
+until the data has been read out, then run (within ~100 cycles of the last
+GPUREAD word). A GP0(02h) fill over the source area does not change the data
+being read; it runs after the read.<br/>
 
 #### Masking and Rounding for FILL Command parameters
 ```
