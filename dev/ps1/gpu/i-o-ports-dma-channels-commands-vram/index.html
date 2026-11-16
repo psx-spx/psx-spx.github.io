@@ -4492,7 +4492,8 @@ a stream. Bit 28 also reads 0 throughout such a stream.<br/>
 DMA2 transfers:
 <div class="highlight"><pre><span></span><code>  DMA2 mode  GP1(04h)  Result
   1 (block)  1         completes, but 16-word blocks lose words (lines,
-                       polygons and rectangles); 1-word blocks are exact
+                       polygons and rectangles); 1-word blocks are exact,
+                       poly-lines included
   1 (block)  2         hangs if a block ends inside a polygon or line command
                        (poly-lines included); blocks of whole commands are fine,
                        rectangles do not hang
@@ -4505,19 +4506,34 @@ line commands it drops right after the command word and stays 0 until all the
 parameters are in, so the block after the one with the command word does not
 start. The transfer stops for good: CHCR stays busy, BCR shows exactly one block
 gone, and GPUSTAT bits 25, 26 and 28 all read 0.<br/>
+The same happens in linked-list mode (DMA2 mode 2, GP1(04h)=2) when a node ends
+inside a polygon or line command, poly-lines included, with any number of its
+parameters already sent: the next node is never fetched. CHCR stays busy, D2_MADR
+holds the next node's address, and GPUSTAT bits 25, 26 and 28 read 0. Nothing
+times out (no change in 3 seconds). The request drops as soon as the command word
+arrives in the FIFO, even while an earlier command is still drawing. Rectangles,
+GP0(02h), GP0(80h), GP0(A0h) and GP0(C0h) cut off inside their header do not hold
+the request, and the list continues. GP1(01h) lets the list carry on, see
+<a href="../display-control-commands-gp1/#gp101h-reset-command-buffer">GP1(01h)</a>.<br/>
 Once the last word is taken, bit 28 comes back long before the command is
 drawn, at a point that depends on the command. Counted in CPU cycles from the
-last word, same pattern on v0 and v2 GPUs:
+last word, the same on v0 and v2 GPUs to within ~10 cycles:
 <div class="highlight"><pre><span></span><code>  Command                         Bit 28 rises
-  triangle                        after its setup, independent of size: flat 0
-                                  or ~180 (?), gouraud and textured ~180-230,
-                                  textured gouraud ~220-340
+  triangle                        after its setup, independent of size: flat
+                                  and semi-transparent flat ~30-40, textured
+                                  ~120-140, gouraud ~155-175, textured gouraud
+                                  ~255-275
   quad                            when its first triangle is drawn, while the
                                   second one is still drawing
   poly-line                       when its last segment starts
-  rectangle, single line, GP0(02h) fill, GP0(80h) copy
-                                  at once
+  single line                     mono ~10-20, shaded ~80 (~120 when both
+                                  vertices are the same point)
+  rectangle, GP0(02h) fill        ~10
+  GP0(80h) copy                   at once
 </code></pre></div>
+A quad's first triangle starts drawing as soon as its own vertices are in,
+before the rest of the packet arrives. So when the words are written slowly,
+the quad releases bit 28 correspondingly sooner after its last word.<br/>
 Bit 26 is the one that rises when the drawing is finished. Bits 25 and 28 rise
 together here in nearly every case. There is no blip between a quad's two
 halves.<br/>
@@ -4526,8 +4542,8 @@ of one node are sent back to back: a long node is transferred at once even
 while the GPU is still drawing, and is then corrupted. D2_MADR holds the
 address of the next node to fetch. The DMA reads the next node header when the
 GPU is not holding the request (above) and at most one word is queued in the
-FIFO. So it neither waits for an empty FIFO nor streams until the FIFO is full:
-behind a drawing triangle a chain of 1-word nodes gets two nodes in (a 1-word
+FIFO. So behind a drawing command it neither waits for an empty FIFO nor
+streams until the FIFO is full: behind a drawing triangle a chain of 1-word nodes gets two nodes in (a 1-word
 node is always followed at once by the next one), a chain of 2-, 4- or 8-word
 nodes, triangles or rectangles gets one, and a GP0(E1h) node plus a 3-word
 sprite node go in as a pair. Then the list waits until the GPU takes those

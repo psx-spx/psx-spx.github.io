@@ -4643,11 +4643,21 @@ after it GP1.read.20 is 0 and the frames are 263 lines, run from the console's
 PAL video clock, until GP1(08h).3 selects PAL again. The first IRQ0 still comes
 257 lines after the write when the reset is written in PAL mode. The reset also
 sets the interlace field flag to the long frame, see
-<a href="../status-register/#switching-interlace-on-and-off">Switching interlace on and off</a>.<br/></p>
+<a href="../status-register/#switching-interlace-on-and-off">Switching interlace on and off</a>.<br/>
+Because the reset includes GP1(04h)=0, a DMA2 transfer still running stays
+stalled after it: CHCR bit 24 stays set and nothing times out (no change in 3
+seconds), even though GPUSTAT bit 28 reads 1. It carries on once GP1(04h)
+selects a DMA direction again.<br/></p>
 <h4 id="gp101h-reset-command-buffer">GP1(01h) - Reset Command Buffer</h4>
 <p><div class="highlight"><pre><span></span><code>  0-23  Not used (zero)
 </code></pre></div>
-Resets the command buffer and CLUT cache.<br/></p>
+Resets the command buffer and CLUT cache.<br/>
+This also drops a command still waiting for its parameters, and the DMA request
+comes back at once, so a DMA2 transfer that is still enabled carries on, its
+next words taken as new commands. A linked list stopped inside a command
+resumes from D2_MADR this way; with D2_CHCR cleared first it stays stopped.
+GP1(01h) also ends a pending VRAM-to-CPU transfer; GPUREAD then keeps returning
+the word it last held.<br/></p>
 <h4 id="gp102h-acknowledge-gpu-interrupt-irq1">GP1(02h) - Acknowledge GPU Interrupt (IRQ1)</h4>
 <p><div class="highlight"><pre><span></span><code>  0-23  Not used (zero)                                        ;GP1.R.24
 </code></pre></div>
