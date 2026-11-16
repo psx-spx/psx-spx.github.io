@@ -21,8 +21,8 @@
   Shaded Textures               ((color/8)*texel)/2     unknown                 (color*texel)/16
   GP0(02h) FillVram             xpos.bit0-3=0Fh=bugged  unknown                 xpos.bit0-3=ignored
 
-  dma-to-vram: blksiz=20h and 40h can lose halfwords, intermittently, on v0
-               and v2 alike; depends on where in the frame the upload runs (?)
+  dma-to-vram: blksiz=20h and 40h lose halfwords when the transfer starts at
+               some points of a scanline, on v0 and v2 alike; 8h, 10h never
                (v2 gpu works with blksiz=8C0h!)
   dma-to-vram: MAYBE also needs extra software-handshake to confirm DMA done?
    320*224 pix = 11800h pix = 8C00h words
@@ -58,9 +58,12 @@ accesses performed simultaneously with DAC output.<br/>
 On the other hand, the v2 GPU's DRAM seems to be faster in some cases (for
 example, during Vblank, it's fast enough to perform DMA's with blksiz\>10h,
 which exceeds the GPU's FIFO size). DMA uploads in blocks of 20h or 40h words
-can lose halfwords on both the v0 and the v2 GPU, in some uploads and not
-others. Uploads started at the same point after the vblank have not lost any,
-so the loss seems to depend on where in the frame the transfer runs (?).<br/>
+lose halfwords on both the v0 and the v2 GPU when the transfer starts at certain
+points of a scanline, mostly within the first 200 or so CPU cycles after the
+start of a line: about 3.5% of start points for 20h-word blocks and 6-7% for
+40h-word blocks on the v2 GPU, about 5.7% and 7% on the v0 GPU, with the
+display on or off. Blocks of 8h and 10h words never lose any. A program whose
+uploads always start at the same point of the frame can avoid them entirely.<br/>
 
 #### X/Y-Flip and PSone 2 MB VRAM
 The X/Y-flipping feature may be used by arcade games (provided that the arcade
