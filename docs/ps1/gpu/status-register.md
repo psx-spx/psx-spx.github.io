@@ -152,12 +152,20 @@ while a triangle, rectangle, fill or copy is still being drawn, and only bit 26
 shows the drawing. A triangle sets it again after its setup (a few hundred
 cycles at most), a quad once its first triangle is drawn, and a poly-line when
 its last segment starts; see the table in
-[GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo). The
-bit is used as DMA request in DMA Mode 2, accordingly, the DMA hangs if the
-Polygon/Line parameters are transferred in a separate DMA block (ie. the DMA
-probably starts ONLY on command words).<br/>
+[GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo). A
+poly-line holds it at 0 through its whole stream, under every GP1(04h) setting.
+The bit is used as DMA request in DMA Mode 2, accordingly, the DMA hangs if a
+block or linked-list node ends between a polygon or line command word and its
+last parameter.<br/>
 RFFL (bit 27): Gets set after sending GP0(C0h) and its parameters, and stays set until
-all data words are received; used as DMA request in DMA Mode 3.<br/>
+all data words are received; used as DMA request in DMA Mode 3. While it is set
+the GPU runs no GP0 command: words written meanwhile wait in the FIFO and run
+once the last GPUREAD word has been read. During that time bit 26 reads 0 and
+bit 28 reads 1 only while nothing is queued. Bit 25 follows bit 28 with
+GP1(04h)=2; with GP1(04h)=1 it still means FIFO not full, and falls one word
+earlier than behind a drawing command (at the 9th or 10th word written), so a
+DMA2 transfer in that mode keeps sending words during the read. GP1(01h) clears
+bit 27 and ends the transfer.<br/>
 IDLE (bit 26): Gets set when the GPU wants to receive a command. If the bit is cleared,
 then the GPU wants to either receive additional parameters/data or it is busy with command
 execution (and doesn't want to receive anything). Note that this bit can NOT be used

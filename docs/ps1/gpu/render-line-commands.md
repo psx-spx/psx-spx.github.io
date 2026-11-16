@@ -34,7 +34,10 @@ If dithering is enabled (via texture page command), then both monochrome and
 shaded lines are drawn with dithering (this differs from monochrome polygons and
 monochrome rectangles).<br/>
 A poly-line keeps the DMA request (GPUSTAT bit 28) at 0 until its last segment
-starts; a single line releases it as soon as its last word is taken. See
+starts. Each segment is drawn as soon as both of its vertices have arrived, so
+a poly-line cut off before its terminator has already drawn the segments it
+got. A single line releases the request shortly after its last word: ~10-20
+CPU cycles for a mono line, ~80 for a shaded one. See
 [GP0 write FIFO](i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>
 
 #### Wire-Frame
