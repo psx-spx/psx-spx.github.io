@@ -54,6 +54,10 @@ next words taken as new commands. A linked list stopped inside a command
 resumes from D2_MADR this way; with D2_CHCR cleared first it stays stopped.
 GP1(01h) also ends a pending VRAM-to-CPU transfer; GPUREAD then keeps returning
 the word it last held.<br/>
+It ends a pending CPU-to-VRAM transfer as well, and the next GP0 word is a command
+again. The pixels already sent stay in VRAM: on the v2 GPU, which holds the words
+of an unfinished row, GP1(01h) writes them out, where GP1(00h) discards them (see
+[CPU to VRAM blitting](memory-transfer-commands.md#cpu-to-vram-blitting-command-5-101)).<br/>
 
 #### GP1(02h) - Acknowledge GPU Interrupt (IRQ1)
 ```
@@ -218,6 +222,8 @@ After sending the command, the result can be read (immediately) from GP0
 register (there's no NOP or other delay required) (namely GP1.R.RFFL is used
 only for VRAM reads, but NOT for register reads, so do not try to wait for that
 flag).<br/>
+The query and the GPUREAD read work during an unfinished GP0(A0h) transfer too,
+and do not end it: the GPU still takes the next GP0 words as image data.<br/>
 GP1(50h), GP1(90h) and GP1(D0h) act as GP1(10h) as well, while GP1(30h) does
 nothing (see GP1(40h..FFh)).<br/>
 ```
