@@ -116,8 +116,9 @@ The coordinates for the above VRAM transfer commands are absolute framebuffer
 addresses (not relative to Draw Offset, and not clipped to Draw Area).<br/>
 Transfers work at any time, by DMA too: a 64x64 GP0(A0h) upload sent by DMA2 in
 block mode (16-word blocks, GP1(04h)=2) arrives intact with the display enabled,
-whether it starts in V-Blank or in the middle of the active display. Blocks
-larger than 16 words were not tested.<br/>
+whether it starts in V-Blank or in the middle of the active display. Blocks of
+20h or 40h words can lose halfwords depending on where in a scanline the
+transfer starts, see [GPU Versions](versions.md).<br/>
 
 #### Wrapping
 If the Source/Dest starting points plus the width/height value exceed the
