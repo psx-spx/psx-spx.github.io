@@ -4623,6 +4623,11 @@ then the GPU wants to either receive additional parameters/data or it is busy wi
 execution (and doesn't want to receive anything). Note that this bit can NOT be used
 to determine when the GPU is finished drawing a DMA chain of primitives, as it will briefly
 go high after processing each primitive.<br/>
+A GP0(A0h) transfer still waiting for image data keeps bit 26 at 0 while bit 28
+reads 1, under every GP1(04h) setting, and bit 25 reads 1 with GP1(04h)=1 or 2.
+So bit 28 does not mean that an upload is finished. DMA2 in that state keeps
+sending words, and the GPU takes them as image data. This holds however long the
+GPU waits, for a transfer one word short of a valid size as for a huge one.<br/>
 Bit25: This is the DMA Request bit, however, the bit is also useful for non-DMA
 transfers, especially in the FIFO State mode. With GP1(04h)=2 it rises together
 with bit 28 after a command in nearly every case; once, after a flat triangle,
