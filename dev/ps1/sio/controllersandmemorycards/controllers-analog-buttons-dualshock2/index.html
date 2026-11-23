@@ -2049,27 +2049,27 @@ For the human-written reference, see the <a href="/">stable version</a>.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#config-mode-command-40h-dualshock2-getset-buttonattr" class="md-nav__link">
+  <a href="#config-mode-command-40h-vrefparam" class="md-nav__link">
     <span class="md-ellipsis">
-      Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?
+      Config Mode - Command 40h - VrefParam
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-mode-command-41h-a-dualshock2-get-reply-capabilities" class="md-nav__link">
+  <a href="#config-mode-command-41h-querybuttonmask" class="md-nav__link">
     <span class="md-ellipsis">
-      Config Mode - Command 41h "A" Dualshock2: Get Reply Capabilities
+      Config Mode - Command 41h - QueryButtonMask
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-mode-command-4fh-o-dualshock2-set-replyprotocol" class="md-nav__link">
+  <a href="#config-mode-command-4fh-setbuttoninfo" class="md-nav__link">
     <span class="md-ellipsis">
-      Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol
+      Config Mode - Command 4Fh - SetButtonInfo
     </span>
   </a>
   
@@ -4322,27 +4322,27 @@ For the human-written reference, see the <a href="/">stable version</a>.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#config-mode-command-40h-dualshock2-getset-buttonattr" class="md-nav__link">
+  <a href="#config-mode-command-40h-vrefparam" class="md-nav__link">
     <span class="md-ellipsis">
-      Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?
+      Config Mode - Command 40h - VrefParam
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-mode-command-41h-a-dualshock2-get-reply-capabilities" class="md-nav__link">
+  <a href="#config-mode-command-41h-querybuttonmask" class="md-nav__link">
     <span class="md-ellipsis">
-      Config Mode - Command 41h "A" Dualshock2: Get Reply Capabilities
+      Config Mode - Command 41h - QueryButtonMask
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-mode-command-4fh-o-dualshock2-set-replyprotocol" class="md-nav__link">
+  <a href="#config-mode-command-4fh-setbuttoninfo" class="md-nav__link">
     <span class="md-ellipsis">
-      Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol
+      Config Mode - Command 4Fh - SetButtonInfo
     </span>
   </a>
   
@@ -4405,26 +4405,30 @@ Commands 40h, 41h and 4Fh only work in analog mode (LED on, after Command 44h
 with Led=01h). In digital mode all three reply with 00h bytes only (the last
 byte included), and a Command 4Fh sent in digital mode does not change the
 reply protocol.<br/></p>
-<h4 id="config-mode-command-40h-dualshock2-getset-buttonattr">Config Mode - Command 40h "@" Dualshock2: Get/Set ButtonAttr?</h4>
+<h4 id="config-mode-command-40h-vrefparam">Config Mode - Command 40h - VrefParam</h4>
 <p><div class="highlight"><pre><span></span><code>  Send  01h 40h 00h Idx Val 00h 00h 00h 00h  ;&lt;-- Set NEW Val, array[Idx]=Val
   Reply HiZ F3h 5Ah 00h 00h Val 00h 00h 5Ah  ;&lt;-- Old Val (or FFh when Idx&gt;0Bh)
 </code></pre></div>
-Allows to change twelve 3bit values (with Idx=00h..0Bh, and Val=00h..03h).
-When Idx&gt;0Bh, both Val and the last reply byte are FFh.
-Default is Val=02h. Purpose is unknown, the 12 values might be related to the
-12 analog buttons, but there is no noticable difference between Val=0,1,2,3.
-Maybe it does have some subtle effects on things like...<br/>
+Allows to change twelve values (with Idx=00h..0Bh, and Val=00h..03h), one
+for each of the twelve analog buttons. When Idx&gt;0Bh, both Val and the last
+reply byte are FFh. Default is Val=02h. The PS2 IOP controller driver (padman)
+sends this command for all twelve indices whenever it enables the analog
+buttons, with values set by the game (padSetVrefParam). The name suggests a
+reference level for each pressure sensor, but there is no noticable difference
+between Val=0,1,2,3. It might have subtle effects on things like...<br/>
 <div class="highlight"><pre><span></span><code>  Digital button sensitivity, or Analog button sensitivity, or
   Analog button bit-depth/conversion speed, or something else?
 </code></pre></div></p>
-<h4 id="config-mode-command-41h-a-dualshock2-get-reply-capabilities">Config Mode - Command 41h "A" Dualshock2: Get Reply Capabilities</h4>
+<h4 id="config-mode-command-41h-querybuttonmask">Config Mode - Command 41h - QueryButtonMask</h4>
 <p><div class="highlight"><pre><span></span><code>  Send  01h 41h 00h 00h 00h 00h 00h 00h 00h
   Reply HiZ F3h 5Ah FFh FFh 03h 00h 00h 5Ah
 </code></pre></div>
-This returns a constant bitmask indicating which reply bytes can be
-enabled/disabled via Command 4Fh (ie. 3FFFFh = 18 bits). The reply stays the
-same after Command 4Fh has changed the current setting.<br/></p>
-<h4 id="config-mode-command-4fh-o-dualshock2-set-replyprotocol">Config Mode - Command 4Fh "O" Dualshock2: Set ReplyProtocol</h4>
+Returns a constant bitmask indicating which reply bytes can be enabled/disabled
+via Command 4Fh (ie. 3FFFFh = 18 bits). The reply stays the same after Command
+4Fh has changed the current setting. The PS2 libpad uses it to detect analog
+button support: padInfoPressMode() returns true only when the mask is
+3FFFFh.<br/></p>
+<h4 id="config-mode-command-4fh-setbuttoninfo">Config Mode - Command 4Fh - SetButtonInfo</h4>
 <p><div class="highlight"><pre><span></span><code>  Send  01h 4Fh 00h aa  bb  cc  dd  ee  ff
   Reply HiZ F3h 5Ah 00h 00h 00h 00h 00h 5Ah
 </code></pre></div>
