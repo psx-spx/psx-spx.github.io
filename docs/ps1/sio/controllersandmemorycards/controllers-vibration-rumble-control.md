@@ -46,7 +46,7 @@ Anyways, here's the full command set...<br/>
 [Configuration Commands](controllers-configuration-commands.md#configuration-commands)<br/>
 And, the rumble-specific config command is described below...<br/>
 
-#### Config Mode - Command 4Dh "M" - Get/Set RumbleProtocol
+#### Config Mode - Command 4Dh - SetActAlign
 ```
   Send  01h 4Dh 00h aa  bb  cc  dd  ee  ff     ;<-- set NEW aa..ff values
   Reply Hiz F3h 5Ah aa  bb  cc  dd  ee  ff     ;<-- returns OLD aa..ff values
@@ -54,9 +54,9 @@ And, the rumble-specific config command is described below...<br/>
 Bytes aa,bb,cc,dd,ee,ff control the meaning of the 4th,5th,6th,7th,8th,9th
 command byte in the controller read command (Command 42h).<br/>
 ```
-  00h      = Map Right/small Motor (Motor M2) to bit0 of this byte
-  01h      = Map Left/Large Motor (Motor M1) to bit0-7 of this byte
-  02h..FEh = Unknown (can be mapped, maybe for extra motors/outputs)
+  00h      = Map actuator 0, Right/small Motor (Motor M2) to bit0 of this byte
+  01h      = Map actuator 1, Left/Large Motor (Motor M1) to bit0-7 of this byte
+  02h..FEh = Map actuator 2..FEh (none exist on SCPH-1200/Dualshock2 pads)
   FFh      = Map nothing to this byte
 ```
 In practice, one would usually send either one of these command/values:<br/>
@@ -73,6 +73,44 @@ In the initial state, aa..ff are all FFh, and the controller does then use the
 old rumble control method (with only one motor). However, that old method gets
 disabled once when having messed with config commands (unknown if/how one can
 re-enable the old method by software).<br/>
+The values are actuator numbers as listed by Command 46h, whose Size field
+tells how many bits/bytes of the mapped byte the actuator uses. libpad's
+PadSetActAlign(port, data) sends this command (wrapped in 43h 01h / 43h 00h)
+with the game's six bytes.<br/>
+
+#### Actuator current limit (libpad)
+The console can supply up to 60 units of current to all controllers combined
+(libpad.h: PadMaxCurr=60; one unit is 10mA). Each actuator's maximum drain is
+returned by Command 46h:<br/>
+```
+  SCPH-1150   motor              10 units   (no config mode, fixed in libpad)
+  SCPH-1200   actuator 0, small  10 units
+  SCPH-1200   actuator 1, large  20 units
+```
+So one SCPH-1200 with both motors on draws 30 units, and two such pads on a
+Multi Tap already reach the limit. Sony's libpad enforces this in software,
+once per frame, while building the 42h command for each controller:<br/>
+```
+  - The running total is cleared at the start of each vsync.
+  - Controllers are processed in order: port 1 (Multi Tap slots A..D), then
+    port 2, and within each controller by actuator number.
+  - An actuator counts as "on" if any 42h byte mapped to it (via 4Dh) is
+    nonzero (only bit0 is tested for actuators with Size=00h).
+  - An "on" actuator is allowed if total+Curr <= 60, and then adds its full
+    Curr to the total, whatever its speed value.
+  - Otherwise, all 42h bytes mapped to it are sent as 00h for that frame.
+  - Later actuators are still checked, so a smaller one may fit after a
+    larger one was refused.
+```
+PadSetAct() never refuses a value and returns no error; the refused motors
+just stay off. For SCPH-1150 pads, libpad charges 10 units when the two
+old-method bytes would switch the motor on (xx=40h..7Fh, yy bit0 set), and
+sends both bytes as 00h if that does not fit. In Sony's words: "If actuator
+parameters are set so that the 60-unit limit is exceeded, the actuators
+connected to the larger port numbers are ignored (they are forcibly stopped).
+This is particularly important for applications that use Multi Taps."<br/>
+The PS2 IOP controller driver (padman) has a similar check with the same 60
+unit limit, but applies it to each controller separately.<br/>
 
 #### Unknown Dualshock2 Vibration
 Dualshock2 does reportedly have "two more levels of vibration", unknown what
