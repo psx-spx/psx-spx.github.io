@@ -17,24 +17,53 @@ Resets the GPU to the following values:<br/>
   GP1(05h)      ;display address (0)
   GP1(06h)      ;display x1,x2 (x1=200h, x2=200h+256*10)
   GP1(07h)      ;display y1,y2 (y1=010h, y2=010h+240)
-  GP1(08h)      ;display mode 320x200 NTSC (0)
+  GP1(08h)      ;display mode 256x240 NTSC (0)
   GP0(E1h..E6h) ;rendering attributes (0)
 ```
-Accordingly, GP1.read becomes 14802000h. The x1,y1 values are too small, ie. the
-upper-left edge isn't visible. Note that GP1(09h) is NOT affected by the reset
-command.<br/>
+Accordingly, GP1.read becomes 14802000h (14800000h on the v0 GPU, whose bit 13
+reads 0). The x1,y1 values are too small, ie. the upper-left edge isn't visible.
+Note that GP1(09h) is NOT affected by the reset command.<br/>
+The reset also restarts the video timing. The scan goes to the line before line
+0, so the next VBlank IRQ0 comes Y2+1 lines after the write (257 lines with the
+reset's Y2=100h) wherever in the frame it was written, and the frame continues
+normally from there (263 lines in NTSC). Written during the active display, the
+reset raises IRQ0 at once (latched within 50 CPU cycles of the write); written
+during VBlank, it raises none. GPUSTAT.31 reads 0 after the reset and starts
+toggling again 18 lines after the write. Measured in NTSC 240p with the display
+off, 5 reps at 27 phases across the frame, identical on a SCPH-1000 (v0 GPU), a DTL-H2700, and a
+SCPH-1001, two SCPH-5501, a SCPH-7001 and a SCPH-9002 (v2 GPU).<br/>
+The reset selects NTSC timing on a PAL console too: from the first VBlank IRQ0
+after it GP1.read.20 is 0 and the frames are 263 lines, run from the console's
+PAL video clock, until GP1(08h).3 selects PAL again. The first IRQ0 still comes
+257 lines after the write when the reset is written in PAL mode. The reset also
+sets the interlace field flag to the long frame, see
+[Switching interlace on and off](status-register.md#switching-interlace-on-and-off).<br/>
+Because the reset includes GP1(04h)=0, a DMA2 transfer still running stays
+stalled after it: CHCR bit 24 stays set and nothing times out (no change in 3
+seconds), even though GPUSTAT bit 28 reads 1. It carries on once GP1(04h)
+selects a DMA direction again.<br/>
 
 #### GP1(01h) - Reset Command Buffer
 ```
   0-23  Not used (zero)
 ```
 Resets the command buffer and CLUT cache.<br/>
+This also drops a command still waiting for its parameters, and the DMA request
+comes back at once, so a DMA2 transfer that is still enabled carries on, its
+next words taken as new commands. A linked list stopped inside a command
+resumes from D2_MADR this way; with D2_CHCR cleared first it stays stopped.
+GP1(01h) also ends a pending VRAM-to-CPU transfer; GPUREAD then keeps returning
+the word it last held.<br/>
+It ends a pending CPU-to-VRAM transfer as well, and the next GP0 word is a command
+again. The pixels already sent stay in VRAM: on the v2 GPU, which holds the words
+of an unfinished row, GP1(01h) writes them out, where GP1(00h) discards them (see
+[CPU to VRAM blitting](memory-transfer-commands.md#cpu-to-vram-blitting-command-5-101)).<br/>
 
 #### GP1(02h) - Acknowledge GPU Interrupt (IRQ1)
 ```
   0-23  Not used (zero)                                        ;GP1.R.24
 ```
-Resets the IRQ flag in GP1.R.24. The flag can be set via GP0(1Fh).<br/>
+Resets the IRQ flag in GP1.R.IRQ. The flag can be set via GP0(1Fh).<br/>
 
 #### GP1(03h) - Display Enable
 ```
@@ -44,7 +73,7 @@ Resets the IRQ flag in GP1.R.24. The flag can be set via GP0(1Fh).<br/>
 Turns display on/off. "Note that a turned off screen still gives the flicker of
 NTSC on a PAL screen if NTSC mode is selected."<br/>
 The "Off" settings displays a black picture (and still sends /SYNC signals to
-the television set). (Unknown if it still generates vblank IRQs though?)<br/>
+the television set). VBlank IRQ0 keeps coming every frame with the display off.<br/>
 
 #### GP1(04h) - DMA Direction / Data Request
 ```
@@ -57,7 +86,7 @@ the television set). (Unknown if it still generates vblank IRQs though?)<br/>
 ```
 Notes: Manually sending/reading data by software (non-DMA) is ALWAYS possible,
 regardless of the GP1(04h) setting. The GP1(04h) setting does affect the
-meaning of GP1.R.25.<br/>
+meaning of GP1.R.DREQ.<br/>
 
 #### Display start/end
 Specifies where the display area is positioned on the screen, and how much data
@@ -92,6 +121,7 @@ scanline.<br/>
   0-11   X1 (260h+0)       ;12bit       ;\counted in video clock units,
   12-23  X2 (260h+320*8)   ;12bit       ;/relative to HSYNC
 ```
+The figures shown (260h+0 and 260h+320\*8) are typical values programmed by games, not the reset value: 260h is the first visible pixel on normal TV sets, and 320\*8 is a 320-pixel line at 8 video clocks per pixel. After GP1(00h) the registers instead hold X1=200h and X2=200h+256\*10 (a 256-pixel line at 10 clocks per pixel); see the Dotclocks list in [horizontal timings](timings.md#horizontal-timings) for the clocks-per-pixel values.<br/>
 Specifies the horizontal range within which the display area is displayed. For
 resolutions other than 320 pixels it may be necessary to fine adjust the value
 to obtain an exact match (eg. X2=X1+pixels\*cycles\_per\_pix).<br/>
@@ -135,6 +165,23 @@ Specifies the vertical range within which the display area is displayed. The
 number of lines is Y2-Y1 (unlike as for the width, there's no rounding applied
 to the height). If Y2 is set to a much too large value, then the hardware stops
 to generate vblank interrupts (IRQ0).<br/>
+VBlank starts when the scan reaches the line Y2 and ends when it reaches Y1; the
+current line is not compared against the range. So a mid-frame GP1(07h) write
+never raises IRQ0 by itself:<br/>
+```
+  Y2 moved above the current line, in the display  IRQ0 at the new Y2, next frame
+  Y2 moved below the current line, in the display  IRQ0 at the new Y2, this frame
+  Y2 moved below the current line, in VBlank       no IRQ0 this frame
+  Y1 moved below the current line, in the display  display runs to Y2 this frame,
+                                                   starts at the new Y1 next frame
+  Y1 moved above the current line, in VBlank       VBlank lasts the rest of the
+                                                   frame, which has no IRQ0
+```
+"Above" means an earlier line. Rewriting PAL's range from 27..267 to 43..283
+11 lines into VBlank and back 4 lines later (Hyper Tennis - Final Match
+does this) gives no extra IRQ0. Measured in NTSC and PAL with the display off,
+5 reps per case, identical on a SCPH-1000 (v0 GPU), a DTL-H2700, and SCPH-5501,
+SCPH-7001 and SCPH-9002 (v2 GPU); the SCPH-1001 matched in NTSC.<br/>
 The 88h/A3h values are the middle-scanlines on normal TV Sets, these values are
 used by MOST NTSC games, and SOME PAL games (see below notes on Mis-Centered
 PAL games).<br/>
@@ -172,9 +219,13 @@ output instead (possibly on a different sub-revision of the v2 GPU).<br/>
 #### GP1(10h) - Read GPU internal register
 #### GP1(11h..1Fh) - Mirrors of GP1(10h), Read GPU internal register
 After sending the command, the result can be read (immediately) from GP0
-register (there's no NOP or other delay required) (namely GP1.R.Bit27 is used
+register (there's no NOP or other delay required) (namely GP1.R.RFFL is used
 only for VRAM reads, but NOT for register reads, so do not try to wait for that
 flag).<br/>
+The query and the GPUREAD read work during an unfinished GP0(A0h) transfer too,
+and do not end it: the GPU still takes the next GP0 words as image data.<br/>
+GP1(50h), GP1(90h) and GP1(D0h) act as GP1(10h) as well, while GP1(30h) does
+nothing (see GP1(40h..FFh)).<br/>
 ```
   0-23  Register index (via following GP0 read)
 ```
@@ -188,6 +239,9 @@ On v0 GPUs, the following indices are supported:<br/>
   06h-07h = Returns Nothing (old value in GP0.read remains unchanged)
   08h-FFFFFFh = Mirrors of 00h..07h
 ```
+On v0, "MSBs=Nothing" means the upper bits keep the previous GP0.read value:
+reading index 03h (E3h=014A3h) right after index 02h returned ABCDEh gives
+814A3h. On v2 the same sequence gives 014A3h.<br/>
 On v2 (and v1?) GPUs, the following indices are supported:<br/>
 ```
   00h-01h = Returns Nothing (old value in GP0.read remains unchanged)
@@ -197,7 +251,7 @@ On v2 (and v1?) GPUs, the following indices are supported:<br/>
   05h     = Read Draw offset             ;GP0(E5h) ;22bit
   06h     = Returns Nothing (old value in GP0.read remains unchanged)
   07h     = Read GPU version (1 or 2)
-  08h     = Unknown (Returns 00000000h) (lightgun? VRAM size set via GP1(09h)?)
+  08h     = Unknown (Returns 00000000h, also with GP1(09h).0=1) (lightgun?)
   09h-0Fh = Returns Nothing (old value in GP0.read remains unchanged)
   10h-FFFFFFh = Mirrors of 00h..0Fh
 ```
@@ -211,15 +265,22 @@ times, but, the latch isn't automatically updated when changing GP0 registers.<b
 ```
 Gates whether the upper Y address bit reaches the VRAM address decoder. With
 bit 0 = 0 (the default after a GP1(00h) reset) all Y addressing is masked to
-9 bits and the upper half of VRAM appears as a mirror of the lower half on
-2 MB systems, or as open bus on retail systems where the second half is not
-populated. With bit 0 = 1 the full 10-bit Y range is honored: GP0(E1h).bit11
+9 bits, so Y=512..1023 aliases Y=0..511 and the upper half of VRAM reads back
+as a mirror of the lower half. This is also the case on 1 MB retail consoles.
+With bit 0 = 1 the full 10-bit Y range is honored: GP0(E1h).bit11
 can reference textures in the second half of VRAM, drawing area / drawing
 offset / display area registers all accept Y values in 0..1023, and the
 Copy / Fill commands address Y across the full bank. The GPU has two
 separate chip select outputs for the first and second half; on a retail
 console only the first output is used, so enabling this feature on a 1 MB
-system will result in textures disappearing if GP0(E1h).bit11 is also set.<br/>
+system will result in textures disappearing if GP0(E1h).bit11 is also set.
+On a 1 MB v2 console with bit 0 = 1, VRAM transfers to Y=512..1023 are
+dropped and reads from there return FFFFh, while the lower half keeps its
+contents.<br/>
+On a DTL-H2700 the upper half mirrored the lower half with either value of
+bit 0, and also after GP1(20h) with 501h or 504h. That board's GPU does not
+answer GP1(10h) index 7, so it is not a v2 GPU; whether its second VRAM half
+is populated is unknown.<br/>
 GP1(09h) is supported only on v2 GPUs; v0 GPUs don't support 2 MB VRAM at all
 and v1 seems to use command GP1(20h) instead.<br/>
 
@@ -228,7 +289,8 @@ and v1 seems to use command GP1(20h) instead.<br/>
   0-23  Unknown (501h=1 MB, 504h=2 MB, or so?)
 ```
 Seems to be used only on v1 arcade/prototype GPUs. Regular v2 GPUs use GP1(09h)
-instead of GP1(20h).<br/>
+instead of GP1(20h); on a v2 GPU, GP1(20h) with 501h or 504h has no visible
+effect on VRAM transfer addressing.<br/>
 
 #### GP1(0Bh) - Unknown/Internal?
 ```
@@ -238,10 +300,18 @@ instead of GP1(20h).<br/>
 The register doesn't seem to be used by any games.<br/>
 
 #### GP1(0Ah,0Ch..0Fh,21h..3Fh) - N/A
-Not used?<br/>
+Not used? GP1(0Ah), GP1(0Ch), GP1(0Fh), GP1(21h) and GP1(3Fh) with parameter 0
+change nothing in GPUSTAT, GP0.read or the GP0(E2h..E5h) state.<br/>
 
-#### GP1(40h..FFh) - N/A (Mirrors)
-Mirrors of GP1(00h..3Fh).<br/>
+#### GP1(40h..FFh) - N/A
+These are not mirrors of GP1(00h..3Fh): bits 30-31 of the command are decoded.
+GP1(40h), GP1(80h) and GP1(C0h) with the parameters of GP1(00h), GP1(03h),
+GP1(04h) and GP1(08h) change nothing in GPUSTAT, GP0.read or the GP0(E2h..E5h)
+state. In particular GP1(80000000h) is not a reset: it raises no IRQ0 and
+leaves the display on. GP1(23h), GP1(24h) and GP1(28h) likewise do nothing.<br/>
+The exception is GP1(10h): GP1(50h), GP1(90h) and GP1(D0h) read the internal
+register like GP1(10h), so that command ignores bits 30-31, but not bit 29
+(GP1(30h) does nothing). The same on v0 and v2 GPUs.<br/>
 
 #### Mis-Centered PAL Games (wrong GP1(06h)/GP1(07h) settings)
 NTSC games are typically well centered (using X1=260h, and Y1/Y2=88h+/-N).<br/>

@@ -99,6 +99,11 @@ When wrapping around at FFFFh (ZRET not set), it will stay at 0000h for only
 When being reset to 0000h by reaching the Target value (ZRET set), it will
 stay at 0000h for 2 clock cycles.
 
+On Timer 2 this only lengthens the period on the system clock source: a
+target of T repeats every T+2 cycles. With System Clock/8 the period is
+exactly T*8 cycles, so target 21168 at /8 gives 169344 cycles, exactly 5 ms.
+Wrapping at FFFFh takes exactly 10000h counts on both sources.
+
 Example behavior with COMP Value of 0001h and ZRET set:
 ```
 clock cycle 0 - Counter Value = 0000h

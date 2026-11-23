@@ -23,17 +23,42 @@ Copies data within framebuffer. The transfer is affected by Mask setting.<br/>
 Transfers data from CPU to frame buffer. If the number of halfwords to be sent
 is odd, an extra halfword should be sent, as packets consist of 32bits words. The
 transfer is affected by Mask setting.<br/>
+On v2 GPUs the data is written to VRAM one complete row of the rectangle at a time:
+the words of a row that is not finished yet stay inside the GPU until more GP0
+data completes it (waiting does not flush them), and GP1(00h) throws them away. So a
+transfer cut short loses its whole last partial row. GP1(01h) is different: it
+writes the held words of the partial row to VRAM before ending the transfer. The
+v0 GPU writes the words of a partial row to VRAM as they arrive.<br/>
+When the width is odd, a row can end in the middle of a word. The halfword that
+starts the next row is then not written until the following word arrives; if the
+transfer is ended there by GP1(01h) or GP1(00h), or left waiting, that pixel stays
+unwritten, on v0 and v2 GPUs alike.<br/>
+Until the last word has arrived, the GPU takes every GP0 word as image data,
+whatever its value: GP0(01h), GP0(02h), GP0(1Fh), GP0(60h) and GP0(E1h, E3h..E6h) words written
+then become pixels, and so do the words of a DMA2 linked list sent meanwhile.
+While it waits, GPUSTAT bit 26 reads 0 and bit 28 reads 1 (see
+[Ready Bits](status-register.md#ready-bits)). GP1(10h) queries and GPUREAD reads
+do not end the transfer. GP1(01h) and GP1(00h) do; the next GP0 word is then a
+command.<br/>
 
 #### VRAM to CPU blitting - command 6 (110)
 ```
   1st  Command                       ;\
   2nd  Source Coord      (YyyyXxxxh) ; write to GP0 port (as usually)
   3rd  Width+Height      (YsizXsizh) ;/
-  ...  Data              (...)       ;<--- read from GP0 port (or via DMA)
+  ...  Data              (...)       ;<--- read from GPUREAD (or via DMA)
 ```
-Transfers data from frame buffer to CPU. Wait for bit27 of the status register
-to be set before reading the image data. When the number of halfwords is odd,
-an extra halfword is added at the end, as packets consist of 32bits words.<br/>
+Transfers data from frame buffer to CPU. The parameters go through GP0 like any
+other command, but the image data comes back on GPUREAD (1F801810h when read),
+not through the GP0 command FIFO. Wait for bit27 of the status register to be
+set before reading the image data. When the number of halfwords is odd,
+an extra halfword is added at the end, as packets consist of 32bits words. It
+holds the VRAM pixel that follows the last pixel of the last row, at X+Xsiz
+(wrapping from 1023 to 0) on that row.<br/>
+GP0 commands written during the transfer, settings and GP0(1Fh) included, wait
+until the data has been read out, then run (within ~100 cycles of the last
+GPUREAD word). A GP0(02h) fill over the source area does not change the data
+being read; it runs after the read.<br/>
 
 #### Masking and Rounding for FILL Command parameters
 ```
@@ -74,6 +99,10 @@ produces 8 rows, and raw Ysiz=1024 produces 512 rows. Software issuing a
 transfer should match the data phase to the effective Ysiz, otherwise the
 extra CPU writes will overflow into the GP0 command stream and corrupt the
 GPU state.<br/>
+Raw Width+Height FFFFFFFFh is no special case either: it is 1023x511, the same
+as 01FF03FFh. GP0(A0h) takes 261377 words for it (522753 pixels, the last word's
+upper halfword unused), GP0(C0h) returns 261377 words, and GP0(80h) copies the
+same rectangle.<br/>
 
 On 2 MB systems, the Ypos 9-bit mask above is the masking that applies with
 GP1(09h).0=0; with GP1(09h).0=1 the upper Y bit is also honored and Ypos
@@ -85,12 +114,11 @@ GP0(80h) blit are on opposite sides of the boundary.<br/>
 #### Notes
 The coordinates for the above VRAM transfer commands are absolute framebuffer
 addresses (not relative to Draw Offset, and not clipped to Draw Area).<br/>
-Non-DMA transfers seem to be working at any time, but GPU-DMA Transfers seem to
-be working ONLY during V-Blank (outside of V-Blank, portions of the data appear
-to be skipped, and the following words arrive at wrong addresses), unknown if
-it's possible to change that by whatever configuration settings...? That
-problem appears ONLY for continous DMA aka VRAM transfers (linked-list DMA aka
-Ordering Table works even outside V-Blank).<br/>
+Transfers work at any time, by DMA too: a 64x64 GP0(A0h) upload sent by DMA2 in
+block mode (16-word blocks, GP1(04h)=2) arrives intact with the display enabled,
+whether it starts in V-Blank or in the middle of the active display. Blocks of
+20h or 40h words can lose halfwords depending on where in a scanline the
+transfer starts, see [GPU Versions](versions.md).<br/>
 
 #### Wrapping
 If the Source/Dest starting points plus the width/height value exceed the

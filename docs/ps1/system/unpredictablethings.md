@@ -65,7 +65,10 @@ exception!) (except, probably 16bit reads are allowed when the region is
 configured to 16bit databus width).<br/>
 There are at least some special cases:<br/>
 ```
-  FFFE0130h-FFFE0133h  8bit (+16bit?) read works ONLY from word-aligned address
+  FFFE0130h-FFFE0133h  8bit and 16bit reads work ONLY from the word-aligned
+                       address (returning the low byte/halfword of BCC); at
+                       the other offsets they complete without exception but
+                       return unrelated data
 ```
 
 #### I/O Write Datasize
@@ -115,7 +118,7 @@ K0), so be careful not to use that register, unless you are 100% sure that no
 interrupts and no other exceptions can occur. Some exception handlers might
 also destroy R27 aka K1 (though exception handler in the PSX Kernel leaves that
 register unchanged).<br/>
-Some assemblers (not a22i in nocash syntax mode) are internally using R1 aka AT
+Some assemblers are internally using R1 aka AT
 as scratch register for some pseudo opcodes, including for a "sw rx,imm32"
 pseudo opcode (which is nearly impossible to separate from the normal "sw
 rx,imm16" opcode), be careful not to use R1, unless you can trust your

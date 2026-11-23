@@ -14,7 +14,9 @@ bottommost N bits (where N = number of address lines, as set in register
 1F801008h). For instance, if the number of DEV0 address lines is set to 8,
 setting this register to 1F000000h or 1F0000FFh has the same effect.<br/>
 When performing a PIO DMA transfer, however, all bits of this register are
-output on the bus regardless of the currently set region size. The System 573
+output on the bus regardless of the currently set region size, and stay there
+for the whole transfer: with the base set to 1F4812A4h, DMA5 drives 4812A4h,
+while a CPU write to 1F480000h drives 480000h..480003h. The System 573
 relies on this behavior as it changes the base address to 1F480000h prior to
 reading data from the IDE CD-ROM using DMA (and does not reset it to 1F000000h
 afterwards).<br/>
@@ -34,6 +36,8 @@ For DEV1, the address seems to be fixed (1FA00000h).<br/>
 #### 1F801014h - DEV4 (SPU) Delay/Size (200931E1h) (use 220931E1h for SPU-RAM reads)
 #### 1F801018h - DEV5 (CD-ROM) Delay/Size (00020843h or 00020943h)
 #### 1F80101Ch - DEV8 Delay/Size (usually 00070777h) (128 bytes, 8bit bus)
+The register reads back what is written to it (tested with size fields 0, 1, 7
+and 8), except bit 30, which always reads back as zero.
 ```
   0-3   Write Delay        (00h..0Fh=01h..10h Cycles)
   4-7   Read Delay         (00h..0Fh=01h..10h Cycles)
@@ -49,7 +53,7 @@ For DEV1, the address seems to be fixed (1FA00000h).<br/>
   24-27 DMA timing override
   28    Address error flag. Write 1 to it to clear it.
   29    DMA timing select  (0=use normal timings, 1=use bits 24-27)
-  30    Wide DMA           (0=use bit 12, 1=override to full 32 bits)
+  30    Unused on the PS1 (writes ignored; the PS2 IOP uses it for 32-bit SBUS)
   31    Wait               (1=wait on external device before being ready)
 ```
 An access wider than the Data Bus-width is a single bus transaction: /CS is
@@ -100,6 +104,26 @@ BIOS ROM (DEV2, 8bit) with the COM\_DELAY register at 00031125h unless noted.
 - Recovery (bit 8) puts COM0 cycles between the units of a wide access, with /CS
   still active, and keeps /CS inactive for COM0 cycles after a write before the
   next transaction. With bit 8 cleared, both gaps are 1 cycle.
+- The gap between the units of a wide access combines these the same way for
+  reads and writes. With recovery and no hold or floating period, it is COM0
+  (5 cycles), plus one cycle when pre-strobe (bit 11) is set, measured with
+  COM3 = 1. With a hold (writes) or floating (reads) period as well, it is that
+  period plus COM0 plus the strobe setup cycle: 7 cycles between the bytes of a
+  BIOS ROM read with 0013253Fh, and 7 between the halves of an SPU read with
+  200935E1h.
+
+These timings are the same on the SCPH-1000, SCPH-1001, SCPH-5501, SCPH-7001,
+SCPH-9002 and the DTL-H2700: the same register values give the same cycle
+counts. What does change is the COM\_DELAY value in use. The BIOS sets
+00031125h at boot, and its CD-ROM sector read code writes 0000132Ch to
+COM\_DELAY (and 00020943h to DEV5), so after the BIOS has read from the disc,
+recovery is 12 cycles and floating 3. A 32bit read of the BIOS ROM then takes
+33 CPU cycles instead of 27, and a 32bit write to the SPU 28 instead of 15.
+Back-to-back byte reads slow down as well: about 28 cycles each instead of 21
+from the SPU, and about 18 instead of 10 from the CD-ROM controller. The SPU
+change follows COM\_DELAY alone. The CD-ROM one needs both values: with DEV5 at
+00020843h (recovery off) CD-ROM byte reads stay at 10 cycles whatever COM\_DELAY
+holds, and with 00020943h they take 11 cycles under 00031125h.
 
 A halfword write to the SPU with 200931E1h: /CS, then a 2 cycle /WR.
 
@@ -159,7 +183,9 @@ With bit 29 set, DMA transfers use bits 24-27 instead of the normal timings:
 cycles with 1 cycle between pulses, whatever the Write or Read Delay and the
 COM bits say. With bit 29 cleared, DMA uses the normal timings and bits 24-27
 are ignored. A DMA block is one /CS assertion for the
-whole block. The BIOS value for DEV4, 200931E1h, has bit 29 set and bits 24-27
+whole block. On the SPU, DACK4 is active high: it goes high in the same cycle
+/CS goes low and drops one cycle after /CS rises, for DMA in either direction,
+and CPU accesses to the SPU leave it low. The BIOS value for DEV4, 200931E1h, has bit 29 set and bits 24-27
 at zero, so SPU DMA writes run at 1 cycle per strobe with 1 cycle between.
 
 ![SPU DMA, normal timings (000931E1h)](waveforms/spu-dma-normal.svg)
@@ -167,11 +193,6 @@ at zero, so SPU DMA writes run at 1 cycle per strobe with 1 cycle between.
 ![SPU DMA, override (200931E1h)](waveforms/spu-dma-override.svg)
 
 ![SPU to RAM DMA, override (200931E1h)](waveforms/spu-dma-read-override.svg)
-
-The Wide DMA flag will enable full 32 bits DMA operations on the bus, by reusing
-the low 16-bits address signals as the high 16-bits data. This means that if
-the CPU is doing Wide DMA reads, the low 16-bits of the address bus will become
-inputs.
 
 Trying to access addresses that exceed the selected size causes a bus exception.
 Maximum size would be DEV0 = 17h (8MB), DEV2 = 16h (4MB), DEV8 = 0Dh (8KB),
@@ -200,6 +221,10 @@ values in Port 1F801008h..1Ch. Works (somehow) like so:<br/>
   IF 1ST<(MIN+6) THEN 1ST=(MIN+6)
   IF SEQ<(MIN+2) THEN SEQ=(MIN+2)
 ```
+The COM0 term of 1ST does not hold as written: with Use_COM0 set, an 8-bit
+CD-ROM or SPU register read costs the same with COM0=3 and COM0=5, and about 6
+cycles more with COM0=0Ch. Each further unit of a wide access changes by as
+much as COM0 does, as the SEQ term says.<br/>
 The total access time is the sum of First Access, plus any Sequential
 Access(es), eg. for a 32bit access with 8bit bus: Total=1ST+SEQ+SEQ+SEQ.<br/>
 If the access is done from code in (uncached) RAM, then 0..4 cycles are added
@@ -330,8 +355,10 @@ CW33300 manual".<br/>
 With BGNT=0, a DMA transfer that has been started waits, and it completes once
 BGNT is set again. CPU access timing is not affected.<br/>
 With LDSCH=0, a load no longer overlaps the independent instructions that
-follow it: a RAM load followed by four NOPs costs about 2 more cycles. A load
-whose result is used by the very next instruction costs the same either way.<br/>
+follow it: a RAM load followed by four NOPs costs about 4 more cycles, and a
+cached RAM load whose value is not used costs about 6 cycles above a NOP instead
+of 2. A load whose result is used by the very next instruction costs the same
+either way.<br/>
 With NOSTR=1, instruction fetch from uncached memory is slower, by about one
 cycle per two instructions.<br/>
 Flipping INTP, RDPRI or NOPAD changes none of: RAM load, store and

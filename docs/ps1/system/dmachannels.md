@@ -27,6 +27,11 @@ getting interrupted by a higher priority DMA channel).<br/>
 In SyncMode=1 and SyncMode=2, the hardware does update MADR (it will contain
 the start address of the currently transferred block; at transfer end, it'll
 hold the end-address in SyncMode=1, or the end marker in SyncMode=2)<br/>
+In SyncMode=1, D#\_MADR and D#\_BCR written while the channel waits for DREQ
+between blocks (bit 24 still set) are used from the next block on: it is read
+from the written address, and the written BA is the number of blocks still to
+go. Seen on DMA2, with the GPU holding DREQ off through GP1(04h)=0, and on DMA4,
+with SPUCNT transfer mode set to stop.<br/>
 Notes: Address bits 0-1 are writeable and the register keeps whatever was written
 to it. The hardware ignores the last two bits when issuing memory fetch commands,
 but the register itself still has the full value.<br/>
@@ -95,13 +100,31 @@ one block in SyncMode=1, one list node in SyncMode=2 (RAM to device). After
 that, the channel waits for DREQ as usual. The CDROM does not assert DREQ on
 DMA3, whatever BFRD says, so CDROM transfers only run in SyncMode=0 with bit 28
 set.<br/>
+A block forced into the GPU (DMA2) while GP1(04h)=0 still crosses the bus in
+full, one word per cycle, same as a DREQ-paced block, but the GPU keeps only the
+even-numbered words: words 0, 2, 4... of the block reach VRAM, packed, for every
+block size from 1 to 16 words, and MADR still advances by the whole block. With
+GP1(04h)=2 and DREQ-paced blocks, every word is written.<br/>
 In SyncMode=2 with device to RAM direction, the channel follows the headers in
 RAM until the end marker and finishes, but moves no data either way.<br/>
 Bit 24 is automatically cleared upon COMPLETION of the transfer, this bit must
 be always set for all SyncModes when starting a transfer.<br/>
+In SyncMode=1, bits 0 and 1 written while the channel waits between blocks
+(with bit 24 kept set) apply from the next block on: setting bit 1 makes the
+remaining blocks step down from the current D#\_MADR, and clearing bit 0 on
+DMA2 makes the remaining blocks write RAM with whatever GPUREAD returns, even
+though the GPU is still set up for RAM to GPU transfers.<br/>
 For DMA6/OTC there are some restrictions, D6\_CHCR has only three
 read/write-able bits: 24,28,30. All other bits are read-only: bit 1 is always
 1 (increment=-4), and the other bits are always 0.<br/>
+The OTC never asserts DREQ, so the transfer needs bits 24 and 28 both set;
+the read-only bits are ignored on write, so 11000000h starts it like
+11000002h. With bit 24 alone the channel stays busy and nothing is written.
+With bit 28 alone nothing happens and bit 28 stays set. On completion bits 24
+and 28 clear, while D6\_MADR and D6\_BCR keep the values written before the
+transfer.<br/>
+If bits 24 and 28 are written while DMA6 is disabled in DPCR, the transfer
+starts as soon as DPCR enables the channel.<br/>
 
 #### 1F8010F0h - DPCR - DMA Control Register (R/W)
 ```
@@ -208,6 +231,22 @@ so it is possible to stop a transfer by toggling the high bit to 1. This will
 trigger a DMA error, reflected into the DICR register. Some games might use
 this to end a DMA chain instead of the normal FFFFFFh marker, which obviously
 can't work when the memory settings of the console is set to 16MB.<br/>
+While the list runs, D2_MADR holds the address of the next node to fetch. The
+DMA reads a node header only when the GPU is not holding its DMA request and at
+most one word is queued in the GP0 FIFO; see
+[GP0 write FIFO](../gpu/i-o-ports-dma-channels-commands-vram.md#gp0-write-fifo).<br/>
+If a node ends inside a polygon or line command, the list stops there for good,
+with D2_MADR at the next node. GP1(01h) with CHCR still busy resumes it from
+D2_MADR; clearing CHCR first leaves it stopped. While a VRAM-to-CPU transfer is
+pending, the next node is fetched only while nothing is queued (GP1(04h)=2), or
+while the FIFO is not full (GP1(04h)=1).<br/>
+Clearing D2_CHCR bit 24 stops the list at a node boundary, and D2_MADR is then
+the address to resume from (Chrono Cross stops and resumes its main list this
+way). While the GPU draws, a stop does not land between a 1-word node and the
+node after it: the DMA sends the two as one burst. Around the moment the GPU
+releases the request (a quad's first triangle finishing, or the GPU taking
+queued words after a command) a stop can land between them for some 20 to 200
+cycles. Whether a stop can cut a multi-word node short is unknown (?).<br/>
 
 #### DMA Transfer Rates
 ```
@@ -224,8 +263,14 @@ MDEC decompression time is still unknown (may vary on RLE and color/mono).<br/>
 GPU polygon rendering time is unknown (may be quite slow for large polys).<br/>
 GPU vram read/write time is unknown (may vary on horizontal screen resolution).<br/>
 CDROM BIOS default is 24 clks, for some reason most games change it to 40 clks.<br/>
-SPU transfer is unknown (may have some extra delays).<br/>
-XXX is SPU really only 4 clks (theoretically SPU access should be slower)?<br/>
+SPU DMA bus time depends on the [DMA timing override](memorycontrol.md) in
+DEV4's Delay/Size register. With the BIOS value 200931E1h a 16-word block holds
+/CS for 67 clks writing to the SPU and 64 reading from it (4 clks/word); with
+override value N (bits 24-27) it is 2*(N+2) clks/word; with bit 29 cleared
+(000931E1h) the normal write and read delays apply: 227 clks per 16 words
+writing, 639 reading. That is the bus side only: after a
+16-word block the SPU raises its DMA request again only 940 to 1165 clks
+later, in both directions and whatever the bus timing.<br/>
 PIO is only used on some arcade systems (and configured with different timings).<br/>
 OTC is just writing to RAM without extra overload.<br/>
 CDROM/SPU/PIO timings can be configured via Memory Control registers.<br/>
@@ -251,6 +296,26 @@ and the next RAM read waits for the whole transfer.<br/>
 Additionally, the CPU operation resumes during periods when DMA gets interrupted
 (ie. after SyncMode 1 blocks, after SyncMode 2 list entries) (or in SyncMode 0
 with Chopping enabled).<br/>
+With Chopping, the channel alternates between moving 1 << N words (CHCR bits
+16-18) and leaving the bus to the CPU for 1 << N cycles (bits 20-22), plus a
+small fixed overhead per chunk (about 10 cycles for 4-word chunks, 22 for
+16-word chunks). A 1024-word RAM to GPU transfer that takes about 1100 cycles
+as a plain burst takes about 3700 with 4-word / 4-cycle windows and about 19000
+with 4-word / 64-cycle windows, so the CPU time gained costs transfer time.
+DMA6 cannot chop: its CHCR does not store bits 8 and 16-22.<br/>
+
+#### Address Bus during DMA
+DMA transfers to the GPU and MDEC, and DMA6, do not touch A0..A23: the
+address of the last CPU access to the external bus stays there. The other
+channels put a fixed address on the bus for the whole transfer, in either
+direction. It stays the same across words and across the 8bit or 16bit units
+of a word, where a CPU access steps A0..A1:
+```
+  DMA3 CDROM  1F801802h  (writes too, not the 1F801801h WRDATA port)
+  DMA4 SPU    1F801DB0h  (not the 1F801DA8h data port)
+  DMA5 PIO    The DEV0 base address, all bits, see 1F801000h
+```
+<br/>
 
 #### PS2 IOP DMA
 The PS2's IOP has an extended DMA unit with more channels, new control registers

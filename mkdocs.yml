@@ -5,6 +5,7 @@ edit_uri: edit/master/docs/
 
 theme:
   name: material
+  custom_dir: overrides
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -30,7 +31,9 @@ theme:
 
 hooks:
   - tools/bitfields/hook.py
+  - tools/figures/hook.py
   - tools/redirects/hook.py
+  - tools/changes/hook.py
 
 plugins:
   - search
@@ -52,11 +55,14 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.tasklist
   - pymdownx.tilde
 
 nav:
 - index.md
+- whatschanged.md
 - PlayStation:
   - System:
     - ps1/system/memorymap.md
@@ -88,9 +94,11 @@ nav:
     - ps1/gpu/video-memory-vram.md
     - ps1/gpu/texture-caching.md
     - ps1/gpu/timings.md
+    - ps1/gpu/drawing-timings.md
     - ps1/gpu/misc.md
   - ps1/spu/soundprocessingunitspu.md
   - CD-ROM:
+    - ps1/cdr/cdromdrive-overview.md
     - ps1/cdr/cdromdrive.md
     - ps1/cdr/cdromformat.md
     - CDROM File Formats:
@@ -114,10 +122,10 @@ nav:
       - ps1/sio/controllersandmemorycards/controllers-standard-digital-analog-controllers.md
       - ps1/sio/controllersandmemorycards/controllers-mouse.md
       - ps1/sio/controllersandmemorycards/controllers-racing-controllers.md
-      - ps1/sio/controllersandmemorycards/controllers-lightguns.md
-      - ps1/sio/controllersandmemorycards/controllers-lightguns-namco-guncon.md
-      - ps1/sio/controllersandmemorycards/controllers-lightguns-konami-justifier-hyperblaster-irq10.md
-      - ps1/sio/controllersandmemorycards/controllers-lightguns-psx-lightgun-games.md
+      - Lightguns:
+        - ps1/sio/controllersandmemorycards/lightguns/index.md
+        - ps1/sio/controllersandmemorycards/lightguns/namco-guncon.md
+        - ps1/sio/controllersandmemorycards/lightguns/konami-justifier-hyperblaster.md
       - ps1/sio/controllersandmemorycards/controllers-configuration-commands.md
       - ps1/sio/controllersandmemorycards/controllers-vibration-rumble-control.md
       - ps1/sio/controllersandmemorycards/controllers-analog-buttons-dualshock2.md

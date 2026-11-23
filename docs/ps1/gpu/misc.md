@@ -32,6 +32,25 @@ for randomly dithered textures like sand, water, fire, grass, and not for
 untextured polygons, and of course not for 2D graphics, so you may exclude
 those from size reduction).<br/>
 
+#### Gaps between subdivided Polygons
+Subdividing a polygon leaves gaps (cracks), up to one pixel wide, along the
+edges it shares with its neighbours. The new vertex in the middle of a divided
+edge is projected and rounded to integer screen coordinates on its own, so it
+does not land exactly on the straight edge the neighbour draws. This happens
+even when both polygons are divided the same number of times, and it is worst
+where a divided polygon meets an undivided one (a vertex in the middle of the
+neighbour's edge). Aligning the geometry to a coarse grid reportedly does not
+avoid it.<br/>
+The fix given in Sony's developer seminar material ("Speeding up Polygon
+Division", Summer 1997) is to draw a "fill"
+triangle for every outer edge that was divided: for an edge from vertex A to
+vertex B with new midpoint M, draw the triangle A,M,B. Draw it whether or not
+the neighbour was divided; the same material notes that back face culling is
+needed for these.<br/>
+It also lists back face culling, lighting and Z sorting as steps done once per
+original polygon, before dividing it, and uses the polygon's furthest vertex as
+the Z sort point.<br/>
+
 #### 24bit RGB to 15bit RGB Dithering (enabled in texture page attribute)
 For dithering, VRAM is broken to 4x4 pixel blocks, depending on the location in
 that 4x4 pixel region, the corresponding dither offset is added to the 8bit
@@ -97,9 +116,24 @@ the resulting colour to the backbuffer. The PS1 has this capability to an extent
 using semi-transparency.<br/>
 
 #### Draw to display enable
-This will enable/disable any drawing to the area that is currently displayed.
-Not sure yet WHY one should want to disable that?<br/>
-Also not sure HOW and IF it works... the SIZE of the display area is implied by
-the screen size - which is horizontally counted in CLOCK CYCLES, so, to obtain
-the size in PIXELS, the hardware would require to divide that value by the
-number of cycles per pixel, depending on the current resolution...?<br/>
+In 480-line interlaced mode, GP0(E1h).10=0 stops the GPU from drawing the lines
+of the field that is currently being displayed: a row whose Y parity equals
+GPUSTAT.31 at the moment it is drawn is skipped, so while GPUSTAT.31=1 only even
+rows are written and while it is 0 only odd rows are. This applies to polygons,
+lines and rectangles as well as to GP0(02h) fills; a fill takes about half as long
+with the rows skipped. With GP0(E1h).10=1 every row is drawn. See the
+[status register](status-register.md#bits-13-and-31-in-480-line-interlaced-mode)
+for when GPUSTAT.31 changes.<br/>
+A consequence is that a frame drawn in less than one field with the bit cleared
+comes out with half of its lines missing; drawing to the display area in 480i
+either needs the bit set, or the frame redrawn on every field.<br/>
+The v0 GPU (SCPH-1000) gets the first row of a GP0(02h) fill wrong: when that
+row has the skipped parity it is drawn anyway and the row after it is skipped
+instead, so a fill starting at y=0 with parity 0 skipped writes rows 0, 3, 5 and
+so on. From the third row on the skipping is normal, and a fill whose first row
+has the kept parity is unaffected. This was seen on an SCPH-1000 at widths 16 and
+640, starting at lines 0 and 40, in either field; the v2 GPU (SCPH-1001) does not
+do it. Whether rectangles and polygons do the same on v0 is not known.<br/>
+The behaviour above was observed with the drawing confined to the display area,
+in NTSC. What happens to rows outside the display area, in PAL, and in 240-line
+modes is not known.<br/>

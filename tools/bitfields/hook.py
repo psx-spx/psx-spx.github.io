@@ -76,7 +76,9 @@ def on_page_markdown(markdown, page, config, files):
         # with-pdf runs the page through the markdown pipeline a second time, so
         # this has to be idempotent: inserting again would shift every following
         # fence and land the second copy inside a code block.
-        if line and lines[line - 1].startswith('!['):
+        # tools/figures/hook.py may already have replaced it with the inline SVG.
+        if line and (lines[line - 1].startswith('![') or
+                     lines[line - 1].startswith('</div><!-- psx-figure -->')):
             continue
         alt = heading.lstrip('#').strip() or 'bit layout'
         lines.insert(line, f'![{alt} - bit layout]({up}{SUBDIR}/{diagram}.svg)')

@@ -15,23 +15,64 @@
 #### GTE Operation
 The GTE doesn't have any memory or I/O ports mapped to the CPU memory bus,
 instead, it's solely accessed via coprocessor opcodes:<br/>
-```x86asm
-  mov  cop0r12,rt          ;-enable/disable COP2 (GTE) via COP0 status register
-  mov  cop2r0-63,rt        ;\write parameters to GTE registers
-  mov  cop2r0-31,[rs+imm]  ;/
-  mov  cop2cmd,imm25       ;-issue GTE command
-  mov  rt,cop2r0-63        ;\read results from GTE registers
-  mov  [rs+imm],cop2r0-31  ;/
-  jt   cop2flg,dest        ;-jump never  ;\implemented (no exception), but,
-  jf   cop2flg,dest        ;-jump always ;/flag seems to be always "false"
+```
+  mtc0 rt,$12              ;-enable/disable COP2 (GTE) via COP0 status register
+  mtc2 rt,rd / ctc2 rt,rd  ;\write parameters to GTE data/control registers
+  lwc2 rt,imm(rs)          ;/(data registers only)
+  cop2 imm25               ;-issue GTE command
+  mfc2 rt,rd / cfc2 rt,rd  ;\read results from GTE data/control registers
+  swc2 rt,imm(rs)          ;/(data registers only)
+  bc2t dest                ;-jump never  ;\implemented (no exception), but,
+  bc2f dest                ;-jump always ;/flag seems to be always "false"
 ```
 
 #### GTE Load Delay Slots
 Using CFC2/MFC2 has a delay of 1 instruction until the GPR is loaded with its new value.
 Certain games are sensitive to this, with the notable example of Tekken 2
 which will be filled with broken geometry on emulators which don't emulate this properly.<br/>
-GTE (memory-?) load and store instructions have a delay of 2 instructions, for
-any GTE commands or operations accessing that register. Any? That's wrong!<br/>
+Writes to GTE registers (MTC2, CTC2 and LWC2) take 2 cycles to land. MFC2,
+CFC2 or SWC2 of the register sees the new value only if at least 2
+instructions sit between the write and the read (measured with NOPs running
+from the instruction cache), and the old value otherwise.<br/>
+A GTE command reads its input registers one after another while it runs, so
+how many instructions it needs after a write depends on the command and on
+the register: 2, 1 or none. Every input not listed below sees a write placed
+directly before the command. Measured with cached NOPs (uncached ones count
+for more), on six consoles and at every position in the cache line; a few
+registers get by with one instruction less at some positions, and DPCT
+needs the extra instruction on RGB0 on most consoles and on RGB1 on an
+SCPH-9002:
+```
+  Command                2 instructions           1 instruction
+  RTPS                   R31R32,TRZ               -
+  RTPT                   R31R32,TRZ               VXY0,R11R12,TRX
+  NCLIP                  SXY0,SXY2                SXY1
+  AVSZ3                  SZ1,ZSF3                 SZ2
+  AVSZ4                  SZ1,ZSF4                 SZ2
+  MVMVA(RT,V0,TR)        VXY0,R11R12,TRX          R13R21,TRY
+  MVMVA(RT,V0,NONE)      VXY0,R11R12              R13R21
+  MVMVA(LL,V0,BK)        VXY0,L11L12,RBK          L13L21,GBK
+  MVMVA(LC,IR,BK)        IR1,LR1LR2,RBK           LR3LG1,GBK
+  SQR                    IR1                      IR2
+  OP                     IR3,R22R23               IR2,R11R12,R33
+  GPF                    IR0,IR1                  IR2
+  GPL                    IR0,IR1,MAC1             IR2,MAC2
+  NCS                    VXY0,L11L12              L13L21
+  NCCS                   VXY0,L11L12              L13L21
+  NCDS                   VXY0,L11L12              L13L21
+  NCT, NCCT, NCDT        VXY0                     -
+  CC, CDP                IR1,LR1LR2,RBK           LR3LG1,GBK
+  DPCS                   RGBC,RFC                 GFC
+  DPCT                   RGB0,RGB1,RFC            GFC
+  DCPL                   RGBC,IR1,RFC             IR2,GFC
+  INTPL                  IR1,RFC                  IR2,GFC
+```
+So `mtc2 VXY0; mtc2 VZ0; nop; MVMVA` is exactly enough, and a write to VZ0
+directly before RTPS or MVMVA is fine. With fewer instructions than listed,
+some commands mix old and new values in one result (MVMVA with VXY0 written
+one instruction before it, for example). With no instruction in between, a command that
+writes the same register can also end up with the written value in it
+instead of its own result (seen with SQR on IR1).<br/>
 GTE instructions and functions should not be used in<br/>
 ```
   - Delay slots of jumps and branches
@@ -417,6 +458,10 @@ For LZCS/LZCR the required gap was measured on hardware as 2 cached opcodes (or 
 uncached opcode) between the MTC2 and the MFC2. With fewer, the MFC2 returns the
 result of the PREVIOUS LZCS write, and does so silently - the stale value is always
 a well-formed count in range 1..32, never a partial result.<br/>
+The gap is two clock cycles, however they are spent: a single LW from an I/O
+port (eg. I_STAT) between the MTC2 and the MFC2 is enough on its own, and so is
+an MFLO that has to wait for a pending MULT or DIV. A lone MULT issues in one
+cycle and runs in the background, so it counts like one cached NOP.<br/>
 The count does not depend on the input value: leading-zero and leading-one runs of
 1..32 were swept, with popcount varied at fixed run length, and none of them move
 it. Verified on SCPH-1000, SCPH-1001, SCPH-5501 and SCPH-7001; not verified on PAL
@@ -530,11 +575,14 @@ The official Sony documentation refers to this opcode as the Outer Product,
 but this is likely the result of a bad translation from Japanese: "外積 - gaiseki"
 can be translated to "cross product", "vector product", or "outer product".<br/>
 
-#### LZCS/LZCR registers - ? Cycles - Count-Leading-Zeroes/Leading-Ones
+#### LZCS/LZCR registers - no execution time - Count-Leading-Zeroes/Leading-Ones
 The LZCS/LZCR registers offer a Count-Leading-Zeroes/Leading-Ones function.<br/>
-The execution time above is unknown. Separately from it, the write to LZCS is
-subject to the cop2 store delay: 2 cached opcodes before reading LZCR. See
-"Additional Functions" above and "Caution - Store Delay" in the CPU chapter.<br/>
+Writing LZCS keeps nothing busy: a GTE command issued right after it takes as
+long as after a write to any other data register, and an MFC2 from LZCR right
+after it does not stall, for any input value. The only cost is the cop2 store
+delay: with fewer than 2 cached opcodes between the MTC2 and the MFC2, the read
+returns the result of the previous write. See "Additional Functions" above and
+"Caution - Store Delay" in the CPU chapter.<br/>
 
 
 

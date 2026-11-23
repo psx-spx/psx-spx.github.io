@@ -9,7 +9,7 @@
 [Standard Digital/Analog Controllers](controllers-standard-digital-analog-controllers.md#standard-digitalanalog-controllers)<br/>
 [Mouse](controllers-mouse.md#mouse)<br/>
 [Racing Controllers](controllers-racing-controllers.md#racing-controllers)<br/>
-[Lightguns](controllers-lightguns.md#lightguns)<br/>
+[Lightguns](lightguns/index.md#lightguns)<br/>
 [Configuration Commands](controllers-configuration-commands.md#configuration-commands)<br/>
 [Vibration/Rumble Control](controllers-vibration-rumble-control.md#vibrationrumble-control)<br/>
 [Analog Buttons (Dualshock2)](controllers-analog-buttons-dualshock2.md#analog-buttons-dualshock2)<br/>

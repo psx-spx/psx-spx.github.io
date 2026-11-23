@@ -74,10 +74,20 @@ The IBLKSZ field in the [BIU/Cache Configuration Register](memorycontrol.md#fffe
 (bits 8-9 of FFFE0130h) limits the maximum burst length. With IBLKSZ=0 (2-word
 refill), entry at word 0 fills only words 0 and 1 (valid = 03h). Entry at words
 1, 2, or 3 is unaffected by IBLKSZ and always fills to end-of-line.<br/>
-When the tag matches but a specific word's valid bit is 0, the CPU treats it as
-a miss and performs a **full line refill** from RAM, replacing all 4 code words
-and setting valid to 0Fh. Consecutive fills to the same line (with matching
-tags) OR into the valid bits, progressively filling the line.<br/>
+When the tag matches but the accessed word's valid bit is 0, the CPU treats it as
+a miss too. The refill overwrites every word it covers, including words whose
+valid bits were already set: a miss at word 0 replaces all 4 code words and sets
+valid to 0Fh. Consecutive fills to the same line (with matching tags) OR into
+the valid bits, progressively filling the line. A tag-matching miss at word 1
+reads words 1 to 3 only, the same as a miss on another tag: measured with only
+word 3 valid, the bus shows a three-word burst and word 0 is not read. Misses at
+word 2 or 3 of a
+matching tag have not been tested.<br/>
+On the bus a refill is a single DRAM page-mode burst: one /RAS cycle, with the
+column advancing by one word per clock, from the accessed word to the last word
+of the line. Since the valid bits are per word, code entered in the middle of a
+line leaves the words before it invalid, and a later jump back to them misses
+again.<br/>
 
 ##### Isolation and self-modifying code
 Store instructions (SW etc.) to RAM addresses do **not** affect the i-cache.
@@ -140,9 +150,11 @@ The Scratchpad is mirrored only in KUSEG and KSEG0, but not in KSEG1.<br/>
 
 #### Write queue
 The MIPS CPU has a 4-words deep pass-through write queue, in order to relieve
-some bus contention when writing to memory. If reading the same memory location
-that just got written into the write queue, it will first be flushed before
-being read back from memory.<br/>
+some bus contention when writing to memory. A read does not wait for the whole
+queue: a read that is pending when the bus becomes free between two queued
+stores is performed first, whether it is of RAM or of an I/O register. A RAM
+read that falls within the same 64 bytes as a store still in the queue waits
+until that store has been written.<br/>
 It is important to realize that the write queue's mechanism is only viable for
 normal memory attached to the main CPU, and that any hardware register state machine
 will get messed up by it.<br/>

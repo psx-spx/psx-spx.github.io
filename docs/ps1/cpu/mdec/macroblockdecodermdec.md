@@ -2,6 +2,8 @@
 The MDEC is a JPEG-style Macroblock Decoder, that can decompress pictures (or a
 series of pictures, for being displayed as a movie).<br/>
 
+![MDEC block diagram](diagrams/mdec.svg)
+
 [MDEC I/O Ports](#mdec-io-ports)<br/>
 [MDEC Commands](#mdec-commands)<br/>
 [MDEC Decompression](#mdec-decompression)<br/>
@@ -48,6 +50,10 @@ information is apparently passed to the DMA1 controller, so that it knows if
 and how it must re-order the data in RAM). If the output fifo is empty, then
 the bits indicate the currently processsed incoming block (ie. Cr,Cb,Y1..Y4; or
 Y for mono).<br/>
+The Data-In FIFO holds 32 words. While the decoder is blocked by an undrained
+output, bit 30 sets on the 32nd word written, and a 33rd word written then is
+lost: it is not counted in bits 0-15, and the command stays busy waiting for
+one more word.<br/>
 An error message in older versions of Sony's MDEC library refers to bit 25 as
 "RGB24", which is only correct because the library always keeps bit 26 set and
 does not support grayscale mode (and even then, the bit is *cleared* in 24bpp
@@ -109,8 +115,10 @@ unsigned parameter bytes for the Color Quant Table (used for Cb and Cr).<br/>
   28-0  Not used (should be zero)  ;Bit25-28 are copied to STAT.23-26 though
 ```
 The command is followed by 64 signed halfwords with 14bit fractional part, the
-values should be usually/always the same values (based on the standard JPEG
-constants, although, MDEC(3) allows to use other values than that constants).<br/>
+values are normally the standard ones listed under set\_scale\_table (based on
+the standard JPEG constants). Other values work too: the IDCT is a plain matrix
+multiply by whatever table was uploaded, so a modified or even non-orthogonal
+matrix changes the output accordingly.<br/>
 There is no usable scale matrix until MDEC(3) has been issued: software that
 never sends one decodes to flat mid-grey, so the table is not left in place by
 the BIOS. On the other hand, the Reset bit does NOT clear the scale matrix nor
@@ -230,7 +238,7 @@ final fraction passed on to the y\_to\_mono stage.<br/>
   for y=0 to 7
     for x=0 to 7
       R=[Crblk+((x+xx)/2)+((y+yy)/2)*8], B=[Cbblk+((x+xx)/2)+((y+yy)/2)*8]
-      G=(-0.3437*B)+(-0.7143*R), R=(1.402*R), B=(1.772*B)
+      G=(-0.3437*B)+(-0.7143*R), R=(1.402*R), B=(1.7754*B)
       Y=[Yblk+(x)+(y)*8]
       R=(Y+R) AND 1FFh, G=(Y+G) AND 1FFh, B=(Y+B) AND 1FFh ;clip to signed 9bit
       R=MinMax(-128,127,R)                   ;saturate from 9bit to signed 8bit
@@ -241,7 +249,12 @@ final fraction passed on to the y\_to\_mono stage.<br/>
     next x
   next y
 ```
-Note: The exact fixed point resolution for "yuv\_to\_rgb" is unknown.<br/>
+Note: The exact fixed point resolution for "yuv\_to\_rgb" is unknown. With a single
+round-half-down after the multiply-add, flat-colour test blocks constrain the factors to at
+least 9 fractional bits: R=1.401..1.404, G/Cr=0.712..0.716, G/Cb=0.342..0.351, and B=1.774..1.776
+(909/512 is the only /512 value that fits). The JPEG value 1.772 for B is off by one at
+Cb=+64. A slightly scaled set of the JPEG constants (gain around 1.001..1.003) fits the same
+data, so the tests do not tell the two apart.<br/>
 
 #### y\_to\_mono
 ```

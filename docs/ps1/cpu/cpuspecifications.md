@@ -11,6 +11,8 @@ all part of the same chip, as its [pinout](../pinouts/cpu-pinouts.md) and the
 [chipset summary](../pinouts/chipset-summary.md) show, even where their pages
 sit under System or Serial Ports.<br/>
 
+![CPU chip block diagram](diagrams/cpu-soc.svg)
+
 #### CPU
 [CPU Registers](#cpu-registers)<br/>
 [CPU Opcode Encoding](#cpu-opcode-encoding)<br/>
@@ -198,7 +200,7 @@ what is accessed (measured on hardware):
   Scratchpad (1F800000h..)      1 cycle    ;on-chip SRAM, no bus access
   On-die I/O (IRQ/DMA/timers)   5 cycles   ;one shared decoder
   Main RAM (KUSEG/KSEG0/KSEG1)  7 cycles   ;plus occasional DRAM-refresh stalls
-  BIOS ROM (1FC00000h..)        27..33     ;8bit ROM, programmable bus delay
+  BIOS ROM (1FC00000h..)        27 or 33   ;8bit ROM, programmable bus delay
 ```
 The scratchpad is the (otherwise unused) data-cache SRAM addressed directly, so
 it reads as fast as a register. All on-die I/O registers read at the same 5
@@ -207,8 +209,10 @@ and uncached (KSEG1) accesses to main RAM cost the same, as there's no data
 cache to speed up the "cached" mirror. The main RAM figure is slightly variable:
 DRAM refresh cycles occasionally collide with a read and stall it for a few
 extra cycles, so a tight read loop averages a little above 7 cycles. The BIOS
-ROM figure varies between consoles, as the ROM bus delay is programmable via the
-memory-control registers.<br/>
+ROM figure depends on the memory-control registers: 27 cycles with DEV2 at
+0013243Fh and COM\_DELAY at 00031125h, 33 cycles once the BIOS CD-ROM read
+code has set COM\_DELAY to 0000132Ch (its floating period goes from 1 to 3
+cycles between the four bytes).<br/>
 
 #### Load Shadow
 The "CPU halted until the data arrives" above is only partly true for a slow
@@ -516,55 +520,6 @@ one uncached opcode).<br/>
   bal dest             ;alias for bgezal r0, r0, dest
 ```
 
-#### Pseudo instructions (nocash/a22i, not present on most other assemblers)
-```
-  mov  rx,NNNN0000h    ;alias for lui  rx,NNNNh
-  mov  rx,0000NNNNh    ;alias for or   rx,r0,NNNNh  ;max +FFFFh
-  mov  rx,-imm15       ;alias for add  rx,r0,-NNNNh ;min -8000h
-  mov  rx,ry           ;alias for or   rx,ry,0  (or "addiu")
-  jrel dest            ;alias for blez R0,dest   ;relative jump
-  crel dest            ;alias for callns R0,dest ;relative call
-  jz   rx,dest         ;alias for je   rx,R0,dest
-  jnz  rx,dest         ;alias for jne  rx,R0,dest
-  call rx              ;alias for call rx,ret=RA
-  ret                  ;alias for jmp  ra
-  subt rt,rs,imm       ;alias for addt rt,rs,-imm
-  sub  rt,rs,imm       ;alias for add  rt,rs,-imm
-  alu  rx,op           ;alias for alu  rx,rx,op
-  neg(t) rx,ry         ;alias for sub(t) rx,R0,ry
-  not    rx,ry         ;alias for nor    rx,R0,ry
-  neg(t)/not rx        ;alias for neg(t)/not rx,rx
-  setz rx,ry           ;alias for setb rx,ry,1   (set if zero)
-  setnz rx,ry          ;alias for setb rx,R0,ry  (set if nonzero)
-  syscall/break        ;alias for syscall/break 000000h
-```
-Below are pseudo instructions combined of two 32bit opcodes...<br/>
-```
-  movp rx,imm32        ;alias for lui  rx,imm16 -plus- or rx,rx,imm16)
-  mov(bhs)p rx,[imm32] ;load from address (lui rx,imm16 / mov rx,[rx+imm16])
-  movu [rs+imm]        ;alias for lwr/swr [rs+imm] plus lwl/swl [rs+imm+3]
-  reti                 ;alias for jmp k0 plus rfe
-```
-Below are pseudo instructions combined of two or more 32bit opcodes...<br/>
-```
-  push rlist           ;alias for sub sp,n*4 -- mov [sp+(1..n)*4],r1..rn
-  pop  rlist           ;alias for mov r1..rn,[sp+(1..n)*4] -- add sp,n*4
-  pop  pc,rlist        ;alias for pop ra,rlist -- jmp ra
-```
-
-#### Directives (nocash)
-```
-  .mips          ;select MIPS instruction set (alternately .hc05 for MC68HC05)
-  .bios          ;create a .ROM file (instead of .EXE)
-  .auto_nop      ;append NOPs to jumps ;unless next opcode starts with a +
-  org imm        ;assume following code to be originated at address "imm"
-  db n(,n(..)))  ;define 8bit data values(s) or quoted ASCII strings
-  dw n(,n(..)))  ;define 16bit data values(s) (not 32bit data!)
-  dd n(,n(..)))  ;define 32bit data values(s)
-  .align imm
-  0              ;alias for immediate 0 and register R0 (whichever fits)
-```
-
 #### Directives (native)
 ```
   org imm        ;self-explaining (but, default=$80010000 for spasm!)
@@ -625,14 +580,28 @@ Describes the most recently recognised exception.
 | Bits  | Mnemonic | Description     |
 |-------|----------|-----------------|
 | 0-1   |          | Not used (zero) |
-| 2-6   | ExcCode  | Describes what kind of exception occured (see below) |
+| 2-6   | ExcCode  | Exception code (see below) |
 | 7     |          | Not used (zero) |
-| 8-9   | Sw       | Software Interrupts. Write to these bits to manually cause an exception. Clear them before returning from the exception handler. |
-| 10-15 | IP       | Interrupt pending field. As long as any of the bits are set they will cause an interrupt if the corresponding bit is set in IM. |
+| 8-9   | Sw       | Software Interrupts (R/W) |
+| 10-15 | IP       | Interrupt pending field |
 | 16-27 |          | Not used (zero) |
-| 28-29 | CE       | Contains the coprocessor number if the exception occurred because of a coprocessor instuction for a coprocessor which wasn't enabled in SR. |
-| 30    | BT       | When BD is set, BT determines whether the branch is taken. The Target Address Register holds the return address. |
-| 31    | BD       | Is set when EPC points to the branch instuction instead of the instruction in the branch delay slot, where the exception occurred. |
+| 28-29 | CE       | Coprocessor number, for Coprocessor Unusable |
+| 30    | BT       | Branch taken, when BD is set |
+| 31    | BD       | Exception in a branch delay slot |
+
+- Sw: write to these bits to manually cause an exception. Clear them before
+  returning from the exception handler.
+- IP: as long as any of the bits are set they will cause an interrupt if the
+  corresponding bit is set in IM. On the PSX only bit 10 is connected, to the
+  interrupt controller, see [Interrupt lines](#interrupt-lines).
+- CE: contains the coprocessor number if the exception occurred because of a
+  coprocessor instuction for a coprocessor which wasn't enabled in SR. After a
+  bus error it is not left unchanged: it holds bits 27-26 of the opcode that
+  follows the one EPC points to (1 for ORI, 2 for XORI, 0 for NOP).
+- BT: when BD is set, BT determines whether the branch is taken. The Target
+  Address Register holds the return address.
+- BD: is set when EPC points to the branch instuction instead of the
+  instruction in the branch delay slot, where the exception occurred.
 
 ExcCode values:
 
@@ -643,7 +612,7 @@ ExcCode values:
 | 02h     | TLBL     | TLB load (none such in PSX) |
 | 03h     | TLBS     | TLB store (none such in PSX) |
 | 04h     | AdEL     | Address error, Data load or Instruction fetch |
-| 05h     | AdES     | Address error, Data store. The address errors occur when attempting to read outside of KUseg in user mode and when the address is misaligned. (See also: Bad Address register) |
+| 05h     | AdES     | Address error, Data store |
 | 06h     | IBE      | Bus error on Instruction fetch |
 | 07h     | DBE      | Bus error on Data load/store |
 | 08h     | Sys      | Generated unconditionally by syscall instruction |
@@ -653,51 +622,79 @@ ExcCode values:
 | 0Ch     | Ovf      | Arithmetic overflow |
 | 0Dh-1Fh |          | Not used    |
 
+The address errors occur when attempting to read outside of KUseg in user mode
+and when the address is misaligned. (See also: Bad Address register)
+
 #### cop0r12 - SR - System status register (R/W)
-```
-  0     IEc Current Interrupt Enable  (0=Disable, 1=Enable) ;rfe pops IUp here
-  1     KUc Current Kernel/User Mode  (0=Kernel, 1=User)    ;rfe pops KUp here
-  2     IEp Previous Interrupt Enable                       ;rfe pops IUo here
-  3     KUp Previous Kernel/User Mode                       ;rfe pops KUo here
-  4     IEo Old Interrupt Enable                        ;left unchanged by rfe
-  5     KUo Old Kernel/User Mode                        ;left unchanged by rfe
-  6-7   -   Not used (zero)
-  8-15  Im  8 bit interrupt mask fields. When set the corresponding
-            interrupts are allowed to cause an exception.
-  16    Isc Isolate Cache (0=No, 1=Isolate)
-              When isolated, all load and store operations are targetted
-              to the cache instead of main memory. Which cache is accessed
-              depends on the BCC register (FFFE0130h): with TAG+IS1, stores
-              go to i-cache tag memory; with IS1 only, stores go to i-cache
-              code words. (Used by PSX Kernel, in combination with Port
-              FFFE0130h)
-  17    Swc Swapped cache mode (0=Normal, 1=Swapped)
-              Documented as swapping instruction and data caches. Hardware
-              testing shows no observable effect on PSX: IsC+SwC produces
-              identical results to IsC alone for both TAG and code word
-              reads/writes. The PSX kernel does not use this bit.
-              (Not used by PSX Kernel)
-  18    PZ  When set cache parity bits are written as 0.
-  19    CM  Shows the result of the last load operation with the D-cache
-            isolated. It gets set if the cache really contained data
-            for the addressed memory location.
-  20    PE  Cache parity error (Does not cause exception)
-  21    TS  TLB shutdown. Gets set if a programm address simultaneously
-            matches 2 TLB entries.
-            (initial value on reset allows to detect extended CPU version?)
-  22    BEV Boot exception vectors in RAM/ROM (0=RAM/KSEG0, 1=ROM/KSEG1)
-  23-24 -   Not used (zero)
-  25    RE  Reverse endianness   (0=Normal endianness, 1=Reverse endianness)
-              Reverses the byte order in which data is stored in
-              memory. (lo-hi -> hi-lo)
-              (Affects only user mode, not kernel mode) (?)
-              (The bit doesn't exist in PSX ?)
-  26-27 -   Not used (zero)
-  28    CU0 COP0 Enable (0=Enable only in Kernel Mode, 1=Kernel and User Mode)
-  29    CU1 COP1 Enable (0=Disable, 1=Enable) (none in PSX)
-  30    CU2 COP2 Enable (0=Disable, 1=Enable) (GTE in PSX)
-  31    CU3 COP3 Enable (0=Disable, 1=Enable) (none in PSX)
-```
+The core is LSI's CW33300, not a stock R3000, and its COP0 differs from the
+R3000's. LSI's "L64360" datasheet, which uses the same core, is the closest
+reference; generic R3000 manuals describe bits this core does not have.
+
+| Bits  | Name | Read | Function |
+|-------|------|------|----------|
+| 0     | IEc  | R/W  | Current Interrupt Enable (0=Disable, 1=Enable) |
+| 1     | KUc  | R/W  | Current Kernel/User Mode (0=Kernel, 1=User) |
+| 2     | IEp  | R/W  | Previous Interrupt Enable |
+| 3     | KUp  | R/W  | Previous Kernel/User Mode |
+| 4     | IEo  | R/W  | Old Interrupt Enable |
+| 5     | KUo  | R/W  | Old Kernel/User Mode |
+| 6-7   | -    | 0    | Not used |
+| 8-9   | Im   | R/W  | Software interrupt mask, for CAUSE bits 8-9 |
+| 10    | Im   | R/W  | Interrupt controller mask, for CAUSE bit 10 |
+| 11-15 | Im   | R/W  | No effect, nothing connected |
+| 16    | IsC  | R/W  | Isolate Cache (0=No, 1=Isolate) |
+| 17    | SwC  | R/W  | No effect |
+| 18    | PZ   | R/W  | No effect |
+| 19    | CM   | R/W  | No effect, holds the last value written |
+| 20    | PE   | 0    | Not used |
+| 21    | TS   | 0    | Not used |
+| 22    | BEV  | R/W  | Exception vectors (0=RAM/KSEG0, 1=ROM/KSEG1) |
+| 23-27 | -    | 0    | Not used |
+| 28    | CU0  | R/W  | COP0 Enable in User Mode (Kernel Mode always) |
+| 29    | CU1  | R/W  | COP1 Enable (there is no COP1) |
+| 30    | CU2  | R/W  | COP2 Enable (GTE) |
+| 31    | CU3  | R/W  | COP3 Enable (there is no COP3) |
+
+Bits marked 0 read back 0 after writing 1. No bit reads back 1 after writing 0.
+
+- IEc..KUo: rfe pops IEp/KUp into IEc/KUc and IEo/KUo into IEp/KUp, and
+  leaves IEo/KUo unchanged. In user mode, loads and instruction fetches outside
+  KUSEG raise AdEL, and COP0 needs CU0.
+- Im (bits 8-9): with IEc set, writing 1 to a CAUSE bit whose mask bit is set
+  raises an interrupt immediately. With the mask bit clear, the CAUSE bit stays
+  set and fires once the mask bit (and IEc) is set.
+- Im (bits 10-15): see [Interrupt lines](#interrupt-lines) below.
+- IsC: when isolated, all load and store operations are targetted to the cache
+  instead of main memory. Which cache is accessed depends on the BCC register
+  (FFFE0130h): with TAG+IS1, stores go to i-cache tag memory; with IS1 only,
+  stores go to i-cache code words. An isolated load returns the contents of the
+  cache line selected by the address, without comparing the line's tag. (Used by
+  PSX Kernel, in combination with Port FFFE0130h)
+- SwC (bit 17): holds what is written. IsC+SwC behaves the same as IsC alone
+  for both TAG and code word reads/writes. (Not used by PSX Kernel)
+- PZ: no effect on loads and stores.
+- CM (bit 19): holds what is written. Isolated loads leave it unchanged,
+  whether or not the tag matches.
+- BEV: with BEV set, exceptions no longer reach 80000080h (see Exception
+  Vectors below).
+- Bit 25: writing it does not affect user mode byte and halfword accesses.
+- CU1, CU3: with the bit clear, every COP1 (or COP3) opcode causes a
+  Coprocessor Unusable Exception (excode=0Bh, CE=1 or 3), in kernel mode too.
+  With the bit set they don't cause an exception, reads return garbage and
+  stores write garbage.
+- CU2: with CU2=0, COP2 opcodes cause a Coprocessor Unusable Exception (CE=2).
+
+#### Interrupt lines
+The R3000 has two software and six hardware interrupt lines, and IM and IP
+keep the meaning the R3000 manual gives them, one mask bit per line. On the PSX
+only hardware line 0 (IP/IM bit 10) is connected. It carries the output of the
+interrupt controller, (I\_STAT AND I\_MASK) != 0, which ORs all eleven
+[interrupt sources](../system/interrupts.md) into that one line. IP11-15 are
+never driven. A handler reads I\_STAT to find the source, devices are masked in
+I\_MASK, IM10 is the master gate for all of them, and acknowledging in I\_STAT
+drops IP10 at once, because CAUSE holds no latch for it.<br/>
+
+![Interrupt requests from I_STAT to the CPU exception](../system/diagrams/interrupt-chain.svg)
 
 #### cop0r14 - EPC - Return Address from Trap (R)
 ```
@@ -748,13 +745,14 @@ unchanged.<br/>
 The RFE opcode does NOT automatically jump to EPC. Instead, the exception
 handler must copy EPC into a register (usually R26 aka K0), and then jump to
 that address. Because of branch delays, that would look like so:<br/>
-```x86asm
-  mov  k0,epc  ;get return address
-  push k0      ;save epc in memory (if you expect nested exceptions)
-  ...          ;whatever (ie. process CAUSE)
-  pop  k0      ;restore from memory (if you expect nested exceptions)
-  jmp  k0      ;jump to K0 (after executing the next opcode)
-  +rfe         ;move SR bit4/5 --> bit2/3 --> bit0/1
+```
+  mfc0 $k0, $14      ;get return address from EPC
+  sw   $k0, ...      ;save it in memory (if you expect nested exceptions)
+  ...                ;whatever (ie. process CAUSE)
+  lw   $k0, ...      ;restore from memory (if you expect nested exceptions)
+  nop                ;load delay
+  jr   $k0           ;jump to $k0 (after executing the next opcode)
+   rfe               ;move SR bit4/5 --> bit2/3 --> bit0/1
 ```
 If you expect exceptions to be nested deeply, also push/pop SR. Note that
 there's no way to leave all registers intact (ie. above code destroys K0).<br/>
@@ -829,12 +827,12 @@ causes a Reserved Instruction Exception (excode=0Ah).<br/>
 The PSX supports only one cop0cmd (cop0cmd=10h aka RFE). Trying to execute the
 TLBxx opcodes causes a Reserved Instruction Exception (excode=0Ah).<br/>
 
-#### jf/jt cop0flg,dest - conditional cop0 jumps
+#### bc0f/bc0t dest - conditional cop0 jumps
 With SR.Bit28=0, these cause a Coprocessor Unusable Exception (excode=0Bh),
 even in kernel mode. With SR.Bit28=1, bc0f always jumps and bc0t never does,
 see [Coprocessor Branches](#coprocessor-branches).<br/>
 
-#### mov [mem],cop0reg / mov cop0reg,[mem] - coprocessor cop0 load/store
+#### lwc0/swc0 - coprocessor cop0 load/store
 Not supported by the CPU. Trying to execute these opcodes causes a Coprocessor
 Unusable Exception (excode=0Bh, ie. unlike above, not 0Ah).<br/>
 
@@ -891,9 +889,9 @@ disabled BEFORE jumping from 80000040h to the actual exception handler).
 If one or both of these bits are nonzero, then the PSX seems to check for the
 following opcode sequence,<br/>
 ```
-  mov rx,[mem]   ;load rx from memory
-  ...            ;one or more opcodes that do not change rx
-  jmp/call rx    ;jump or call to rx
+  lw   rx,imm(rs) ;load rx from memory
+  ...              ;one or more opcodes that do not change rx
+  jr/jalr rx       ;jump or call to rx
 ```
 if it does sense that sequence, then it sets PC=[00000000h], but does not store
 any useful information in any cop0 registers, namely it does not store the

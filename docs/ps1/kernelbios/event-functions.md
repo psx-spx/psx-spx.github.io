@@ -1,5 +1,6 @@
 #   Event Functions
 #### B(08h) - OpenEvent(class, spec, mode, func)
+`uint32_t OpenEvent(uint32_t class, uint32_t spec, uint32_t mode, void (*func)(void));`<br/>
 Adds an event structure to the event table.<br/>
 ```
      class,spec - triggers if BOTH values match
@@ -19,15 +20,19 @@ will slowdown the DeliverEvent function (which always scans all EvCBs, even if
 all events are disabled).<br/>
 
 #### B(09h) - CloseEvent(event) - releases event from the event table
+`int CloseEvent(uint32_t event);`<br/>
 Always returns 1 (even if the event handle is unused or invalid).<br/>
 
 #### B(0Ch) - EnableEvent(event) - Turns on event handling for specified event
+`int EnableEvent(uint32_t event);`<br/>
 Always returns 1 (even if the event handle is unused or invalid).<br/>
 
 #### B(0Dh) - DisableEvent(event) - Turns off event handling for specified event
+`int DisableEvent(uint32_t event);`<br/>
 Always returns 1 (even if the event handle is unused or invalid).<br/>
 
 #### B(0Ah) - WaitEvent(event)
+`int WaitEvent(uint32_t event);`<br/>
 Returns 0 if the event is disabled. Otherwise hangs in a loop until the event
 becomes ready, and returns 1 once when it is ready (and automatically switches
 the event back to busy status). Callback events (mode=1000h) do never set the
@@ -40,22 +45,26 @@ the event status changes from not-ready to ready shortly after the function
 call).<br/>
 
 #### B(0Bh) - TestEvent(event)
+`int TestEvent(uint32_t event);`<br/>
 Returns 0 if the event is busy or disabled. Otherwise, when it is ready,
 returns 1 (and automatically switches the event back to busy status). Callback
 events (mode=1000h) do never set the ready flag.<br/>
 
 #### B(07h) - DeliverEvent(class, spec)
+`void DeliverEvent(uint32_t class, uint32_t spec);`<br/>
 This function is usually called by the kernel, it triggers all events that are
 enabled/busy, and that have the specified class and spec values. Depending on
 the mode, either the callback function is called (mode=1000h), or the event is
 marked as enabled/ready (mode=2000h).<br/>
 
 #### B(20h) - UnDeliverEvent(class, spec)
+`void UnDeliverEvent(uint32_t class, uint32_t spec);`<br/>
 This function is usually called by the kernel, undelivers all events that are
 enabled/ready, and that have mode=2000h, and that have the specified class and
 spec values. Undeliver means that the events are marked as enabled/busy.<br/>
 
 #### C(04h) - get\_free\_EvCB\_slot()
+`int get_free_EvCB_slot(void);`<br/>
 A subfunction for OpenEvent.<br/>
 
 #### Event Classes

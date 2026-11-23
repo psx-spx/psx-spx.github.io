@@ -85,7 +85,7 @@ should be disabled, as all controllers and memory cards expect these settings.
   3     BRK     (SIO1) TX Output Level   (0=Normal, 1=Inverted, during Inactivity & Stop bits)
   4     ERRRST  Acknowledge              (0=No change, 1=Reset SR.Bits 3,4,5,9)      (W)
   5     RTS     (SIO1) RTS Output Level  (0=Off, 1=On)
-  6     INTRST  Reset                    (0=No change, 1=Reset most registers to zero) (W)
+  6     INTRST  Reset                    (0=No change, 1=Reset the whole port, see below) (W)
   7     ?       (SIO1) unknown?          (read/write-able when FACTOR non-zero) (otherwise always zero)
   8-9   BUFSZ   RX Interrupt Mode        (0..3 = IRQ when RX FIFO contains 1,2,4,8 bytes)
   10    TXIEN   TX Interrupt Enable      (0=Disable, 1=Enable) ;when SR.0-or-2 ;Ready
@@ -103,15 +103,46 @@ unless bit 1 is also set. When set, data will be received regardless of whether
 /CS is asserted, however bit 2 will be automatically cleared after a byte is
 received.
 
+Bit 6 resets the whole port. Right after it is written, CR, MR and BR all read
+back as zero, including bit 6 itself and any other bits written together with
+it, so MR, BR and CR must be programmed again before the port is used. SR reads
+as TX ready and TX finished (bits 0 and 2) plus the live DSR/CTS input levels;
+the parity, overrun, framing and IRQ flags are cleared. A byte being sent is
+aborted, and the RX FIFO is emptied: RX ready clears and only bytes received
+after the reset are counted, although reading DR while it is empty can still
+return bytes from before the reset. The baud rate timer reads zero on SIO0,
+while on SIO1 it keeps counting down from where it was and wraps around.
+
 Note that some emulators do not implement all SIO0 interrupts, as the kernel's
 controller driver only ever uses the DSR (/ACK) interrupt.
 
 #### `0x1f80105c`: SIO1 unknown
 This is an internal register, which usually shouldn't be accessed by software.
-Messing with it has rather strange effects: After writing a value "X" to this
-register, reading returns "X ROR 8" eventually "ANDed with 1F1Fh and ORed with
-C0C0h or 8080h" (depending on the character length in MR). SIO0 does not have
-this register.
+Writing a value to it and reading it back returns the two bytes swapped, with
+each byte trimmed to the character length set in MR at the time of the write:
+```
+  Character length   Each byte becomes
+  5 bits             (byte AND 1Fh) OR C0h
+  6 bits             (byte AND 3Fh) OR 80h
+  7 bits              byte AND 7Fh
+  8 bits              byte unchanged
+```
+For example, writing 1234h reads back as D4D2h, B492h, 3412h or 3412h for 5, 6,
+7 and 8 bits. The value reads back the same immediately and later, the MR baud
+rate factor makes no difference, and writing it does not affect SR, MR or BR. A
+port reset (CR bit 6) does not change it, even though it clears MR. SIO0 does
+not have this register.
+
+The access width of a store is ignored, only its address counts. The CPU puts
+the source register on the data bus shifted left by 8 times the low two address
+bits, and the halfword register at 1F80105Ch or at BR (1F80105Eh) latches its
+own 16 bits of the bus. So an 8-bit or 32-bit store to 1F80105Ch writes the
+source's low 16 bits, exactly like a 16-bit one, and a 32-bit store does not
+change BR. An 8-bit store to 1F80105Dh writes 1F80105Ch with the source's low
+byte as its high byte and 00h as its low byte (before the swap and trim above),
+and an 8-bit store to 1F80105Fh does the same to BR. A 32-bit read at 1F80105Ch
+returns BR in the upper half; 8-bit and 16-bit reads return the matching part of
+that word.
 
 #### `0x1f80104e + 0x10*N`: `BR` (baud rate register)
 ```

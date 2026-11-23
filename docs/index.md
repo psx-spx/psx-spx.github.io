@@ -13,6 +13,7 @@ The authors of this fork thought that this deserves more than a footnote, hence 
 
 This is a conversion/edition of Martin "nocash" Korth's Playstation specs document originally hosted at [https://problemkaputt.de/psx-spx.htm](https://problemkaputt.de/psx-spx.htm). See [https://github.com/psx-spx/psx-spx.github.io#readme](https://github.com/psx-spx/psx-spx.github.io#readme) for more details.<br />
 You can also download this website as a [single-page pdf](psx-spx.pdf).
+Recent edits are listed by week and page in [What changed](whatschanged.md).
 
 Martin is a difficult individual to reach (see [https://problemkaputt.de/email.htm](https://problemkaputt.de/email.htm), especially the part about gmail), and so far, any attempt at contacting him about collaborating on this document failed.
 
@@ -100,6 +101,7 @@ SPU is DMA4.
 
 The drive is DMA3.
 
+[CDROM Drive Overview](ps1/cdr/cdromdrive-overview.md)<br/>
 [CDROM Drive](ps1/cdr/cdromdrive.md)<br/>
 [CDROM Format](ps1/cdr/cdromformat.md)<br/>
 [CDROM File Formats](ps1/cdr/cdromfileformats/index.md)<br/>

@@ -6,6 +6,7 @@ heading that moved to a different page or id; "" is where the page itself went.
 Each old URL gets a small stub that picks the target from the fragment, so a
 pasted link like /graphicsprocessingunitgpu/#gpu-timings lands on the right
 section of the right page. Anchors the map does not list are passed through.
+Keys may be nested paths, for pages that moved again after the restructure.
 """
 import html
 import json
@@ -27,11 +28,11 @@ var m = {table};
 var h = location.hash.slice(1);
 try {{ h = decodeURIComponent(h); }} catch (e) {{}}
 var t = Object.prototype.hasOwnProperty.call(m, h) ? m[h] : m[""] + (h ? "#" + h : "");
-location.replace("../" + t);
+location.replace("{up}" + t);
 </script>
-<noscript><meta http-equiv="refresh" content="0; url=../{default}"></noscript>
+<noscript><meta http-equiv="refresh" content="0; url={up}{default}"></noscript>
 </head>
-<body><p>This page has moved to <a href="../{default}">{default}</a>.</p></body>
+<body><p>This page has moved to <a href="{up}{default}">{default}</a>.</p></body>
 </html>
 """
 
@@ -49,4 +50,5 @@ def on_post_build(config):
         default = html.escape(table[''])
         with open(out, 'w', encoding='utf-8') as f:
             f.write(STUB.format(table=json.dumps(table, sort_keys=True).replace('</', '<\\/'),
-                                default=default, canonical=base + default))
+                                default=default, canonical=base + default,
+                                up='../' * (old.count('/') + 1)))

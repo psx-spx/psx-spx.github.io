@@ -1468,6 +1468,16 @@ Wobble is commonly used only on (recordable) CDRs, ie. usually NOT on
 (readonly) CDROMs and Audio Disks. The copyprotected PSX CDROMs are having a
 short CDR-style wobble period in the first some seconds, which seems to contain
 the "SCEx" string instead of ATIP information.<br/>
+A CD-R with a forged SCEx signal has been reported to boot on unmodified
+consoles, using a Yamaha CRW-F1 with patched firmware. Its DiscT@2 mode drives
+the laser from a bitmap and can write marks longer than EFM allows; these
+disturb the tracking error signal at around 24kHz, which the drive decodes as
+SCEx. The patch slows the EFM clock about 1.6 times, moving the CD-R's own
+22050Hz ATIP wobble to about 35kHz, out of the detector's band. The pattern is
+written in the lead-in near ATIP 98:00-99:59, with each SCEx bit lasting
+3.9-4.2ms. Reported limits: pre-PU-22 boards only, no success with counterfeit
+KSM sleds, and no published tools or independent reproduction (psxdev.net
+forum thread t=1266).<br/>
 
 #### Other Protections
 Aside from the SCEx string, PSX disks are required to contain region and

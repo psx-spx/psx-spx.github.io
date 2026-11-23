@@ -1,5 +1,6 @@
 #   Character Sets
 #### B(51h) - Krom2RawAdd(shiftjis\_code)
+`const uint8_t *Krom2RawAdd(uint32_t shiftjis_code);`<br/>
 ```
   In: r4  = 16bit Shift-JIS character code
   Out: r2 = address in BIOS ROM of the desired character (or -1 = error)
@@ -7,6 +8,7 @@
 r4 should be 8140h..84BEh (charset 2), or 889Fh..9872h (charset 3).<br/>
 
 #### B(53h) - Krom2Offset(shiftjis\_code)
+`uint16_t Krom2Offset(uint32_t shiftjis_code);`<br/>
 ```
   In: r4  = 16bit Shift-JIS character code
   Out: r2 = offset within charset (without charset base address)

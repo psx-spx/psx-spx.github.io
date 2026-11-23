@@ -14,6 +14,8 @@ Sony designed for the SNES. The main differences are:
 - "external" audio inputs (from the CD-ROM drive and parallel port) are now
   digital and can be sent through reverb.
 
+![SPU block diagram](diagrams/spu.svg)
+
 [SPU Overview](#spu-overview)<br/>
 [SPU ADPCM Samples](#spu-adpcm-samples)<br/>
 [SPU ADPCM Pitch](#spu-adpcm-pitch)<br/>
@@ -145,6 +147,19 @@ reading from it may be useful to sense if the hardware has reached a start bit,
 and writing may be also useful in some cases, eg. to redirect a one-shot sample
 (with stop-bit, but without any start-bits) to a silent-loop located elsewhere
 in memory.<br/>
+Writing to LSAX sets an internal per-voice flag that stops Loop-Start-Bits from
+overwriting the register until the next Key On. This happens on any write, even
+one that writes back the value already in the register, and also while the voice
+is keyed off. Key On clears the flag, but does not change LSAX itself, so the
+previous value remains until the voice reaches a block with the Loop-Start-Bit.<br/>
+The exception is a write shortly after Key On. On each of the first three
+samples after Key On is serviced, the voice fetches the header of the first
+block (see Key On latency), and if that block has the Loop-Start-Bit, each fetch
+copies its address to LSAX. A write made before the last of these three fetches
+does not set the flag, so it is overwritten by the first block's Loop-Start-Bit,
+or by the next Loop-Start-Bit found later in the sample. A write made after it
+sets the flag as usual. The cutoff depends only on the time since Key On, not on
+the pitch or on whether the first block has a Loop-Start-Bit.<br/>
 
 #### Sample Data (BRR/SPU-ADPCM)
 Samples consist of one or more 16-byte blocks:<br/>
@@ -196,7 +211,7 @@ two sample rates, and, XA doesn't support looping.<br/>
 ##   SPU ADPCM Pitch
 ####  `0x1f801c04 + 0x10*N`: `PITCH`
 ```
-  0-15  Sample rate (0=stop, 4000h=fastest, 4001h..FFFFh=usually same as 4000h)
+  0-15  Sample rate (0=stop, 3FFFh=fastest, 4000h..FFFFh=same as 3FFFh)
 ```
 Defines the ADPCM sample rate (1000h = 44100Hz). This register (and PMON) does
 affect only the ADPCM sample frequency (but not on the Noise frequency, which
@@ -232,7 +247,7 @@ The pitch counter is adjusted at 44100Hz rate as follows:<br/>
     Step=SignExpand16to32(Step)   ;hardware glitch on VxPitch>7FFFh, make sign
     Step = (Step * Factor) SAR 15 ;range 0..1FFFFh (glitchy if VxPitch>7FFFh)
     Step=Step AND 0000FFFFh       ;hardware glitch on VxPitch>7FFFh, kill sign
-  IF Step>3FFFh then Step=4000h   ;range +0000h..+3FFFh (0.. 176.4kHz)
+  IF Step>3FFFh then Step=3FFFh   ;range +0000h..+3FFFh (0.. 176.4kHz)
   Counter = Counter + Step
 ```
 Counter.Bit12 and up indicates the current sample (within a ADPCM block).<br/>
@@ -245,7 +260,7 @@ The pitch counter supports sample rates up to 176.4kHz. However, exceeding the
 44.1kHz limit causes the hardware to skip samples (or actually: to apply
 incomplete interpolation on the 'skipped' samples).<br/>
 VxPitch can be theoretically 0..FFFFh (max 705.6kHz), normally 4000h..FFFFh are
-simply clipped to max=4000h (176.4kHz). Except, 4000h..FFFFh could be used with
+simply clipped to max=3FFFh (176.4kHz). Except, 4000h..FFFFh could be used with
 pitch modulation (as they are multiplied by 0.00..1.99 before clipping; in
 practice this works only for 4000h..7FFFh; as values 8000h..FFFFh are mistaken
 as signed values).<br/>
@@ -430,9 +445,23 @@ setting the initial level with Bit15=0, followed by the sweep parameter with
 Bit15=1 works only if there's a suitable delay between the two operations).
 Once when sweep is started, the current volume level increases to +7FFFh, or
 decreases to 0000h.<br/>
-Sweep Phase should be equal to the sign of the current volume (not yet tested,
-in the negative mode it does probably "increase" to -7FFFh?). The Phase bit
-seems to have no effect in Exponential Decrease mode.<br/>
+The current level can be read back from VOLXL/VOLXR (1F801E00h+N\*4). Sweep
+steps at the same rate as an ADSR envelope with the same Shift value: with
+Shift=12 the step is applied every other sample, with Shift=16 every 32nd
+sample (tested for shift values 12, 13 and 16). Step sizes, the linear
+saturation points and the Exponential Increase slowdown above 6000h are as in
+the envelope pseudo code below.<br/>
+Negative Phase with Increase moves the volume towards -8000h using the
+decrease step sizes (-8..-5), from either a positive or a negative start
+(a positive volume goes down through zero), and saturates at -8000h.
+Negative Phase with Decrease, from a negative volume, moves towards zero and
+stops at 0000h. In Exponential Decrease mode from a negative volume the Phase
+bit decides. With Phase=0 the volume goes to 0000h at the first step, at any
+Shift and Step. With Phase=1 it moves towards zero and stops at a level set by
+bits 0-6: FFFFh for 00h, FFE1h for 10h, FE01h for 20h, F801h for 28h, F001h for
+2Ch, EDB7h for 2Dh, EAABh for 2Eh, E667h for 2Fh, and F001h for 30h and 34h. A
+positive volume decreases to 0000h with either Phase. Voice and main volume
+sweeps behave alike.<br/>
 
 #### `0x1f801db0`: `AVOLL` (I2SA/CD-ROM volume left)
 #### `0x1f801db2`: `AVOLR` (I2SA/CD-ROM volume right)
@@ -556,6 +585,24 @@ Negative volumes are phase inverted, otherwise same as positive.<br/>
 ```
 Starts the ADSR Envelope, and automatically initializes ADSR Volume to zero.<br/>
 
+#### Key On latency
+KON writes are not acted on immediately. Key On is serviced on a 2-sample grid
+(one opportunity every 1536 CPU cycles), so a write can wait up to 2 samples
+before it is picked up. For a write made right
+at a STATX.Bit11 edge, ENVX becomes nonzero 6 or 7 samples later.<br/>
+The phase of that grid relative to the capture buffer write position (see
+STATX.Bit11) is fixed for a given power-on, but differs from one power-on to the
+next. Code that times a Key On from a Bit11 edge therefore sees the sound start
+at capture buffer index 8 on some boots and index 9 on others (same console,
+same code), and an ADSR curve sampled on Bit11 edges sits up to two samples of
+envelope progress apart between such boots. Tests comparing capture buffer
+contents against a reference should allow for a one-sample offset.<br/>
+Once Key On is serviced, the voice stays silent for four samples. On each of the
+first three, it fetches the header of the first block and applies its
+Loop-Start-Bit; ENDX is cleared on the first of them. The Attack phase starts
+on the fifth sample, so ENVX becomes nonzero four samples after ENDX is
+cleared.<br/>
+
 #### `0x1f801d8c`: `KOF0` (voice 0..15 key off, write-only)
 ```
   0-15  Voice 0..15 Off (0=No change, 1=Start Release)
@@ -569,6 +616,8 @@ Starts the ADSR Envelope, and automatically initializes ADSR Volume to zero.<br/
 For a full ADSR pattern, OFF would be usually issued in the Sustain period,
 however, it can be issued at any time (eg. to abort Attack, skip the Decay and
 Sustain periods, and switch immediately to Release).<br/>
+A keyed-off voice keeps advancing through the sample data and applying
+Loop-Start-Bits to LSAX, whether or not the SPU IRQ is enabled.<br/>
 
 #### `0x1f801d9c`: `ENDX0` (voice 0..15 end reached, read-only)
 ```
@@ -580,7 +629,8 @@ Sustain periods, and switch immediately to Release).<br/>
   0-7   Voice 16..23 Status (0=Newly Keyed On, 1=Reached LOOP-END)
   8-15  Not used
 ```
-The bits get CLEARED when setting the corresponding KEY ON bits.<br/>
+The bits get CLEARED when the voice is keyed on, on the first sample after Key
+On is serviced (see Key On latency).<br/>
 The bits get SET when reaching an LOOP-END flag in ADPCM header.bit0.<br/>
 Some emulators do not implement this register.<br/>
 
@@ -607,15 +657,29 @@ however, thereafter the hardware is overwriting that value).<br/>
 ```
 
 #### SPU Noise Generator
-The signed 16bit output Level is calculated as so (repeated at 44.1kHz clock):<br/>
+The signed 16bit output Level is a 16bit LFSR, updated on each noise clock:<br/>
 ```
-  Wait(1 cycle)          ;at 44.1kHz clock
-  Timer=Timer-NoiseStep  ;subtract Step (4..7)
   ParityBit = NoiseLevel.Bit15 xor Bit12 xor Bit11 xor Bit10 xor 1
-  IF Timer<0 then NoiseLevel = NoiseLevel*2 + ParityBit
-  IF Timer<0 then Timer=Timer+(20000h SHR NoiseShift)  ;reload timer once
-  IF Timer<0 then Timer=Timer+(20000h SHR NoiseShift)  ;reload again if needed
+  NoiseLevel = NoiseLevel*2 + ParityBit
 ```
+The noise clock runs on a period of (20000h SHR NoiseShift) samples at 44.1kHz.
+The period is split into four quarters; the LFSR is clocked at the start of
+each quarter, and clocked once more halfway into Step (0..3) of the quarters:<br/>
+```
+  Step=0  clocks at 0/8, 2/8, 4/8, 6/8 of the period        (4 per period)
+  Step=1  clocks at 0/8, 1/8, 2/8, 4/8, 6/8                 (5 per period)
+  Step=2  clocks at 0/8, 1/8, 2/8, 4/8, 5/8, 6/8            (6 per period)
+  Step=3  clocks at 0/8, 1/8, 2/8, 3/8, 4/8, 5/8, 6/8       (7 per period)
+```
+So the gap between clocks is always either 1/4 or 1/8 of the period, and the
+average rate is (4+Step)/(20000h SHR NoiseShift) clocks per
+sample. The LFSR is clocked at most once per sample, so at NoiseShift=0Fh every
+Step setting clocks it on every sample.<br/>
+The LFSR sequence has a period of 65535 clocks (FFFFh is the lock-up state that
+the sequence never enters). Clearing ATTR bit15 does not reset the noise
+generator.<br/>
+In Noise mode, the Voice 1/3 capture buffers receive the full 16bit noise
+level scaled by the envelope, (NoiseLevel*ENVX) SAR 15, not a 1bit signal.<br/>
 Note that the Noise frequency is solely controlled by the Shift/Step values in
 ATTR register (the ADPCM Sample Rate has absolutely no effect on noise), so
 when using noise for multiple voices, all of them are forcefully having the
@@ -649,15 +713,29 @@ mode (and, again, wait until Stop is applied in STATX).<br/>
   15-12 Unknown/Unused (seems to be usually zero)
   11    Writing to First/Second half of Capture Buffers (0=First, 1=Second)
   10    Data Transfer Busy Flag          (0=Ready, 1=Busy)
-  9     Data Transfer DMA Read Request   (0=No, 1=Yes)
-  8     Data Transfer DMA Write Request  (0=No, 1=Yes)
+  9     Data Transfer DMA Write Request  (0=No, 1=Yes)
+  8     Data Transfer DMA Read Request   (0=No, 1=Yes)
   7     Data Transfer DMA Read/Write Request ;seems to be same as ATTR.Bit5
   6     IRQ9 Flag                        (0=No, 1=Interrupt Request)
   5-0   Current SPU Mode   (same as ATTR.Bit5-0, but, applied a bit delayed)
 ```
-When switching ATTR to DMA-read mode, status bit9 and bit7 aren't set
+When switching ATTR to DMA-read mode, status bit8 and bit7 aren't set
 immediately (apparently the SPU is first internally collecting the data in the
 Fifo, before transferring it).<br/>
+In DMA-write mode the opposite happens at the end of a transfer: when the DMA
+channel reports completion (CHCR bit24 clear), the last 50-60 bytes of the
+block have not been written to Sound RAM yet. Bits 7 and 9 fall once data is in
+the Fifo and rise together roughly 1150-2000 CPU cycles after CHCR goes idle,
+once the last write to Sound RAM is done. Leaving transfer mode (writing ATTR
+bits 5-4) before that loses the tail of the block: those bytes are never
+written, and the old contents remain. Bit10 does not change at any point of a
+DMA write, so it cannot be used to wait for the end of one. A short block can
+finish on the DMA side before bits 7 and 9 have fallen (a 32-halfword block can
+clear CHCR within about 40 cycles), so polling bit7 right after CHCR goes idle
+may pass at once and lose most of the block; wait for bit7 to read 0 and then
+1. For a block of 128 halfwords, polling bit7 after CHCR goes idle keeps every
+byte. A polling loop should have an upper bound, as emulators may never set
+the bit.<br/>
 Bit11 indicates if data is currently written to the first or second half of the
 four 1K-byte capture buffers (for CD Audio left/right, and voice 1/3). Note:
 Bit11 works only if Bit2 and/or Bit3 of Port 1F801DACh are set.<br/>
@@ -704,6 +782,13 @@ This register is uninitialized on power-on and must be explicitly set to 0004h
 arcade hardware) prior to accessing SPU RAM.<br/>
 When using values other than 0004h, the addressing unit used by address/pointer
 registers is adjusted accordingly (16 bytes for 1MB, 32 for 2MB, 64 for 4MB).<br/>
+An invalid chip size (bits 2-3 = 0 or 3) stops the capture buffer pointers from
+advancing (see STATX bit 11). Bits 2-3 = 3 freezes them on SCPH-1000, SCPH-5501
+and SCPH-7001; bits 2-3 = 0 freezes them on SCPH-5501 and SCPH-7001 but not on
+SCPH-1000.<br/>
+Sony ZN-1 and ZN-2 arcade boards have an unpopulated footprint for a second
+bank, selected by a solder jumper readable at 1FA10200h bit 2; the Capcom ZN
+titles examined (tgmj, sfex2p) write 0004h regardless of that jumper.<br/>
 The following is preliminary, from tests on modified consoles.
 SPU RAM may be upgraded on motherboard revisions that use the standalone 100-pin
 SPU, but having multiple banks is electrically unsafe as the SPU selects *both*
@@ -793,25 +878,32 @@ since there is no known way to activate the stable "mode" via I/O ports, the
 stable/unstable behaviour does eventually depend on internal clock
 dividers/multipliers, and whether they are starting in sync with the CPU or
 not.<br/>
-Caution: The "rep2" trick cannot be used in combination with reverb (reverb
-seems to be using the Port 1F801DACh Sound RAM Data Transfer Control, too).<br/>
+Caution: The "rep2" trick cannot be used in combination with reverb, because
+the reverb work area address scales with the RAM\_CTRL size setting too.<br/>
 
 #### Alternate RAM\_CTRL setting behavior on 512KB RAM
 When setting RAM\_CTRL to values other than 0004h on a stock console fitted with
 a single 512KB bank, the following erratic SPU RAM writing behavior can be
 observed:<br/>
 ```
-  Bits 1-3_______Halfwords in Fifo________Halfwords written to SPU RAM__
-  010 (512KB)    A,B,C,D,E,F,G,H,...,X    A,B,C,D,E,F,G,H,...
-  011 (1MB)      A,B,C,D,E,F,G,H,...,X    A,A,C,C,E,E,G,G,...
-  100 (2MB)      A,B,C,D,E,F,G,H,...,X    A,A,A,A,E,E,E,E,...
-  101 (4MB)      A,B,C,D,E,F,G,H,...,X    H,H,H,H,H,H,H,H,...
-  others         A,B,C,D,E,F,G,H,...,X    X,X,X,X,X,X,X,X,...
+  Bits 1-3_______Halfwords in Fifo________Written to consecutive SPU RAM halfwords__
+  010 (512KB)    A,B,C,D,E,F,G,H          A,B,C,D,E,F,G,H
+  011 (1MB)      A,B,C,D,E,F,G,H          A,C,E,G (earlier boards) or B,D,F,H (later boards)
+  100 (2MB)      A,B,C,D,E,F,G,H          D,H
+  101 (4MB)      A,B,C,D,E,F,G,H          G (earlier boards) or H (later boards)
+  others         A,B,C,D,E,F,G,H          H
 ```
-1MB skips the 2nd halfword, 2MB skips 2nd..4th, 4MB skips 1st..7th.<br/>
-Invalid settings only use the LAST halfword.<br/>
-Note: The above rather bizarre results apply to WRITE mode. In READ mode, the
-register causes the same halfword to be read 2/4/8 times (for 1/2/4MB).<br/>
+Each setting writes one halfword per group of 2, 4 or 8 halfwords.<br/>
+Invalid settings only use the last halfword, except on some early consoles,
+where bits 1-3 = 000 writes the 1st, 2nd and 3rd halfword and 001 writes the
+1st, 3rd and 5th, each at four-halfword spacing.<br/>
+Note: The above results apply to WRITE mode. In READ mode, the register causes
+the same halfword to be read 2/4/8 times (for 1/2/4MB).<br/>
+Both patterns are aliasing: the SPU keeps generating addresses for the configured
+size, and the 512KB chip ignores the address lines it does not have, so
+consecutive halfwords land on the same location. Reads from the absent second
+bank return FFFFh on SCPH-1000 (separate SPU) and 0000h on SCPH-7001 (combined
+SPU/CD-ROM chip).<br/>
 
 ##   SPU Interrupt
 #### `0x1f801da4`: `IRQA` (IRQ address)
@@ -916,6 +1008,10 @@ src/dst are relative to the current buffer address, the disp registers are
 relative to src registers, the base register defines the start address of the
 reverb buffer (the end address is fixed, at 7FFFEh). Writing a value to ESA
 does additionally set the current buffer address to that value.<br/>
+ESA is the register other documents call mBASE. The work area is ESA\*8 to
+7FFFFh, whatever the other reverb registers need: the buffer address steps
+through all of it and wraps back to ESA\*8, so every cell in the area gets
+written, and nothing below ESA\*8 is touched.<br/>
 
 #### `0x1f801d98`: `EON0` (voice 0..15 echo/reverb enable)
 ```
@@ -1075,6 +1171,16 @@ ATTR, and to zerofill the Reverb Buffer (so that no garbage values are output
 when activating reverb). For whatever reason, one MUST also initialize Port
 1F801DACh (otherwise reverb stays off).<br/>
 
+The sizes below are the amount of memory the official library allocates for
+each preset. The reverb unit itself needs only the largest address register
+(mLSAME..mRAPF2, dLSAME..dRDIFF, in 8-byte units) plus one unit: that is within
+a few bytes of the listed size for most presets, but Half Echo needs only
+1B90h bytes, and Chaos Echo and Delay only 10000h. The write pointer sweeps the
+whole area from 1F801DA2h*8 to 7FFFFh and wraps back to the start, nothing below
+1F801DA2h*8 is ever written, so a smaller area computed this way is safe; with
+the listed sizes the extra space is written but never read back by these
+settings.<br/>
+
 #### Room (size=26C0h bytes)
 ```
   007Dh,005Bh,6D80h,54B8h,BED0h,0000h,0000h,BA80h
@@ -1115,7 +1221,7 @@ when activating reverb). For whatever reason, one MUST also initialize Port
   09C2h,05C1h,05C0h,041Ah,0274h,013Ah,8000h,8000h
 ```
 
-#### Half Echo (size=3C00h bytes)
+#### Half Echo (size=3C00h bytes, minimum 1B90h)
 ```
   0017h,0013h,70F0h,4FA8h,BCE0h,4510h,BEF0h,8500h
   5F80h,54C0h,0371h,02AFh,02E5h,01DFh,02B0h,01D7h
@@ -1131,7 +1237,7 @@ when activating reverb). For whatever reason, one MUST also initialize Port
   1056h,0AE1h,0AE0h,07A2h,0464h,0232h,8000h,8000h
 ```
 
-#### Chaos Echo (almost infinite) (size=18040h bytes)
+#### Chaos Echo (almost infinite) (size=18040h bytes, minimum 10000h)
 ```
   0001h,0001h,7FFFh,7FFFh,0000h,0000h,0000h,8100h
   0000h,0000h,1FFFh,0FFFh,1005h,0005h,0000h,0000h
@@ -1139,7 +1245,7 @@ when activating reverb). For whatever reason, one MUST also initialize Port
   0000h,0000h,1004h,1002h,0004h,0002h,8000h,8000h
 ```
 
-#### Delay (one-shot echo) (size=18040h bytes)
+#### Delay (one-shot echo) (size=18040h bytes, minimum 10000h)
 ```
   0001h,0001h,7FFFh,7FFFh,0000h,0000h,0000h,0000h
   0000h,0000h,1FFFh,0FFFh,1005h,0005h,0000h,0000h
@@ -1168,7 +1274,9 @@ zero.<br/>
 #### `0x1f801dbc` - 4 bytes - unused?
 #### `0x1f801e60` - 32 bytes - unused?
 The registers are read/write-able, although writing any values to them doesn't
-seem to have any effect on sound output. Also, the SPU doesn't seem to modify
+seem to have any effect on sound output, except that on some consoles any write
+to 1F801DBCh, including of the value read from it, can stop the capture buffer
+of voice 1 from being written. Also, the SPU doesn't seem to modify
 the registers at any time during sound output, nor reverb calculations, nor
 activated external audio input... the registers seem to be just some kind of
 general-purpose RAM.<br/>

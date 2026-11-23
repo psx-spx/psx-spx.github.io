@@ -203,7 +203,7 @@ motor (which can't be queried) as PadCurrCTP1=10 units.<br/>
 #### Config Mode - Command 47h - QueryComb
 ```
   Send  01h 47h 00h ii  00h 00h 00h 00h 00h
-  Reply HiZ F3h 5Ah 00h 00h Num A0  A1  00h
+  Reply HiZ F3h 5Ah 00h 00h Num A0  A1  A2
 ```
 Returns actuator combination list number ii (00h..Comb-1): Num is the number
 of actuators in the list, followed by the actuator numbers. SCPH-1200, SCPH-110

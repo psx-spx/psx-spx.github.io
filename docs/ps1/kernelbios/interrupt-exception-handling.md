@@ -25,6 +25,7 @@ does randomly trigger Events. Fortunately, it does not acknowledge the IRQs
 (unless SetIrqAutoAck was used to enable that fatal behaviour).<br/>
 
 #### B(18h) - ResetEntryInt()
+`void ResetEntryInt(void);`<br/>
 Applies the default "Exit" structure (which consists of a pointer to
 ReturnFromException, and the Kernel's exception stacktop (minus 4, for whatever
 reason), and zeroes for the R16..R23,R28,R30 registers. Returns the address of
@@ -32,6 +33,7 @@ that structure.<br/>
 See HookEntryInt for details.<br/>
 
 #### B(19h) - HookEntryInt(addr)
+`void HookEntryInt(struct JmpBuf *addr);`<br/>
 addr points to a structure (with same format as for the setjmp function):<br/>
 ```
   00h 4    r31/ra,pc ;usually ptr to ReturnFromException function
@@ -69,6 +71,7 @@ handler as soon as the RFE opcode in ReturnFromException does re-enable
 interrupts).<br/>
 
 #### C(02h) - SysEnqIntRP(priority,struc)  ;bugged, use with care
+`int SysEnqIntRP(int priority, struct HandlerInfo *struc);`<br/>
 Inserts a new element in the specified priority chain. The new element is
 inserted at the begin of the chain, so (within that priority chain) the new
 element has highest priority.<br/>
@@ -90,6 +93,7 @@ DequeueCdIntr and _96_remove try to remove priority 0 elements, but that
 functions won't work anyways; due to the same bug).<br/>
 
 #### C(03h) - SysDeqIntRP(priority,struc)  ;bugged, use with care
+`int SysDeqIntRP(int priority, struct HandlerInfo *struc);`<br/>
 Removes the specified element from the specified priority chain.<br/>
 BUG: The function tries to search the whole chain (and to remove the element if
 it finds it). However, it does only check the first element properly, and,
@@ -110,6 +114,7 @@ to Bit0 once when returning from the syscall exception). There's no return
 value (all registers except SR and K0 are unchanged).<br/>
 
 #### C(0Dh) - SetIrqAutoAck(irq,flag)
+`void SetIrqAutoAck(uint32_t irq, int flag);`<br/>
 Specifies if the DefaultInterruptHandler shall automatically acknowledge IRQs.
 The "irq" paramter is the number of the interrupt, ie. 00h..0Ah = IRQ0..IRQ10.
 The "flag" value should be 0 to disable AutoAck, or non-zero to enable AutoAck.
@@ -120,6 +125,7 @@ their IRQ, and it may even cause the DefaultInterruptHandler to miss its own
 IRQs.<br/>
 
 #### C(06h) - ExceptionHandler()
+`void ExceptionHandler(void);`<br/>
 The C(06h) vector points to the exception handler, ie. to the function that is
 invoked from the 4 opcodes at address 80000080h, that opcodes jump directly to
 the exception handler, so patching the C(06h) vector has no effect.<br/>
@@ -137,6 +143,7 @@ newer BIOS versions, additionally, most commercial games still include patches
 for compatibility with the old BIOS.<br/>
 
 #### B(17h) - ReturnFromException()
+`void ReturnFromException(void);`<br/>
 Restores the CPU registers (R1-R31,HI,LO,SR,PC) (except R26/K0) from the
 current TCB. This function is usually executed automatically at the end of the
 ExceptionHandler, however, functions in the exception chain may call
@@ -144,8 +151,11 @@ ReturnFromException to return immediately, without processing chain elements of
 lower priority.<br/>
 
 #### C(00h) - EnqueueTimerAndVblankIrqs(priority) ;used with prio=1
+`int EnqueueTimerAndVblankIrqs(int priority);`<br/>
 #### C(01h) - EnqueueSyscallHandler(priority) ;used with prio=0
+`int EnqueueSyscallHandler(int priority);`<br/>
 #### C(0Ch) - InitDefInt(priority) ;used with prio=3
+`int InitDefInt(int priority);`<br/>
 Internally used to add some default IRQ and Exception handlers.<br/>
 
 #### No Nested Exceptions

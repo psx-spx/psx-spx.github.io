@@ -1,5 +1,8 @@
 name: Publish docs via GitHub Pages
 
+# master builds only the development version and replaces /dev/ inside the
+# existing gh-pages tree. The root (stable) is published by the stable branch.
+
 on:
   push:
     branches:
@@ -7,21 +10,46 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-dev
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
-    name: Deploy docs
+    name: Deploy dev docs
     runs-on: ubuntu-latest
+    container: squidfunk/mkdocs-material:9.5.17
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apk add --no-cache bash git build-base cairo cairo-gobject fontconfig gdk-pixbuf \
+            jpeg-dev libffi-dev linux-headers msttcorefonts-installer pango zlib-dev
+          update-ms-fonts
+          fc-cache -f
+          pip install --no-cache-dir mkdocs-with-pdf
 
-      - name: Deploy docs
-        uses: nicolasnoble/mkdocs-deploy-gh-pages@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_DOMAIN: psx-spx.consoledev.net
-          CONFIG_FILE: mkdocs.yml
-          ENABLE_PDF_EXPORT: 1
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          path: dev
+          fetch-depth: 0
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: pages
+
+      - name: Build and deploy /dev/
+        run: |
+          git config --global --add safe.directory '*'
+          rm -rf pages/dev
+          mkdocs build --config-file dev/mkdocs.yml --site-dir "$GITHUB_WORKSPACE/pages/dev"
+          cd pages
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git add -A dev
+          git commit -m "Deploy dev $(git -C ../dev rev-parse --short HEAD)" || exit 0
+          git push origin HEAD:gh-pages
